@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/features/home/cubit/home_cubit.dart';
-import 'package:store/features/home/screen/home_screen.dart';
 import 'package:store/features/store/categories/cubit/categories_cubit.dart';
 import 'package:store/features/store/create_product/cubit/create_product_cubit.dart';
 import 'package:store/features/store/lookups/cubit/lookups_cubit.dart';
