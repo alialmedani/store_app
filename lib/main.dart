@@ -4,14 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store/core/classes/cashe_helper.dart';
-import 'package:store/core/ui/screens/splash_screen.dart';
 import 'package:store/features/home/cubit/home_cubit.dart';
 import 'package:store/features/home/screen/home_screen.dart';
 import 'package:store/features/store/create_product/cubit/create_product_cubit.dart';
 import 'package:store/features/store/lookups/cubit/lookups_cubit.dart';
 import 'package:store/features/store/product_details/cubit/product_details_cubit.dart';
 import 'core/classes/keys.dart';
-import 'core/classes/notification.dart';
 import 'core/constant/app_theme/app_theme.dart';
 
 SharedPreferences? prefs;
