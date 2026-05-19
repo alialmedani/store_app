@@ -6,9 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/features/home/cubit/home_cubit.dart';
 import 'package:store/features/home/screen/home_screen.dart';
+import 'package:store/features/store/categories/cubit/categories_cubit.dart';
 import 'package:store/features/store/create_product/cubit/create_product_cubit.dart';
 import 'package:store/features/store/lookups/cubit/lookups_cubit.dart';
 import 'package:store/features/store/product_details/cubit/product_details_cubit.dart';
+import 'package:store/features/store/root/cubit/store_root_cubit.dart';
+import 'package:store/features/store/root/screen/store_root_screen.dart';
 import 'core/classes/keys.dart';
 import 'core/constant/app_theme/app_theme.dart';
 
@@ -45,6 +48,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ProductDetailsCubit()),
         BlocProvider(create: (context) => CreateProductCubit()),
         BlocProvider(create: (context) => LookupsCubit()),
+        BlocProvider(create: (context) => StoreRootCubit()),
+        BlocProvider(create: (context) => CategoriesCubit()),
         // BlocProvider(create: (context) => RootCubit()),
         // BlocProvider(create: (context) => ProfileCubit()),
         // BlocProvider(create: (context) => OfficeBoyCubit()),
@@ -67,7 +72,7 @@ class MyApp extends StatelessWidget {
             navigatorKey: Keys.navigatorKey,
             title: 'Task App',
             theme: appThemeData[AppTheme.light],
-            home: const HomeScreen(),
+            home: const StoreRootScreen(),
           );
         },
       ),
