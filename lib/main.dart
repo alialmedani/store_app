@@ -5,6 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/core/ui/screens/splash_screen.dart';
+import 'package:store/features/home/cubit/home_cubit.dart';
+import 'package:store/features/home/screen/home_screen.dart';
+import 'package:store/features/store/product_details/cubit/product_details_cubit.dart';
 import 'core/classes/keys.dart';
 import 'core/classes/notification.dart';
 import 'core/constant/app_theme/app_theme.dart';
@@ -38,6 +41,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(create: (context) => ProductDetailsCubit()),
+
         // BlocProvider(create: (context) => RootCubit()),
         // BlocProvider(create: (context) => ProfileCubit()),
         // BlocProvider(create: (context) => OfficeBoyCubit()),
@@ -60,7 +66,7 @@ class MyApp extends StatelessWidget {
             navigatorKey: Keys.navigatorKey,
             title: 'Task App',
             theme: appThemeData[AppTheme.light],
-            home:  SplashSscreen()  ,
+            home: const HomeScreen(),
           );
         },
       ),

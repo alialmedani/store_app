@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store/core/utils/Navigation/navigation.dart';
+import 'package:store/features/store/product_details/screen/product_details_screen.dart';
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../cubit/home_cubit.dart';
@@ -13,9 +15,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => HomeCubit(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Store Products'),
-        ),
+        appBar: AppBar(title: const Text('Store Products')),
         body: PaginationList<ProductModel>(
           withPagination: true,
           repositoryCallBack: (data) {
@@ -32,17 +32,24 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final product = products[index];
 
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Text(product.name?.substring(0, 1) ?? '?'),
+                return InkWell(
+                  onTap: () {
+                    Navigation.push(
+                      ProductDetailsScreen(productId: product.id!),
+                    );
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Text(product.name?.substring(0, 1) ?? '?'),
+                      ),
+                      title: Text(product.name ?? 'No name'),
+                      subtitle: Text(
+                        'Stock: ${product.totalVariantStock ?? 0} | ${product.brandName ?? ''}',
+                      ),
+                      trailing: Text('${product.price ?? 0}'),
                     ),
-                    title: Text(product.name ?? 'No name'),
-                    subtitle: Text(
-                      'Stock: ${product.totalVariantStock ?? 0} | ${product.brandName ?? ''}',
-                    ),
-                    trailing: Text('${product.price ?? 0}'),
                   ),
                 );
               },
