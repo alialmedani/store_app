@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/features/home/screen/home_screen.dart';
+import 'package:store/features/store/brands/screen/brands_screen.dart';
 import 'package:store/features/store/categories/screen/categories_screen.dart';
 import '../cubit/store_root_cubit.dart';
 
@@ -16,7 +17,7 @@ class StoreRootScreen extends StatelessWidget {
         final screens = [
           const HomeScreen(),
           const CategoriesScreen(),
-          const Center(child: Text('Brands')),
+          const BrandsScreen(),
           const Center(child: Text('More')),
         ];
 

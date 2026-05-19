@@ -2,36 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
-import '../cubit/categories_cubit.dart';
-import '../data/model/category_model.dart';
+import '../cubit/brands_cubit.dart';
+import '../data/model/brand_model.dart';
 
-class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+class BrandsScreen extends StatelessWidget {
+  const BrandsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoriesCubit, CategoriesState>(
+    return BlocBuilder<BrandsCubit, BrandsState>(
       builder: (context, state) {
-        final cubit = context.read<CategoriesCubit>();
+        final cubit = context.read<BrandsCubit>();
 
         return Scaffold(
-          appBar: AppBar(title: const Text('Categories')),
-          body: PaginationList<CategoryModel>(
+          appBar: AppBar(title: const Text('Brands')),
+          body: PaginationList<BrandModel>(
             key: ValueKey(cubit.refreshKey),
             withPagination: false,
             repositoryCallBack: (data) {
-              return cubit.fetchCategories();
+              return cubit.fetchBrands();
             },
-            listBuilder: (categories) {
-              if (categories.isEmpty) {
-                return const Center(child: Text('No categories found'));
+            listBuilder: (brands) {
+              if (brands.isEmpty) {
+                return const Center(child: Text('No brands found'));
               }
 
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: categories.length,
+                itemCount: brands.length,
                 itemBuilder: (context, index) {
-                  final category = categories[index];
+                  final brand = brands[index];
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -40,22 +40,22 @@ class CategoriesScreen extends StatelessWidget {
                         final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => CategoryDetailsScreen(
-                              categoryId: category.id!,
+                            builder: (_) => BrandDetailsScreen(
+                              brandId: brand.id!,
                             ),
                           ),
                         );
 
                         if (result == true && context.mounted) {
-                          context.read<CategoriesCubit>().refreshCategories();
+                          context.read<BrandsCubit>().refreshBrands();
                         }
                       },
                       leading: CircleAvatar(
-                        child: Text(category.name?.substring(0, 1) ?? '?'),
+                        child: Text(brand.name?.substring(0, 1) ?? '?'),
                       ),
-                      title: Text(category.name ?? 'No name'),
-                      subtitle: Text(category.description ?? 'No description'),
-                      trailing: category.isActive == true
+                      title: Text(brand.name ?? 'No name'),
+                      subtitle: Text(brand.description ?? 'No description'),
+                      trailing: brand.isActive == true
                           ? const Icon(Icons.check_circle, color: Colors.green)
                           : const Icon(Icons.cancel, color: Colors.red),
                     ),
@@ -69,12 +69,12 @@ class CategoriesScreen extends StatelessWidget {
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const CreateCategoryScreen(),
+                  builder: (_) => const CreateBrandScreen(),
                 ),
               );
 
               if (result != null && context.mounted) {
-                context.read<CategoriesCubit>().refreshCategories();
+                context.read<BrandsCubit>().refreshBrands();
               }
             },
             child: const Icon(Icons.add),
@@ -85,33 +85,33 @@ class CategoriesScreen extends StatelessWidget {
   }
 }
 
-class CategoryDetailsScreen extends StatelessWidget {
-  final int categoryId;
+class BrandDetailsScreen extends StatelessWidget {
+  final int brandId;
 
-  const CategoryDetailsScreen({
+  const BrandDetailsScreen({
     super.key,
-    required this.categoryId,
+    required this.brandId,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Category Details'),
+        title: const Text('Brand Details'),
         actions: [
           IconButton(
             onPressed: () async {
-              final result = await context
-                  .read<CategoriesCubit>()
-                  .fetchCategoryById(categoryId);
+              final result = await context.read<BrandsCubit>().fetchBrandById(
+                    brandId,
+                  );
 
               if (!context.mounted || !result.hasDataOnly) return;
 
               final editResult = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => EditCategoryScreen(
-                    category: result.data as CategoryModel,
+                  builder: (_) => EditBrandScreen(
+                    brand: result.data as BrandModel,
                   ),
                 ),
               );
@@ -125,7 +125,7 @@ class CategoryDetailsScreen extends StatelessWidget {
         ],
       ),
       body: FutureBuilder(
-        future: context.read<CategoriesCubit>().fetchCategoryById(categoryId),
+        future: context.read<BrandsCubit>().fetchBrandById(brandId),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -135,13 +135,11 @@ class CategoryDetailsScreen extends StatelessWidget {
 
           if (result == null || !result.hasDataOnly) {
             return Center(
-              child: Text(
-                result?.error.toString() ?? 'Failed to load category',
-              ),
+              child: Text(result?.error.toString() ?? 'Failed to load brand'),
             );
           }
 
-          final category = result.data as CategoryModel;
+          final brand = result.data as BrandModel;
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -149,33 +147,31 @@ class CategoryDetailsScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   title: const Text('Name'),
-                  subtitle: Text(category.name ?? ''),
+                  subtitle: Text(brand.name ?? ''),
                 ),
               ),
               Card(
                 child: ListTile(
                   title: const Text('Description'),
-                  subtitle: Text(category.description ?? 'No description'),
+                  subtitle: Text(brand.description ?? 'No description'),
                 ),
               ),
               Card(
                 child: ListTile(
                   title: const Text('Status'),
-                  subtitle: Text(
-                    category.isActive == true ? 'Active' : 'Inactive',
-                  ),
+                  subtitle: Text(brand.isActive == true ? 'Active' : 'Inactive'),
                 ),
               ),
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () async {
-                  final result = category.isActive == true
-                      ? await context
-                          .read<CategoriesCubit>()
-                          .deactivateCategory(category.id!)
-                      : await context
-                          .read<CategoriesCubit>()
-                          .activateCategory(category.id!);
+                  final result = brand.isActive == true
+                      ? await context.read<BrandsCubit>().deactivateBrand(
+                            brand.id!,
+                          )
+                      : await context.read<BrandsCubit>().activateBrand(
+                            brand.id!,
+                          );
 
                   if (!context.mounted) return;
 
@@ -188,10 +184,10 @@ class CategoryDetailsScreen extends StatelessWidget {
                   }
                 },
                 icon: Icon(
-                  category.isActive == true ? Icons.pause : Icons.play_arrow,
+                  brand.isActive == true ? Icons.pause : Icons.play_arrow,
                 ),
                 label: Text(
-                  category.isActive == true ? 'Deactivate' : 'Activate',
+                  brand.isActive == true ? 'Deactivate' : 'Activate',
                 ),
               ),
               const SizedBox(height: 12),
@@ -204,10 +200,8 @@ class CategoryDetailsScreen extends StatelessWidget {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (_) => AlertDialog(
-                      title: const Text('Delete Category'),
-                      content: const Text(
-                        'Are you sure you want to delete this category?',
-                      ),
+                      title: const Text('Delete Brand'),
+                      content: const Text('Are you sure you want to delete this brand?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
@@ -223,9 +217,9 @@ class CategoryDetailsScreen extends StatelessWidget {
 
                   if (confirm != true) return;
 
-                  final result = await context
-                      .read<CategoriesCubit>()
-                      .deleteCategory(category.id!);
+                  final result = await context.read<BrandsCubit>().deleteBrand(
+                        brand.id!,
+                      );
 
                   if (!context.mounted) return;
 
@@ -248,28 +242,28 @@ class CategoryDetailsScreen extends StatelessWidget {
   }
 }
 
-class CreateCategoryScreen extends StatefulWidget {
-  const CreateCategoryScreen({super.key});
+class CreateBrandScreen extends StatefulWidget {
+  const CreateBrandScreen({super.key});
 
   @override
-  State<CreateCategoryScreen> createState() => _CreateCategoryScreenState();
+  State<CreateBrandScreen> createState() => _CreateBrandScreenState();
 }
 
-class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
+class _CreateBrandScreenState extends State<CreateBrandScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    context.read<CategoriesCubit>().resetCreateParams();
+    context.read<BrandsCubit>().resetCreateParams();
   }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<CategoriesCubit>();
+    final cubit = context.read<BrandsCubit>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Category')),
+      appBar: AppBar(title: const Text('Create Brand')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -302,14 +296,14 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                 final isValid = _formKey.currentState?.validate() ?? false;
                 if (!isValid) return;
 
-                final result = await cubit.createCategory();
+                final result = await cubit.createBrand();
 
                 if (!context.mounted) return;
 
                 if (result.hasDataOnly) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Category created successfully'),
+                      content: Text('Brand created successfully'),
                     ),
                   );
 
@@ -320,7 +314,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                   );
                 }
               },
-              child: const Text('Create Category'),
+              child: const Text('Create Brand'),
             ),
           ],
         ),
@@ -329,19 +323,19 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
   }
 }
 
-class EditCategoryScreen extends StatefulWidget {
-  final CategoryModel category;
+class EditBrandScreen extends StatefulWidget {
+  final BrandModel brand;
 
-  const EditCategoryScreen({
+  const EditBrandScreen({
     super.key,
-    required this.category,
+    required this.brand,
   });
 
   @override
-  State<EditCategoryScreen> createState() => _EditCategoryScreenState();
+  State<EditBrandScreen> createState() => _EditBrandScreenState();
 }
 
-class _EditCategoryScreenState extends State<EditCategoryScreen> {
+class _EditBrandScreenState extends State<EditBrandScreen> {
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _nameController;
@@ -351,11 +345,11 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
   void initState() {
     super.initState();
 
-    context.read<CategoriesCubit>().setUpdateParams(widget.category);
+    context.read<BrandsCubit>().setUpdateParams(widget.brand);
 
-    _nameController = TextEditingController(text: widget.category.name ?? '');
+    _nameController = TextEditingController(text: widget.brand.name ?? '');
     _descriptionController = TextEditingController(
-      text: widget.category.description ?? '',
+      text: widget.brand.description ?? '',
     );
   }
 
@@ -368,10 +362,10 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<CategoriesCubit>();
+    final cubit = context.read<BrandsCubit>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Category')),
+      appBar: AppBar(title: const Text('Edit Brand')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -406,14 +400,14 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                 final isValid = _formKey.currentState?.validate() ?? false;
                 if (!isValid) return;
 
-                final result = await cubit.updateCategory();
+                final result = await cubit.updateBrand();
 
                 if (!context.mounted) return;
 
                 if (result.hasDataOnly) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Category updated successfully'),
+                      content: Text('Brand updated successfully'),
                     ),
                   );
 

@@ -23,6 +23,19 @@ class CategoryRepository extends CoreRepository {
     return paginatedCall(result: result);
   }
 
+  Future<Result<CategoryModel>> getCategoryByIdRequest({
+    required GetCategoryByIdParams params,
+  }) async {
+    final result = await RemoteDataSource.request<CategoryModel>(
+      withAuthentication: false,
+      url: '$categoriesUrl/${params.id}',
+      method: HttpMethod.GET,
+      converter: (json) => CategoryModel.fromJson(json),
+    );
+
+    return call(result: result);
+  }
+
   Future<Result<CategoryModel>> createCategoryRequest({
     required CreateCategoryParams params,
   }) async {
@@ -31,6 +44,59 @@ class CategoryRepository extends CoreRepository {
       url: categoriesUrl,
       method: HttpMethod.POST,
       data: params.toJson(),
+      converter: (json) => CategoryModel.fromJson(json),
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<CategoryModel>> updateCategoryRequest({
+    required UpdateCategoryParams params,
+  }) async {
+    final result = await RemoteDataSource.request<CategoryModel>(
+      withAuthentication: false,
+      url: '$categoriesUrl/${params.id}',
+      method: HttpMethod.PUT,
+      data: params.toJson(),
+      converter: (json) => CategoryModel.fromJson(json),
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<dynamic>> deleteCategoryRequest({
+    required CategoryActionParams params,
+  }) async {
+    final result = await RemoteDataSource.request<dynamic>(
+      withAuthentication: false,
+      url: '$categoriesUrl/${params.id}',
+      method: HttpMethod.DELETE,
+      converter: (json) => json,
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<CategoryModel>> activateCategoryRequest({
+    required CategoryActionParams params,
+  }) async {
+    final result = await RemoteDataSource.request<CategoryModel>(
+      withAuthentication: false,
+      url: '$categoriesUrl/${params.id}/activate',
+      method: HttpMethod.PUT,
+      converter: (json) => CategoryModel.fromJson(json),
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<CategoryModel>> deactivateCategoryRequest({
+    required CategoryActionParams params,
+  }) async {
+    final result = await RemoteDataSource.request<CategoryModel>(
+      withAuthentication: false,
+      url: '$categoriesUrl/${params.id}/deactivate',
+      method: HttpMethod.PUT,
       converter: (json) => CategoryModel.fromJson(json),
     );
 

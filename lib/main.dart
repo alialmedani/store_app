@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/features/home/cubit/home_cubit.dart';
+import 'package:store/features/store/brands/cubit/brands_cubit.dart';
 import 'package:store/features/store/categories/cubit/categories_cubit.dart';
 import 'package:store/features/store/create_product/cubit/create_product_cubit.dart';
 import 'package:store/features/store/lookups/cubit/lookups_cubit.dart';
@@ -49,14 +50,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => LookupsCubit()),
         BlocProvider(create: (context) => StoreRootCubit()),
         BlocProvider(create: (context) => CategoriesCubit()),
-        // BlocProvider(create: (context) => RootCubit()),
-        // BlocProvider(create: (context) => ProfileCubit()),
-        // BlocProvider(create: (context) => OfficeBoyCubit()),
-        // BlocProvider(create: (context) => AuthCubit()),
-        // BlocProvider(create: (context) => DrinkCubit()),
-        // BlocProvider(create: (context) => CartCubit()),
-        // BlocProvider(create: (context) => OrderCubit()),
-        // BlocProvider(create: (context) => PlaceCubit()),
+        BlocProvider(create: (context) => BrandsCubit()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,
