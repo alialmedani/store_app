@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/core/utils/Navigation/navigation.dart';
+import 'package:store/features/store/create_product/screen/create_product_screen.dart';
 import 'package:store/features/store/product_details/screen/product_details_screen.dart';
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
@@ -55,6 +56,12 @@ class HomeScreen extends StatelessWidget {
               },
             );
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigation.push(const CreateProductScreen());
+          },
+          child: const Icon(Icons.add),
         ),
       ),
     );
