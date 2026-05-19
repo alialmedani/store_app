@@ -1,3 +1,6 @@
+import 'package:store/features/store/lookups/data/model/size_group_model.dart';
+import 'package:store/features/store/lookups/data/usecase/get_size_groups_usecase.dart';
+
 import '../../../../../core/data_source/remote_data_source.dart';
 import '../../../../../core/http/http_method.dart';
 import '../../../../../core/repository/core_repository.dart';
@@ -29,6 +32,23 @@ class LookupsRepository extends CoreRepository {
       converter: (json) {
         final List<dynamic> data = json['items'] ?? [];
         return data.map((item) => LookupModel.fromJson(item)).toList();
+      },
+    );
+
+    return paginatedCall(result: result);
+  }
+
+  Future<Result<List<SizeGroupModel>>> getSizeGroupsRequest({
+    required GetSizeGroupsParams params,
+  }) async {
+    final result = await RemoteDataSource.request<List<SizeGroupModel>>(
+      withAuthentication: false,
+      url: '$baseUrl/api/SizeGroups',
+      method: HttpMethod.GET,
+      queryParameters: params.toJson(),
+      converter: (json) {
+        final List<dynamic> data = json['items'] ?? [];
+        return data.map((item) => SizeGroupModel.fromJson(item)).toList();
       },
     );
 

@@ -7,6 +7,8 @@ import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/core/ui/screens/splash_screen.dart';
 import 'package:store/features/home/cubit/home_cubit.dart';
 import 'package:store/features/home/screen/home_screen.dart';
+import 'package:store/features/store/create_product/cubit/create_product_cubit.dart';
+import 'package:store/features/store/lookups/cubit/lookups_cubit.dart';
 import 'package:store/features/store/product_details/cubit/product_details_cubit.dart';
 import 'core/classes/keys.dart';
 import 'core/classes/notification.dart';
@@ -43,7 +45,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => HomeCubit()),
         BlocProvider(create: (context) => ProductDetailsCubit()),
-
+        BlocProvider(create: (context) => CreateProductCubit()),
+        BlocProvider(create: (context) => LookupsCubit()),
         // BlocProvider(create: (context) => RootCubit()),
         // BlocProvider(create: (context) => ProfileCubit()),
         // BlocProvider(create: (context) => OfficeBoyCubit()),

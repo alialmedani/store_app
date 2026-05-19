@@ -6,7 +6,7 @@ import '../repository/create_product_repository.dart';
 
 class CreateProductVariantParams {
   String color;
-  String size;
+  int? sizeOptionId;
   int quantity;
   String? sku;
   String? imageUrl;
@@ -14,7 +14,7 @@ class CreateProductVariantParams {
 
   CreateProductVariantParams({
     required this.color,
-    required this.size,
+    this.sizeOptionId,
     required this.quantity,
     this.sku,
     this.imageUrl,
@@ -24,10 +24,11 @@ class CreateProductVariantParams {
   Map<String, dynamic> toJson() {
     return {
       'color': color,
-      'size': size,
+      'sizeOptionId': sizeOptionId,
       'quantity': quantity,
-      'sku': sku,
-      'imageUrl': imageUrl,
+      if (sku != null && sku!.trim().isNotEmpty) 'sku': sku,
+      if (imageUrl != null && imageUrl!.trim().isNotEmpty)
+        'imageUrl': imageUrl,
       'isActive': isActive,
     };
   }
@@ -56,8 +57,10 @@ class CreateProductWithVariantsParams extends BaseParams {
     return {
       'name': name,
       'price': price,
-      'description': description,
-      'imageUrl': imageUrl,
+      if (description != null && description!.trim().isNotEmpty)
+        'description': description,
+      if (imageUrl != null && imageUrl!.trim().isNotEmpty)
+        'imageUrl': imageUrl,
       'categoryId': categoryId,
       'brandId': brandId,
       'variants': variants.map((e) => e.toJson()).toList(),
