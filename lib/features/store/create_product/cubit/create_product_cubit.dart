@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 
-import '../../../../core/results/result.dart';
 import '../../brands/data/repository/brand_repository.dart';
 import '../../brands/data/usecase/brand_usecase.dart';
 import '../../categories/data/repository/category_repository.dart';
@@ -8,6 +7,7 @@ import '../../categories/data/usecase/category_usecase.dart';
 import '../../lookups/data/model/lookup_model.dart';
 import '../../lookups/data/model/size_group_model.dart';
 import '../../lookups/data/repository/lookups_repository.dart';
+import '../../lookups/data/usecase/create_size_group_usecase.dart';
 import '../../lookups/data/usecase/get_brands_usecase.dart' as lookup_brands;
 import '../../lookups/data/usecase/get_categories_usecase.dart'
     as lookup_categories;
@@ -24,6 +24,9 @@ class CreateProductCubit extends Cubit<CreateProductState> {
 
   bool isLoadingLookups = false;
   bool isLoadingSizes = false;
+  bool isCreatingCategory = false;
+  bool isCreatingBrand = false;
+  bool isCreatingSizeGroup = false;
   bool isSubmitting = false;
 
   List<LookupModel> categories = [];
@@ -38,6 +41,10 @@ class CreateProductCubit extends Cubit<CreateProductState> {
 
   String newBrandName = '';
   String? newBrandDescription;
+
+  String newSizeGroupName = '';
+  String? newSizeGroupDescription;
+  String newSizeOptionsText = '';
 
   CreateProductWithVariantsParams params = CreateProductWithVariantsParams(
     name: '',
@@ -80,21 +87,15 @@ class CreateProductCubit extends Cubit<CreateProductState> {
     emit(CreateProductChanged());
   }
 
-  void setProductName(String value) {
-    params.name = value;
-  }
+  void setProductName(String value) => params.name = value;
 
   void setPrice(String value) {
     params.price = double.tryParse(value) ?? 0;
   }
 
-  void setDescription(String value) {
-    params.description = value;
-  }
+  void setDescription(String value) => params.description = value;
 
-  void setMainImageUrl(String value) {
-    params.imageUrl = value;
-  }
+  void setMainImageUrl(String value) => params.imageUrl = value;
 
   Future<void> setCategory(int? id) async {
     params.categoryId = id;
@@ -124,27 +125,24 @@ class CreateProductCubit extends Cubit<CreateProductState> {
       return;
     }
 
-    emit(CreateProductLoading());
+    isCreatingCategory = true;
+    emit(CreateProductChanged());
 
-    final result = await CreateCategoryUsecase(
-      CategoryRepository(),
-    ).call(
+    final result = await CreateCategoryUsecase(CategoryRepository()).call(
       params: CreateCategoryParams(
         name: newCategoryName.trim(),
         description: newCategoryDescription,
       ),
     );
 
-    if (result.hasDataOnly) {
-      final category = result.data;
+    isCreatingCategory = false;
 
-      if (category?.id == null) {
-        emit(CreateProductError('Created category id is missing'));
-        return;
-      }
-
+    if (result.hasDataOnly && result.data?.id != null) {
       await loadCategoriesAndBrands();
-      await setCategory(category!.id);
+      await setCategory(result.data!.id);
+
+      currentStep = 2;
+
       emit(CreateProductChanged());
     } else {
       emit(CreateProductError(result.error.toString()));
@@ -157,27 +155,21 @@ class CreateProductCubit extends Cubit<CreateProductState> {
       return;
     }
 
-    emit(CreateProductLoading());
+    isCreatingBrand = true;
+    emit(CreateProductChanged());
 
-    final result = await CreateBrandUsecase(
-      BrandRepository(),
-    ).call(
+    final result = await CreateBrandUsecase(BrandRepository()).call(
       params: CreateBrandParams(
         name: newBrandName.trim(),
         description: newBrandDescription,
       ),
     );
 
-    if (result.hasDataOnly) {
-      final brand = result.data;
+    isCreatingBrand = false;
 
-      if (brand?.id == null) {
-        emit(CreateProductError('Created brand id is missing'));
-        return;
-      }
-
+    if (result.hasDataOnly && result.data?.id != null) {
       await loadCategoriesAndBrands();
-      setBrand(brand!.id);
+      setBrand(result.data!.id);
       emit(CreateProductChanged());
     } else {
       emit(CreateProductError(result.error.toString()));
@@ -188,9 +180,7 @@ class CreateProductCubit extends Cubit<CreateProductState> {
     isLoadingSizes = true;
     emit(CreateProductChanged());
 
-    final result = await GetSizeGroupsUsecase(
-      LookupsRepository(),
-    ).call(
+    final result = await GetSizeGroupsUsecase(LookupsRepository()).call(
       params: GetSizeGroupsParams(categoryId: categoryId),
     );
 
@@ -222,6 +212,60 @@ class CreateProductCubit extends Cubit<CreateProductState> {
     }
 
     emit(CreateProductChanged());
+  }
+
+  Future<void> createNewSizeGroup() async {
+    if (params.categoryId == null) {
+      emit(CreateProductError('Select category first'));
+      return;
+    }
+
+    if (newSizeGroupName.trim().isEmpty) {
+      emit(CreateProductError('Size group name is required'));
+      return;
+    }
+
+    final options = newSizeOptionsText
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+
+    if (options.isEmpty) {
+      emit(CreateProductError('Size options are required'));
+      return;
+    }
+
+    isCreatingSizeGroup = true;
+    emit(CreateProductChanged());
+
+    final result = await CreateSizeGroupUsecase(LookupsRepository()).call(
+      params: CreateSizeGroupParams(
+        categoryId: params.categoryId!,
+        name: newSizeGroupName.trim(),
+        description: newSizeGroupDescription,
+        sizeOptions: List.generate(
+          options.length,
+          (index) => CreateSizeOptionParams(
+            name: options[index],
+            sortOrder: index + 1,
+          ),
+        ),
+      ),
+    );
+
+    isCreatingSizeGroup = false;
+
+    if (result.hasDataOnly && result.data?.id != null) {
+      await loadSizeGroupsByCategory(params.categoryId!);
+      setSizeGroup(result.data!.id);
+
+      currentStep = 3;
+
+      emit(CreateProductChanged());
+    } else {
+      emit(CreateProductError(result.error.toString()));
+    }
   }
 
   void addVariant() {
@@ -273,7 +317,7 @@ class CreateProductCubit extends Cubit<CreateProductState> {
     }
 
     if (params.price <= 0) {
-      emit(CreateProductError('Price is required'));
+      emit(CreateProductError('Price must be greater than 0'));
       return false;
     }
 
@@ -326,11 +370,7 @@ class CreateProductCubit extends Cubit<CreateProductState> {
           '${variant.color.trim().toLowerCase()}-${variant.sizeOptionId}';
 
       if (seen.contains(key)) {
-        emit(
-          CreateProductError(
-            'Duplicate variant color and size is not allowed',
-          ),
-        );
+        emit(CreateProductError('Duplicate color + size is not allowed'));
         return false;
       }
 
@@ -364,14 +404,12 @@ class CreateProductCubit extends Cubit<CreateProductState> {
     emit(CreateProductChanged());
   }
 
-  Future<Result<dynamic>> createProduct() async {
+  Future<void> submit() async {
     if (!validateStep1() ||
         !validateStep2() ||
         !validateStep3() ||
         !validateStep4()) {
-      return await Future.value(
-        Result(error: 'Validation failed'),
-      );
+      return;
     }
 
     isSubmitting = true;
@@ -382,8 +420,11 @@ class CreateProductCubit extends Cubit<CreateProductState> {
     ).call(params: params);
 
     isSubmitting = false;
-    emit(CreateProductChanged());
 
-    return result;
+    if (result.hasDataOnly) {
+      emit(CreateProductSuccess(result.data));
+    } else {
+      emit(CreateProductError(result.error.toString()));
+    }
   }
 }

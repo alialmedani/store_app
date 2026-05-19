@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/create_product_cubit.dart';
-import '../data/model/create_product_response_model.dart';
 
 class CreateProductScreen extends StatefulWidget {
   const CreateProductScreen({super.key});
@@ -15,9 +14,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      context.read<CreateProductCubit>().init();
-    });
+    Future.microtask(() => context.read<CreateProductCubit>().init());
   }
 
   @override
@@ -42,32 +39,18 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         final cubit = context.read<CreateProductCubit>();
 
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Create Product'),
-          ),
+          appBar: AppBar(title: const Text('Create Product')),
           body: cubit.isLoadingLookups
               ? const Center(child: CircularProgressIndicator())
               : Stepper(
                   currentStep: cubit.currentStep,
                   type: StepperType.vertical,
-                  onStepContinue: () async {
+                  onStepContinue: () {
                     if (cubit.currentStep == 3) {
-                      final result = await cubit.createProduct();
-
-                      if (result.hasDataOnly && context.mounted) {
-                        context.read<CreateProductCubit>().emit(
-                              CreateProductSuccess(result.data),
-                            );
-                      } else if (!result.hasDataOnly && context.mounted) {
-                        context.read<CreateProductCubit>().emit(
-                              CreateProductError(result.error.toString()),
-                            );
-                      }
-
-                      return;
+                      cubit.submit();
+                    } else {
+                      cubit.nextStep();
                     }
-
-                    cubit.nextStep();
                   },
                   onStepCancel: cubit.previousStep,
                   controlsBuilder: (context, details) {
@@ -102,26 +85,22 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       ),
                     );
                   },
-                  steps: [
+                  steps: const [
                     Step(
-                      title: const Text('Product Basic Info'),
-                      isActive: cubit.currentStep >= 0,
-                      content: const _ProductBasicInfoStep(),
+                      title: Text('Product Basic Info'),
+                      content: _ProductBasicInfoStep(),
                     ),
                     Step(
-                      title: const Text('Category & Brand'),
-                      isActive: cubit.currentStep >= 1,
-                      content: const _CategoryBrandStep(),
+                      title: Text('Category & Brand'),
+                      content: _CategoryBrandStep(),
                     ),
                     Step(
-                      title: const Text('Size System'),
-                      isActive: cubit.currentStep >= 2,
-                      content: const _SizeSystemStep(),
+                      title: Text('Size System'),
+                      content: _SizeSystemStep(),
                     ),
                     Step(
-                      title: const Text('Variants'),
-                      isActive: cubit.currentStep >= 3,
-                      content: const _VariantsStep(),
+                      title: Text('Variants'),
+                      content: _VariantsStep(),
                     ),
                   ],
                 ),
@@ -141,32 +120,24 @@ class _ProductBasicInfoStep extends StatelessWidget {
     return Column(
       children: [
         TextFormField(
-          decoration: const InputDecoration(
-            labelText: 'Product Name',
-          ),
+          decoration: const InputDecoration(labelText: 'Product Name'),
           onChanged: cubit.setProductName,
         ),
         const SizedBox(height: 12),
         TextFormField(
-          decoration: const InputDecoration(
-            labelText: 'Price',
-          ),
+          decoration: const InputDecoration(labelText: 'Price'),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onChanged: cubit.setPrice,
         ),
         const SizedBox(height: 12),
         TextFormField(
-          decoration: const InputDecoration(
-            labelText: 'Description',
-          ),
+          decoration: const InputDecoration(labelText: 'Description'),
           maxLines: 2,
           onChanged: cubit.setDescription,
         ),
         const SizedBox(height: 12),
         TextFormField(
-          decoration: const InputDecoration(
-            labelText: 'Main Image URL',
-          ),
+          decoration: const InputDecoration(labelText: 'Main Image URL'),
           onChanged: cubit.setMainImageUrl,
         ),
       ],
@@ -184,95 +155,69 @@ class _CategoryBrandStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Use Existing Category',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        const Text('Use Existing Category'),
         const SizedBox(height: 8),
         DropdownButtonFormField<int>(
           value: cubit.params.categoryId,
           decoration: const InputDecoration(labelText: 'Category'),
           items: cubit.categories
               .map(
-                (category) => DropdownMenuItem<int>(
-                  value: category.id,
-                  child: Text(category.name ?? ''),
+                (e) => DropdownMenuItem<int>(
+                  value: e.id,
+                  child: Text(e.name ?? ''),
                 ),
               )
               .toList(),
           onChanged: cubit.setCategory,
         ),
-        const SizedBox(height: 16),
-        const Divider(),
-        const Text(
-          'Or Create New Category',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
+        const Divider(height: 32),
+        const Text('Create New Category'),
         TextFormField(
-          decoration: const InputDecoration(labelText: 'New Category Name'),
-          onChanged: (value) {
-            cubit.newCategoryName = value;
-          },
+          decoration: const InputDecoration(labelText: 'Category Name'),
+          onChanged: (value) => cubit.newCategoryName = value,
         ),
-        const SizedBox(height: 8),
         TextFormField(
-          decoration:
-              const InputDecoration(labelText: 'New Category Description'),
-          onChanged: (value) {
-            cubit.newCategoryDescription = value;
-          },
+          decoration: const InputDecoration(labelText: 'Category Description'),
+          onChanged: (value) => cubit.newCategoryDescription = value,
         ),
         const SizedBox(height: 8),
-        OutlinedButton.icon(
-          onPressed: cubit.createNewCategory,
-          icon: const Icon(Icons.add),
-          label: const Text('Create Category & Use It'),
+        OutlinedButton(
+          onPressed: cubit.isCreatingCategory ? null : cubit.createNewCategory,
+          child: Text(
+            cubit.isCreatingCategory ? 'Creating...' : 'Create Category & Use',
+          ),
         ),
         const SizedBox(height: 24),
-        const Text(
-          'Use Existing Brand',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
+        const Text('Use Existing Brand'),
         DropdownButtonFormField<int>(
           value: cubit.params.brandId,
           decoration: const InputDecoration(labelText: 'Brand'),
           items: cubit.brands
               .map(
-                (brand) => DropdownMenuItem<int>(
-                  value: brand.id,
-                  child: Text(brand.name ?? ''),
+                (e) => DropdownMenuItem<int>(
+                  value: e.id,
+                  child: Text(e.name ?? ''),
                 ),
               )
               .toList(),
           onChanged: cubit.setBrand,
         ),
-        const SizedBox(height: 16),
-        const Divider(),
-        const Text(
-          'Or Create New Brand',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
+        const Divider(height: 32),
+        const Text('Create New Brand'),
         TextFormField(
-          decoration: const InputDecoration(labelText: 'New Brand Name'),
-          onChanged: (value) {
-            cubit.newBrandName = value;
-          },
+          decoration: const InputDecoration(labelText: 'Brand Name'),
+          onChanged: (value) => cubit.newBrandName = value,
         ),
-        const SizedBox(height: 8),
         TextFormField(
-          decoration: const InputDecoration(labelText: 'New Brand Description'),
-          onChanged: (value) {
-            cubit.newBrandDescription = value;
-          },
+          decoration: const InputDecoration(labelText: 'Brand Description'),
+          onChanged: (value) => cubit.newBrandDescription = value,
         ),
         const SizedBox(height: 8),
-        OutlinedButton.icon(
-          onPressed: cubit.createNewBrand,
-          icon: const Icon(Icons.add),
-          label: const Text('Create Brand & Use It'),
+        OutlinedButton(
+          onPressed: cubit.isCreatingBrand ? null : cubit.createNewBrand,
+          child: Text(
+            cubit.isCreatingBrand ? 'Creating...' : 'Create Brand & Use',
+          ),
         ),
       ],
     );
@@ -287,7 +232,7 @@ class _SizeSystemStep extends StatelessWidget {
     final cubit = context.read<CreateProductCubit>();
 
     if (cubit.params.categoryId == null) {
-      return const Text('Please select category first.');
+      return const Text('Select category first.');
     }
 
     return Column(
@@ -296,49 +241,54 @@ class _SizeSystemStep extends StatelessWidget {
         if (cubit.isLoadingSizes)
           const Center(child: CircularProgressIndicator())
         else ...[
-          const Text(
-            'Use Existing Size Group',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
+          const Text('Use Existing Size Group'),
           DropdownButtonFormField<int>(
             value: cubit.selectedSizeGroupId,
             decoration: const InputDecoration(labelText: 'Size Group'),
             items: cubit.sizeGroups
                 .map(
-                  (group) => DropdownMenuItem<int>(
-                    value: group.id,
-                    child: Text(group.name ?? ''),
+                  (e) => DropdownMenuItem<int>(
+                    value: e.id,
+                    child: Text(e.name ?? ''),
                   ),
                 )
                 .toList(),
             onChanged: cubit.setSizeGroup,
           ),
           const SizedBox(height: 12),
-          if (cubit.sizeOptions.isNotEmpty)
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: cubit.sizeOptions
-                  .map(
-                    (size) => Chip(
-                      label: Text(size.name ?? ''),
-                    ),
-                  )
-                  .toList(),
-            )
-          else
-            const Text('No size options loaded.'),
-          const SizedBox(height: 16),
-          const Divider(),
-          const Text(
-            'Create New Size Group / Size Options',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Wrap(
+            spacing: 8,
+            children: cubit.sizeOptions
+                .map((e) => Chip(label: Text(e.name ?? '')))
+                .toList(),
+          ),
+          const Divider(height: 32),
+          const Text('Create New Size Group'),
+          TextFormField(
+            decoration: const InputDecoration(labelText: 'Size Group Name'),
+            onChanged: (value) => cubit.newSizeGroupName = value,
+          ),
+          TextFormField(
+            decoration:
+                const InputDecoration(labelText: 'Size Group Description'),
+            onChanged: (value) => cubit.newSizeGroupDescription = value,
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Size Options',
+              hintText: 'S,M,L,XL',
+            ),
+            onChanged: (value) => cubit.newSizeOptionsText = value,
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Required backend endpoint: create size group and create size options. '
-            'Currently this screen only uses existing size groups.',
+          OutlinedButton(
+            onPressed:
+                cubit.isCreatingSizeGroup ? null : cubit.createNewSizeGroup,
+            child: Text(
+              cubit.isCreatingSizeGroup
+                  ? 'Creating...'
+                  : 'Create Size Group & Use',
+            ),
           ),
         ],
       ],
@@ -354,7 +304,6 @@ class _VariantsStep extends StatelessWidget {
     final cubit = context.read<CreateProductCubit>();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...List.generate(cubit.params.variants.length, (index) {
           final variant = cubit.params.variants[index];
@@ -367,10 +316,7 @@ class _VariantsStep extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        'Variant ${index + 1}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      Text('Variant ${index + 1}'),
                       const Spacer(),
                       IconButton(
                         onPressed: () => cubit.removeVariant(index),
@@ -380,9 +326,7 @@ class _VariantsStep extends StatelessWidget {
                   ),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Color'),
-                    onChanged: (value) {
-                      cubit.setVariantColor(index, value);
-                    },
+                    onChanged: (value) => cubit.setVariantColor(index, value),
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
@@ -390,9 +334,9 @@ class _VariantsStep extends StatelessWidget {
                     decoration: const InputDecoration(labelText: 'Size'),
                     items: cubit.sizeOptions
                         .map(
-                          (size) => DropdownMenuItem<int>(
-                            value: size.id,
-                            child: Text(size.name ?? ''),
+                          (e) => DropdownMenuItem<int>(
+                            value: e.id,
+                            child: Text(e.name ?? ''),
                           ),
                         )
                         .toList(),
@@ -411,9 +355,7 @@ class _VariantsStep extends StatelessWidget {
                   const SizedBox(height: 12),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'SKU'),
-                    onChanged: (value) {
-                      cubit.setVariantSku(index, value);
-                    },
+                    onChanged: (value) => cubit.setVariantSku(index, value),
                   ),
                   const SizedBox(height: 12),
                   TextFormField(

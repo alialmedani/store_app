@@ -1,11 +1,11 @@
-import 'package:store/features/store/lookups/data/model/size_group_model.dart';
-import 'package:store/features/store/lookups/data/usecase/get_size_groups_usecase.dart';
-
 import '../../../../../core/data_source/remote_data_source.dart';
 import '../../../../../core/http/http_method.dart';
 import '../../../../../core/repository/core_repository.dart';
 import '../../../../../core/results/result.dart';
 import '../model/lookup_model.dart';
+import '../model/size_group_model.dart';
+import '../usecase/create_size_group_usecase.dart';
+import '../usecase/get_size_groups_usecase.dart';
 
 const String baseUrl = 'http://10.200.0.112:7151';
 
@@ -53,5 +53,19 @@ class LookupsRepository extends CoreRepository {
     );
 
     return paginatedCall(result: result);
+  }
+
+  Future<Result<SizeGroupModel>> createSizeGroupRequest({
+    required CreateSizeGroupParams params,
+  }) async {
+    final result = await RemoteDataSource.request<SizeGroupModel>(
+      withAuthentication: false,
+      url: '$baseUrl/api/SizeGroups',
+      method: HttpMethod.POST,
+      data: params.toJson(),
+      converter: (json) => SizeGroupModel.fromJson(json),
+    );
+
+    return call(result: result);
   }
 }

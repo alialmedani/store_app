@@ -6,16 +6,14 @@ class CreateProductInitial extends CreateProductState {}
 
 class CreateProductChanged extends CreateProductState {}
 
-class CreateProductLoading extends CreateProductState {}
+class CreateProductError extends CreateProductState {
+  final String message;
+
+  CreateProductError(this.message);
+}
 
 class CreateProductSuccess extends CreateProductState {
   final dynamic data;
 
   CreateProductSuccess(this.data);
-}
-
-class CreateProductError extends CreateProductState {
-  final String message;
-
-  CreateProductError(this.message);
 }
