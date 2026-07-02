@@ -7,7 +7,8 @@ const setDeviceIdUrl = '$baseUrl/api/app/user-device/set-device-id';
 // ========== File Upload URLs ==========
 const uploadFileUrl = '$baseUrl/api/app/file/upload';
 
-String getFileByNameUrl(String fileName) => '$baseUrl/api/app/file/by-file-name/$fileName';
+String getFileByNameUrl(String fileName) =>
+    '$baseUrl/api/app/file/by-file-name/$fileName';
 
 // ========== Category URLs ==========
 const createCategoryUrl = '$baseUrl/api/app/category';

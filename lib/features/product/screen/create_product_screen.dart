@@ -102,7 +102,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     }
 
     // Check if image was selected but upload failed
-    if (cubit.selectedImageFile != null && 
+    if (cubit.selectedImageFile != null &&
         cubit.createProductParams.imageUrl.isEmpty) {
       showDialog(
         context: context,
