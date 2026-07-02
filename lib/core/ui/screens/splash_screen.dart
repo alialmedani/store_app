@@ -1,11 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/core/constant/app_colors/app_colors.dart';
 import 'dart:ui';
-import '../../classes/cashe_helper.dart';
-import '../../classes/notification.dart';
-import '../../utils/Navigation/navigation.dart';
 
 class SplashSscreen extends StatefulWidget {
   const SplashSscreen({super.key});
@@ -36,9 +32,6 @@ class _SplashSscreenState extends State<SplashSscreen>
 
   void _checkUserAuthentication() async {
     _startAnimations();
-
-    bool shouldNavigateToRoot = false;
-    bool shouldNavigateToOfficeboy = false;
 
     // try {
     //   final result = await context.read<ProfileCubit>().fetchCurrentCustomer();

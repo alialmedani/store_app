@@ -1,10 +1,8 @@
 
-import 'package:store/core/results/result.dart';
 import '../../classes/cashe_helper.dart';
 
 Future<void> checkToken() async {
   if (CacheHelper.token?.isNotEmpty ?? false) {
-    DateTime? expiryDate = CacheHelper.datenow;
       //to doo 
 
     // if (DateTime.now().isAfter(expiryDate!)) {

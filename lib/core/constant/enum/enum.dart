@@ -1,3 +1,49 @@
+enum SizeType {
+  none,
+  clothing,
+  shoes,
+  oneSize,
+  kidsAge,
+  custom;
+
+  static SizeType? fromInt(int? value) {
+    switch (value) {
+      case 1:
+        return SizeType.none;
+      case 2:
+        return SizeType.clothing;
+      case 3:
+        return SizeType.shoes;
+      case 4:
+        return SizeType.oneSize;
+      case 5:
+        return SizeType.kidsAge;
+      case 6:
+        return SizeType.custom;
+
+      default:
+        return null;
+    }
+  }
+
+  int toInt() {
+    switch (this) {
+      case SizeType.none:
+        return 1;
+      case SizeType.clothing:
+        return 2;
+      case SizeType.shoes:
+        return 3;
+      case SizeType.oneSize:
+        return 4;
+      case SizeType.kidsAge:
+        return 5;
+      case SizeType.custom:
+        return 6;
+    }
+  }
+}
+
 enum EntityType {
   drink,
   user,

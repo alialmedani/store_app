@@ -1,17 +1,13 @@
-const baseUrl = 'http://10.200.0.112:7151/';
-const getProductsUrl = '${baseUrl}api/Products';
-const createProductWithVariantsUrl =
-    '${baseUrl}api/Products/create-with-variants';
+const String baseUrl = 'https://10.0.2.2:5000';
 
-String getProductDetailsUrl(int id) => '${baseUrl}api/Products/$id/details';
+// ========== Auth URLs ==========
+const loginUrl = '$baseUrl/connect/token';
+const registerUrl = '$baseUrl/api/account/register';
+const appConfigUrl = '$baseUrl/api/abp/application-configuration';
+const setDeviceIdUrl = '$baseUrl/api/app/user-device/set-device-id';
 
-const getCategoriesUrl = '${baseUrl}api/Categories';
-const getBrandsUrl = '${baseUrl}api/Brands';
+// ========== Category URLs ==========
+const createCategoryUrl = '$baseUrl/api/app/category';
+const String getCategoryListUrl = '$baseUrl/api/app/category';
 
-const getProductVariantsUrl = '${baseUrl}api/ProductVariants';
-
-String increaseVariantStockUrl(int id) =>
-    '${baseUrl}api/ProductVariants/$id/increase-stock';
-
-String decreaseVariantStockUrl(int id) =>
-    '${baseUrl}api/ProductVariants/$id/decrease-stock';
+// ========== Product URLs ==========
