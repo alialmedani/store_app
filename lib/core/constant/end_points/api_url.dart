@@ -1,6 +1,4 @@
-const String baseUrl = 'https://10.0.2.2:5000';
-
-// ========== Auth URLs ==========
+const String baseUrl = 'http://10.0.2.2:5000';
 const loginUrl = '$baseUrl/connect/token';
 const registerUrl = '$baseUrl/api/account/register';
 const appConfigUrl = '$baseUrl/api/abp/application-configuration';

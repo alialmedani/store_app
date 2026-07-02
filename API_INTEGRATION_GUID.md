@@ -1082,3 +1082,4 @@ See reference implementations:
 
 *Last Updated: 2025-01-29*
 *Architecture Version: 1.0*
+Architecture

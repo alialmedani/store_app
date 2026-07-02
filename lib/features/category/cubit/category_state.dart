@@ -1,15 +1,10 @@
 part of 'category_cubit.dart';
 
 @immutable
-abstract class CategoryState {}
+sealed class CategoryState {}
 
-class CategoryInitial extends CategoryState {}
+final class CategoryInitial extends CategoryState {}
 
-class CategoryLoading extends CategoryState {}
+final class UpdateCategoryParams extends CategoryState {}
 
-class CategorySuccess extends CategoryState {}
-
-class CategoryError extends CategoryState {
-  final String message;
-  CategoryError(this.message);
-}
+final class CategoryValidationError extends CategoryState {}

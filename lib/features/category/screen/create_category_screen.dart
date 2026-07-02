@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-import '../../../core/boilerplate/create_model/widgets/create_model.dart';
-import '../../../core/constant/enum/enum.dart';
-import '../../../core/ui/widgets/custom_button.dart';
-import '../../../core/ui/widgets/custom_text_form_field.dart';
+import '../../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
+import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
 
+/// Create Category Screen - Form to create new category
+/// Uses CreateModel widget for state management
+/// Uses shadcn_flutter components
 class CreateCategoryScreen extends StatefulWidget {
   const CreateCategoryScreen({super.key});
 
@@ -16,15 +17,22 @@ class CreateCategoryScreen extends StatefulWidget {
 }
 
 class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
-  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  late CategoryCubit _cubit;
+  CreateModelCubit? createModelCubit;
 
-  @override
-  void initState() {
-    super.initState();
-    _cubit = CategoryCubit();
+  bool _validateFields(CategoryCubit cubit) {
+    bool isValid = true;
+
+    // Validate name
+    if (_nameController.text.trim().isEmpty) {
+      cubit.setNameError('Category name is required');
+      isValid = false;
+    } else {
+      cubit.clearNameError();
+    }
+
+    return isValid;
   }
 
   @override
@@ -36,166 +44,317 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _cubit,
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Create Category')),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                // Name Field
-                CustomTextFormField(
-                  controller: _nameController,
-                  labelText: 'Category Name',
-                  hintText: 'e.g., T-Shirts, Jeans, Shoes',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a category name';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _cubit.createCategoryParams.name = value;
-                  },
-                ),
-                const SizedBox(height: 16),
+    final cubit = context.read<CategoryCubit>();
 
-                // Description Field
-                CustomTextFormField(
-                  controller: _descriptionController,
-                  labelText: 'Description',
-                  hintText: 'e.g., Cotton T-Shirts collection',
-                  maxLines: 3,
-                  onChanged: (value) {
-                    _cubit.createCategoryParams.description = value;
-                  },
-                ),
-                const SizedBox(height: 24),
+    return Scaffold(
+      child: SafeArea(
+        child: Column(
+          children: [
+            // App Bar
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
+                    variance: ButtonVariance.ghost,
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Create Category',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-                // Size Type Selector
-                const Text(
-                  'Size Type',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 12),
-                BlocBuilder<CategoryCubit, CategoryState>(
-                  builder: (context, state) {
-                    return Column(
+            // Form Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildSizeTypeOption(
-                          _cubit,
-                          SizeType.none,
-                          'None',
-                          'For accessories',
+                        // Name Field
+                        BlocBuilder<CategoryCubit, CategoryState>(
+                          builder: (context, state) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Category Name',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                TextField(
+                                  controller: _nameController,
+                                  placeholder: const Text('Enter category name'),
+                                  onChanged: (value) {
+                                    cubit.createCategoryParams.name = value;
+                                    cubit.clearNameError();
+                                  },
+                                ),
+                                if (cubit.nameError != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      cubit.nameError!,
+                                      style: const TextStyle(
+                                        color: Color(0xFFEF4444),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
                         ),
-                        _buildSizeTypeOption(
-                          _cubit,
-                          SizeType.clothing,
-                          'Clothing',
-                          'S, M, L, XL or 38, 40, 42, 44',
+                        const SizedBox(height: 16),
+
+                        // Description Field
+                        const Text(
+                          'Description',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                        _buildSizeTypeOption(
-                          _cubit,
-                          SizeType.shoes,
-                          'Shoes',
-                          'US, EU, UK sizing',
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: _descriptionController,
+                          placeholder: const Text('Enter description (optional)'),
+                          maxLines: 3,
+                          onChanged: (value) {
+                            cubit.createCategoryParams.description = value;
+                          },
                         ),
-                        _buildSizeTypeOption(
-                          _cubit,
-                          SizeType.oneSize,
-                          'One Size',
-                          'One size fits all',
+                        const SizedBox(height: 16),
+
+                        // Size Type Selection
+                        BlocBuilder<CategoryCubit, CategoryState>(
+                          builder: (context, state) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Size Type',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: [
+                                    _SizeTypeChip(
+                                      label: 'None',
+                                      value: 1,
+                                      selectedValue: cubit.selectedSizeType,
+                                      onSelected: (value) => cubit.selectSizeType(value),
+                                    ),
+                                    _SizeTypeChip(
+                                      label: 'Clothing',
+                                      value: 2,
+                                      selectedValue: cubit.selectedSizeType,
+                                      onSelected: (value) => cubit.selectSizeType(value),
+                                    ),
+                                    _SizeTypeChip(
+                                      label: 'Shoes',
+                                      value: 3,
+                                      selectedValue: cubit.selectedSizeType,
+                                      onSelected: (value) => cubit.selectSizeType(value),
+                                    ),
+                                    _SizeTypeChip(
+                                      label: 'One Size',
+                                      value: 4,
+                                      selectedValue: cubit.selectedSizeType,
+                                      onSelected: (value) => cubit.selectSizeType(value),
+                                    ),
+                                    _SizeTypeChip(
+                                      label: 'Kids Age',
+                                      value: 5,
+                                      selectedValue: cubit.selectedSizeType,
+                                      onSelected: (value) => cubit.selectSizeType(value),
+                                    ),
+                                    _SizeTypeChip(
+                                      label: 'Custom',
+                                      value: 6,
+                                      selectedValue: cubit.selectedSizeType,
+                                      onSelected: (value) => cubit.selectSizeType(value),
+                                    ),
+                                  ],
+                                ),
+                                if (cubit.sizeTypeError != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      cubit.sizeTypeError!,
+                                      style: const TextStyle(
+                                        color: Color(0xFFEF4444),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
                         ),
-                        _buildSizeTypeOption(
-                          _cubit,
-                          SizeType.kidsAge,
-                          'Kids Age',
-                          '2Y, 3Y, 4Y, 5Y',
+                        const SizedBox(height: 16),
+
+                        // Active Switch
+                        BlocBuilder<CategoryCubit, CategoryState>(
+                          builder: (context, state) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Active',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Switch(
+                                  value: cubit.createCategoryParams.isActive,
+                                  onChanged: (value) {
+                                    cubit.toggleIsActive(value);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                        _buildSizeTypeOption(
-                          _cubit,
-                          SizeType.custom,
-                          'Custom',
-                          'Custom size definition',
+                        const SizedBox(height: 32),
+
+                        // Submit Button
+                        CreateModel<CategoryModel>(
+                          withValidation: true,
+                          onCubitCreated: (createCubit) {
+                            createModelCubit = createCubit;
+                          },
+                          onTap: () {
+                            return _validateFields(cubit);
+                          },
+                          useCaseCallBack: (data) {
+                            return cubit.createCategory();
+                          },
+                          onSuccess: (categoryModel) {
+                            // Clear form
+                            cubit.createCategoryParams.name = '';
+                            cubit.createCategoryParams.description = '';
+                            cubit.createCategoryParams.sizeType = 1;
+                            cubit.createCategoryParams.isActive = true;
+                            cubit.selectedSizeType = 1;
+                            cubit.clearAllErrors();
+
+                            // Show success dialog
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('Success'),
+                                content: const Text('Category created successfully!'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(ctx);
+                                      Navigator.pop(context); // Go back to list
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          onError: (error) {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('Error'),
+                                content: Text('Failed to create category: $error'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: PrimaryButton(
+                            child: const Text('Create Category'),
+                          ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 24),
-
-                // Active Toggle
-                BlocBuilder<CategoryCubit, CategoryState>(
-                  builder: (context, state) {
-                    return SwitchListTile(
-                      title: const Text('Active'),
-                      subtitle: const Text('Show this category in the store'),
-                      value: _cubit.createCategoryParams.isActive,
-                      onChanged: (value) {
-                        setState(() {
-                          _cubit.toggleActive(value);
-                        });
-                      },
-                    );
-                  },
-                ),
-                const SizedBox(height: 32),
-
-                // Submit Button with CreateModel wrapper
-                CreateModel<CategoryModel>(
-                  useCaseCallBack: (data) => _cubit.createCategory(),
-
-                  onSuccess: (data) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Category "${data.name}" created successfully!',
-                        ),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  },
-                  onError: (error) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('Error: $error')));
-                  },
-                  withValidation: true,
-                  onTap: () => _formKey.currentState?.validate() ?? false,
-                  child: CustomButton(text: 'Create Category'),
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildSizeTypeOption(
-    CategoryCubit cubit,
-    SizeType type,
-    String title,
-    String subtitle,
-  ) {
-    final isSelected = cubit.createCategoryParams.sizeType == type;
+/// Size Type Chip Widget for selection
+class _SizeTypeChip extends StatelessWidget {
+  final String label;
+  final int value;
+  final int? selectedValue;
+  final Function(int) onSelected;
 
-    return RadioListTile<SizeType>(
-      title: Text(title),
-      subtitle: Text(subtitle),
-      value: type,
-      groupValue: cubit.createCategoryParams.sizeType,
-      onChanged: (value) {
-        if (value != null) {
-          setState(() {
-            cubit.selectSizeType(value);
-          });
-        }
-      },
-      selected: isSelected,
+  const _SizeTypeChip({
+    required this.label,
+    required this.value,
+    required this.selectedValue,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = value == selectedValue;
+    final theme = Theme.of(context);
+    
+    return GestureDetector(
+      onTap: () => onSelected(value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? theme.colorScheme.primary.withOpacity(0.1)
+              : Colors.transparent,
+          border: Border.all(
+            color: isSelected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.border,
+            width: isSelected ? 2 : 1,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            color: isSelected ? theme.colorScheme.primary : null,
+          ),
+        ),
+      ),
     );
   }
 }

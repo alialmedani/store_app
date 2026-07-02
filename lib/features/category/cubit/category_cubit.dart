@@ -1,70 +1,80 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-import 'package:store/core/constant/enum/enum.dart';
-
-import '../../../core/boilerplate/pagination/cubits/pagination_cubit.dart';
+import 'package:flutter/foundation.dart';
 import '../../../core/results/result.dart';
+import '../data/model/category_model.dart';
 import '../data/repository/category_repository.dart';
-import '../data/usecase/create_category_params.dart';
 import '../data/usecase/create_category_usecase.dart';
-import '../data/usecase/get_category_by_id_usecase.dart';
 import '../data/usecase/get_category_list_usecase.dart';
-import '../data/usecase/get_category_params.dart';
 
 part 'category_state.dart';
 
 class CategoryCubit extends Cubit<CategoryState> {
   CategoryCubit() : super(CategoryInitial());
 
-  /// Pagination cubit instance for category lists
-  PaginationCubit? categoryPagination;
-
-  /// Params for create/update operations
+  // Params
   CreateCategoryParams createCategoryParams = CreateCategoryParams(
     name: '',
     description: '',
-    sizeType: SizeType.none,
+    sizeType: 1,
     isActive: true,
   );
 
-  /// Create a new category
-  Future<Result> createCategory() async {
-    return await CreateCategoryUsecase(
-      CategoryRepository(),
-    ).call(params: createCategoryParams);
+  // UI State Variables
+  int? selectedSizeType = 1;
+
+  // Validation Error Variables
+  String? nameError;
+  String? sizeTypeError;
+
+  // UI State Methods (with emit)
+  void selectSizeType(int sizeType) {
+    selectedSizeType = sizeType;
+    createCategoryParams.sizeType = sizeType;
+    clearSizeTypeError();
+    emit(UpdateCategoryParams());
   }
 
-  /// Fetch list of categories with pagination
-  Future<Result> fetchCategoryList(data) async {
-    return await GetCategoryListUsecase(
-      CategoryRepository(),
-    ).call(params: GetCategoryParams(request: data));
-  }
-
-  /// Fetch single category by ID
-  Future<Result> fetchCategoryById(String id) async {
-    return await GetCategoryByIdUsecase(
-      CategoryRepository(),
-    ).call(params: GetCategoryParams(id: id));
-  }
-
-  /// Update selected size type
-  void selectSizeType(SizeType type) {
-    createCategoryParams.sizeType = type;
-  }
-
-  /// Toggle active status
-  void toggleActive(bool value) {
+  void toggleIsActive(bool value) {
     createCategoryParams.isActive = value;
+    emit(UpdateCategoryParams());
   }
 
-  /// Reset params to defaults
-  void resetParams() {
-    createCategoryParams = CreateCategoryParams(
-      name: '',
-      description: '',
-      sizeType: SizeType.none,
-      isActive: true,
+  void setNameError(String error) {
+    nameError = error;
+    emit(CategoryValidationError());
+  }
+
+  void clearNameError() {
+    nameError = null;
+    emit(CategoryValidationError());
+  }
+
+  void setSizeTypeError(String error) {
+    sizeTypeError = error;
+    emit(CategoryValidationError());
+  }
+
+  void clearSizeTypeError() {
+    sizeTypeError = null;
+    emit(CategoryValidationError());
+  }
+
+  void clearAllErrors() {
+    nameError = null;
+    sizeTypeError = null;
+    emit(CategoryValidationError());
+  }
+
+  // API Methods (NO emit - boilerplate handles state)
+  Future<Result<CategoryModel>> createCategory() async {
+    return await CreateCategoryUsecase(CategoryRepository()).call(
+      params: createCategoryParams,
+    );
+  }
+
+  Future<Result<List<CategoryModel>>> fetchCategoryList(data) async {
+    return await GetCategoryListUsecase(CategoryRepository()).call(
+      params: GetCategoryListParams(request: data),
     );
   }
 }

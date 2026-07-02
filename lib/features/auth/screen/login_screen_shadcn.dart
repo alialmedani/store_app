@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
+import '../../../core/boilerplate/create_model/widgets/create_model.dart';
+import '../../../core/classes/cashe_helper.dart';
+import '../../home/screen/home_screen.dart';
 import '../cubit/auth_cubit.dart';
 import '../data/model/login_model.dart';
 import 'register_screen_shadcn.dart';
@@ -159,23 +161,44 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                             useCaseCallBack: (data) {
                               return context.read<AuthCubit>().login();
                             },
-                            onSuccess: (loginModel) {
-                              // Show success message
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => AlertDialog(
-                                  title: const Text('Success'),
-                                  content: const Text('Login successful!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(ctx),
-                                      child: const Text('OK'),
+                            onSuccess: (loginModel) async {
+                              // Save token
+                              await CacheHelper.setToken(loginModel.accessToken);
+                              await CacheHelper.setRefreshToken(loginModel.refreshToken);
+                              await CacheHelper.setExpiresIn(loginModel.expiresIn ?? 0);
+                              
+                              // Fetch current user
+                              final authCubit = context.read<AuthCubit>();
+                              final userResult = await authCubit.getAppConfig();
+                              
+                              if (userResult.hasDataOnly) {
+                                authCubit.currentUser = userResult.data;
+                                
+                                // Navigate to home
+                                if (context.mounted) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
                                     ),
-                                  ],
-                                ),
-                              );
-                              // Navigate to home or save token
-                              // You can access the token via: loginModel.accessToken
+                                  );
+                                }
+                              } else {
+                                // Show error
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: const Text('Error'),
+                                    content: const Text('Failed to load user data. Please try again.'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(ctx),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                             onError: (error) {
                               // Show error message

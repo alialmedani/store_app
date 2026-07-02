@@ -5,11 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/features/auth/screen/login_screen_shadcn.dart';
-import 'package:store/features/category/screen/create_category_screen.dart';
 
 import 'core/classes/keys.dart';
 import 'features/auth/cubit/auth_cubit.dart';
-import 'features/auth/screen/login_screen.dart';
 import 'features/category/cubit/category_cubit.dart';
 
 SharedPreferences? prefs;

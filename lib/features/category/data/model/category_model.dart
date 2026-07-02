@@ -5,40 +5,79 @@ class CategoryModel {
   final String? name;
   final String? description;
   final SizeType? sizeType;
+  final String? sizeTypeName;
+  final int? sizeTypeId;
   final bool? isActive;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime? creationTime;
+  final String? creatorId;
+  final DateTime? lastModificationTime;
+  final String? lastModifierId;
+  final bool? isDeleted;
+  final String? deleterId;
+  final DateTime? deletionTime;
 
   CategoryModel({
     this.id,
     this.name,
     this.description,
     this.sizeType,
+    this.sizeTypeName,
+    this.sizeTypeId,
     this.isActive,
-    this.createdAt,
-    this.updatedAt,
+    this.creationTime,
+    this.creatorId,
+    this.lastModificationTime,
+    this.lastModifierId,
+    this.isDeleted,
+    this.deleterId,
+    this.deletionTime,
   });
 
   /// From JSON - Parse API response
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    // Handle nested sizeType object from API response
+    SizeType? parsedSizeType;
+    String? parsedSizeTypeName;
+    int? parsedSizeTypeId;
+
+    if (json['sizeType'] != null) {
+      if (json['sizeType'] is Map) {
+        // Response format: {"id": 0, "name": "string"}
+        parsedSizeTypeId = json['sizeType']['id'];
+        parsedSizeTypeName = json['sizeType']['name'];
+        parsedSizeType = SizeType.fromInt(parsedSizeTypeId);
+      } else if (json['sizeType'] is int) {
+        // Direct integer format
+        parsedSizeTypeId = json['sizeType'];
+        parsedSizeType = SizeType.fromInt(parsedSizeTypeId);
+      }
+    }
+
     return CategoryModel(
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      sizeType: json['sizeType'] != null
-          ? SizeType.fromInt(json['sizeType'])
-          : null,
+      sizeType: parsedSizeType,
+      sizeTypeName: parsedSizeTypeName,
+      sizeTypeId: parsedSizeTypeId,
       isActive: json['isActive'],
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
+      creationTime: json['creationTime'] != null
+          ? DateTime.parse(json['creationTime'])
           : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
+      creatorId: json['creatorId'],
+      lastModificationTime: json['lastModificationTime'] != null
+          ? DateTime.parse(json['lastModificationTime'])
+          : null,
+      lastModifierId: json['lastModifierId'],
+      isDeleted: json['isDeleted'],
+      deleterId: json['deleterId'],
+      deletionTime: json['deletionTime'] != null
+          ? DateTime.parse(json['deletionTime'])
           : null,
     );
   }
 
-  /// To JSON - Send to API
+  /// To JSON - Send to API (for POST/PUT requests)
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
@@ -46,8 +85,6 @@ class CategoryModel {
       if (description != null) 'description': description,
       if (sizeType != null) 'sizeType': sizeType!.toInt(),
       if (isActive != null) 'isActive': isActive,
-      if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
-      if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
     };
   }
 
@@ -57,18 +94,32 @@ class CategoryModel {
     String? name,
     String? description,
     SizeType? sizeType,
+    String? sizeTypeName,
+    int? sizeTypeId,
     bool? isActive,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    DateTime? creationTime,
+    String? creatorId,
+    DateTime? lastModificationTime,
+    String? lastModifierId,
+    bool? isDeleted,
+    String? deleterId,
+    DateTime? deletionTime,
   }) {
     return CategoryModel(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       sizeType: sizeType ?? this.sizeType,
+      sizeTypeName: sizeTypeName ?? this.sizeTypeName,
+      sizeTypeId: sizeTypeId ?? this.sizeTypeId,
       isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      creationTime: creationTime ?? this.creationTime,
+      creatorId: creatorId ?? this.creatorId,
+      lastModificationTime: lastModificationTime ?? this.lastModificationTime,
+      lastModifierId: lastModifierId ?? this.lastModifierId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      deleterId: deleterId ?? this.deleterId,
+      deletionTime: deletionTime ?? this.deletionTime,
     );
   }
 }
