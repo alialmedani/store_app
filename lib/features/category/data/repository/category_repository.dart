@@ -8,7 +8,6 @@ import '../usecase/create_category_params.dart';
 import '../usecase/get_category_params.dart';
 
 class CategoryRepository extends CoreRepository {
-  
   /// CREATE - POST request
   Future<Result<CategoryModel>> createCategoryRequest({
     required CreateCategoryParams params,

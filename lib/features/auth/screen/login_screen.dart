@@ -42,11 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Logo or App Name
-                  Icon(
-                    Icons.store,
-                    size: 80.sp,
-                    color: AppColors.profPrimary,
-                  ),
+                  Icon(Icons.store, size: 80.sp, color: AppColors.profPrimary),
                   SizedBox(height: 16.h),
                   Text(
                     'Store Management',
@@ -77,15 +73,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: Icon(Icons.person_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide(color: AppColors.profLightBorder),
+                        borderSide: BorderSide(
+                          color: AppColors.profLightBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide(color: AppColors.profLightBorder),
+                        borderSide: BorderSide(
+                          color: AppColors.profLightBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide(color: AppColors.profPrimary, width: 2),
+                        borderSide: BorderSide(
+                          color: AppColors.profPrimary,
+                          width: 2,
+                        ),
                       ),
                       filled: true,
                       fillColor: AppColors.white,
@@ -125,21 +128,29 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
-                            borderSide: BorderSide(color: AppColors.profLightBorder),
+                            borderSide: BorderSide(
+                              color: AppColors.profLightBorder,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
-                            borderSide: BorderSide(color: AppColors.profLightBorder),
+                            borderSide: BorderSide(
+                              color: AppColors.profLightBorder,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
-                            borderSide: BorderSide(color: AppColors.profPrimary, width: 2),
+                            borderSide: BorderSide(
+                              color: AppColors.profPrimary,
+                              width: 2,
+                            ),
                           ),
                           filled: true,
                           fillColor: AppColors.white,
                         ),
                         onChanged: (value) {
-                          context.read<AuthCubit>().loginParams.password = value;
+                          context.read<AuthCubit>().loginParams.password =
+                              value;
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -186,7 +197,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 56.h,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [AppColors.profPrimary, AppColors.profPrimaryDark],
+                          colors: [
+                            AppColors.profPrimary,
+                            AppColors.profPrimaryDark,
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(12.r),
                         boxShadow: [

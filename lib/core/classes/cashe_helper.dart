@@ -1,4 +1,3 @@
-
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:store/core/constant/end_points/cashe_helper_constant.dart';
 
@@ -111,18 +110,18 @@ class CacheHelper {
   //         item.sugarPercentage == cartItem.sugarPercentage,
   //   );
 
-    // if (existingIndex != -1) {
-    //   // Update quantity if item exists
-    //   currentCart[existingIndex] = currentCart[existingIndex].copyWith(
-    //     quantity: currentCart[existingIndex].quantity + cartItem.quantity,
-    //   );
-    // } else {
-    //   // Add new item
-    //   currentCart.add(cartItem);
-    // }
+  // if (existingIndex != -1) {
+  //   // Update quantity if item exists
+  //   currentCart[existingIndex] = currentCart[existingIndex].copyWith(
+  //     quantity: currentCart[existingIndex].quantity + cartItem.quantity,
+  //   );
+  // } else {
+  //   // Add new item
+  //   currentCart.add(cartItem);
+  // }
 
-    // await _saveCartItems(currentCart);
-  }
+  // await _saveCartItems(currentCart);
+}
 
   // static Future<void> removeFromCart(
   //   String drinkId,

@@ -10,9 +10,7 @@ class GetCategoryByIdUsecase extends UseCase<CategoryModel, GetCategoryParams> {
   GetCategoryByIdUsecase(this.repository);
 
   @override
-  Future<Result<CategoryModel>> call({
-    required GetCategoryParams params,
-  }) {
+  Future<Result<CategoryModel>> call({required GetCategoryParams params}) {
     return repository.getCategoryByIdRequest(id: params.id!);
   }
 }

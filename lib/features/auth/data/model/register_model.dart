@@ -3,11 +3,7 @@ class RegisterModel {
   bool? success;
   String? userId;
 
-  RegisterModel({
-    this.message,
-    this.success,
-    this.userId,
-  });
+  RegisterModel({this.message, this.success, this.userId});
 
   RegisterModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];

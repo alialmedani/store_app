@@ -1,9 +1,8 @@
-
 import '../../classes/cashe_helper.dart';
 
 Future<void> checkToken() async {
   if (CacheHelper.token?.isNotEmpty ?? false) {
-      //to doo 
+    //to doo
 
     // if (DateTime.now().isAfter(expiryDate!)) {
     //   Result<LoginModel> response = await RefreshTokenUsecase(AuthRepository())

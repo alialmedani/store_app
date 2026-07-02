@@ -1,6 +1,5 @@
 import 'package:store/core/constant/enum/enum.dart';
 
-
 class CategoryModel {
   final String? id;
   final String? name;
@@ -26,7 +25,7 @@ class CategoryModel {
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      sizeType: json['sizeType'] != null 
+      sizeType: json['sizeType'] != null
           ? SizeType.fromInt(json['sizeType'])
           : null,
       isActive: json['isActive'],

@@ -4,7 +4,8 @@ import '../model/category_model.dart';
 import '../repository/category_repository.dart';
 import 'get_category_params.dart';
 
-class GetCategoryListUsecase extends UseCase<List<CategoryModel>, GetCategoryParams> {
+class GetCategoryListUsecase
+    extends UseCase<List<CategoryModel>, GetCategoryParams> {
   final CategoryRepository repository;
 
   GetCategoryListUsecase(this.repository);

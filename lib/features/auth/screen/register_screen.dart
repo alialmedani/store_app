@@ -49,7 +49,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return 'Password must be at least 6 characters';
     }
     // Check for at least one uppercase, one lowercase, one digit, and one special character
-    if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]').hasMatch(value)) {
+    if (!RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]',
+    ).hasMatch(value)) {
       return 'Password must contain uppercase, lowercase, number and special character';
     }
     return null;
@@ -118,7 +120,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide(color: AppColors.profPrimary, width: 2),
+                      borderSide: BorderSide(
+                        color: AppColors.profPrimary,
+                        width: 2,
+                      ),
                     ),
                     filled: true,
                     fillColor: AppColors.white,
@@ -156,13 +161,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide(color: AppColors.profPrimary, width: 2),
+                      borderSide: BorderSide(
+                        color: AppColors.profPrimary,
+                        width: 2,
+                      ),
                     ),
                     filled: true,
                     fillColor: AppColors.white,
                   ),
                   onChanged: (value) {
-                    context.read<AuthCubit>().registerParams.emailAddress = value;
+                    context.read<AuthCubit>().registerParams.emailAddress =
+                        value;
                   },
                   validator: _validateEmail,
                 ),
@@ -191,21 +200,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: AppColors.profLightBorder),
+                          borderSide: BorderSide(
+                            color: AppColors.profLightBorder,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: AppColors.profLightBorder),
+                          borderSide: BorderSide(
+                            color: AppColors.profLightBorder,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: AppColors.profPrimary, width: 2),
+                          borderSide: BorderSide(
+                            color: AppColors.profPrimary,
+                            width: 2,
+                          ),
                         ),
                         filled: true,
                         fillColor: AppColors.white,
                       ),
                       onChanged: (value) {
-                        context.read<AuthCubit>().registerParams.password = value;
+                        context.read<AuthCubit>().registerParams.password =
+                            value;
                       },
                       validator: _validatePassword,
                     );
@@ -237,7 +254,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _buildPasswordRequirement('One uppercase letter'),
                       _buildPasswordRequirement('One lowercase letter'),
                       _buildPasswordRequirement('One number'),
-                      _buildPasswordRequirement('One special character (@\$!%*?&)'),
+                      _buildPasswordRequirement(
+                        'One special character (@\$!%*?&)',
+                      ),
                     ],
                   ),
                 ),
@@ -256,15 +275,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         prefixIcon: Icon(Icons.lock_outline),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: AppColors.profLightBorder),
+                          borderSide: BorderSide(
+                            color: AppColors.profLightBorder,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: AppColors.profLightBorder),
+                          borderSide: BorderSide(
+                            color: AppColors.profLightBorder,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: AppColors.profPrimary, width: 2),
+                          borderSide: BorderSide(
+                            color: AppColors.profPrimary,
+                            width: 2,
+                          ),
                         ),
                         filled: true,
                         fillColor: AppColors.white,
@@ -295,7 +321,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onSuccess: (registerModel) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Registration successful! Please sign in.'),
+                        content: Text(
+                          'Registration successful! Please sign in.',
+                        ),
                         backgroundColor: AppColors.profSuccessColor,
                       ),
                     );
@@ -314,7 +342,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 56.h,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [AppColors.profPrimary, AppColors.profPrimaryDark],
+                        colors: [
+                          AppColors.profPrimary,
+                          AppColors.profPrimaryDark,
+                        ],
                       ),
                       borderRadius: BorderRadius.circular(12.r),
                       boxShadow: [
@@ -387,10 +418,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           SizedBox(width: 6.w),
           Text(
             text,
-            style: TextStyle(
-              fontSize: 11.sp,
-              color: AppColors.profMediumText,
-            ),
+            style: TextStyle(fontSize: 11.sp, color: AppColors.profMediumText),
           ),
         ],
       ),

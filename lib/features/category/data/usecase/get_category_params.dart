@@ -6,21 +6,14 @@ class GetCategoryParams extends BaseParams {
   final String? id;
   final bool? isActive;
 
-  GetCategoryParams({
-    this.request,
-    this.id,
-    this.isActive,
-  });
+  GetCategoryParams({this.request, this.id, this.isActive});
 
   @override
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
       if (isActive != null) 'isActive': isActive,
-      if (request != null) ...{
-        'skip': request!.skip,
-        'take': request!.take,
-      },
+      if (request != null) ...{'skip': request!.skip, 'take': request!.take},
     };
   }
 }
