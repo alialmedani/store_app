@@ -34,9 +34,7 @@ class CreateCategoryUsecase
   CreateCategoryUsecase(this.repository);
 
   @override
-  Future<Result<CategoryModel>> call({
-    required CreateCategoryParams params,
-  }) {
+  Future<Result<CategoryModel>> call({required CreateCategoryParams params}) {
     return repository.createCategoryRequest(params: params);
   }
 }

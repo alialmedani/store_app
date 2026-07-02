@@ -100,7 +100,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _nameController,
-                                  placeholder: const Text('Enter category name'),
+                                  placeholder: const Text(
+                                    'Enter category name',
+                                  ),
                                   onChanged: (value) {
                                     cubit.createCategoryParams.name = value;
                                     cubit.clearNameError();
@@ -134,7 +136,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _descriptionController,
-                          placeholder: const Text('Enter description (optional)'),
+                          placeholder: const Text(
+                            'Enter description (optional)',
+                          ),
                           maxLines: 3,
                           onChanged: (value) {
                             cubit.createCategoryParams.description = value;
@@ -164,37 +168,43 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                       label: 'None',
                                       value: 1,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) => cubit.selectSizeType(value),
+                                      onSelected: (value) =>
+                                          cubit.selectSizeType(value),
                                     ),
                                     _SizeTypeChip(
                                       label: 'Clothing',
                                       value: 2,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) => cubit.selectSizeType(value),
+                                      onSelected: (value) =>
+                                          cubit.selectSizeType(value),
                                     ),
                                     _SizeTypeChip(
                                       label: 'Shoes',
                                       value: 3,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) => cubit.selectSizeType(value),
+                                      onSelected: (value) =>
+                                          cubit.selectSizeType(value),
                                     ),
                                     _SizeTypeChip(
                                       label: 'One Size',
                                       value: 4,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) => cubit.selectSizeType(value),
+                                      onSelected: (value) =>
+                                          cubit.selectSizeType(value),
                                     ),
                                     _SizeTypeChip(
                                       label: 'Kids Age',
                                       value: 5,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) => cubit.selectSizeType(value),
+                                      onSelected: (value) =>
+                                          cubit.selectSizeType(value),
                                     ),
                                     _SizeTypeChip(
                                       label: 'Custom',
                                       value: 6,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) => cubit.selectSizeType(value),
+                                      onSelected: (value) =>
+                                          cubit.selectSizeType(value),
                                     ),
                                   ],
                                 ),
@@ -266,7 +276,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Success'),
-                                content: const Text('Category created successfully!'),
+                                content: const Text(
+                                  'Category created successfully!',
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -284,7 +296,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Error'),
-                                content: Text('Failed to create category: $error'),
+                                content: Text(
+                                  'Failed to create category: $error',
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx),
@@ -329,7 +343,7 @@ class _SizeTypeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSelected = value == selectedValue;
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: () => onSelected(value),
       child: Container(

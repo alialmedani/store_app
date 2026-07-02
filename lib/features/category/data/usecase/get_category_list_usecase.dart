@@ -8,9 +8,7 @@ import '../repository/category_repository.dart';
 class GetCategoryListParams extends BaseParams {
   final GetListRequest? request;
 
-  GetCategoryListParams({
-    this.request,
-  });
+  GetCategoryListParams({this.request});
 
   Map<String, dynamic> toJson() {
     return {

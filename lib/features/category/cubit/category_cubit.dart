@@ -67,14 +67,14 @@ class CategoryCubit extends Cubit<CategoryState> {
 
   // API Methods (NO emit - boilerplate handles state)
   Future<Result<CategoryModel>> createCategory() async {
-    return await CreateCategoryUsecase(CategoryRepository()).call(
-      params: createCategoryParams,
-    );
+    return await CreateCategoryUsecase(
+      CategoryRepository(),
+    ).call(params: createCategoryParams);
   }
 
   Future<Result<List<CategoryModel>>> fetchCategoryList(data) async {
-    return await GetCategoryListUsecase(CategoryRepository()).call(
-      params: GetCategoryListParams(request: data),
-    );
+    return await GetCategoryListUsecase(
+      CategoryRepository(),
+    ).call(params: GetCategoryListParams(request: data));
   }
 }

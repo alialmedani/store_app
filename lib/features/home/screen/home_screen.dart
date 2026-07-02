@@ -140,7 +140,9 @@ class HomeScreen extends StatelessWidget {
                         context: context,
                         builder: (ctx) => AlertDialog(
                           title: const Text('Coming Soon'),
-                          content: const Text('Products feature will be available soon.'),
+                          content: const Text(
+                            'Products feature will be available soon.',
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(ctx),
@@ -162,7 +164,9 @@ class HomeScreen extends StatelessWidget {
                         context: context,
                         builder: (ctx) => AlertDialog(
                           title: const Text('Coming Soon'),
-                          content: const Text('Orders feature will be available soon.'),
+                          content: const Text(
+                            'Orders feature will be available soon.',
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(ctx),
@@ -184,7 +188,9 @@ class HomeScreen extends StatelessWidget {
                         context: context,
                         builder: (ctx) => AlertDialog(
                           title: const Text('Coming Soon'),
-                          content: const Text('Reports feature will be available soon.'),
+                          content: const Text(
+                            'Reports feature will be available soon.',
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(ctx),
@@ -235,27 +241,17 @@ class _StatCard extends StatelessWidget {
                 color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                size: 24,
-                color: color,
-              ),
+              child: Icon(icon, size: 24, color: color),
             ),
             const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xFF9E9E9E),
-              ),
+              style: const TextStyle(fontSize: 12, color: Color(0xFF9E9E9E)),
             ),
             const SizedBox(height: 4),
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -297,11 +293,7 @@ class _MenuCard extends StatelessWidget {
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  icon,
-                  size: 32,
-                  color: color,
-                ),
+                child: Icon(icon, size: 32, color: color),
               ),
               const SizedBox(height: 12),
               Text(
@@ -314,10 +306,7 @@ class _MenuCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF9E9E9E),
-                ),
+                style: const TextStyle(fontSize: 12, color: Color(0xFF9E9E9E)),
               ),
             ],
           ),

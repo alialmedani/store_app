@@ -49,7 +49,9 @@ class CategoryListScreen extends StatelessWidget {
                     withPagination: true,
                     withRefresh: true,
                     repositoryCallBack: (data) {
-                      return context.read<CategoryCubit>().fetchCategoryList(data);
+                      return context.read<CategoryCubit>().fetchCategoryList(
+                        data,
+                      );
                     },
                     listBuilder: (list) {
                       return ListView.builder(

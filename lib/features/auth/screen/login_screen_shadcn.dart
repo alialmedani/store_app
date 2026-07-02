@@ -60,7 +60,7 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       child: SafeArea(
         child: Center(
@@ -87,12 +87,18 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                 // Header
                 Text(
                   'Store Management',
-                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Sign in to continue',
-                  style: const TextStyle(fontSize: 14, color: Color(0xFF9E9E9E)),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF9E9E9E),
+                  ),
                 ),
                 const SizedBox(height: 48),
 
@@ -108,9 +114,12 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                           // Username Field
                           TextField(
                             controller: _usernameController,
-                            placeholder: const Text('Enter your username or email'),
+                            placeholder: const Text(
+                              'Enter your username or email',
+                            ),
                             onChanged: (value) {
-                              context.read<AuthCubit>().loginParams.username = value;
+                              context.read<AuthCubit>().loginParams.username =
+                                  value;
                               if (_usernameError != null) {
                                 setState(() {
                                   _usernameError = null;
@@ -123,7 +132,10 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
                                 _usernameError!,
-                                style: const TextStyle(color: Color(0xFFEF4444), fontSize: 12),
+                                style: const TextStyle(
+                                  color: Color(0xFFEF4444),
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           const SizedBox(height: 16),
@@ -134,7 +146,8 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                             obscureText: _obscurePassword,
                             placeholder: const Text('Enter your password'),
                             onChanged: (value) {
-                              context.read<AuthCubit>().loginParams.password = value;
+                              context.read<AuthCubit>().loginParams.password =
+                                  value;
                               if (_passwordError != null) {
                                 setState(() {
                                   _passwordError = null;
@@ -147,7 +160,10 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
                                 _passwordError!,
-                                style: const TextStyle(color: Color(0xFFEF4444), fontSize: 12),
+                                style: const TextStyle(
+                                  color: Color(0xFFEF4444),
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           const SizedBox(height: 24),
@@ -163,17 +179,23 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                             },
                             onSuccess: (loginModel) async {
                               // Save token
-                              await CacheHelper.setToken(loginModel.accessToken);
-                              await CacheHelper.setRefreshToken(loginModel.refreshToken);
-                              await CacheHelper.setExpiresIn(loginModel.expiresIn ?? 0);
-                              
+                              await CacheHelper.setToken(
+                                loginModel.accessToken,
+                              );
+                              await CacheHelper.setRefreshToken(
+                                loginModel.refreshToken,
+                              );
+                              await CacheHelper.setExpiresIn(
+                                loginModel.expiresIn ?? 0,
+                              );
+
                               // Fetch current user
                               final authCubit = context.read<AuthCubit>();
                               final userResult = await authCubit.getAppConfig();
-                              
+
                               if (userResult.hasDataOnly) {
                                 authCubit.currentUser = userResult.data;
-                                
+
                                 // Navigate to home
                                 if (context.mounted) {
                                   Navigator.pushReplacement(
@@ -189,7 +211,9 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                                   context: context,
                                   builder: (ctx) => AlertDialog(
                                     title: const Text('Error'),
-                                    content: const Text('Failed to load user data. Please try again.'),
+                                    content: const Text(
+                                      'Failed to load user data. Please try again.',
+                                    ),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(ctx),
@@ -216,9 +240,7 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                                 ),
                               );
                             },
-                            child: PrimaryButton(
-                              child: const Text('Sign In'),
-                            ),
+                            child: PrimaryButton(child: const Text('Sign In')),
                           ),
                         ],
                       ),
@@ -233,7 +255,10 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                   children: [
                     Text(
                       "Don't have an account? ",
-                      style: const TextStyle(fontSize: 14, color: Color(0xFF9E9E9E)),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF9E9E9E),
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
