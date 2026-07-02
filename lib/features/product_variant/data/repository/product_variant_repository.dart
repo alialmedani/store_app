@@ -34,9 +34,7 @@ class ProductVariantRepository extends CoreRepository {
       method: HttpMethod.GET,
       converter: (json) {
         final items = json['items'] as List;
-        return items
-            .map((item) => ProductVariantModel.fromJson(item))
-            .toList();
+        return items.map((item) => ProductVariantModel.fromJson(item)).toList();
       },
     );
 

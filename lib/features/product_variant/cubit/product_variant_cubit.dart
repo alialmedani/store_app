@@ -14,12 +14,12 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
   // Params
   CreateProductVariantParams createProductVariantParams =
       CreateProductVariantParams(
-    productId: '',
-    color: '',
-    size: '',
-    stockQuantity: 0,
-    isActive: true,
-  );
+        productId: '',
+        color: '',
+        size: '',
+        stockQuantity: 0,
+        isActive: true,
+      );
 
   // UI State Variables
   String? selectedProductId;
@@ -99,7 +99,8 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
   }
 
   Future<Result<List<ProductVariantModel>>> fetchProductVariantList(
-      data) async {
+    data,
+  ) async {
     return await GetProductVariantListUsecase(
       ProductVariantRepository(),
     ).call(params: GetProductVariantListParams(request: data));

@@ -77,10 +77,7 @@ class _CreateProductVariantScreenState
     return isValid;
   }
 
-  void _showProductSelector(
-    BuildContext context,
-    ProductVariantCubit cubit,
-  ) {
+  void _showProductSelector(BuildContext context, ProductVariantCubit cubit) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -125,9 +122,9 @@ class _CreateProductVariantScreenState
                                 product.description!,
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .mutedForeground,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.mutedForeground,
                                 ),
                                 maxLines: 2,
                                 overflow: fw.TextOverflow.ellipsis,
@@ -356,14 +353,17 @@ class _CreateProductVariantScreenState
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _stockQuantityController,
-                                  placeholder:
-                                      const Text('Enter stock quantity'),
+                                  placeholder: const Text(
+                                    'Enter stock quantity',
+                                  ),
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
                                     final stock = int.tryParse(value);
                                     if (stock != null) {
-                                      cubit.createProductVariantParams
-                                          .stockQuantity = stock;
+                                      cubit
+                                              .createProductVariantParams
+                                              .stockQuantity =
+                                          stock;
                                     }
                                     cubit.clearStockQuantityError();
                                   },
@@ -400,8 +400,8 @@ class _CreateProductVariantScreenState
                                   ),
                                 ),
                                 Switch(
-                                  value: cubit
-                                      .createProductVariantParams.isActive,
+                                  value:
+                                      cubit.createProductVariantParams.isActive,
                                   onChanged: (value) {
                                     cubit.toggleIsActive(value);
                                   },
