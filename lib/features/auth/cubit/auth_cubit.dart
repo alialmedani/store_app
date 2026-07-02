@@ -19,7 +19,6 @@ import '../data/usecase/send_otp_usecase.dart';
 import '../data/usecase/verify_otp_usecase.dart';
 import '../data/usecase/set_decive_id_usecase.dart';
 
-
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -32,13 +31,14 @@ class AuthCubit extends Cubit<AuthState> {
   Timer? _timer;
   bool isObscure = true;
 
- LoginParams loginParams = LoginParams(
-    username: 'admin',                           // ✅ اسم المستخدم الصحيح
-    password: '1q2w3E*',                         // ✅ كلمة المرور الافتراضية
-    grantType: 'password',                       // ✅ صح
-    clientId: 'StoreManagement_Mobile',          // ✅ الـ Client ID الصحيح
-    scope: 'openid profile email phone address roles offline_access StoreManagement',  // ✅ كامل
-);
+  LoginParams loginParams = LoginParams(
+    username: 'admin', // ✅ اسم المستخدم الصحيح
+    password: '1q2w3E*', // ✅ كلمة المرور الافتراضية
+    grantType: 'password', // ✅ صح
+    clientId: 'StoreManagement_Mobile', // ✅ الـ Client ID الصحيح
+    scope:
+        'openid profile email phone address roles offline_access StoreManagement', // ✅ كامل
+  );
 
   RegisterParams registerParams = RegisterParams(
     userName: '',
@@ -245,7 +245,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     // Clear current user data
     currentUser = null;
-    
+
     // Clear all auth data from cache
     await CacheHelper.clearAuth();
   }

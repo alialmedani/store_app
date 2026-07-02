@@ -91,27 +91,16 @@ class AvailabilityStatusModel {
   final int? id;
   final String? name;
 
-  AvailabilityStatusModel({
-    this.id,
-    this.name,
-  });
+  AvailabilityStatusModel({this.id, this.name});
 
   factory AvailabilityStatusModel.fromJson(Map<String, dynamic> json) {
-    return AvailabilityStatusModel(
-      id: json['id'],
-      name: json['name'],
-    );
+    return AvailabilityStatusModel(id: json['id'], name: json['name']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    };
+    return {if (id != null) 'id': id, if (name != null) 'name': name};
   }
 }
-
-
 
 /// Target Audience nested model
 class TargetAudienceModel {
@@ -119,11 +108,7 @@ class TargetAudienceModel {
   final String? name;
   final TargetAudience? targetAudience;
 
-  TargetAudienceModel({
-    this.id,
-    this.name,
-    this.targetAudience,
-  });
+  TargetAudienceModel({this.id, this.name, this.targetAudience});
 
   factory TargetAudienceModel.fromJson(Map<String, dynamic> json) {
     int? parsedId;
@@ -147,9 +132,6 @@ class TargetAudienceModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    };
+    return {if (id != null) 'id': id, if (name != null) 'name': name};
   }
 }

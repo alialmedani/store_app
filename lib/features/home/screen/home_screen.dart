@@ -217,7 +217,7 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                   _MenuCard(
-                    icon:  Icons.bar_chart,
+                    icon: Icons.bar_chart,
                     title: 'Reports',
                     subtitle: 'View analytics',
                     color: const Color(0xFFF59E0B),

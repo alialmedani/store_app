@@ -49,7 +49,8 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
         fw.Navigator.pushReplacement(
           context,
           fw.PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const HomeScreen(),
             transitionDuration: Duration.zero,
           ),
         );
@@ -58,7 +59,8 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
         fw.Navigator.pushReplacement(
           context,
           fw.PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const LoginScreenShadcn(),
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const LoginScreenShadcn(),
             transitionDuration: Duration.zero,
           ),
         );
@@ -90,21 +92,16 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
               ),
             ),
             const fw.SizedBox(height: 32),
-            
+
             // App Title
             const Text(
               'Store Management',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: fw.FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 28, fontWeight: fw.FontWeight.bold),
             ),
             const fw.SizedBox(height: 48),
-            
+
             // Loading Indicator
-            CircularProgressIndicator(
-              color: theme.colorScheme.primary,
-            ),
+            CircularProgressIndicator(color: theme.colorScheme.primary),
           ],
         ),
       ),
