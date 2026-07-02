@@ -170,8 +170,10 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
 
                           // Login Button - Using CreateModel for state management
                           CreateModel<LoginModel>(
+                            
                             withValidation: true,
                             onTap: () {
+                              
                               return _validateFields();
                             },
                             useCaseCallBack: (data) {
@@ -186,7 +188,7 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                                 loginModel.refreshToken,
                               );
                               await CacheHelper.setExpiresIn(
-                                loginModel.expiresIn ?? 0,
+                                loginModel.expiresIn ?? 3600,
                               );
 
                               // Fetch current user

@@ -98,6 +98,17 @@ class CacheHelper {
   //   return box.get(userModel);
   // }
 
+  /// Clear authentication data (for logout)
+  static Future<void> clearAuth() async {
+    await box.delete(accessToken);
+    await box.delete(refreshToken);
+    await box.delete(userId);
+    await box.delete(expiresIn);
+    await box.delete(date);
+    await box.delete(role);
+    await currentUserBox.clear();
+  }
+
   // Cart operations
   // static Future<void> addToCart(CartItemModel cartItem) async {
   //   List<CartItemModel> currentCart = getCartItems();

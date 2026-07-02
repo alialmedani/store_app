@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../../../core/results/result.dart';
+import '../../../../core/classes/cashe_helper.dart';
 
 import '../data/model/current_user_model.dart';
 import '../data/repository/auth_repository.dart';
@@ -238,6 +239,15 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> close() {
     _timer?.cancel();
     return super.close();
+  }
+
+  /// Logout user and clear authentication data
+  Future<void> logout() async {
+    // Clear current user data
+    currentUser = null;
+    
+    // Clear all auth data from cache
+    await CacheHelper.clearAuth();
   }
 
   // Future<Result> setDeviceId() async {

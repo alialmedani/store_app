@@ -4,7 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:store/core/classes/cashe_helper.dart';
-import 'package:store/features/auth/screen/login_screen_shadcn.dart';
+import 'package:store/features/auth/screen/auth_wrapper.dart';
+import 'package:store/features/product/cubit/product_cubit.dart';
 
 import 'core/classes/keys.dart';
 import 'features/auth/cubit/auth_cubit.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthCubit>(create: (context) => AuthCubit()),
         BlocProvider<CategoryCubit>(create: (context) => CategoryCubit()),
+        BlocProvider<ProductCubit>(create: (context) => ProductCubit()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,
@@ -57,7 +59,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorSchemes.darkZinc,
               radius: 0.5,
             ),
-            home: const LoginScreenShadcn(),
+            home: const AuthWrapper(),
           );
         },
       ),

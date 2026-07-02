@@ -2,7 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../auth/cubit/auth_cubit.dart';
+import '../../auth/screen/login_screen_shadcn.dart';
 import '../../category/screen/category_list_screen.dart';
+import '../../product/screen/product_list_screen.dart';
 
 /// Home Screen - Main dashboard after login
 /// Uses shadcn_flutter components with clean, modern design
@@ -46,12 +48,59 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.notifications_outlined),
-                      onPressed: () {
-                        // TODO: Navigate to notifications
-                      },
-                      variance: ButtonVariance.ghost,
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.notifications_outlined),
+                          onPressed: () {
+                            // TODO: Navigate to notifications
+                          },
+                          variance: ButtonVariance.ghost,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.logout),
+                          onPressed: () async {
+                            // Show logout confirmation dialog
+                            final shouldLogout = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('Logout'),
+                                content: const Text(
+                                  'Are you sure you want to logout?',
+                                ),
+                                actions: [
+                                  SecondaryButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  DestructiveButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text('Logout'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (shouldLogout == true && context.mounted) {
+                              // Perform logout
+                              await authCubit.logout();
+
+                              // Navigate to login screen
+                              if (context.mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const LoginScreenShadcn(),
+                                  ),
+                                  (route) => false,
+                                );
+                              }
+                            }
+                          },
+                          variance: ButtonVariance.ghost,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -135,20 +184,10 @@ class HomeScreen extends StatelessWidget {
                     subtitle: 'Manage products',
                     color: const Color(0xFF10B981),
                     onTap: () {
-                      // TODO: Navigate to products
-                      showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: const Text('Coming Soon'),
-                          content: const Text(
-                            'Products feature will be available soon.',
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(ctx),
-                              child: const Text('OK'),
-                            ),
-                          ],
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductListScreen(),
                         ),
                       );
                     },
@@ -178,7 +217,7 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                   _MenuCard(
-                    icon: Icons.bar_chart,
+                    icon:  Icons.bar_chart,
                     title: 'Reports',
                     subtitle: 'View analytics',
                     color: const Color(0xFFF59E0B),
@@ -192,7 +231,7 @@ class HomeScreen extends StatelessWidget {
                             'Reports feature will be available soon.',
                           ),
                           actions: [
-                            TextButton(
+                            PrimaryButton(
                               onPressed: () => Navigator.pop(ctx),
                               child: const Text('OK'),
                             ),

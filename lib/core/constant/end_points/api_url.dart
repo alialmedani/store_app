@@ -9,3 +9,11 @@ const createCategoryUrl = '$baseUrl/api/app/category';
 const String getCategoryListUrl = '$baseUrl/api/app/category';
 
 // ========== Product URLs ==========
+const createProductUrl = '$baseUrl/api/app/product';
+const getProductListUrl = '$baseUrl/api/app/product';
+
+String getProductDetailsUrl(String id) => '$baseUrl/api/app/product/$id';
+
+String updateProductUrl(String id) => '$baseUrl/api/app/product/$id';
+
+String deleteProductUrl(String id) => '$baseUrl/api/app/product/$id';
