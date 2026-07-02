@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:store/features/category/data/model/category_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import '../../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
@@ -25,9 +27,98 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   final _priceController = TextEditingController();
   final _categoryIdController = TextEditingController();
   CreateModelCubit? createModelCubit;
+  final ImagePicker _imagePicker = ImagePicker();
+
+  Future<void> _pickAndUploadImage(ProductCubit cubit) async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        final file = File(image.path);
+        cubit.selectImageFile(file);
+
+        // رفع الصورة تلقائياً
+        final uploadResult = await cubit.uploadProductImage();
+
+        if (uploadResult.hasErrorOnly && mounted) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('خطأ'),
+              content: Text(uploadResult.error ?? 'فشل رفع الصورة'),
+              actions: [
+                PrimaryButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('حسناً'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('خطأ'),
+            content: Text('فشل اختيار الصورة: $e'),
+            actions: [
+              PrimaryButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('حسناً'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
 
   bool _validateFields(ProductCubit cubit) {
     bool isValid = true;
+
+    // Check if image is still uploading
+    if (cubit.isUploadingImage) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('انتظر'),
+          content: const Text('جارٍ رفع الصورة... يرجى الانتظار'),
+          actions: [
+            PrimaryButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('حسناً'),
+            ),
+          ],
+        ),
+      );
+      return false;
+    }
+
+    // Check if image was selected but upload failed
+    if (cubit.selectedImageFile != null && 
+        cubit.createProductParams.imageUrl.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('خطأ'),
+          content: const Text('فشل رفع الصورة. يرجى اختيار الصورة مرة أخرى'),
+          actions: [
+            PrimaryButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('حسناً'),
+            ),
+          ],
+        ),
+      );
+      return false;
+    }
 
     // Validate name
     if (_nameController.text.trim().isEmpty) {
@@ -280,6 +371,103 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         ),
                         const SizedBox(height: 16),
 
+                        // Product Image Upload
+                        BlocBuilder<ProductCubit, ProductState>(
+                          builder: (context, state) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'صورة المنتج (اختياري)',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                if (cubit.selectedImageFile != null)
+                                  Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.file(
+                                          cubit.selectedImageFile!,
+                                          height: 200,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            cubit.clearImageFile();
+                                          },
+                                          variance: ButtonVariance.destructive,
+                                        ),
+                                      ),
+                                      if (cubit.isUploadingImage)
+                                        Positioned.fill(
+                                          child: Container(
+                                            color: Colors.black.withOpacity(
+                                              0.5,
+                                            ),
+                                            child: const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  )
+                                else
+                                  OutlineButton(
+                                    onPressed: cubit.isUploadingImage
+                                        ? null
+                                        : () => _pickAndUploadImage(cubit),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.image,
+                                          size: 20,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          cubit.isUploadingImage
+                                              ? 'جاري الرفع...'
+                                              : 'اختر صورة',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                if (cubit
+                                        .createProductParams
+                                        .imageUrl
+                                        .isNotEmpty &&
+                                    !cubit.isUploadingImage)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      '✓ تم رفع الصورة بنجاح',
+                                      style: TextStyle(
+                                        color: const Color(0xFF10B981),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
                         // Target Audience Selection
                         BlocBuilder<ProductCubit, ProductState>(
                           builder: (context, state) {
@@ -383,9 +571,17 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             cubit.createProductParams.isActive = true;
                             cubit.createProductParams.targetAudience = 0;
                             cubit.createProductParams.categoryId = '';
+                            cubit.createProductParams.imageUrl = '';
                             cubit.selectedTargetAudience = 0;
                             cubit.selectedCategoryId = null;
                             cubit.clearAllErrors();
+
+                            // Clear controllers
+                            _nameController.clear();
+                            _descriptionController.clear();
+                            _priceController.clear();
+                            _categoryIdController.clear();
+                            cubit.clearImageFile();
 
                             // Show success dialog
                             showDialog(

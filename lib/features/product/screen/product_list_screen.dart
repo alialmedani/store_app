@@ -112,6 +112,48 @@ class _ProductCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                // Product Image
+                if (product.imageFullUrl != null &&
+                    product.imageFullUrl!.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      product.imageFullUrl!,
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.muted,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: theme.colorScheme.mutedForeground,
+                            size: 30,
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                else
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.muted,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.inventory_2,
+                      color: theme.colorScheme.mutedForeground,
+                      size: 30,
+                    ),
+                  ),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

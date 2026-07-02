@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:io';
+import '../../../core/repository/file_upload_repository.dart';
 import '../../../core/results/result.dart';
 import '../data/model/product_model.dart';
 import '../data/repository/product_repository.dart';
@@ -25,6 +27,8 @@ class ProductCubit extends Cubit<ProductState> {
   // UI State Variables
   int? selectedTargetAudience = 0;
   String? selectedCategoryId;
+  File? selectedImageFile;
+  bool isUploadingImage = false;
 
   // Validation Error Variables
   String? nameError;
@@ -85,6 +89,44 @@ class ProductCubit extends Cubit<ProductState> {
     priceError = null;
     categoryError = null;
     emit(ProductValidationError());
+  }
+
+  void selectImageFile(File? file) {
+    selectedImageFile = file;
+    emit(UpdateProductParams());
+  }
+
+  void clearImageFile() {
+    selectedImageFile = null;
+    createProductParams.imageUrl = '';
+    emit(UpdateProductParams());
+  }
+
+  Future<Result<String>> uploadProductImage() async {
+    if (selectedImageFile == null) {
+      return Result(error: 'No image selected');
+    }
+
+    isUploadingImage = true;
+    emit(UpdateProductParams());
+
+    final result = await FileUploadRepository().uploadFile(
+      file: selectedImageFile!,
+      entityId: 'temp-product',
+      entityType: 2, // Product = 2
+      filePlacement: 'product-main',
+    );
+
+    isUploadingImage = false;
+
+    if (result.hasDataOnly && result.data != null) {
+      createProductParams.imageUrl = result.data!.fileName ?? '';
+      emit(UpdateProductParams());
+      return Result(data: result.data!.fileName ?? '');
+    } else {
+      emit(UpdateProductParams());
+      return Result(error: result.error ?? 'Upload failed');
+    }
   }
 
   // API Methods (NO emit - boilerplate handles state)
