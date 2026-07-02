@@ -11,6 +11,7 @@ Before coding, read existing similar features first.
 Reference guides:
 - API_INTEGRATION_GUID.md
 - SHADCN_UI_INTEGRATION_GUIDE.md
+- COPILOT_FEATURE_WORKFLOW.md
 
 ---
 
@@ -264,6 +265,86 @@ CreateModel<CategoryModel>(
 
 ---
 
+## UI Framework Rules
+
+Use `shadcn_flutter` as the main UI framework.
+
+Do not mix Material UI widgets with `shadcn_flutter`.
+
+Do not import:
+
+```dart
+import 'package:flutter/material.dart';
+```
+
+unless absolutely required by an existing file or package.
+
+Prefer this for base Flutter widgets, layout, navigation, and gestures:
+
+```dart
+import 'package:flutter/widgets.dart' as fw;
+import 'package:shadcn_flutter/shadcn_flutter.dart';
+```
+
+Allowed:
+- `package:shadcn_flutter/shadcn_flutter.dart`
+- `package:flutter/widgets.dart` as `fw`
+
+Avoid:
+- Material `Scaffold`
+- `MaterialPageRoute`
+- `InkWell`
+- `TextButton`
+- `ElevatedButton`
+- Material `OutlinedButton`
+- `FloatingActionButton`
+- `DropdownButtonFormField`
+- Material dialogs
+- Material `AppBar`
+- Material form widgets
+- Material custom buttons
+- Material `CircularProgressIndicator` if a shadcn/project alternative exists
+- Material `Icons` unless there is no available alternative
+
+Use instead:
+- shadcn `Scaffold`
+- shadcn `PrimaryButton`
+- shadcn `SecondaryButton`
+- shadcn `OutlineButton`
+- shadcn `DestructiveButton`
+- shadcn `GhostButton`
+- shadcn `Card`
+- shadcn `AlertDialog`
+- shadcn `TextField`
+- shadcn `Switch`
+- shadcn `Checkbox`
+- `fw.GestureDetector` around shadcn `Card` for clickable cards
+- `Wrap + PrimaryButton + OutlineButton` for dropdown-like choices
+- `fw.Navigator` or the existing project navigation helper instead of `MaterialPageRoute`
+
+If Flutter base widgets are needed, use them with the `fw.` prefix.
+
+Examples:
+- `fw.Column`
+- `fw.Row`
+- `fw.Container`
+- `fw.Center`
+- `fw.SizedBox`
+- `fw.Padding`
+- `fw.Navigator`
+- `fw.PageRouteBuilder`
+- `fw.GestureDetector`
+
+Do not use:
+
+```dart
+import 'package:flutter/material.dart';
+```
+
+If an existing file already imports `material.dart`, remove it when possible and replace Material-only widgets with `shadcn_flutter` or `flutter/widgets.dart` alternatives.
+
+---
+
 ## shadcn_flutter UI Rules
 
 Use `shadcn_flutter` for new UI screens.
@@ -304,9 +385,9 @@ Example:
 
 ```dart
 IconButton(
-  icon: const Icon(Icons.arrow_back),
+  icon: const Text('←'),
   variance: ButtonVariance.ghost,
-  onPressed: () => Navigator.pop(context),
+  onPressed: () => fw.Navigator.pop(context),
 )
 ```
 
@@ -320,26 +401,30 @@ Avoid these Material UI widgets:
 - `InkWell`
 - `TextButton`
 - `ElevatedButton`
-- `OutlinedButton`
+- Material `OutlinedButton`
 - `FloatingActionButton`
 - `DropdownButtonFormField`
 - Material custom buttons
-- Material form widgets when a shadcn alternative or project pattern exists
+- Material form widgets
+- Material dialogs
+- Material `Scaffold`
+- Material `AppBar`
+- `MaterialPageRoute`
 
 Use shadcn components instead.
 
 For clickable cards:
-- Use `GestureDetector` around shadcn `Card`
+- Use `fw.GestureDetector` around shadcn `Card`
 - Do not use `InkWell`
 
 Example:
 
 ```dart
-GestureDetector(
+fw.GestureDetector(
   onTap: onTap,
   child: Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
+    child: fw.Padding(
+      padding: const fw.EdgeInsets.all(16),
       child: child,
     ),
   ),
@@ -361,7 +446,7 @@ AlertDialog(
   actions: [
     PrimaryButton(
       child: const Text('OK'),
-      onPressed: () => Navigator.pop(context),
+      onPressed: () => fw.Navigator.pop(context),
     ),
   ],
 )
@@ -369,9 +454,79 @@ AlertDialog(
 
 For navigation:
 - Preserve existing navigation style unless asked to change it.
+- If the project already uses a navigation helper, use that helper.
 - If the project already uses named routes, use named routes.
-- If the existing feature uses `Navigator.push`, keep consistent with that feature.
-- Do not change navigation architecture randomly.
+- Do not use `MaterialPageRoute`.
+- If direct navigation is needed, use `fw.Navigator` with `fw.PageRouteBuilder`.
+
+Example:
+
+```dart
+fw.Navigator.of(context).push(
+  fw.PageRouteBuilder(
+    pageBuilder: (_, __, ___) => const TargetScreen(),
+    transitionDuration: Duration.zero,
+    reverseTransitionDuration: Duration.zero,
+  ),
+);
+```
+
+Do not change navigation architecture randomly.
+
+---
+
+## Material Import Fix Rule
+
+If a generated or existing file contains:
+
+```dart
+import 'package:flutter/material.dart';
+```
+
+check if it is actually needed.
+
+If it is only used for layout widgets, replace it with:
+
+```dart
+import 'package:flutter/widgets.dart' as fw;
+import 'package:shadcn_flutter/shadcn_flutter.dart';
+```
+
+Then prefix base Flutter widgets with `fw.`.
+
+Examples:
+- `StatefulWidget` → `fw.StatefulWidget`
+- `State` → `fw.State`
+- `Widget` → `fw.Widget`
+- `BuildContext` → `fw.BuildContext`
+- `Center` → `fw.Center`
+- `Column` → `fw.Column`
+- `Row` → `fw.Row`
+- `Container` → `fw.Container`
+- `Padding` → `fw.Padding`
+- `SizedBox` → `fw.SizedBox`
+- `EdgeInsets` → `fw.EdgeInsets`
+- `BoxDecoration` → `fw.BoxDecoration`
+- `BorderRadius` → `fw.BorderRadius`
+- `MainAxisAlignment` → `fw.MainAxisAlignment`
+- `CrossAxisAlignment` → `fw.CrossAxisAlignment`
+- `Navigator` → `fw.Navigator`
+- `PageRouteBuilder` → `fw.PageRouteBuilder`
+- `GestureDetector` → `fw.GestureDetector`
+
+Do not replace shadcn widgets with `fw.` widgets.
+
+Keep:
+- `Scaffold` from shadcn
+- `Theme.of(context)` from shadcn
+- `Text` from shadcn unless base text is specifically needed
+- `PrimaryButton`
+- `SecondaryButton`
+- `OutlineButton`
+- `DestructiveButton`
+- `Card`
+- `AlertDialog`
+- `TextField`
 
 ---
 
@@ -562,6 +717,10 @@ Handle dates safely.
 Use `String` for Guid values.
 
 Use `DateTime?` for date fields when needed.
+
+For lookup objects, create small reusable lookup models if the project already has that pattern.
+
+Do not duplicate lookup models unnecessarily.
 
 ---
 
@@ -760,12 +919,16 @@ showDialog(
     actions: [
       PrimaryButton(
         child: const Text('OK'),
-        onPressed: () => Navigator.pop(ctx),
+        onPressed: () => fw.Navigator.pop(ctx),
       ),
     ],
   ),
 );
 ```
+
+If `showDialog` requires Material import in this project, use the existing project dialog helper instead.
+
+Do not add `material.dart` only for dialog buttons.
 
 ---
 
@@ -785,7 +948,7 @@ Example:
 
 ```dart
 IconButton(
-  icon: const Icon(Icons.notifications_outlined),
+  icon: const Text('🔔'),
   variance: ButtonVariance.ghost,
   onPressed: () {},
 )
@@ -855,6 +1018,8 @@ Before modifying code:
 8. Keep UI consistent with shadcn_flutter.
 9. Do not mix Material UI with shadcn UI.
 10. Verify shadcn component API before using advanced components like `Select`.
+11. Avoid importing `package:flutter/material.dart`.
+12. Prefer `package:flutter/widgets.dart` as `fw` for base layout/navigation.
 
 ---
 
@@ -884,3 +1049,7 @@ Do not use `setState` for feature state.
 Use `api_url.dart` for endpoints.
 
 Do not mix Material UI widgets with shadcn_flutter unless explicitly requested.
+
+Use `flutter/widgets.dart` as `fw` for basic Flutter layout/navigation.
+
+Avoid `package:flutter/material.dart` unless absolutely required.

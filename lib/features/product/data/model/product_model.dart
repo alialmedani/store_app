@@ -8,6 +8,8 @@ class ProductModel {
   final double? price;
   final int? totalStockQuantity;
   final bool? isActive;
+  final String? imageUrl;
+  final String? imageFullUrl;
   final DateTime? creationTime;
   final String? creatorId;
   final DateTime? lastModificationTime;
@@ -28,6 +30,8 @@ class ProductModel {
     this.price,
     this.totalStockQuantity,
     this.isActive,
+    this.imageUrl,
+    this.imageFullUrl,
     this.creationTime,
     this.creatorId,
     this.lastModificationTime,
@@ -49,6 +53,8 @@ class ProductModel {
       price: json['price'] != null ? (json['price'] as num).toDouble() : null,
       totalStockQuantity: json['totalStockQuantity'],
       isActive: json['isActive'],
+      imageUrl: json['imageUrl'],
+      imageFullUrl: json['imageFullUrl'],
       creationTime: json['creationTime'] != null
           ? DateTime.parse(json['creationTime'])
           : null,
@@ -82,6 +88,7 @@ class ProductModel {
       if (description != null) 'description': description,
       if (price != null) 'price': price,
       if (isActive != null) 'isActive': isActive,
+      if (imageUrl != null) 'imageUrl': imageUrl,
     };
   }
 }

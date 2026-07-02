@@ -11,6 +11,7 @@ class CreateProductParams extends BaseParams {
   bool isActive;
   int targetAudience;
   String categoryId;
+  String imageUrl;
 
   CreateProductParams({
     required this.name,
@@ -19,6 +20,7 @@ class CreateProductParams extends BaseParams {
     required this.isActive,
     required this.targetAudience,
     required this.categoryId,
+    required this.imageUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +31,7 @@ class CreateProductParams extends BaseParams {
       'isActive': isActive,
       'targetAudience': targetAudience,
       'categoryId': categoryId,
+      'imageUrl': imageUrl,
     };
   }
 }

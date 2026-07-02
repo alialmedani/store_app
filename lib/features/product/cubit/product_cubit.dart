@@ -19,6 +19,7 @@ class ProductCubit extends Cubit<ProductState> {
     isActive: true,
     targetAudience: 0,
     categoryId: '',
+    imageUrl: '',
   );
 
   // UI State Variables

@@ -5,6 +5,7 @@ import '../../auth/cubit/auth_cubit.dart';
 import '../../auth/screen/login_screen_shadcn.dart';
 import '../../category/screen/category_list_screen.dart';
 import '../../product/screen/product_list_screen.dart';
+import '../../product_variant/screen/product_variant_list_screen.dart';
 
 /// Home Screen - Main dashboard after login
 /// Uses shadcn_flutter components with clean, modern design
@@ -188,6 +189,20 @@ class HomeScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const ProductListScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _MenuCard(
+                    icon: Icons.style,
+                    title: 'Product Variants',
+                    subtitle: 'Manage variants',
+                    color: const Color(0xFF06B6D4),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductVariantListScreen(),
                         ),
                       );
                     },

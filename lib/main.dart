@@ -10,6 +10,7 @@ import 'package:store/features/product/cubit/product_cubit.dart';
 import 'core/classes/keys.dart';
 import 'features/auth/cubit/auth_cubit.dart';
 import 'features/category/cubit/category_cubit.dart';
+import 'features/product_variant/cubit/product_variant_cubit.dart';
 
 SharedPreferences? prefs;
 
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthCubit>(create: (context) => AuthCubit()),
         BlocProvider<CategoryCubit>(create: (context) => CategoryCubit()),
         BlocProvider<ProductCubit>(create: (context) => ProductCubit()),
+        BlocProvider<ProductVariantCubit>(
+          create: (context) => ProductVariantCubit(),
+        ),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,

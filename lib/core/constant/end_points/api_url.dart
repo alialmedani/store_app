@@ -17,3 +17,7 @@ String getProductDetailsUrl(String id) => '$baseUrl/api/app/product/$id';
 String updateProductUrl(String id) => '$baseUrl/api/app/product/$id';
 
 String deleteProductUrl(String id) => '$baseUrl/api/app/product/$id';
+
+// ========== Product Variant URLs ==========
+const createProductVariantUrl = '$baseUrl/api/app/product-variant';
+const getProductVariantListUrl = '$baseUrl/api/app/product-variant';
