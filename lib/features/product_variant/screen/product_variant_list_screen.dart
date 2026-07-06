@@ -241,7 +241,7 @@ class _ProductVariantCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),                // Edit Button
+                const SizedBox(width: 8), // Edit Button
                 IconButton(
                   icon: const Icon(Icons.edit, size: 16),
                   onPressed: () async {
@@ -249,9 +249,7 @@ class _ProductVariantCard extends StatelessWidget {
                       fw.PageRouteBuilder(
                         pageBuilder: (_, __, ___) => BlocProvider(
                           create: (ctx) => ProductVariantCubit(),
-                          child: UpdateProductVariantScreen(
-                            variant: variant,
-                          ),
+                          child: UpdateProductVariantScreen(variant: variant),
                         ),
                         transitionDuration: Duration.zero,
                         reverseTransitionDuration: Duration.zero,

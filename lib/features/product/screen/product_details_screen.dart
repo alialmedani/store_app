@@ -75,9 +75,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                               fw.PageRouteBuilder(
                                 pageBuilder: (_, __, ___) => BlocProvider.value(
                                   value: context.read<ProductCubit>(),
-                                  child: UpdateProductScreen(
-                                    product: product,
-                                  ),
+                                  child: UpdateProductScreen(product: product),
                                 ),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
@@ -86,9 +84,9 @@ class ProductDetailsScreen extends fw.StatelessWidget {
 
                             // Refresh details if product was updated
                             if (result != null) {
-                              context
-                                  .read<ProductCubit>()
-                                  .getProductDetails(productId);
+                              context.read<ProductCubit>().getProductDetails(
+                                productId,
+                              );
                             }
                           },
                           variance: ButtonVariance.ghost,

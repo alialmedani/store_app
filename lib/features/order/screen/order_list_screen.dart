@@ -143,7 +143,8 @@ class _OrderCard extends StatelessWidget {
         if (order.id != null) {
           fw.Navigator.of(context).push(
             fw.PageRouteBuilder(
-              pageBuilder: (_, __, ___) => OrderDetailsScreen(orderId: order.id!),
+              pageBuilder: (_, __, ___) =>
+                  OrderDetailsScreen(orderId: order.id!),
               transitionDuration: Duration.zero,
               reverseTransitionDuration: Duration.zero,
             ),
@@ -163,176 +164,174 @@ class _OrderCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          // Order Number and Date
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                order.orderNumber ?? 'N/A',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.foreground,
-                ),
-              ),
-              Row(
-                children: [
-                  if (order.creationTime != null)
-                    Text(
-                      _formatDate(order.creationTime!),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: theme.colorScheme.mutedForeground,
-                      ),
-                    ),
-                  const SizedBox(width: 8),
-                  // Edit Button
-                  IconButton(
-                    icon: const Icon(Icons.edit, size: 16),
-                    onPressed: () async {
-                      await fw.Navigator.of(context).push(
-                        fw.PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => BlocProvider(
-                            create: (ctx) => OrderCubit(),
-                            child: UpdateOrderScreen(
-                              order: order,
-                            ),
-                          ),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
-                      );
-                    },
-                    variance: ButtonVariance.ghost,
+            // Order Number and Date
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  order.orderNumber ?? 'N/A',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.foreground,
                   ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
+                ),
+                Row(
+                  children: [
+                    if (order.creationTime != null)
+                      Text(
+                        _formatDate(order.creationTime!),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: theme.colorScheme.mutedForeground,
+                        ),
+                      ),
+                    const SizedBox(width: 8),
+                    // Edit Button
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 16),
+                      onPressed: () async {
+                        await fw.Navigator.of(context).push(
+                          fw.PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => BlocProvider(
+                              create: (ctx) => OrderCubit(),
+                              child: UpdateOrderScreen(order: order),
+                            ),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
+                      variance: ButtonVariance.ghost,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
-          // Customer Name
-          Row(
-            children: [
-              Icon(
-                Icons.person_outline,
-                size: 16,
-                color: theme.colorScheme.mutedForeground,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  order.customerName ?? 'N/A',
+            // Customer Name
+            Row(
+              children: [
+                Icon(
+                  Icons.person_outline,
+                  size: 16,
+                  color: theme.colorScheme.mutedForeground,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    order.customerName ?? 'N/A',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: theme.colorScheme.foreground,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Phone
+            Row(
+              children: [
+                Icon(
+                  Icons.phone_outlined,
+                  size: 16,
+                  color: theme.colorScheme.mutedForeground,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  order.customerPhone ?? 'N/A',
                   style: TextStyle(
                     fontSize: 14,
                     color: theme.colorScheme.foreground,
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          // Phone
-          Row(
-            children: [
-              Icon(
-                Icons.phone_outlined,
-                size: 16,
-                color: theme.colorScheme.mutedForeground,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                order.customerPhone ?? 'N/A',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: theme.colorScheme.foreground,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-
-          // Status and Payment Status
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              if (order.status != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    order.status!.name ?? 'N/A',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.primary,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                ),
-              if (order.paymentStatus != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.secondary.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    order.paymentStatus!.name ?? 'N/A',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.secondary,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 12),
-
-          // Total Amount
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Total: ',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: theme.colorScheme.mutedForeground,
-                  ),
-                ),
-                Text(
-                  '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 12),
+
+            // Status and Payment Status
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (order.status != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      order.status!.name ?? 'N/A',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ),
+                if (order.paymentStatus != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.secondary.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      order.paymentStatus!.name ?? 'N/A',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.secondary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Total Amount
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Total: ',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: theme.colorScheme.mutedForeground,
+                    ),
+                  ),
+                  Text(
+                    '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 

@@ -72,9 +72,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                               fw.PageRouteBuilder(
                                 pageBuilder: (_, __, ___) => BlocProvider.value(
                                   value: context.read<OrderCubit>(),
-                                  child: UpdateOrderScreen(
-                                    order: order,
-                                  ),
+                                  child: UpdateOrderScreen(order: order),
                                 ),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
@@ -83,9 +81,9 @@ class OrderDetailsScreen extends fw.StatelessWidget {
 
                             // Refresh details if order was updated
                             if (result != null) {
-                              context
-                                  .read<OrderCubit>()
-                                  .getOrderDetails(orderId);
+                              context.read<OrderCubit>().getOrderDetails(
+                                orderId,
+                              );
                             }
                           },
                           variance: ButtonVariance.ghost,

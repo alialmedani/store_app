@@ -16,13 +16,12 @@ class UpdateOrderItemParams extends BaseParams {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'quantity': quantity,
-    };
+    return {'quantity': quantity};
   }
 }
 
-class UpdateOrderItemUsecase extends UseCase<OrderModel, UpdateOrderItemParams> {
+class UpdateOrderItemUsecase
+    extends UseCase<OrderModel, UpdateOrderItemParams> {
   final OrderRepository repository;
 
   UpdateOrderItemUsecase(this.repository);

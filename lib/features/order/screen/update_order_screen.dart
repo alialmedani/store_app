@@ -32,7 +32,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
     // Initialize params with existing order data
     cubit.updateOrderParams.orderId = widget.order.id ?? '';
     cubit.updateOrderParams.customerName = widget.order.customerName ?? '';
-    cubit.updateOrderParams.customerAddress = widget.order.customerAddress ?? '';
+    cubit.updateOrderParams.customerAddress =
+        widget.order.customerAddress ?? '';
     cubit.updateOrderParams.customerPhone = widget.order.customerPhone ?? '';
     cubit.updateOrderParams.note = widget.order.note ?? '';
 
@@ -173,9 +174,12 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _customerNameController,
-                                  placeholder: const Text('Enter customer name'),
+                                  placeholder: const Text(
+                                    'Enter customer name',
+                                  ),
                                   onChanged: (value) {
-                                    cubit.updateOrderParams.customerName = value;
+                                    cubit.updateOrderParams.customerName =
+                                        value;
                                     cubit.clearCustomerNameError();
                                   },
                                 ),
@@ -215,7 +219,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                   placeholder: const Text('Enter phone number'),
                                   keyboardType: TextInputType.phone,
                                   onChanged: (value) {
-                                    cubit.updateOrderParams.customerPhone = value;
+                                    cubit.updateOrderParams.customerPhone =
+                                        value;
                                     cubit.clearCustomerPhoneError();
                                   },
                                 ),
@@ -252,10 +257,13 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _customerAddressController,
-                                  placeholder: const Text('Enter delivery address'),
+                                  placeholder: const Text(
+                                    'Enter delivery address',
+                                  ),
                                   maxLines: 3,
                                   onChanged: (value) {
-                                    cubit.updateOrderParams.customerAddress = value;
+                                    cubit.updateOrderParams.customerAddress =
+                                        value;
                                     cubit.clearCustomerAddressError();
                                   },
                                 ),
@@ -279,12 +287,17 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                         // Note Field
                         const Text(
                           'Note (Optional)',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         const fw.SizedBox(height: 8),
                         TextField(
                           controller: _noteController,
-                          placeholder: const Text('Add special instructions or notes'),
+                          placeholder: const Text(
+                            'Add special instructions or notes',
+                          ),
                           maxLines: 3,
                           onChanged: (value) {
                             cubit.updateOrderParams.note = value;
@@ -314,7 +327,10 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                   PrimaryButton(
                                     onPressed: () {
                                       fw.Navigator.pop(ctx);
-                                      fw.Navigator.pop(context, true); // Return true to indicate success
+                                      fw.Navigator.pop(
+                                        context,
+                                        true,
+                                      ); // Return true to indicate success
                                     },
                                     child: const Text('OK'),
                                   ),
@@ -327,9 +343,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Error'),
-                                content: Text(
-                                  'Failed to update order: $error',
-                                ),
+                                content: Text('Failed to update order: $error'),
                                 actions: [
                                   PrimaryButton(
                                     onPressed: () => fw.Navigator.pop(ctx),

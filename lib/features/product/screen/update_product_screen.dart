@@ -38,7 +38,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
     cubit.updateProductParams.description = widget.product.description ?? '';
     cubit.updateProductParams.price = widget.product.price ?? 0.0;
     cubit.updateProductParams.isActive = widget.product.isActive ?? true;
-    cubit.updateProductParams.targetAudience = widget.product.targetAudience?.id ?? 0;
+    cubit.updateProductParams.targetAudience =
+        widget.product.targetAudience?.id ?? 0;
     cubit.updateProductParams.categoryId = widget.product.category?.id ?? '';
 
     // Initialize UI state
@@ -330,7 +331,10 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                           cubit.selectedTargetAudience,
                                       onSelected: (value) {
                                         cubit.selectTargetAudience(value);
-                                        cubit.updateProductParams.targetAudience = value;
+                                        cubit
+                                                .updateProductParams
+                                                .targetAudience =
+                                            value;
                                       },
                                     ),
                                     _TargetAudienceChip(
@@ -340,7 +344,10 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                           cubit.selectedTargetAudience,
                                       onSelected: (value) {
                                         cubit.selectTargetAudience(value);
-                                        cubit.updateProductParams.targetAudience = value;
+                                        cubit
+                                                .updateProductParams
+                                                .targetAudience =
+                                            value;
                                       },
                                     ),
                                     _TargetAudienceChip(
@@ -350,7 +357,10 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                           cubit.selectedTargetAudience,
                                       onSelected: (value) {
                                         cubit.selectTargetAudience(value);
-                                        cubit.updateProductParams.targetAudience = value;
+                                        cubit
+                                                .updateProductParams
+                                                .targetAudience =
+                                            value;
                                       },
                                     ),
                                     _TargetAudienceChip(
@@ -360,7 +370,10 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                           cubit.selectedTargetAudience,
                                       onSelected: (value) {
                                         cubit.selectTargetAudience(value);
-                                        cubit.updateProductParams.targetAudience = value;
+                                        cubit
+                                                .updateProductParams
+                                                .targetAudience =
+                                            value;
                                       },
                                     ),
                                   ],
@@ -375,7 +388,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                         BlocBuilder<ProductCubit, ProductState>(
                           builder: (context, state) {
                             return fw.Row(
-                              mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment:
+                                  fw.MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   'Active',
@@ -419,7 +433,10 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                   PrimaryButton(
                                     onPressed: () {
                                       fw.Navigator.pop(ctx);
-                                      fw.Navigator.pop(context, true); // Return true to indicate success
+                                      fw.Navigator.pop(
+                                        context,
+                                        true,
+                                      ); // Return true to indicate success
                                     },
                                     child: const Text('OK'),
                                   ),
