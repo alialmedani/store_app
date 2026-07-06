@@ -134,11 +134,12 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
   }
 
   Future<Result<List<ProductVariantModel>>> fetchProductVariantList(
-    data,
-  ) async {
+    data, {
+    String? productId,
+  }) async {
     return await GetProductVariantListUsecase(
       ProductVariantRepository(),
-    ).call(params: GetProductVariantListParams(request: data));
+    ).call(params: GetProductVariantListParams(request: data, productId: productId));
   }
 
   Future<Result<ProductVariantModel>> getProductVariantDetails(

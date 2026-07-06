@@ -7,8 +7,9 @@ import '../repository/product_repository.dart';
 
 class GetProductListParams extends BaseParams {
   final GetListRequest? request;
+  final String? categoryId;
 
-  GetProductListParams({this.request});
+  GetProductListParams({this.request, this.categoryId});
 
   Map<String, dynamic> toJson() {
     return {
@@ -16,6 +17,7 @@ class GetProductListParams extends BaseParams {
         'SkipCount': request!.skip,
         'MaxResultCount': request!.take,
       },
+      if (categoryId != null) 'CategoryId': categoryId,
     };
   }
 }

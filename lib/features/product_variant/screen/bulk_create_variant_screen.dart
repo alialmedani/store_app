@@ -79,10 +79,9 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                         color: Theme.of(context).colorScheme.muted,
                         borderRadius: fw.BorderRadius.circular(8),
                         border: fw.Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .border
-                              .withOpacity(0.3),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.border.withOpacity(0.3),
                         ),
                       ),
                       child: Text(
@@ -306,8 +305,9 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                             return VariantItem(
                               color: v.colorController.text.trim(),
                               size: v.sizeController.text.trim(),
-                              stockQuantity:
-                                  int.parse(v.stockController.text.trim()),
+                              stockQuantity: int.parse(
+                                v.stockController.text.trim(),
+                              ),
                               isActive: v.isActive,
                             );
                           }).toList(),
@@ -446,10 +446,7 @@ class _VariantCardState extends State<_VariantCard> {
             // Color Field
             const Text(
               'Color',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -461,10 +458,7 @@ class _VariantCardState extends State<_VariantCard> {
             // Size Field
             const Text(
               'Size',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -476,10 +470,7 @@ class _VariantCardState extends State<_VariantCard> {
             // Stock Quantity Field
             const Text(
               'Stock Quantity',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -495,10 +486,7 @@ class _VariantCardState extends State<_VariantCard> {
                 const Expanded(
                   child: Text(
                     'Active',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Switch(

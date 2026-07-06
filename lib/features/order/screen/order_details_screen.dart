@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-import '../../../core/boilerplate/get_model/get_model.dart';
+import '../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../cubit/order_cubit.dart';
 import '../data/model/order_model.dart';
 
@@ -20,58 +20,58 @@ class OrderDetailsScreen extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      child: SafeArea(
-        child: fw.Column(
-          children: [
-            // App Bar
-            fw.Container(
-              padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
-              decoration: fw.BoxDecoration(
-                color: theme.colorScheme.background,
-                border: fw.Border(
-                  bottom: fw.BorderSide(
-                    color: theme.colorScheme.border.withOpacity(0.1),
-                    width: 1,
+    return BlocProvider(
+      create: (context) => OrderCubit(),
+      child: Scaffold(
+        child: SafeArea(
+          child: fw.Column(
+            children: [
+              // App Bar
+              fw.Container(
+                padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
+                decoration: fw.BoxDecoration(
+                  color: theme.colorScheme.background,
+                  border: fw.Border(
+                    bottom: fw.BorderSide(
+                      color: theme.colorScheme.border.withOpacity(0.1),
+                      width: 1,
+                    ),
                   ),
                 ),
-              ),
-              child: fw.Row(
-                children: [
-                  fw.Container(
-                    decoration: fw.BoxDecoration(
-                      color: theme.colorScheme.muted.withOpacity(0.3),
-                      borderRadius: fw.BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, size: 20),
-                      onPressed: () => fw.Navigator.pop(context),
-                      variance: ButtonVariance.ghost,
-                    ),
-                  ),
-                  const fw.SizedBox(width: 12),
-                  const fw.Expanded(
-                    child: Text(
-                      'Order Details',
-                      style: fw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: fw.FontWeight.w700,
-                        letterSpacing: -0.5,
+                child: fw.Row(
+                  children: [
+                    fw.Container(
+                      decoration: fw.BoxDecoration(
+                        color: theme.colorScheme.muted.withOpacity(0.3),
+                        borderRadius: fw.BorderRadius.circular(12),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, size: 20),
+                        onPressed: () => fw.Navigator.pop(context),
+                        variance: ButtonVariance.ghost,
                       ),
                     ),
-                  ),
-                ],
+                    const fw.SizedBox(width: 12),
+                    const fw.Expanded(
+                      child: Text(
+                        'Order Details',
+                        style: fw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: fw.FontWeight.w700,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // Content
-            fw.Expanded(
-              child: GetModel<OrderModel>(
-                modelId: orderId,
-                repositoryCallBack: (id) {
-                  return context.read<OrderCubit>().getOrderDetails(id);
-                },
-                modelBuilder: (order) {
+              // Content
+              fw.Expanded(
+                child: GetModel<OrderModel>(
+                  useCaseCallBack: () =>
+                      context.read<OrderCubit>().getOrderDetails(orderId),
+                  modelBuilder: (order) {
                   return fw.SingleChildScrollView(
                     padding: const fw.EdgeInsets.all(20),
                     child: fw.Column(
@@ -384,7 +384,8 @@ class OrderDetailsScreen extends fw.StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
 

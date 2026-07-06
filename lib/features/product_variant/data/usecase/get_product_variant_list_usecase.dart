@@ -7,8 +7,9 @@ import '../repository/product_variant_repository.dart';
 
 class GetProductVariantListParams extends BaseParams {
   final GetListRequest? request;
+  final String? productId;
 
-  GetProductVariantListParams({this.request});
+  GetProductVariantListParams({this.request, this.productId});
 
   Map<String, dynamic> toJson() {
     return {
@@ -16,6 +17,7 @@ class GetProductVariantListParams extends BaseParams {
         'SkipCount': request!.skip,
         'MaxResultCount': request!.take,
       },
+      if (productId != null) 'ProductId': productId,
     };
   }
 }

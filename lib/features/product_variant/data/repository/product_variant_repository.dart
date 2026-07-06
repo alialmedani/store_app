@@ -69,7 +69,9 @@ class ProductVariantRepository extends CoreRepository {
       method: HttpMethod.POST,
       converter2: (json) {
         if (json is List) {
-          return json.map((item) => ProductVariantModel.fromJson(item)).toList();
+          return json
+              .map((item) => ProductVariantModel.fromJson(item))
+              .toList();
         }
         return [];
       },
@@ -88,7 +90,9 @@ class ProductVariantRepository extends CoreRepository {
       method: HttpMethod.POST,
       converter2: (json) {
         if (json is List) {
-          return json.map((item) => ProductVariantModel.fromJson(item)).toList();
+          return json
+              .map((item) => ProductVariantModel.fromJson(item))
+              .toList();
         }
         return [];
       },

@@ -92,7 +92,9 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                               ),
                               borderRadius: fw.BorderRadius.circular(20),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(0.3),
+                                color: theme.colorScheme.border.withOpacity(
+                                  0.3,
+                                ),
                                 width: 1,
                               ),
                             ),
@@ -125,20 +127,25 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                           // Variant Info Cards
                           fw.Row(
                             children: [
-                              if (variant.color != null && variant.color!.isNotEmpty)
+                              if (variant.color != null &&
+                                  variant.color!.isNotEmpty)
                                 fw.Expanded(
                                   child: Container(
                                     padding: const fw.EdgeInsets.all(16),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.card,
-                                      borderRadius: fw.BorderRadius.circular(16),
+                                      borderRadius: fw.BorderRadius.circular(
+                                        16,
+                                      ),
                                       border: Border.all(
-                                        color: theme.colorScheme.border.withOpacity(0.5),
+                                        color: theme.colorScheme.border
+                                            .withOpacity(0.5),
                                         width: 1,
                                       ),
                                     ),
                                     child: fw.Column(
-                                      crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          fw.CrossAxisAlignment.start,
                                       children: [
                                         fw.Row(
                                           children: [
@@ -153,7 +160,9 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w600,
-                                                color: theme.colorScheme.mutedForeground,
+                                                color: theme
+                                                    .colorScheme
+                                                    .mutedForeground,
                                               ),
                                             ),
                                           ],
@@ -175,20 +184,25 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                   variant.size != null &&
                                   variant.size!.isNotEmpty)
                                 const fw.SizedBox(width: 12),
-                              if (variant.size != null && variant.size!.isNotEmpty)
+                              if (variant.size != null &&
+                                  variant.size!.isNotEmpty)
                                 fw.Expanded(
                                   child: Container(
                                     padding: const fw.EdgeInsets.all(16),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.card,
-                                      borderRadius: fw.BorderRadius.circular(16),
+                                      borderRadius: fw.BorderRadius.circular(
+                                        16,
+                                      ),
                                       border: Border.all(
-                                        color: theme.colorScheme.border.withOpacity(0.5),
+                                        color: theme.colorScheme.border
+                                            .withOpacity(0.5),
                                         width: 1,
                                       ),
                                     ),
                                     child: fw.Column(
-                                      crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          fw.CrossAxisAlignment.start,
                                       children: [
                                         fw.Row(
                                           children: [
@@ -203,7 +217,9 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w600,
-                                                color: theme.colorScheme.mutedForeground,
+                                                color: theme
+                                                    .colorScheme
+                                                    .mutedForeground,
                                               ),
                                             ),
                                           ],
@@ -234,12 +250,14 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                     color: theme.colorScheme.card,
                                     borderRadius: fw.BorderRadius.circular(16),
                                     border: Border.all(
-                                      color: theme.colorScheme.border.withOpacity(0.5),
+                                      color: theme.colorScheme.border
+                                          .withOpacity(0.5),
                                       width: 1,
                                     ),
                                   ),
                                   child: fw.Column(
-                                    crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        fw.CrossAxisAlignment.start,
                                     children: [
                                       fw.Row(
                                         children: [
@@ -254,14 +272,17 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                             style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              color: theme.colorScheme.mutedForeground,
+                                              color: theme
+                                                  .colorScheme
+                                                  .mutedForeground,
                                             ),
                                           ),
                                         ],
                                       ),
                                       const fw.SizedBox(height: 8),
                                       Text(
-                                        variant.stockQuantity?.toString() ?? '0',
+                                        variant.stockQuantity?.toString() ??
+                                            '0',
                                         style: const TextStyle(
                                           fontSize: 22,
                                           fontWeight: FontWeight.w700,
@@ -279,13 +300,21 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: variant.isActive == true
-                                      ? theme.colorScheme.primary.withOpacity(0.1)
-                                      : theme.colorScheme.muted.withOpacity(0.3),
+                                      ? theme.colorScheme.primary.withOpacity(
+                                          0.1,
+                                        )
+                                      : theme.colorScheme.muted.withOpacity(
+                                          0.3,
+                                        ),
                                   borderRadius: fw.BorderRadius.circular(16),
                                   border: Border.all(
                                     color: variant.isActive == true
-                                        ? theme.colorScheme.primary.withOpacity(0.3)
-                                        : theme.colorScheme.border.withOpacity(0.3),
+                                        ? theme.colorScheme.primary.withOpacity(
+                                            0.3,
+                                          )
+                                        : theme.colorScheme.border.withOpacity(
+                                            0.3,
+                                          ),
                                     width: 1,
                                   ),
                                 ),
@@ -296,12 +325,15 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
-                                        color: theme.colorScheme.mutedForeground,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
                                       ),
                                     ),
                                     const fw.SizedBox(height: 8),
                                     Text(
-                                      variant.isActive == true ? 'Active' : 'Inactive',
+                                      variant.isActive == true
+                                          ? 'Active'
+                                          : 'Inactive',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
@@ -334,7 +366,9 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                               color: theme.colorScheme.card,
                               borderRadius: fw.BorderRadius.circular(16),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(0.5),
+                                color: theme.colorScheme.border.withOpacity(
+                                  0.5,
+                                ),
                                 width: 1,
                               ),
                             ),
@@ -348,7 +382,8 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 const fw.SizedBox(height: 16),
                                 _DetailRow(
                                   label: 'Availability',
-                                  value: variant.availabilityStatus?.name ?? 'N/A',
+                                  value:
+                                      variant.availabilityStatus?.name ?? 'N/A',
                                   theme: theme,
                                 ),
                                 if (variant.creationTime != null) ...[
@@ -363,7 +398,9 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                   const fw.SizedBox(height: 16),
                                   _DetailRow(
                                     label: 'Last Modified',
-                                    value: _formatDate(variant.lastModificationTime!),
+                                    value: _formatDate(
+                                      variant.lastModificationTime!,
+                                    ),
                                     theme: theme,
                                   ),
                                 ],

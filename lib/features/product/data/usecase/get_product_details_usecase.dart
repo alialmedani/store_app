@@ -17,9 +17,7 @@ class GetProductDetailsUsecase
   GetProductDetailsUsecase(this.repository);
 
   @override
-  Future<Result<ProductModel>> call({
-    required GetProductDetailsParams params,
-  }) {
+  Future<Result<ProductModel>> call({required GetProductDetailsParams params}) {
     return repository.getProductDetailsRequest(params: params);
   }
 }

@@ -126,14 +126,14 @@ class ProductCubit extends Cubit<ProductState> {
     // Step 2: Upload image if selected
     if (selectedImageFile != null && productId != null) {
       print('📤 Step 2: Uploading image...');
-      
+
       isUploadingImage = true;
       emit(UpdateProductParams());
 
       final uploadResult = await FileUploadRepository().uploadFile(
         file: selectedImageFile!,
-        entityId: productId,  // ✅ Real productId
-        entityType: 2,         // Product = 2
+        entityId: productId, // ✅ Real productId
+        entityType: 2, // Product = 2
         filePlacement: 'main', // or 'product-main'
       );
 
@@ -153,7 +153,7 @@ class ProductCubit extends Cubit<ProductState> {
   }
 
   // API Methods (NO emit - boilerplate handles state)
-  
+
   /// OLD METHOD: Create product only (no image handling)
   /// Use createProductWithImage() instead for new features
   Future<Result<ProductModel>> createProduct() async {
@@ -168,10 +168,10 @@ class ProductCubit extends Cubit<ProductState> {
     ).call(params: createProductParams);
   }
 
-  Future<Result<List<ProductModel>>> fetchProductList(data) async {
+  Future<Result<List<ProductModel>>> fetchProductList(data, {String? categoryId}) async {
     return await GetProductListUsecase(
       ProductRepository(),
-    ).call(params: GetProductListParams(request: data));
+    ).call(params: GetProductListParams(request: data, categoryId: categoryId));
   }
 
   Future<Result<ProductModel>> getProductDetails(String productId) async {

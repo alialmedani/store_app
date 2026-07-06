@@ -214,11 +214,7 @@ class _OptionCard extends StatelessWidget {
                       color: buttonColor.withOpacity(0.1),
                       borderRadius: fw.BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      icon,
-                      size: 28,
-                      color: buttonColor,
-                    ),
+                    child: Icon(icon, size: 28, color: buttonColor),
                   ),
                   const SizedBox(width: 16),
                   Expanded(

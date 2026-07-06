@@ -2,11 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
-import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
-import '../../product_variant/cubit/product_variant_cubit.dart';
-import '../../product_variant/data/model/product_variant_model.dart';
 import '../cubit/order_cubit.dart';
 import '../data/usecase/create_order_usecase.dart';
+import 'widgets/add_product_dialog.dart';
 
 /// Create Order Screen - Form to create new order
 /// Uses CreateModel widget for state management
@@ -460,16 +458,13 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   void _showAddItemDialog(BuildContext context, OrderCubit cubit) {
     showDialog(
       context: context,
-      builder: (ctx) => BlocProvider(
-        create: (_) => ProductVariantCubit(),
-        child: _AddItemDialog(
-          onItemAdded: (productVariantId, quantity) {
-            cubit.addOrderItem(
-              productVariantId: productVariantId,
-              quantity: quantity,
-            );
-          },
-        ),
+      builder: (ctx) => AddProductDialog(
+        onItemAdded: (productVariantId, quantity) {
+          cubit.addOrderItem(
+            productVariantId: productVariantId,
+            quantity: quantity,
+          );
+        },
       ),
     );
   }
@@ -544,194 +539,6 @@ class _OrderItemTile extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// Add Item Dialog
-class _AddItemDialog extends StatefulWidget {
-  final Function(String productVariantId, int quantity) onItemAdded;
-
-  const _AddItemDialog({required this.onItemAdded});
-
-  @override
-  State<_AddItemDialog> createState() => _AddItemDialogState();
-}
-
-class _AddItemDialogState extends State<_AddItemDialog> {
-  final _quantityController = TextEditingController(text: '1');
-  String? selectedVariantId;
-
-  @override
-  void dispose() {
-    _quantityController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return AlertDialog(
-      title: const Text('Add Item to Order'),
-      content: SizedBox(
-        width: 400,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Product Variant Selector
-            const Text(
-              'Select Product Variant',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              constraints: const BoxConstraints(maxHeight: 300),
-              child: PaginationList<ProductVariantModel>(
-                withPagination: true,
-                withRefresh: false,
-                repositoryCallBack: (data) {
-                  return context
-                      .read<ProductVariantCubit>()
-                      .fetchProductVariantList(data);
-                },
-                listBuilder: (list) {
-                  if (list.isEmpty) {
-                    return const Center(
-                      child: Text('No product variants available'),
-                    );
-                  }
-
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      final variant = list[index];
-                      final isSelected = selectedVariantId == variant.id;
-
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedVariantId = variant.id;
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? theme.colorScheme.primary.withOpacity(0.1)
-                                : theme.colorScheme.muted.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.border.withOpacity(0.2),
-                              width: isSelected ? 2 : 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                variant.productName ?? 'N/A',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Color: ${variant.color ?? 'N/A'} | Size: ${variant.size ?? 'N/A'}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: theme.colorScheme.mutedForeground,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Stock: ${variant.stockQuantity ?? 0}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: theme.colorScheme.mutedForeground,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Quantity Field
-            const Text(
-              'Quantity',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _quantityController,
-              placeholder: const Text('Enter quantity'),
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: false,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        OutlineButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        PrimaryButton(
-          onPressed: () {
-            if (selectedVariantId == null) {
-              showDialog(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text('Error'),
-                  content: const Text('Please select a product variant'),
-                  actions: [
-                    PrimaryButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-              return;
-            }
-
-            final quantity = int.tryParse(_quantityController.text) ?? 1;
-            if (quantity <= 0) {
-              showDialog(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text('Error'),
-                  content: const Text('Quantity must be greater than 0'),
-                  actions: [
-                    PrimaryButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-              return;
-            }
-
-            widget.onItemAdded(selectedVariantId!, quantity);
-            Navigator.pop(context);
-          },
-          child: const Text('Add'),
-        ),
-      ],
     );
   }
 }

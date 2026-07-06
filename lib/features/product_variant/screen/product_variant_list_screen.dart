@@ -169,151 +169,152 @@ class _ProductVariantCard extends StatelessWidget {
             ),
           ],
         ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      variant.productName ?? 'N/A',
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        variant.productName ?? 'N/A',
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 6,
-                      children: [
-                        if (variant.color != null && variant.color!.isNotEmpty)
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.palette_outlined,
-                                size: 14,
-                                color: theme.colorScheme.mutedForeground,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                variant.color!,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 6,
+                        children: [
+                          if (variant.color != null &&
+                              variant.color!.isNotEmpty)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.palette_outlined,
+                                  size: 14,
                                   color: theme.colorScheme.mutedForeground,
                                 ),
-                              ),
-                            ],
-                          ),
-                        if (variant.size != null && variant.size!.isNotEmpty)
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.straighten,
-                                size: 14,
-                                color: theme.colorScheme.mutedForeground,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                variant.size!,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                                const SizedBox(width: 4),
+                                Text(
+                                  variant.color!,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: theme.colorScheme.mutedForeground,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          if (variant.size != null && variant.size!.isNotEmpty)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.straighten,
+                                  size: 14,
                                   color: theme.colorScheme.mutedForeground,
                                 ),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ],
+                                const SizedBox(width: 4),
+                                Text(
+                                  variant.size!,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: theme.colorScheme.mutedForeground,
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              if (variant.isActive != null)
-                fw.Container(
-                  padding: const fw.EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: fw.BoxDecoration(
-                    color: variant.isActive!
-                        ? const Color(0xFF10B981).withOpacity(0.12)
-                        : const Color(0xFFEF4444).withOpacity(0.12),
-                    borderRadius: fw.BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    variant.isActive! ? 'Active' : 'Inactive',
-                    style: TextStyle(
+                const SizedBox(width: 8),
+                if (variant.isActive != null)
+                  fw.Container(
+                    padding: const fw.EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: fw.BoxDecoration(
                       color: variant.isActive!
-                          ? const Color(0xFF10B981)
-                          : const Color(0xFFEF4444),
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.3,
+                          ? const Color(0xFF10B981).withOpacity(0.12)
+                          : const Color(0xFFEF4444).withOpacity(0.12),
+                      borderRadius: fw.BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      variant.isActive! ? 'Active' : 'Inactive',
+                      style: TextStyle(
+                        color: variant.isActive!
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFFEF4444),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.inventory_2_outlined,
-                      size: 15,
-                      color: theme.colorScheme.mutedForeground,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Stock: ${variant.stockQuantity ?? 0}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.inventory_2_outlined,
+                        size: 15,
                         color: theme.colorScheme.mutedForeground,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              if (variant.availabilityStatus != null)
-                fw.Container(
-                  padding: const fw.EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.secondary.withOpacity(0.12),
-                    borderRadius: fw.BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    variant.availabilityStatus!.name ?? 'N/A',
-                    style: TextStyle(
-      
-                    color: theme.colorScheme.secondary,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.3,
-                    ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Stock: ${variant.stockQuantity ?? 0}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.mutedForeground,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-            ],
-          ),
-        ],
-      ),)
+                if (variant.availabilityStatus != null)
+                  fw.Container(
+                    padding: const fw.EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: fw.BoxDecoration(
+                      color: theme.colorScheme.secondary.withOpacity(0.12),
+                      borderRadius: fw.BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      variant.availabilityStatus!.name ?? 'N/A',
+                      style: TextStyle(
+                        color: theme.colorScheme.secondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

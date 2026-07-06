@@ -265,7 +265,8 @@ class _CreateProductVariantScreenState
                                       '(Optional)',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: theme.colorScheme.mutedForeground,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
                                       ),
                                     ),
                                   ],
@@ -273,9 +274,12 @@ class _CreateProductVariantScreenState
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _colorController,
-                                  placeholder: const Text('Enter color (optional)'),
+                                  placeholder: const Text(
+                                    'Enter color (optional)',
+                                  ),
                                   onChanged: (value) {
-                                    cubit.createProductVariantParams.color = value.isEmpty ? null : value;
+                                    cubit.createProductVariantParams.color =
+                                        value.isEmpty ? null : value;
                                     cubit.clearColorError();
                                   },
                                 ),
@@ -316,7 +320,8 @@ class _CreateProductVariantScreenState
                                       '(Optional)',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: theme.colorScheme.mutedForeground,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
                                       ),
                                     ),
                                   ],
@@ -324,9 +329,12 @@ class _CreateProductVariantScreenState
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _sizeController,
-                                  placeholder: const Text('Enter size (optional)'),
+                                  placeholder: const Text(
+                                    'Enter size (optional)',
+                                  ),
                                   onChanged: (value) {
-                                    cubit.createProductVariantParams.size = value.isEmpty ? null : value;
+                                    cubit.createProductVariantParams.size =
+                                        value.isEmpty ? null : value;
                                     cubit.clearSizeError();
                                   },
                                 ),

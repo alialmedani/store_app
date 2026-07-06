@@ -48,7 +48,8 @@ String deleteProductUrl(String id) => '$baseUrl/api/app/product/$id';
 
 // ========== Product Variant URLs ==========
 const createProductVariantUrl = '$baseUrl/api/app/product-variant';
-const bulkCreateProductVariantUrl = '$baseUrl/api/app/product-variant/bulk-create';
+const bulkCreateProductVariantUrl =
+    '$baseUrl/api/app/product-variant/bulk-create';
 const generateProductVariantUrl = '$baseUrl/api/app/product-variant/generate';
 const getProductVariantListUrl = '$baseUrl/api/app/product-variant';
 

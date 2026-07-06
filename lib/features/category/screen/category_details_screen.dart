@@ -12,10 +12,7 @@ import '../data/model/category_model.dart';
 class CategoryDetailsScreen extends fw.StatelessWidget {
   final String categoryId;
 
-  const CategoryDetailsScreen({
-    super.key,
-    required this.categoryId,
-  });
+  const CategoryDetailsScreen({super.key, required this.categoryId});
 
   @override
   fw.Widget build(fw.BuildContext context) {
@@ -26,9 +23,12 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
       child: Scaffold(
         child: SafeArea(
           child: GetModel<CategoryModel>(
-            useCaseCallBack: () => context.read<CategoryCubit>().getCategoryDetails(categoryId),
+            useCaseCallBack: () =>
+                context.read<CategoryCubit>().getCategoryDetails(categoryId),
             modelBuilder: (category) {
-              final imageUrl = ImageHelper.getCategoryImageUrl(category.id ?? '');
+              final imageUrl = ImageHelper.getCategoryImageUrl(
+                category.id ?? '',
+              );
 
               return fw.Column(
                 children: [
@@ -87,7 +87,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                               color: theme.colorScheme.muted.withOpacity(0.3),
                               borderRadius: fw.BorderRadius.circular(20),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(0.3),
+                                color: theme.colorScheme.border.withOpacity(
+                                  0.3,
+                                ),
                                 width: 1,
                               ),
                             ),
@@ -100,7 +102,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 fit: fw.BoxFit.cover,
                                 errorWidget: Container(
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.muted.withOpacity(0.3),
+                                    color: theme.colorScheme.muted.withOpacity(
+                                      0.3,
+                                    ),
                                     borderRadius: fw.BorderRadius.circular(20),
                                   ),
                                   child: Icon(
@@ -136,36 +140,48 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: category.isActive == true
-                                        ? theme.colorScheme.primary.withOpacity(0.1)
-                                        : theme.colorScheme.muted.withOpacity(0.3),
+                                        ? theme.colorScheme.primary.withOpacity(
+                                            0.1,
+                                          )
+                                        : theme.colorScheme.muted.withOpacity(
+                                            0.3,
+                                          ),
                                     borderRadius: fw.BorderRadius.circular(12),
                                     border: Border.all(
                                       color: category.isActive == true
-                                          ? theme.colorScheme.primary.withOpacity(0.3)
-                                          : theme.colorScheme.border.withOpacity(0.3),
+                                          ? theme.colorScheme.primary
+                                                .withOpacity(0.3)
+                                          : theme.colorScheme.border
+                                                .withOpacity(0.3),
                                       width: 1,
                                     ),
                                   ),
                                   child: fw.Column(
-                                    crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        fw.CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Status',
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.mutedForeground,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
                                         ),
                                       ),
                                       const fw.SizedBox(height: 4),
                                       Text(
-                                        category.isActive == true ? 'Active' : 'Inactive',
+                                        category.isActive == true
+                                            ? 'Active'
+                                            : 'Inactive',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w700,
                                           color: category.isActive == true
                                               ? theme.colorScheme.primary
-                                              : theme.colorScheme.mutedForeground,
+                                              : theme
+                                                    .colorScheme
+                                                    .mutedForeground,
                                         ),
                                       ),
                                     ],
@@ -180,22 +196,26 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                     vertical: 12,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.secondary.withOpacity(0.1),
+                                    color: theme.colorScheme.secondary
+                                        .withOpacity(0.1),
                                     borderRadius: fw.BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: theme.colorScheme.secondary.withOpacity(0.3),
+                                      color: theme.colorScheme.secondary
+                                          .withOpacity(0.3),
                                       width: 1,
                                     ),
                                   ),
                                   child: fw.Column(
-                                    crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        fw.CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Size Type',
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.mutedForeground,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
                                         ),
                                       ),
                                       const fw.SizedBox(height: 4),
@@ -216,7 +236,8 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                           const fw.SizedBox(height: 24),
 
                           // Description Section
-                          if (category.description != null && category.description!.isNotEmpty) ...[
+                          if (category.description != null &&
+                              category.description!.isNotEmpty) ...[
                             Text(
                               'Description',
                               style: const TextStyle(
@@ -233,7 +254,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 color: theme.colorScheme.card,
                                 borderRadius: fw.BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: theme.colorScheme.border.withOpacity(0.5),
+                                  color: theme.colorScheme.border.withOpacity(
+                                    0.5,
+                                  ),
                                   width: 1,
                                 ),
                               ),
@@ -266,7 +289,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                               color: theme.colorScheme.card,
                               borderRadius: fw.BorderRadius.circular(16),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(0.5),
+                                color: theme.colorScheme.border.withOpacity(
+                                  0.5,
+                                ),
                                 width: 1,
                               ),
                             ),
@@ -274,7 +299,8 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                               children: [
                                 _DetailRow(
                                   label: 'Size Type ID',
-                                  value: category.sizeTypeId?.toString() ?? 'N/A',
+                                  value:
+                                      category.sizeTypeId?.toString() ?? 'N/A',
                                   theme: theme,
                                 ),
                                 if (category.creationTime != null) ...[
@@ -289,7 +315,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                   const fw.SizedBox(height: 16),
                                   _DetailRow(
                                     label: 'Last Modified',
-                                    value: _formatDate(category.lastModificationTime!),
+                                    value: _formatDate(
+                                      category.lastModificationTime!,
+                                    ),
                                     theme: theme,
                                   ),
                                 ],

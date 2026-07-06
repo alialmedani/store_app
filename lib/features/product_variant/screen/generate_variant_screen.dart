@@ -96,10 +96,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         color: Theme.of(context).colorScheme.muted,
                         borderRadius: fw.BorderRadius.circular(8),
                         border: fw.Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .border
-                              .withOpacity(0.3),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.border.withOpacity(0.3),
                         ),
                       ),
                       child: Text(
@@ -177,10 +176,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
           children: [
             Text(
               'This will generate $totalVariants variants:',
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             Text(
@@ -444,8 +440,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                       decoration: fw.BoxDecoration(
                                         color: theme.colorScheme.primary
                                             .withOpacity(0.1),
-                                        borderRadius:
-                                            fw.BorderRadius.circular(8),
+                                        borderRadius: fw.BorderRadius.circular(
+                                          8,
+                                        ),
                                         border: fw.Border.all(
                                           color: theme.colorScheme.primary
                                               .withOpacity(0.3),
@@ -527,13 +524,16 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                         vertical: 8,
                                       ),
                                       decoration: fw.BoxDecoration(
-                                        color: const Color(0xFF10B981)
-                                            .withOpacity(0.1),
-                                        borderRadius:
-                                            fw.BorderRadius.circular(8),
+                                        color: const Color(
+                                          0xFF10B981,
+                                        ).withOpacity(0.1),
+                                        borderRadius: fw.BorderRadius.circular(
+                                          8,
+                                        ),
                                         border: fw.Border.all(
-                                          color: const Color(0xFF10B981)
-                                              .withOpacity(0.3),
+                                          color: const Color(
+                                            0xFF10B981,
+                                          ).withOpacity(0.3),
                                         ),
                                       ),
                                       child: Row(
@@ -670,7 +670,8 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                       '${colors.length} colors × ${sizes.length} sizes',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: theme.colorScheme.mutedForeground,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
                                       ),
                                     ),
                                   ],
@@ -698,8 +699,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                           productId: selectedProduct!.id!,
                           colors: colors,
                           sizes: sizes,
-                          defaultStockQuantity:
-                              int.parse(_defaultStockController.text.trim()),
+                          defaultStockQuantity: int.parse(
+                            _defaultStockController.text.trim(),
+                          ),
                           skipExisting: skipExisting,
                           isActive: isActive,
                         );
@@ -747,10 +749,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Icon(
-                              Icons.auto_awesome,
-                              size: 18,
-                            ),
+                            Icon(Icons.auto_awesome, size: 18),
                             SizedBox(width: 8),
                             Text(
                               'Generate All Variants',

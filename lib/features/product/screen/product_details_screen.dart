@@ -12,10 +12,7 @@ import '../data/model/product_model.dart';
 class ProductDetailsScreen extends fw.StatelessWidget {
   final String productId;
 
-  const ProductDetailsScreen({
-    super.key,
-    required this.productId,
-  });
+  const ProductDetailsScreen({super.key, required this.productId});
 
   @override
   fw.Widget build(fw.BuildContext context) {
@@ -26,7 +23,8 @@ class ProductDetailsScreen extends fw.StatelessWidget {
       child: Scaffold(
         child: SafeArea(
           child: GetModel<ProductModel>(
-            useCaseCallBack: () => context.read<ProductCubit>().getProductDetails(productId),
+            useCaseCallBack: () =>
+                context.read<ProductCubit>().getProductDetails(productId),
             modelBuilder: (product) {
               final imageUrl = ImageHelper.getProductImageUrl(product.id ?? '');
 
@@ -87,7 +85,9 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                               color: theme.colorScheme.muted.withOpacity(0.3),
                               borderRadius: fw.BorderRadius.circular(20),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(0.3),
+                                color: theme.colorScheme.border.withOpacity(
+                                  0.3,
+                                ),
                                 width: 1,
                               ),
                             ),
@@ -100,7 +100,9 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                 fit: fw.BoxFit.cover,
                                 errorWidget: Container(
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.muted.withOpacity(0.3),
+                                    color: theme.colorScheme.muted.withOpacity(
+                                      0.3,
+                                    ),
                                     borderRadius: fw.BorderRadius.circular(20),
                                   ),
                                   child: Icon(
@@ -135,22 +137,26 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                     vertical: 12,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary.withOpacity(0.1),
+                                    color: theme.colorScheme.primary
+                                        .withOpacity(0.1),
                                     borderRadius: fw.BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: theme.colorScheme.primary.withOpacity(0.3),
+                                      color: theme.colorScheme.primary
+                                          .withOpacity(0.3),
                                       width: 1,
                                     ),
                                   ),
                                   child: fw.Column(
-                                    crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        fw.CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Price',
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.mutedForeground,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
                                         ),
                                       ),
                                       const fw.SizedBox(height: 4),
@@ -174,13 +180,21 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: product.isActive == true
-                                      ? theme.colorScheme.primary.withOpacity(0.1)
-                                      : theme.colorScheme.muted.withOpacity(0.3),
+                                      ? theme.colorScheme.primary.withOpacity(
+                                          0.1,
+                                        )
+                                      : theme.colorScheme.muted.withOpacity(
+                                          0.3,
+                                        ),
                                   borderRadius: fw.BorderRadius.circular(12),
                                   border: Border.all(
                                     color: product.isActive == true
-                                        ? theme.colorScheme.primary.withOpacity(0.3)
-                                        : theme.colorScheme.border.withOpacity(0.3),
+                                        ? theme.colorScheme.primary.withOpacity(
+                                            0.3,
+                                          )
+                                        : theme.colorScheme.border.withOpacity(
+                                            0.3,
+                                          ),
                                     width: 1,
                                   ),
                                 ),
@@ -191,12 +205,15 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
-                                        color: theme.colorScheme.mutedForeground,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
                                       ),
                                     ),
                                     const fw.SizedBox(height: 4),
                                     Text(
-                                      product.isActive == true ? 'Active' : 'Inactive',
+                                      product.isActive == true
+                                          ? 'Active'
+                                          : 'Inactive',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
@@ -213,7 +230,8 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                           const fw.SizedBox(height: 24),
 
                           // Description Section
-                          if (product.description != null && product.description!.isNotEmpty) ...[
+                          if (product.description != null &&
+                              product.description!.isNotEmpty) ...[
                             Text(
                               'Description',
                               style: const TextStyle(
@@ -230,7 +248,9 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                 color: theme.colorScheme.card,
                                 borderRadius: fw.BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: theme.colorScheme.border.withOpacity(0.5),
+                                  color: theme.colorScheme.border.withOpacity(
+                                    0.5,
+                                  ),
                                   width: 1,
                                 ),
                               ),
@@ -263,7 +283,9 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                               color: theme.colorScheme.card,
                               borderRadius: fw.BorderRadius.circular(16),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(0.5),
+                                color: theme.colorScheme.border.withOpacity(
+                                  0.5,
+                                ),
                                 width: 1,
                               ),
                             ),
@@ -277,13 +299,16 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                 const fw.SizedBox(height: 16),
                                 _DetailRow(
                                   label: 'Stock Quantity',
-                                  value: product.totalStockQuantity?.toString() ?? '0',
+                                  value:
+                                      product.totalStockQuantity?.toString() ??
+                                      '0',
                                   theme: theme,
                                 ),
                                 const fw.SizedBox(height: 16),
                                 _DetailRow(
                                   label: 'Availability',
-                                  value: product.availabilityStatus?.name ?? 'N/A',
+                                  value:
+                                      product.availabilityStatus?.name ?? 'N/A',
                                   theme: theme,
                                 ),
                                 const fw.SizedBox(height: 16),

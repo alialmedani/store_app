@@ -171,139 +171,139 @@ class _CategoryCard extends StatelessWidget {
             ),
           ],
         ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Category Image
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.muted.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: theme.colorScheme.border.withOpacity(0.3),
-                    width: 1,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Category Image
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.muted.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: theme.colorScheme.border.withOpacity(0.3),
+                      width: 1,
+                    ),
                   ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AuthenticatedImage(
-                    imageUrl: imageUrl,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                    errorWidget: Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: AuthenticatedImage(
+                      imageUrl: imageUrl,
                       width: 80,
                       height: 80,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.muted.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.category_outlined,
-                        color: theme.colorScheme.mutedForeground,
-                        size: 32,
+                      fit: BoxFit.cover,
+                      errorWidget: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.muted.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.category_outlined,
+                          color: theme.colorScheme.mutedForeground,
+                          size: 32,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            category.name ?? 'N/A',
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.2,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              category.name ?? 'N/A',
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.2,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        // Status Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: (category.isActive ?? false)
-                                ? const Color(0xFF10B981).withOpacity(0.12)
-                                : const Color(0xFFEF4444).withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            (category.isActive ?? false)
-                                ? 'Active'
-                                : 'Inactive',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
+                          const SizedBox(width: 8),
+                          // Status Badge
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
                               color: (category.isActive ?? false)
-                                  ? const Color(0xFF10B981)
-                                  : const Color(0xFFEF4444),
-                              letterSpacing: 0.3,
+                                  ? const Color(0xFF10B981).withOpacity(0.12)
+                                  : const Color(0xFFEF4444).withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              (category.isActive ?? false)
+                                  ? 'Active'
+                                  : 'Inactive',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: (category.isActive ?? false)
+                                    ? const Color(0xFF10B981)
+                                    : const Color(0xFFEF4444),
+                                letterSpacing: 0.3,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          if (category.description != null &&
-              category.description!.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Text(
-              category.description!,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme.colorScheme.mutedForeground,
-                height: 1.4,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          if (category.sizeTypeName != null) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(
-                  Icons.straighten,
-                  size: 15,
-                  color: theme.colorScheme.mutedForeground,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Size Type: ${category.sizeTypeName}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.mutedForeground,
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
+            if (category.description != null &&
+                category.description!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                category.description!,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: theme.colorScheme.mutedForeground,
+                  height: 1.4,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+            if (category.sizeTypeName != null) ...[
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(
+                    Icons.straighten,
+                    size: 15,
+                    color: theme.colorScheme.mutedForeground,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Size Type: ${category.sizeTypeName}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
+        ),
       ),
-    ),
     );
   }
 }
