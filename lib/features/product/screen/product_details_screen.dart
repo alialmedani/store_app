@@ -7,6 +7,7 @@ import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
+import 'update_product_screen.dart';
 
 /// Product Details Screen - Shows complete product information
 class ProductDetailsScreen extends fw.StatelessWidget {
@@ -65,6 +66,32 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                               letterSpacing: -0.5,
                             ),
                           ),
+                        ),
+                        // Edit Button
+                        IconButton(
+                          icon: const Icon(Icons.edit, size: 20),
+                          onPressed: () async {
+                            final result = await fw.Navigator.of(context).push(
+                              fw.PageRouteBuilder(
+                                pageBuilder: (_, __, ___) => BlocProvider.value(
+                                  value: context.read<ProductCubit>(),
+                                  child: UpdateProductScreen(
+                                    product: product,
+                                  ),
+                                ),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+
+                            // Refresh details if product was updated
+                            if (result != null) {
+                              context
+                                  .read<ProductCubit>()
+                                  .getProductDetails(productId);
+                            }
+                          },
+                          variance: ButtonVariance.ghost,
                         ),
                       ],
                     ),

@@ -67,3 +67,8 @@ const createOrderUrl = '$baseUrl/api/app/order';
 const getOrderListUrl = '$baseUrl/api/app/order';
 
 String getOrderDetailsUrl(String id) => '$baseUrl/api/app/order/$id';
+
+String updateOrderUrl(String id) => '$baseUrl/api/app/order/$id';
+
+String updateOrderItemUrl(String id, String itemId) =>
+    '$baseUrl/api/app/order/$id/item/$itemId';

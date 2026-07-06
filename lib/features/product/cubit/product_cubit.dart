@@ -8,6 +8,7 @@ import '../data/repository/product_repository.dart';
 import '../data/usecase/create_product_usecase.dart';
 import '../data/usecase/get_product_details_usecase.dart';
 import '../data/usecase/get_product_list_usecase.dart';
+import '../data/usecase/update_product_usecase.dart';
 
 part 'product_state.dart';
 
@@ -25,6 +26,16 @@ class ProductCubit extends Cubit<ProductState> {
     imageUrl: '',
   );
 
+  UpdateProductParams updateProductParams = UpdateProductParams(
+    productId: '',
+    name: '',
+    description: '',
+    price: 0.0,
+    isActive: true,
+    targetAudience: 0,
+    categoryId: '',
+  );
+
   // UI State Variables
   int? selectedTargetAudience = 0;
   String? selectedCategoryId;
@@ -40,19 +51,19 @@ class ProductCubit extends Cubit<ProductState> {
   void selectTargetAudience(int value) {
     selectedTargetAudience = value;
     createProductParams.targetAudience = value;
-    emit(UpdateProductParams());
+    emit(ProductParamsUpdated());
   }
 
   void selectCategory(String id) {
     selectedCategoryId = id;
     createProductParams.categoryId = id;
     clearCategoryError();
-    emit(UpdateProductParams());
+    emit(ProductParamsUpdated());
   }
 
   void toggleIsActive(bool value) {
     createProductParams.isActive = value;
-    emit(UpdateProductParams());
+    emit(ProductParamsUpdated());
   }
 
   void setNameError(String error) {
@@ -94,13 +105,13 @@ class ProductCubit extends Cubit<ProductState> {
 
   void selectImageFile(File? file) {
     selectedImageFile = file;
-    emit(UpdateProductParams());
+    emit(ProductParamsUpdated());
   }
 
   void clearImageFile() {
     selectedImageFile = null;
     createProductParams.imageUrl = '';
-    emit(UpdateProductParams());
+    emit(ProductParamsUpdated());
   }
 
   /// 🚀 NEW METHOD: Create product with image (all in one)
@@ -128,7 +139,7 @@ class ProductCubit extends Cubit<ProductState> {
       print('📤 Step 2: Uploading image...');
 
       isUploadingImage = true;
-      emit(UpdateProductParams());
+      emit(ProductParamsUpdated());
 
       final uploadResult = await FileUploadRepository().uploadFile(
         file: selectedImageFile!,
@@ -138,7 +149,7 @@ class ProductCubit extends Cubit<ProductState> {
       );
 
       isUploadingImage = false;
-      emit(UpdateProductParams());
+      emit(ProductParamsUpdated());
 
       if (uploadResult.hasDataOnly) {
         print('✅ Image uploaded successfully');
@@ -181,5 +192,11 @@ class ProductCubit extends Cubit<ProductState> {
     return await GetProductDetailsUsecase(
       ProductRepository(),
     ).call(params: GetProductDetailsParams(productId: productId));
+  }
+
+  Future<Result<ProductModel>> updateProduct() async {
+    return await UpdateProductUsecase(
+      ProductRepository(),
+    ).call(params: updateProductParams);
   }
 }

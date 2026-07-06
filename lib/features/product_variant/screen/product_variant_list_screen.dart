@@ -7,6 +7,7 @@ import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
 import 'variant_creation_options_screen.dart';
 import 'product_variant_details_screen.dart';
+import 'update_product_variant_screen.dart';
 
 /// Product Variant List Screen - Shows all product variants with pagination
 /// Uses PaginationList widget from boilerplate
@@ -239,6 +240,25 @@ class _ProductVariantCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(width: 8),                // Edit Button
+                IconButton(
+                  icon: const Icon(Icons.edit, size: 16),
+                  onPressed: () async {
+                    await fw.Navigator.of(context).push(
+                      fw.PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => BlocProvider(
+                          create: (ctx) => ProductVariantCubit(),
+                          child: UpdateProductVariantScreen(
+                            variant: variant,
+                          ),
+                        ),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  variance: ButtonVariance.ghost,
                 ),
                 const SizedBox(width: 8),
                 if (variant.isActive != null)

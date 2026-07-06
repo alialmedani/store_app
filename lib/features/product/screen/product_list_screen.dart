@@ -9,6 +9,7 @@ import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
 import 'create_product_screen.dart';
 import 'product_details_screen.dart';
+import 'update_product_screen.dart';
 
 /// Product List Screen - Shows all products with pagination
 /// Uses PaginationList widget from boilerplate
@@ -247,6 +248,25 @@ class _ProductCard extends StatelessWidget {
                                 ),
                               ],
                             ),
+                          ),
+                          const SizedBox(width: 8),
+                          // Edit Button
+                          IconButton(
+                            icon: const Icon(Icons.edit, size: 16),
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (ctx) => BlocProvider(
+                                    create: (ctx) => ProductCubit(),
+                                    child: UpdateProductScreen(
+                                      product: product,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            variance: ButtonVariance.ghost,
                           ),
                           const SizedBox(width: 8),
                           // Status Badge

@@ -7,6 +7,7 @@ import '../cubit/order_cubit.dart';
 import '../data/model/order_model.dart';
 import 'create_order_screen.dart';
 import 'order_details_screen.dart';
+import 'update_order_screen.dart';
 
 /// Order List Screen - Shows all orders with pagination
 /// Uses PaginationList widget from boilerplate
@@ -174,14 +175,38 @@ class _OrderCard extends StatelessWidget {
                   color: theme.colorScheme.foreground,
                 ),
               ),
-              if (order.creationTime != null)
-                Text(
-                  _formatDate(order.creationTime!),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: theme.colorScheme.mutedForeground,
+              Row(
+                children: [
+                  if (order.creationTime != null)
+                    Text(
+                      _formatDate(order.creationTime!),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: theme.colorScheme.mutedForeground,
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  // Edit Button
+                  IconButton(
+                    icon: const Icon(Icons.edit, size: 16),
+                    onPressed: () async {
+                      await fw.Navigator.of(context).push(
+                        fw.PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => BlocProvider(
+                            create: (ctx) => OrderCubit(),
+                            child: UpdateOrderScreen(
+                              order: order,
+                            ),
+                          ),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
+                    variance: ButtonVariance.ghost,
                   ),
-                ),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 12),
