@@ -34,16 +34,10 @@ class OrderItemParams {
   String productVariantId;
   int quantity;
 
-  OrderItemParams({
-    required this.productVariantId,
-    required this.quantity,
-  });
+  OrderItemParams({required this.productVariantId, required this.quantity});
 
   Map<String, dynamic> toJson() {
-    return {
-      'productVariantId': productVariantId,
-      'quantity': quantity,
-    };
+    return {'productVariantId': productVariantId, 'quantity': quantity};
   }
 }
 

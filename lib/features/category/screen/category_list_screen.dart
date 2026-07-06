@@ -16,7 +16,7 @@ class CategoryListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       child: SafeArea(
         child: Stack(
@@ -117,10 +117,7 @@ class CategoryListScreen extends StatelessWidget {
                   leading: const Icon(Icons.add, size: 20),
                   child: const Text(
                     'Add Category',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -235,7 +232,9 @@ class _CategoryCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            (category.isActive ?? false) ? 'Active' : 'Inactive',
+                            (category.isActive ?? false)
+                                ? 'Active'
+                                : 'Inactive',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,

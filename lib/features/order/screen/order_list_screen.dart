@@ -113,10 +113,7 @@ class OrderListScreen extends StatelessWidget {
                   leading: const Icon(Icons.add, size: 20),
                   child: const Text(
                     'Create Order',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

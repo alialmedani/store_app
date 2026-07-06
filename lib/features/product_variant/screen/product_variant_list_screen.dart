@@ -15,7 +15,7 @@ class ProductVariantListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       child: SafeArea(
         child: Stack(
@@ -116,10 +116,7 @@ class ProductVariantListScreen extends StatelessWidget {
                   leading: const Icon(Icons.add, size: 20),
                   child: const Text(
                     'Add Variant',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -183,8 +180,7 @@ class _ProductVariantCard extends StatelessWidget {
                       spacing: 12,
                       runSpacing: 6,
                       children: [
-                        if (variant.color != null &&
-                            variant.color!.isNotEmpty)
+                        if (variant.color != null && variant.color!.isNotEmpty)
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -204,8 +200,7 @@ class _ProductVariantCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                        if (variant.size != null &&
-                            variant.size!.isNotEmpty)
+                        if (variant.size != null && variant.size!.isNotEmpty)
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

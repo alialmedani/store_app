@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import '../../../core/constant/enum/enum.dart';
 import '../../../core/results/result.dart';
+import '../../product/data/model/product_model.dart';
 import '../data/model/product_variant_model.dart';
 import '../data/repository/product_variant_repository.dart';
 import '../data/usecase/create_product_variant_usecase.dart';
@@ -15,14 +17,14 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
   CreateProductVariantParams createProductVariantParams =
       CreateProductVariantParams(
         productId: '',
-        color: '',
-        size: '',
+        color: null,
+        size: null,
         stockQuantity: 0,
         isActive: true,
       );
 
   // UI State Variables
-  String? selectedProductId;
+  ProductModel? selectedProduct;
 
   // Validation Error Variables
   String? productError;
@@ -31,11 +33,25 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
   String? stockQuantityError;
 
   // UI State Methods (with emit)
-  void selectProduct(String id) {
-    selectedProductId = id;
-    createProductVariantParams.productId = id;
+  void selectProduct(ProductModel product) {
+    selectedProduct = product;
+    createProductVariantParams.productId = product.id ?? '';
     clearProductError();
     emit(UpdateProductVariantParams());
+  }
+
+  // Check if color is required based on product category sizeType
+  bool isColorRequired() {
+    final sizeType = selectedProduct?.category?.sizeType;
+    // Color not required only for 'none' type (accessories)
+    return sizeType != SizeType.none;
+  }
+
+  // Check if size is required based on product category sizeType
+  bool isSizeRequired() {
+    final sizeType = selectedProduct?.category?.sizeType;
+    // Size not required for 'none' and 'oneSize' types
+    return sizeType != SizeType.none && sizeType != SizeType.oneSize;
   }
 
   void toggleIsActive(bool value) {

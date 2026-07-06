@@ -27,9 +27,7 @@ class GetOrderListUsecase
   GetOrderListUsecase(this.repository);
 
   @override
-  Future<Result<List<OrderModel>>> call({
-    required GetOrderListParams params,
-  }) {
+  Future<Result<List<OrderModel>>> call({required GetOrderListParams params}) {
     return repository.getOrderListRequest(params: params);
   }
 }

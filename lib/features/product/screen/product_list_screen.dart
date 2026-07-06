@@ -16,7 +16,7 @@ class ProductListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       child: SafeArea(
         child: Stack(
@@ -117,10 +117,7 @@ class ProductListScreen extends StatelessWidget {
                   leading: const Icon(Icons.add, size: 20),
                   child: const Text(
                     'Add Product',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

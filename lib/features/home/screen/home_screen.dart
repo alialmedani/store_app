@@ -73,7 +73,10 @@ class HomeScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
-                            icon: const Icon(Icons.notifications_outlined, size: 20),
+                            icon: const Icon(
+                              Icons.notifications_outlined,
+                              size: 20,
+                            ),
                             onPressed: () {
                               // TODO: Navigate to notifications
                             },
@@ -99,7 +102,8 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   actions: [
                                     SecondaryButton(
-                                      onPressed: () => Navigator.pop(ctx, false),
+                                      onPressed: () =>
+                                          Navigator.pop(ctx, false),
                                       child: const Text('Cancel'),
                                     ),
                                     DestructiveButton(
@@ -306,7 +310,7 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -378,7 +382,7 @@ class _MenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(

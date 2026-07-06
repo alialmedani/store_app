@@ -26,15 +26,16 @@ class NoDataScreen extends StatelessWidget {
                   maxWidth: width ?? 300.w,
                   maxHeight: height ?? 200.h,
                 ),
-                child: Image.asset(
-                  noDataImage,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(noDataImage, fit: BoxFit.contain),
               ),
               SizedBox(height: 16.h),
-              Text("no data",
-                  style: AppTextStyle.getRegularStyle(
-                      color: AppColors.grey9A, fontSize: AppFontSize.size_16)),
+              Text(
+                "no data",
+                style: AppTextStyle.getRegularStyle(
+                  color: AppColors.grey9A,
+                  fontSize: AppFontSize.size_16,
+                ),
+              ),
             ],
           ),
         ),

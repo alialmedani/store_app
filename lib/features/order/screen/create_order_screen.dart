@@ -232,8 +232,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                       ),
                                       maxLines: 2,
                                       onChanged: (value) {
-                                        cubit.createOrderParams
-                                            .customerAddress = value;
+                                        cubit
+                                                .createOrderParams
+                                                .customerAddress =
+                                            value;
                                         cubit.clearCustomerAddressError();
                                       },
                                     ),
@@ -318,10 +320,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                   return Container(
                                     padding: const EdgeInsets.all(24),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .muted
-                                          .withOpacity(0.3),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.muted.withOpacity(0.3),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Center(
@@ -330,18 +331,18 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                           Icon(
                                             Icons.shopping_cart_outlined,
                                             size: 48,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .mutedForeground,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.mutedForeground,
                                           ),
                                           const SizedBox(height: 12),
                                           Text(
                                             'No items added yet',
                                             style: TextStyle(
                                               fontSize: 14,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .mutedForeground,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.mutedForeground,
                                             ),
                                           ),
                                         ],
@@ -352,9 +353,11 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
                                 return Column(
                                   children: [
-                                    for (int i = 0;
-                                        i < cubit.orderItems.length;
-                                        i++)
+                                    for (
+                                      int i = 0;
+                                      i < cubit.orderItems.length;
+                                      i++
+                                    )
                                       _OrderItemTile(
                                         item: cubit.orderItems[i],
                                         index: i,
@@ -405,9 +408,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                           context: context,
                           builder: (ctx) => AlertDialog(
                             title: const Text('Success'),
-                            content: const Text(
-                              'Order created successfully!',
-                            ),
+                            content: const Text('Order created successfully!'),
                             actions: [
                               PrimaryButton(
                                 onPressed: () {
@@ -582,10 +583,7 @@ class _AddItemDialogState extends State<_AddItemDialog> {
             // Product Variant Selector
             const Text(
               'Select Product Variant',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Container(
@@ -673,16 +671,15 @@ class _AddItemDialogState extends State<_AddItemDialog> {
             // Quantity Field
             const Text(
               'Quantity',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _quantityController,
               placeholder: const Text('Enter quantity'),
-              keyboardType: const TextInputType.numberWithOptions(decimal: false),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: false,
+              ),
             ),
           ],
         ),

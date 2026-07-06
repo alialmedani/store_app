@@ -110,17 +110,11 @@ class OrderStatusModel {
   OrderStatusModel({this.id, this.name});
 
   factory OrderStatusModel.fromJson(Map<String, dynamic> json) {
-    return OrderStatusModel(
-      id: json['id'],
-      name: json['name'],
-    );
+    return OrderStatusModel(id: json['id'], name: json['name']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    };
+    return {if (id != null) 'id': id, if (name != null) 'name': name};
   }
 }
 
@@ -132,16 +126,10 @@ class PaymentStatusModel {
   PaymentStatusModel({this.id, this.name});
 
   factory PaymentStatusModel.fromJson(Map<String, dynamic> json) {
-    return PaymentStatusModel(
-      id: json['id'],
-      name: json['name'],
-    );
+    return PaymentStatusModel(id: json['id'], name: json['name']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    };
+    return {if (id != null) 'id': id, if (name != null) 'name': name};
   }
 }

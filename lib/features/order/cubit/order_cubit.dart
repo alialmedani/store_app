@@ -80,10 +80,7 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderValidationError());
   }
 
-  void addOrderItem({
-    required String productVariantId,
-    required int quantity,
-  }) {
+  void addOrderItem({required String productVariantId, required int quantity}) {
     final item = OrderItemParams(
       productVariantId: productVariantId,
       quantity: quantity,
@@ -119,12 +116,14 @@ class OrderCubit extends Cubit<OrderState> {
   // API Methods (NO emit - boilerplate handles state)
 
   Future<Result<OrderModel>> createOrder() async {
-    return await CreateOrderUsecase(OrderRepository())
-        .call(params: createOrderParams);
+    return await CreateOrderUsecase(
+      OrderRepository(),
+    ).call(params: createOrderParams);
   }
 
   Future<Result<List<OrderModel>>> fetchOrderList(data) async {
-    return await GetOrderListUsecase(OrderRepository())
-        .call(params: GetOrderListParams(request: data));
+    return await GetOrderListUsecase(
+      OrderRepository(),
+    ).call(params: GetOrderListParams(request: data));
   }
 }
