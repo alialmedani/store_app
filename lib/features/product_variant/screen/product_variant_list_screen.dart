@@ -5,7 +5,8 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
-import 'create_product_variant_screen.dart';
+import 'variant_creation_options_screen.dart';
+import 'product_variant_details_screen.dart';
 
 /// Product Variant List Screen - Shows all product variants with pagination
 /// Uses PaginationList widget from boilerplate
@@ -108,8 +109,10 @@ class ProductVariantListScreen extends StatelessWidget {
                   onPressed: () {
                     fw.Navigator.of(context).push(
                       fw.PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            const CreateProductVariantScreen(),
+                        pageBuilder: (_, __, ___) =>
+                            const VariantCreationOptionsScreen(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
                       ),
                     );
                   },
@@ -138,23 +141,34 @@ class _ProductVariantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.border.withOpacity(0.5),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+    return fw.GestureDetector(
+      onTap: () {
+        if (variant.id != null) {
+          fw.Navigator.of(context).push(
+            fw.PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  ProductVariantDetailsScreen(productVariantId: variant.id!),
+            ),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.border.withOpacity(0.5),
+            width: 1,
           ),
-        ],
-      ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -288,7 +302,8 @@ class _ProductVariantCard extends StatelessWidget {
                   child: Text(
                     variant.availabilityStatus!.name ?? 'N/A',
                     style: TextStyle(
-                      color: theme.colorScheme.secondary,
+      
+                    color: theme.colorScheme.secondary,
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.3,
@@ -298,7 +313,7 @@ class _ProductVariantCard extends StatelessWidget {
             ],
           ),
         ],
-      ),
+      ),)
     );
   }
 }

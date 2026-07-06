@@ -5,6 +5,7 @@ import '../../../core/results/result.dart';
 import '../data/model/order_model.dart';
 import '../data/repository/order_repository.dart';
 import '../data/usecase/create_order_usecase.dart';
+import '../data/usecase/get_order_details_usecase.dart';
 import '../data/usecase/get_order_list_usecase.dart';
 
 part 'order_state.dart';
@@ -125,5 +126,11 @@ class OrderCubit extends Cubit<OrderState> {
     return await GetOrderListUsecase(
       OrderRepository(),
     ).call(params: GetOrderListParams(request: data));
+  }
+
+  Future<Result<OrderModel>> getOrderDetails(String orderId) async {
+    return await GetOrderDetailsUsecase(
+      OrderRepository(),
+    ).call(params: GetOrderDetailsParams(orderId: orderId));
   }
 }

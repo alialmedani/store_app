@@ -6,6 +6,7 @@ import '../../../core/results/result.dart';
 import '../data/model/category_model.dart';
 import '../data/repository/category_repository.dart';
 import '../data/usecase/create_category_usecase.dart';
+import '../data/usecase/get_category_details_usecase.dart';
 import '../data/usecase/get_category_list_usecase.dart';
 
 part 'category_state.dart';
@@ -137,5 +138,11 @@ class CategoryCubit extends Cubit<CategoryState> {
     return await GetCategoryListUsecase(
       CategoryRepository(),
     ).call(params: GetCategoryListParams(request: data));
+  }
+
+  Future<Result<CategoryModel>> getCategoryDetails(String categoryId) async {
+    return await GetCategoryDetailsUsecase(
+      CategoryRepository(),
+    ).call(params: GetCategoryDetailsParams(categoryId: categoryId));
   }
 }

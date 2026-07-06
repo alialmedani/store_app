@@ -6,15 +6,15 @@ import '../repository/product_variant_repository.dart';
 
 class CreateProductVariantParams extends BaseParams {
   String productId;
-  String color;
-  String size;
+  String? color;
+  String? size;
   int stockQuantity;
   bool isActive;
 
   CreateProductVariantParams({
     required this.productId,
-    required this.color,
-    required this.size,
+    this.color,
+    this.size,
     required this.stockQuantity,
     required this.isActive,
   });
@@ -22,8 +22,8 @@ class CreateProductVariantParams extends BaseParams {
   Map<String, dynamic> toJson() {
     return {
       'productId': productId,
-      'color': color,
-      'size': size,
+      'color': color ?? '',
+      'size': size ?? '',
       'stockQuantity': stockQuantity,
       'isActive': isActive,
     };

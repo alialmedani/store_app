@@ -5,7 +5,10 @@ import '../../../core/results/result.dart';
 import '../../product/data/model/product_model.dart';
 import '../data/model/product_variant_model.dart';
 import '../data/repository/product_variant_repository.dart';
+import '../data/usecase/bulk_create_product_variant_usecase.dart';
 import '../data/usecase/create_product_variant_usecase.dart';
+import '../data/usecase/generate_product_variant_usecase.dart';
+import '../data/usecase/get_product_variant_details_usecase.dart';
 import '../data/usecase/get_product_variant_list_usecase.dart';
 
 part 'product_variant_state.dart';
@@ -114,11 +117,39 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
     ).call(params: createProductVariantParams);
   }
 
+  Future<Result<List<ProductVariantModel>>> bulkCreateProductVariant(
+    BulkCreateProductVariantParams params,
+  ) async {
+    return await BulkCreateProductVariantUsecase(
+      ProductVariantRepository(),
+    ).call(params: params);
+  }
+
+  Future<Result<List<ProductVariantModel>>> generateProductVariant(
+    GenerateProductVariantParams params,
+  ) async {
+    return await GenerateProductVariantUsecase(
+      ProductVariantRepository(),
+    ).call(params: params);
+  }
+
   Future<Result<List<ProductVariantModel>>> fetchProductVariantList(
     data,
   ) async {
     return await GetProductVariantListUsecase(
       ProductVariantRepository(),
     ).call(params: GetProductVariantListParams(request: data));
+  }
+
+  Future<Result<ProductVariantModel>> getProductVariantDetails(
+    String productVariantId,
+  ) async {
+    return await GetProductVariantDetailsUsecase(
+      ProductVariantRepository(),
+    ).call(
+      params: GetProductVariantDetailsParams(
+        productVariantId: productVariantId,
+      ),
+    );
   }
 }

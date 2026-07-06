@@ -5,6 +5,7 @@ import '../../../../../core/repository/core_repository.dart';
 import '../../../../../core/results/result.dart';
 import '../model/category_model.dart';
 import '../usecase/create_category_usecase.dart';
+import '../usecase/get_category_details_usecase.dart';
 import '../usecase/get_category_list_usecase.dart';
 
 class CategoryRepository extends CoreRepository {
@@ -39,5 +40,20 @@ class CategoryRepository extends CoreRepository {
     );
 
     return paginatedCall(result: result);
+  }
+
+  Future<Result<CategoryModel>> getCategoryDetailsRequest({
+    required GetCategoryDetailsParams params,
+  }) async {
+    final result = await RemoteDataSource.request<CategoryModel>(
+      withAuthentication: true,
+      url: getCategoryDetailsUrl(params.categoryId),
+      method: HttpMethod.GET,
+      converter: (json) {
+        return CategoryModel.fromJson(json);
+      },
+    );
+
+    return call(result: result);
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:flutter/widgets.dart' as fw;
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
+import 'category_details_screen.dart';
 import 'create_category_screen.dart';
 
 /// Category List Screen - Shows all categories with pagination
@@ -140,23 +142,35 @@ class _CategoryCard extends StatelessWidget {
     final theme = Theme.of(context);
     final imageUrl = ImageHelper.getCategoryImageUrl(category.id ?? '');
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.border.withOpacity(0.5),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+    return fw.GestureDetector(
+      onTap: () {
+        if (category.id != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CategoryDetailsScreen(categoryId: category.id!),
+            ),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.border.withOpacity(0.5),
+            width: 1,
           ),
-        ],
-      ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -289,6 +303,7 @@ class _CategoryCard extends StatelessWidget {
           ],
         ],
       ),
+    ),
     );
   }
 }

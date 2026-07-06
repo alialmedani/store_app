@@ -4,7 +4,10 @@ import '../../../../../core/http/http_method.dart';
 import '../../../../../core/repository/core_repository.dart';
 import '../../../../../core/results/result.dart';
 import '../model/product_variant_model.dart';
+import '../usecase/bulk_create_product_variant_usecase.dart';
 import '../usecase/create_product_variant_usecase.dart';
+import '../usecase/generate_product_variant_usecase.dart';
+import '../usecase/get_product_variant_details_usecase.dart';
 import '../usecase/get_product_variant_list_usecase.dart';
 
 class ProductVariantRepository extends CoreRepository {
@@ -39,5 +42,58 @@ class ProductVariantRepository extends CoreRepository {
     );
 
     return paginatedCall(result: result);
+  }
+
+  Future<Result<ProductVariantModel>> getProductVariantDetailsRequest({
+    required GetProductVariantDetailsParams params,
+  }) async {
+    final result = await RemoteDataSource.request<ProductVariantModel>(
+      withAuthentication: true,
+      url: getProductVariantDetailsUrl(params.productVariantId),
+      method: HttpMethod.GET,
+      converter: (json) {
+        return ProductVariantModel.fromJson(json);
+      },
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<List<ProductVariantModel>>> bulkCreateProductVariantRequest({
+    required BulkCreateProductVariantParams params,
+  }) async {
+    final result = await RemoteDataSource.request<List<ProductVariantModel>>(
+      withAuthentication: true,
+      data: params.toJson(),
+      url: bulkCreateProductVariantUrl,
+      method: HttpMethod.POST,
+      converter2: (json) {
+        if (json is List) {
+          return json.map((item) => ProductVariantModel.fromJson(item)).toList();
+        }
+        return [];
+      },
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<List<ProductVariantModel>>> generateProductVariantRequest({
+    required GenerateProductVariantParams params,
+  }) async {
+    final result = await RemoteDataSource.request<List<ProductVariantModel>>(
+      withAuthentication: true,
+      data: params.toJson(),
+      url: generateProductVariantUrl,
+      method: HttpMethod.POST,
+      converter2: (json) {
+        if (json is List) {
+          return json.map((item) => ProductVariantModel.fromJson(item)).toList();
+        }
+        return [];
+      },
+    );
+
+    return call(result: result);
   }
 }

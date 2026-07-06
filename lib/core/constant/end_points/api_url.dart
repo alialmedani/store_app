@@ -30,6 +30,12 @@ String getFileByEntityUrl({
 const createCategoryUrl = '$baseUrl/api/app/category';
 const String getCategoryListUrl = '$baseUrl/api/app/category';
 
+String getCategoryDetailsUrl(String id) => '$baseUrl/api/app/category/$id';
+
+String updateCategoryUrl(String id) => '$baseUrl/api/app/category/$id';
+
+String deleteCategoryUrl(String id) => '$baseUrl/api/app/category/$id';
+
 // ========== Product URLs ==========
 const createProductUrl = '$baseUrl/api/app/product';
 const getProductListUrl = '$baseUrl/api/app/product';
@@ -42,8 +48,21 @@ String deleteProductUrl(String id) => '$baseUrl/api/app/product/$id';
 
 // ========== Product Variant URLs ==========
 const createProductVariantUrl = '$baseUrl/api/app/product-variant';
+const bulkCreateProductVariantUrl = '$baseUrl/api/app/product-variant/bulk-create';
+const generateProductVariantUrl = '$baseUrl/api/app/product-variant/generate';
 const getProductVariantListUrl = '$baseUrl/api/app/product-variant';
+
+String getProductVariantDetailsUrl(String id) =>
+    '$baseUrl/api/app/product-variant/$id';
+
+String updateProductVariantUrl(String id) =>
+    '$baseUrl/api/app/product-variant/$id';
+
+String deleteProductVariantUrl(String id) =>
+    '$baseUrl/api/app/product-variant/$id';
 
 // ========== Order URLs ==========
 const createOrderUrl = '$baseUrl/api/app/order';
 const getOrderListUrl = '$baseUrl/api/app/order';
+
+String getOrderDetailsUrl(String id) => '$baseUrl/api/app/order/$id';

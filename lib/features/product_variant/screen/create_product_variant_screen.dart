@@ -40,21 +40,9 @@ class _CreateProductVariantScreenState
       cubit.clearProductError();
     }
 
-    // Validate color
-    if (_colorController.text.trim().isEmpty) {
-      cubit.setColorError('Color is required');
-      isValid = false;
-    } else {
-      cubit.clearColorError();
-    }
-
-    // Validate size
-    if (_sizeController.text.trim().isEmpty) {
-      cubit.setSizeError('Size is required');
-      isValid = false;
-    } else {
-      cubit.clearSizeError();
-    }
+    // Color and Size are always optional - clear any errors
+    cubit.clearColorError();
+    cubit.clearSizeError();
 
     // Validate stock quantity
     final stockText = _stockQuantityController.text.trim();
@@ -98,7 +86,7 @@ class _CreateProductVariantScreenState
                   final product = list[index];
                   return fw.GestureDetector(
                     onTap: () {
-                      cubit.selectProduct(product.id ?? '');
+                      cubit.selectProduct(product);
                       _productIdController.text = product.name ?? '';
                       fw.Navigator.of(dialogContext).pop();
                     },
@@ -263,20 +251,31 @@ class _CreateProductVariantScreenState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Color',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'Color',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '(Optional)',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: theme.colorScheme.mutedForeground,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _colorController,
-                                  placeholder: const Text('Enter color'),
+                                  placeholder: const Text('Enter color (optional)'),
                                   onChanged: (value) {
-                                    cubit.createProductVariantParams.color =
-                                        value;
+                                    cubit.createProductVariantParams.color = value.isEmpty ? null : value;
                                     cubit.clearColorError();
                                   },
                                 ),
@@ -303,20 +302,31 @@ class _CreateProductVariantScreenState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Size',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'Size',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '(Optional)',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: theme.colorScheme.mutedForeground,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _sizeController,
-                                  placeholder: const Text('Enter size'),
+                                  placeholder: const Text('Enter size (optional)'),
                                   onChanged: (value) {
-                                    cubit.createProductVariantParams.size =
-                                        value;
+                                    cubit.createProductVariantParams.size = value.isEmpty ? null : value;
                                     cubit.clearSizeError();
                                   },
                                 ),

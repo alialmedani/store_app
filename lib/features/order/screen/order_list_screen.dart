@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -5,6 +6,7 @@ import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../cubit/order_cubit.dart';
 import '../data/model/order_model.dart';
 import 'create_order_screen.dart';
+import 'order_details_screen.dart';
 
 /// Order List Screen - Shows all orders with pagination
 /// Uses PaginationList widget from boilerplate
@@ -135,19 +137,31 @@ class _OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.border.withOpacity(0.2),
-          width: 1,
+    return fw.GestureDetector(
+      onTap: () {
+        if (order.id != null) {
+          fw.Navigator.of(context).push(
+            fw.PageRouteBuilder(
+              pageBuilder: (_, __, ___) => OrderDetailsScreen(orderId: order.id!),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.border.withOpacity(0.2),
+            width: 1,
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Order Number and Date
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -293,6 +307,7 @@ class _OrderCard extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 

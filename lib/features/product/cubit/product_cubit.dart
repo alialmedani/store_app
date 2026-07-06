@@ -6,6 +6,7 @@ import '../../../core/results/result.dart';
 import '../data/model/product_model.dart';
 import '../data/repository/product_repository.dart';
 import '../data/usecase/create_product_usecase.dart';
+import '../data/usecase/get_product_details_usecase.dart';
 import '../data/usecase/get_product_list_usecase.dart';
 
 part 'product_state.dart';
@@ -171,5 +172,11 @@ class ProductCubit extends Cubit<ProductState> {
     return await GetProductListUsecase(
       ProductRepository(),
     ).call(params: GetProductListParams(request: data));
+  }
+
+  Future<Result<ProductModel>> getProductDetails(String productId) async {
+    return await GetProductDetailsUsecase(
+      ProductRepository(),
+    ).call(params: GetProductDetailsParams(productId: productId));
   }
 }
