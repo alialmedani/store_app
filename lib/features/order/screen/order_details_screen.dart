@@ -11,10 +11,7 @@ import '../data/model/order_model.dart';
 class OrderDetailsScreen extends fw.StatelessWidget {
   final String orderId;
 
-  const OrderDetailsScreen({
-    super.key,
-    required this.orderId,
-  });
+  const OrderDetailsScreen({super.key, required this.orderId});
 
   @override
   fw.Widget build(fw.BuildContext context) {
@@ -72,320 +69,350 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                   useCaseCallBack: () =>
                       context.read<OrderCubit>().getOrderDetails(orderId),
                   modelBuilder: (order) {
-                  return fw.SingleChildScrollView(
-                    padding: const fw.EdgeInsets.all(20),
-                    child: fw.Column(
-                      crossAxisAlignment: fw.CrossAxisAlignment.start,
-                      children: [
-                        // Order Number Card
-                        Card(
-                          child: fw.Container(
-                            width: double.infinity,
-                            padding: const fw.EdgeInsets.all(20),
-                            child: fw.Column(
-                              crossAxisAlignment: fw.CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Order Number',
-                                  style: fw.TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: fw.FontWeight.w600,
-                                    color: theme.colorScheme.mutedForeground,
-                                    letterSpacing: 0.5,
+                    return fw.SingleChildScrollView(
+                      padding: const fw.EdgeInsets.all(20),
+                      child: fw.Column(
+                        crossAxisAlignment: fw.CrossAxisAlignment.start,
+                        children: [
+                          // Order Number Card
+                          Card(
+                            child: fw.Container(
+                              width: double.infinity,
+                              padding: const fw.EdgeInsets.all(20),
+                              child: fw.Column(
+                                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Order Number',
+                                    style: fw.TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: fw.FontWeight.w600,
+                                      color: theme.colorScheme.mutedForeground,
+                                      letterSpacing: 0.5,
+                                    ),
                                   ),
-                                ),
-                                const fw.SizedBox(height: 8),
-                                Text(
-                                  order.orderNumber ?? 'N/A',
-                                  style: fw.TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: fw.FontWeight.w700,
-                                    color: theme.colorScheme.primary,
+                                  const fw.SizedBox(height: 8),
+                                  Text(
+                                    order.orderNumber ?? 'N/A',
+                                    style: fw.TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: fw.FontWeight.w700,
+                                      color: theme.colorScheme.primary,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: 16),
 
-                        // Customer Information Card
-                        Card(
-                          child: fw.Container(
-                            width: double.infinity,
-                            padding: const fw.EdgeInsets.all(20),
-                            child: fw.Column(
-                              crossAxisAlignment: fw.CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'CUSTOMER INFORMATION',
-                                  style: fw.TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: fw.FontWeight.w700,
-                                    color: theme.colorScheme.mutedForeground,
-                                    letterSpacing: 0.8,
+                          // Customer Information Card
+                          Card(
+                            child: fw.Container(
+                              width: double.infinity,
+                              padding: const fw.EdgeInsets.all(20),
+                              child: fw.Column(
+                                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'CUSTOMER INFORMATION',
+                                    style: fw.TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: fw.FontWeight.w700,
+                                      color: theme.colorScheme.mutedForeground,
+                                      letterSpacing: 0.8,
+                                    ),
                                   ),
-                                ),
-                                const fw.SizedBox(height: 16),
-                                _InfoRow(
-                                  icon: Icons.person_outline,
-                                  label: 'Name',
-                                  value: order.customerName ?? 'N/A',
-                                  theme: theme,
-                                ),
-                                const fw.SizedBox(height: 12),
-                                _InfoRow(
-                                  icon: Icons.phone_outlined,
-                                  label: 'Phone',
-                                  value: order.customerPhone ?? 'N/A',
-                                  theme: theme,
-                                ),
-                                const fw.SizedBox(height: 12),
-                                _InfoRow(
-                                  icon: Icons.location_on_outlined,
-                                  label: 'Address',
-                                  value: order.customerAddress ?? 'N/A',
-                                  theme: theme,
-                                ),
-                                if (order.note != null && order.note!.isNotEmpty) ...[
+                                  const fw.SizedBox(height: 16),
+                                  _InfoRow(
+                                    icon: Icons.person_outline,
+                                    label: 'Name',
+                                    value: order.customerName ?? 'N/A',
+                                    theme: theme,
+                                  ),
                                   const fw.SizedBox(height: 12),
                                   _InfoRow(
-                                    icon: Icons.note_outlined,
-                                    label: 'Note',
-                                    value: order.note!,
+                                    icon: Icons.phone_outlined,
+                                    label: 'Phone',
+                                    value: order.customerPhone ?? 'N/A',
                                     theme: theme,
                                   ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ),
-                        const fw.SizedBox(height: 16),
-
-                        // Status Information Card
-                        Card(
-                          child: fw.Container(
-                            width: double.infinity,
-                            padding: const fw.EdgeInsets.all(20),
-                            child: fw.Column(
-                              crossAxisAlignment: fw.CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'STATUS',
-                                  style: fw.TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: fw.FontWeight.w700,
-                                    color: theme.colorScheme.mutedForeground,
-                                    letterSpacing: 0.8,
-                                  ),
-                                ),
-                                const fw.SizedBox(height: 16),
-                                fw.Row(
-                                  children: [
-                                    if (order.status != null)
-                                      fw.Expanded(
-                                        child: fw.Container(
-                                          padding: const fw.EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 12,
-                                          ),
-                                          decoration: fw.BoxDecoration(
-                                            color: theme.colorScheme.primary.withOpacity(0.12),
-                                            borderRadius: fw.BorderRadius.circular(12),
-                                          ),
-                                          child: fw.Column(
-                                            crossAxisAlignment: fw.CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Order Status',
-                                                style: fw.TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: fw.FontWeight.w600,
-                                                  color: theme.colorScheme.mutedForeground,
-                                                ),
-                                              ),
-                                              const fw.SizedBox(height: 4),
-                                              Text(
-                                                order.status!.name ?? 'N/A',
-                                                style: fw.TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: fw.FontWeight.w700,
-                                                  color: theme.colorScheme.primary,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    const fw.SizedBox(width: 12),
-                                    if (order.paymentStatus != null)
-                                      fw.Expanded(
-                                        child: fw.Container(
-                                          padding: const fw.EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 12,
-                                          ),
-                                          decoration: fw.BoxDecoration(
-                                            color: theme.colorScheme.secondary.withOpacity(0.12),
-                                            borderRadius: fw.BorderRadius.circular(12),
-                                          ),
-                                          child: fw.Column(
-                                            crossAxisAlignment: fw.CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Payment',
-                                                style: fw.TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: fw.FontWeight.w600,
-                                                  color: theme.colorScheme.mutedForeground,
-                                                ),
-                                              ),
-                                              const fw.SizedBox(height: 4),
-                                              Text(
-                                                order.paymentStatus!.name ?? 'N/A',
-                                                style: fw.TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: fw.FontWeight.w700,
-                                                  color: theme.colorScheme.secondary,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const fw.SizedBox(height: 16),
-
-                        // Payment Summary Card
-                        Card(
-                          child: fw.Container(
-                            width: double.infinity,
-                            padding: const fw.EdgeInsets.all(20),
-                            child: fw.Column(
-                              crossAxisAlignment: fw.CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'PAYMENT SUMMARY',
-                                  style: fw.TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: fw.FontWeight.w700,
-                                    color: theme.colorScheme.mutedForeground,
-                                    letterSpacing: 0.8,
-                                  ),
-                                ),
-                                const fw.SizedBox(height: 16),
-                                _PaymentRow(
-                                  label: 'Total Amount',
-                                  value: '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
-                                  theme: theme,
-                                ),
-                                const fw.SizedBox(height: 12),
-                                _PaymentRow(
-                                  label: 'Paid Amount',
-                                  value: '\$${order.paidAmount?.toStringAsFixed(2) ?? '0.00'}',
-                                  theme: theme,
-                                  valueColor: theme.colorScheme.primary,
-                                ),
-                                const fw.SizedBox(height: 12),
-                                fw.Container(
-                                  padding: const fw.EdgeInsets.only(top: 12),
-                                  decoration: fw.BoxDecoration(
-                                    border: fw.Border(
-                                      top: fw.BorderSide(
-                                        color: theme.colorScheme.border.withOpacity(0.2),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  child: _PaymentRow(
-                                    label: 'Remaining Amount',
-                                    value: '\$${order.remainingAmount?.toStringAsFixed(2) ?? '0.00'}',
-                                    theme: theme,
-                                    isLarge: true,
-                                    valueColor: (order.remainingAmount ?? 0) > 0
-                                        ? theme.colorScheme.destructive
-                                        : theme.colorScheme.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const fw.SizedBox(height: 16),
-
-                        // Dates Card
-                        Card(
-                          child: fw.Container(
-                            width: double.infinity,
-                            padding: const fw.EdgeInsets.all(20),
-                            child: fw.Column(
-                              crossAxisAlignment: fw.CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'DATES',
-                                  style: fw.TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: fw.FontWeight.w700,
-                                    color: theme.colorScheme.mutedForeground,
-                                    letterSpacing: 0.8,
-                                  ),
-                                ),
-                                const fw.SizedBox(height: 16),
-                                if (order.creationTime != null)
-                                  _DateRow(
-                                    label: 'Created',
-                                    date: order.creationTime!,
-                                    theme: theme,
-                                  ),
-                                if (order.lastModificationTime != null) ...[
                                   const fw.SizedBox(height: 12),
-                                  _DateRow(
-                                    label: 'Last Modified',
-                                    date: order.lastModificationTime!,
+                                  _InfoRow(
+                                    icon: Icons.location_on_outlined,
+                                    label: 'Address',
+                                    value: order.customerAddress ?? 'N/A',
                                     theme: theme,
                                   ),
-                                ],
-                                if (order.cancellationTime != null) ...[
-                                  const fw.SizedBox(height: 12),
-                                  _DateRow(
-                                    label: 'Cancelled',
-                                    date: order.cancellationTime!,
-                                    theme: theme,
-                                    isDestructive: true,
-                                  ),
-                                  if (order.cancellationReason != null &&
-                                      order.cancellationReason!.isNotEmpty) ...[
-                                    const fw.SizedBox(height: 8),
-                                    Text(
-                                      'Reason: ${order.cancellationReason}',
-                                      style: fw.TextStyle(
-                                        fontSize: 13,
-                                        color: theme.colorScheme.mutedForeground,
-                                        fontStyle: fw.FontStyle.italic,
-                                      ),
+                                  if (order.note != null &&
+                                      order.note!.isNotEmpty) ...[
+                                    const fw.SizedBox(height: 12),
+                                    _InfoRow(
+                                      icon: Icons.note_outlined,
+                                      label: 'Note',
+                                      value: order.note!,
+                                      theme: theme,
                                     ),
                                   ],
                                 ],
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          const fw.SizedBox(height: 16),
+
+                          // Status Information Card
+                          Card(
+                            child: fw.Container(
+                              width: double.infinity,
+                              padding: const fw.EdgeInsets.all(20),
+                              child: fw.Column(
+                                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'STATUS',
+                                    style: fw.TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: fw.FontWeight.w700,
+                                      color: theme.colorScheme.mutedForeground,
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                  const fw.SizedBox(height: 16),
+                                  fw.Row(
+                                    children: [
+                                      if (order.status != null)
+                                        fw.Expanded(
+                                          child: fw.Container(
+                                            padding:
+                                                const fw.EdgeInsets.symmetric(
+                                                  horizontal: 16,
+                                                  vertical: 12,
+                                                ),
+                                            decoration: fw.BoxDecoration(
+                                              color: theme.colorScheme.primary
+                                                  .withOpacity(0.12),
+                                              borderRadius:
+                                                  fw.BorderRadius.circular(12),
+                                            ),
+                                            child: fw.Column(
+                                              crossAxisAlignment:
+                                                  fw.CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Order Status',
+                                                  style: fw.TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        fw.FontWeight.w600,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .mutedForeground,
+                                                  ),
+                                                ),
+                                                const fw.SizedBox(height: 4),
+                                                Text(
+                                                  order.status!.name ?? 'N/A',
+                                                  style: fw.TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        fw.FontWeight.w700,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      const fw.SizedBox(width: 12),
+                                      if (order.paymentStatus != null)
+                                        fw.Expanded(
+                                          child: fw.Container(
+                                            padding:
+                                                const fw.EdgeInsets.symmetric(
+                                                  horizontal: 16,
+                                                  vertical: 12,
+                                                ),
+                                            decoration: fw.BoxDecoration(
+                                              color: theme.colorScheme.secondary
+                                                  .withOpacity(0.12),
+                                              borderRadius:
+                                                  fw.BorderRadius.circular(12),
+                                            ),
+                                            child: fw.Column(
+                                              crossAxisAlignment:
+                                                  fw.CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Payment',
+                                                  style: fw.TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        fw.FontWeight.w600,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .mutedForeground,
+                                                  ),
+                                                ),
+                                                const fw.SizedBox(height: 4),
+                                                Text(
+                                                  order.paymentStatus!.name ??
+                                                      'N/A',
+                                                  style: fw.TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        fw.FontWeight.w700,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .secondary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const fw.SizedBox(height: 16),
+
+                          // Payment Summary Card
+                          Card(
+                            child: fw.Container(
+                              width: double.infinity,
+                              padding: const fw.EdgeInsets.all(20),
+                              child: fw.Column(
+                                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'PAYMENT SUMMARY',
+                                    style: fw.TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: fw.FontWeight.w700,
+                                      color: theme.colorScheme.mutedForeground,
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                  const fw.SizedBox(height: 16),
+                                  _PaymentRow(
+                                    label: 'Total Amount',
+                                    value:
+                                        '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
+                                    theme: theme,
+                                  ),
+                                  const fw.SizedBox(height: 12),
+                                  _PaymentRow(
+                                    label: 'Paid Amount',
+                                    value:
+                                        '\$${order.paidAmount?.toStringAsFixed(2) ?? '0.00'}',
+                                    theme: theme,
+                                    valueColor: theme.colorScheme.primary,
+                                  ),
+                                  const fw.SizedBox(height: 12),
+                                  fw.Container(
+                                    padding: const fw.EdgeInsets.only(top: 12),
+                                    decoration: fw.BoxDecoration(
+                                      border: fw.Border(
+                                        top: fw.BorderSide(
+                                          color: theme.colorScheme.border
+                                              .withOpacity(0.2),
+                                          width: 1,
+                                        ),
+                                      ),
+                                    ),
+                                    child: _PaymentRow(
+                                      label: 'Remaining Amount',
+                                      value:
+                                          '\$${order.remainingAmount?.toStringAsFixed(2) ?? '0.00'}',
+                                      theme: theme,
+                                      isLarge: true,
+                                      valueColor:
+                                          (order.remainingAmount ?? 0) > 0
+                                          ? theme.colorScheme.destructive
+                                          : theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const fw.SizedBox(height: 16),
+
+                          // Dates Card
+                          Card(
+                            child: fw.Container(
+                              width: double.infinity,
+                              padding: const fw.EdgeInsets.all(20),
+                              child: fw.Column(
+                                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'DATES',
+                                    style: fw.TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: fw.FontWeight.w700,
+                                      color: theme.colorScheme.mutedForeground,
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                  const fw.SizedBox(height: 16),
+                                  if (order.creationTime != null)
+                                    _DateRow(
+                                      label: 'Created',
+                                      date: order.creationTime!,
+                                      theme: theme,
+                                    ),
+                                  if (order.lastModificationTime != null) ...[
+                                    const fw.SizedBox(height: 12),
+                                    _DateRow(
+                                      label: 'Last Modified',
+                                      date: order.lastModificationTime!,
+                                      theme: theme,
+                                    ),
+                                  ],
+                                  if (order.cancellationTime != null) ...[
+                                    const fw.SizedBox(height: 12),
+                                    _DateRow(
+                                      label: 'Cancelled',
+                                      date: order.cancellationTime!,
+                                      theme: theme,
+                                      isDestructive: true,
+                                    ),
+                                    if (order.cancellationReason != null &&
+                                        order
+                                            .cancellationReason!
+                                            .isNotEmpty) ...[
+                                      const fw.SizedBox(height: 8),
+                                      Text(
+                                        'Reason: ${order.cancellationReason}',
+                                        style: fw.TextStyle(
+                                          fontSize: 13,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
+                                          fontStyle: fw.FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
   }
 }
 
@@ -408,11 +435,7 @@ class _InfoRow extends fw.StatelessWidget {
     return fw.Row(
       crossAxisAlignment: fw.CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 18,
-          color: theme.colorScheme.mutedForeground,
-        ),
+        Icon(icon, size: 18, color: theme.colorScheme.mutedForeground),
         const fw.SizedBox(width: 12),
         fw.Expanded(
           child: fw.Column(

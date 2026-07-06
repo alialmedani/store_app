@@ -137,9 +137,9 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
     data, {
     String? productId,
   }) async {
-    return await GetProductVariantListUsecase(
-      ProductVariantRepository(),
-    ).call(params: GetProductVariantListParams(request: data, productId: productId));
+    return await GetProductVariantListUsecase(ProductVariantRepository()).call(
+      params: GetProductVariantListParams(request: data, productId: productId),
+    );
   }
 
   Future<Result<ProductVariantModel>> getProductVariantDetails(

@@ -168,10 +168,13 @@ class ProductCubit extends Cubit<ProductState> {
     ).call(params: createProductParams);
   }
 
-  Future<Result<List<ProductModel>>> fetchProductList(data, {String? categoryId}) async {
-    return await GetProductListUsecase(
-      ProductRepository(),
-    ).call(params: GetProductListParams(request: data, categoryId: categoryId));
+  Future<Result<List<ProductModel>>> fetchProductList(
+    data, {
+    String? categoryId,
+  }) async {
+    return await GetProductListUsecase(ProductRepository()).call(
+      params: GetProductListParams(request: data, categoryId: categoryId),
+    );
   }
 
   Future<Result<ProductModel>> getProductDetails(String productId) async {
