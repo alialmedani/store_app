@@ -18,7 +18,8 @@ String getFileByEntityUrl({
   String? filePlacement,
 }) {
   // ✅ Using route parameter for entityId, query params for entityType & filePlacement
-  String url = '$baseUrl/api/app/file/by-entity/$entityId?entityType=$entityType';
+  String url =
+      '$baseUrl/api/app/file/by-entity/$entityId?entityType=$entityType';
   if (filePlacement != null && filePlacement.isNotEmpty) {
     url += '&filePlacement=$filePlacement';
   }
