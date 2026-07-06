@@ -191,10 +191,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
             children: [
               const Text(
                 'Customer Information',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 24),
 
@@ -320,10 +317,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
               // Note Field
               const Text(
                 'Note (Optional)',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
               TextField(
@@ -390,10 +384,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                 children: [
                   const Text(
                     'Order Items',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   OutlineButton(
                     onPressed: () {
@@ -557,10 +548,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
             child: PrimaryButton(
               child: const Text(
                 'Create Order',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -617,10 +605,7 @@ class _StepIndicator extends StatelessWidget {
                 : theme.colorScheme.muted.withOpacity(0.3),
             shape: BoxShape.circle,
             border: isActive
-                ? Border.all(
-                    color: theme.colorScheme.primary,
-                    width: 3,
-                  )
+                ? Border.all(color: theme.colorScheme.primary, width: 3)
                 : null,
           ),
           child: Center(

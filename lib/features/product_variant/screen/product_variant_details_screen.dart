@@ -73,8 +73,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                           onPressed: () async {
                             final result = await fw.Navigator.of(context).push(
                               fw.PageRouteBuilder(
-                                pageBuilder: (_, __, ___) =>
-                                    BlocProvider.value(
+                                pageBuilder: (_, __, ___) => BlocProvider.value(
                                   value: context.read<ProductVariantCubit>(),
                                   child: UpdateProductVariantScreen(
                                     variant: variant,

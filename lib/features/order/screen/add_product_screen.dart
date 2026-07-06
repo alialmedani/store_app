@@ -153,29 +153,29 @@ class _AddProductScreenState extends fw.State<AddProductScreen> {
                         },
                       )
                     : _selectedTabIndex == 1
-                        ? _ByProductView(
-                            selectedProductId: selectedProductId,
-                            selectedVariantId: selectedVariantId,
-                            onProductSelected: (id) {
-                              setState(() {
-                                selectedProductId = id;
-                                selectedVariantId = null;
-                              });
-                            },
-                            onVariantSelected: (id) {
-                              setState(() {
-                                selectedVariantId = id;
-                              });
-                            },
-                          )
-                        : _AllVariantsView(
-                            selectedVariantId: selectedVariantId,
-                            onVariantSelected: (id) {
-                              setState(() {
-                                selectedVariantId = id;
-                              });
-                            },
-                          ),
+                    ? _ByProductView(
+                        selectedProductId: selectedProductId,
+                        selectedVariantId: selectedVariantId,
+                        onProductSelected: (id) {
+                          setState(() {
+                            selectedProductId = id;
+                            selectedVariantId = null;
+                          });
+                        },
+                        onVariantSelected: (id) {
+                          setState(() {
+                            selectedVariantId = id;
+                          });
+                        },
+                      )
+                    : _AllVariantsView(
+                        selectedVariantId: selectedVariantId,
+                        onVariantSelected: (id) {
+                          setState(() {
+                            selectedVariantId = id;
+                          });
+                        },
+                      ),
               ),
             ),
 
@@ -229,7 +229,9 @@ class _AddProductScreenState extends fw.State<AddProductScreen> {
                           onPressed: () {
                             if (selectedVariantId == null) {
                               _showError(
-                                  context, 'Please select a product variant');
+                                context,
+                                'Please select a product variant',
+                              );
                               return;
                             }
 
@@ -237,7 +239,9 @@ class _AddProductScreenState extends fw.State<AddProductScreen> {
                                 int.tryParse(_quantityController.text) ?? 1;
                             if (quantity <= 0) {
                               _showError(
-                                  context, 'Quantity must be greater than 0');
+                                context,
+                                'Quantity must be greater than 0',
+                              );
                               return;
                             }
 
@@ -458,9 +462,9 @@ class _ByCategoryView extends fw.StatelessWidget {
                   withRefresh: false,
                   repositoryCallBack: (data) {
                     return context.read<ProductCubit>().fetchProductList(
-                          data,
-                          categoryId: selectedCategoryId,
-                        );
+                      data,
+                      categoryId: selectedCategoryId,
+                    );
                   },
                   listBuilder: (list) {
                     if (list.isEmpty) {

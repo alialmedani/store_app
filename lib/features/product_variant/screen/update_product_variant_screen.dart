@@ -12,10 +12,7 @@ import '../data/model/product_variant_model.dart';
 class UpdateProductVariantScreen extends fw.StatefulWidget {
   final ProductVariantModel variant;
 
-  const UpdateProductVariantScreen({
-    super.key,
-    required this.variant,
-  });
+  const UpdateProductVariantScreen({super.key, required this.variant});
 
   @override
   fw.State<UpdateProductVariantScreen> createState() =>
@@ -33,8 +30,7 @@ class _UpdateProductVariantScreenState
     final cubit = context.read<ProductVariantCubit>();
 
     // Initialize params with existing variant data
-    cubit.updateProductVariantParams.productVariantId =
-        widget.variant.id ?? '';
+    cubit.updateProductVariantParams.productVariantId = widget.variant.id ?? '';
     cubit.updateProductVariantParams.color = widget.variant.color;
     cubit.updateProductVariantParams.size = widget.variant.size;
     cubit.updateProductVariantParams.isActive = widget.variant.isActive ?? true;
@@ -254,8 +250,8 @@ class _UpdateProductVariantScreenState
                                   ),
                                 ),
                                 Switch(
-                                  value: cubit
-                                      .updateProductVariantParams.isActive,
+                                  value:
+                                      cubit.updateProductVariantParams.isActive,
                                   onChanged: (value) {
                                     cubit.toggleUpdateIsActive(value);
                                   },
