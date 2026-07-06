@@ -5,6 +5,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
+import 'update_product_variant_screen.dart';
 
 /// Product Variant Details Screen - Shows complete product variant information
 class ProductVariantDetailsScreen extends fw.StatelessWidget {
@@ -65,6 +66,34 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                               letterSpacing: -0.5,
                             ),
                           ),
+                        ),
+                        // Edit Button
+                        IconButton(
+                          icon: const Icon(Icons.edit, size: 20),
+                          onPressed: () async {
+                            final result = await fw.Navigator.of(context).push(
+                              fw.PageRouteBuilder(
+                                pageBuilder: (_, __, ___) =>
+                                    BlocProvider.value(
+                                  value: context.read<ProductVariantCubit>(),
+                                  child: UpdateProductVariantScreen(
+                                    variant: variant,
+                                  ),
+                                ),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+
+                            // Refresh details if variant was updated
+                            if (result != null) {
+                              // Trigger a rebuild by calling the details API again
+                              context
+                                  .read<ProductVariantCubit>()
+                                  .getProductVariantDetails(productVariantId);
+                            }
+                          },
+                          variance: ButtonVariance.ghost,
                         ),
                       ],
                     ),

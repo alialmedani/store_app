@@ -9,6 +9,7 @@ import '../usecase/create_product_variant_usecase.dart';
 import '../usecase/generate_product_variant_usecase.dart';
 import '../usecase/get_product_variant_details_usecase.dart';
 import '../usecase/get_product_variant_list_usecase.dart';
+import '../usecase/update_product_variant_usecase.dart';
 
 class ProductVariantRepository extends CoreRepository {
   Future<Result<ProductVariantModel>> createProductVariantRequest({
@@ -95,6 +96,22 @@ class ProductVariantRepository extends CoreRepository {
               .toList();
         }
         return [];
+      },
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<ProductVariantModel>> updateProductVariantRequest({
+    required UpdateProductVariantParams params,
+  }) async {
+    final result = await RemoteDataSource.request<ProductVariantModel>(
+      withAuthentication: true,
+      data: params.toJson(),
+      url: updateProductVariantUrl(params.productVariantId),
+      method: HttpMethod.PUT,
+      converter: (json) {
+        return ProductVariantModel.fromJson(json);
       },
     );
 

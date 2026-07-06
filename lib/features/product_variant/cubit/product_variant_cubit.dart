@@ -10,6 +10,7 @@ import '../data/usecase/create_product_variant_usecase.dart';
 import '../data/usecase/generate_product_variant_usecase.dart';
 import '../data/usecase/get_product_variant_details_usecase.dart';
 import '../data/usecase/get_product_variant_list_usecase.dart';
+import '../data/usecase/update_product_variant_usecase.dart';
 
 part 'product_variant_state.dart';
 
@@ -23,6 +24,14 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
         color: null,
         size: null,
         stockQuantity: 0,
+        isActive: true,
+      );
+
+  UpdateProductVariantParams updateProductVariantParams =
+      UpdateProductVariantParams(
+        productVariantId: '',
+        color: null,
+        size: null,
         isActive: true,
       );
 
@@ -40,7 +49,7 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
     selectedProduct = product;
     createProductVariantParams.productId = product.id ?? '';
     clearProductError();
-    emit(UpdateProductVariantParams());
+    emit(ProductVariantInitial());
   }
 
   // Check if color is required based on product category sizeType
@@ -59,7 +68,12 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
 
   void toggleIsActive(bool value) {
     createProductVariantParams.isActive = value;
-    emit(UpdateProductVariantParams());
+    emit(ProductVariantInitial());
+  }
+
+  void toggleUpdateIsActive(bool value) {
+    updateProductVariantParams.isActive = value;
+    emit(ProductVariantInitial());
   }
 
   void setProductError(String error) {
@@ -152,5 +166,11 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
         productVariantId: productVariantId,
       ),
     );
+  }
+
+  Future<Result<ProductVariantModel>> updateProductVariant() async {
+    return await UpdateProductVariantUsecase(
+      ProductVariantRepository(),
+    ).call(params: updateProductVariantParams);
   }
 }
