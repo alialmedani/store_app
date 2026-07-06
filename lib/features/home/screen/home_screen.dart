@@ -4,6 +4,8 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../auth/cubit/auth_cubit.dart';
 import '../../auth/screen/login_screen_shadcn.dart';
 import '../../category/screen/category_list_screen.dart';
+import '../../order/cubit/order_cubit.dart';
+import '../../order/screen/order_list_screen.dart';
 import '../../product/screen/product_list_screen.dart';
 import '../../product_variant/screen/product_variant_list_screen.dart';
 
@@ -24,82 +26,109 @@ class HomeScreen extends StatelessWidget {
           slivers: [
             // App Bar
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.background,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.colorScheme.border.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome Back',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF9E9E9E),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome Back',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: theme.colorScheme.mutedForeground,
+                              letterSpacing: 0.3,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          currentUser?.userName ?? 'User',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(height: 6),
+                          Text(
+                            currentUser?.userName ?? 'User',
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.5,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Row(
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.notifications_outlined),
-                          onPressed: () {
-                            // TODO: Navigate to notifications
-                          },
-                          variance: ButtonVariance.ghost,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.muted.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.notifications_outlined, size: 20),
+                            onPressed: () {
+                              // TODO: Navigate to notifications
+                            },
+                            variance: ButtonVariance.ghost,
+                          ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.logout),
-                          onPressed: () async {
-                            // Show logout confirmation dialog
-                            final shouldLogout = await showDialog<bool>(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: const Text('Logout'),
-                                content: const Text(
-                                  'Are you sure you want to logout?',
+                        const SizedBox(width: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.muted.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.logout, size: 20),
+                            onPressed: () async {
+                              // Show logout confirmation dialog
+                              final shouldLogout = await showDialog<bool>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: const Text('Logout'),
+                                  content: const Text(
+                                    'Are you sure you want to logout?',
+                                  ),
+                                  actions: [
+                                    SecondaryButton(
+                                      onPressed: () => Navigator.pop(ctx, false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    DestructiveButton(
+                                      onPressed: () => Navigator.pop(ctx, true),
+                                      child: const Text('Logout'),
+                                    ),
+                                  ],
                                 ),
-                                actions: [
-                                  SecondaryButton(
-                                    onPressed: () => Navigator.pop(ctx, false),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  DestructiveButton(
-                                    onPressed: () => Navigator.pop(ctx, true),
-                                    child: const Text('Logout'),
-                                  ),
-                                ],
-                              ),
-                            );
+                              );
 
-                            if (shouldLogout == true && context.mounted) {
-                              // Perform logout
-                              await authCubit.logout();
+                              if (shouldLogout == true && context.mounted) {
+                                // Perform logout
+                                await authCubit.logout();
 
-                              // Navigate to login screen
-                              if (context.mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const LoginScreenShadcn(),
-                                  ),
-                                  (route) => false,
-                                );
+                                // Navigate to login screen
+                                if (context.mounted) {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LoginScreenShadcn(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
                               }
-                            }
-                          },
-                          variance: ButtonVariance.ghost,
+                            },
+                            variance: ButtonVariance.ghost,
+                          ),
                         ),
                       ],
                     ),
@@ -111,23 +140,23 @@ class HomeScreen extends StatelessWidget {
             // Quick Stats
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
                 child: Row(
                   children: [
                     Expanded(
                       child: _StatCard(
                         icon: Icons.category_outlined,
                         title: 'Categories',
-                        value: '--',
+                        value: '—',
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: _StatCard(
                         icon: Icons.inventory_2_outlined,
                         title: 'Products',
-                        value: '--',
+                        value: '—',
                         color: const Color(0xFF10B981),
                       ),
                     ),
@@ -136,8 +165,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
             // Main Menu
             SliverToBoxAdapter(
               child: Padding(
@@ -145,14 +172,15 @@ class HomeScreen extends StatelessWidget {
                 child: Text(
                   'Main Menu',
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.3,
                   ),
                 ),
               ),
             ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
             // Menu Items
             SliverPadding(
@@ -160,9 +188,9 @@ class HomeScreen extends StatelessWidget {
               sliver: SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.15,
                 ),
                 delegate: SliverChildListDelegate([
                   _MenuCard(
@@ -214,20 +242,13 @@ class HomeScreen extends StatelessWidget {
                     subtitle: 'View orders',
                     color: const Color(0xFF8B5CF6),
                     onTap: () {
-                      // TODO: Navigate to orders
-                      showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: const Text('Coming Soon'),
-                          content: const Text(
-                            'Orders feature will be available soon.',
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (_) => OrderCubit(),
+                            child: const OrderListScreen(),
                           ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(ctx),
-                              child: const Text('OK'),
-                            ),
-                          ],
                         ),
                       );
                     },
@@ -284,32 +305,55 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, size: 24, color: color),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 12, color: Color(0xFF9E9E9E)),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ],
+    final theme = Theme.of(context);
+    
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.border.withOpacity(0.5),
+          width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, size: 22, color: color),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.mutedForeground,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.5,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -333,38 +377,58 @@ class _MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return GestureDetector(
       onTap: onTap,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, size: 32, color: color),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 12, color: Color(0xFF9E9E9E)),
-              ),
-            ],
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.border.withOpacity(0.5),
+            width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, size: 28, color: color),
+            ),
+            const Spacer(),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.2,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: theme.colorScheme.mutedForeground,
+              ),
+            ),
+          ],
         ),
       ),
     );

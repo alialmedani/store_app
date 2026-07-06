@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/features/auth/screen/auth_wrapper.dart';
+import 'package:store/features/order/cubit/order_cubit.dart'; 
 import 'package:store/features/product/cubit/product_cubit.dart';
 
 import 'core/classes/keys.dart';
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProductCubit>(create: (context) => ProductCubit()),
         BlocProvider<ProductVariantCubit>(
           create: (context) => ProductVariantCubit(),
+        ),
+        BlocProvider<OrderCubit>(
+          create: (context) => OrderCubit(),
         ),
       ],
       child: ScreenUtilInit(

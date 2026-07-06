@@ -12,21 +12,31 @@ class NoDataScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:  EdgeInsets.only(top: 70.h),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(noDataImage,
-            width: width??300.w,height:height??230.h ,
-            ),
-            SizedBox(height: 30.h ),
-            Text("no data",
-                style: AppTextStyle.getRegularStyle(
-                    color:AppColors.grey9A, fontSize: AppFontSize.size_16)),
-          ],
+    return Center(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: width ?? 300.w,
+                  maxHeight: height ?? 200.h,
+                ),
+                child: Image.asset(
+                  noDataImage,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Text("no data",
+                  style: AppTextStyle.getRegularStyle(
+                      color: AppColors.grey9A, fontSize: AppFontSize.size_16)),
+            ],
+          ),
         ),
       ),
     );
