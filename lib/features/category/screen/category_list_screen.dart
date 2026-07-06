@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
+import '../../../../core/ui/widgets/authenticated_image.dart';
+import '../../../../core/utils/image_helper.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
 import 'create_category_screen.dart';
@@ -102,6 +104,9 @@ class _CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final imageUrl = ImageHelper.getCategoryImageUrl(category.id ?? '');
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -110,6 +115,30 @@ class _CategoryCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                // Category Image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: AuthenticatedImage(
+                    imageUrl: imageUrl,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    errorWidget: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.muted,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.category,
+                        color: theme.colorScheme.mutedForeground,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

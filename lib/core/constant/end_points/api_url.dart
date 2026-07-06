@@ -10,6 +10,21 @@ const uploadFileUrl = '$baseUrl/api/app/file/upload';
 String getFileByNameUrl(String fileName) =>
     '$baseUrl/api/app/file/by-file-name/$fileName';
 
+/// Get file URL by entity (NEW METHOD - recommended)
+/// Example: getFileByEntityUrl(entityId: productId, entityType: 2)
+String getFileByEntityUrl({
+  required String entityId,
+  required int entityType,
+  String? filePlacement,
+}) {
+  // ✅ Using route parameter for entityId, query params for entityType & filePlacement
+  String url = '$baseUrl/api/app/file/by-entity/$entityId?entityType=$entityType';
+  if (filePlacement != null && filePlacement.isNotEmpty) {
+    url += '&filePlacement=$filePlacement';
+  }
+  return url;
+}
+
 // ========== Category URLs ==========
 const createCategoryUrl = '$baseUrl/api/app/category';
 const String getCategoryListUrl = '$baseUrl/api/app/category';

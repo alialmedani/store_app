@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
+import '../../../../core/ui/widgets/authenticated_image.dart';
+import '../../../../core/utils/image_helper.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
 import 'create_product_screen.dart';
@@ -103,6 +105,7 @@ class _ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final imageUrl = ImageHelper.getProductImageUrl(product.id ?? '');
 
     return Card(
       child: Padding(
@@ -113,46 +116,28 @@ class _ProductCard extends StatelessWidget {
             Row(
               children: [
                 // Product Image
-                if (product.imageFullUrl != null &&
-                    product.imageFullUrl!.isNotEmpty)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      product.imageFullUrl!,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.muted,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.image_not_supported,
-                            color: theme.colorScheme.mutedForeground,
-                            size: 30,
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                else
-                  Container(
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: AuthenticatedImage(
+                    imageUrl: imageUrl,
                     width: 60,
                     height: 60,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.muted,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      Icons.inventory_2,
-                      color: theme.colorScheme.mutedForeground,
-                      size: 30,
+                    fit: BoxFit.cover,
+                    errorWidget: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.muted,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.inventory_2,
+                        color: theme.colorScheme.mutedForeground,
+                        size: 30,
+                      ),
                     ),
                   ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(

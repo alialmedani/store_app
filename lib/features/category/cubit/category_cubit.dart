@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:io';
+import '../../../core/repository/file_upload_repository.dart';
 import '../../../core/results/result.dart';
 import '../data/model/category_model.dart';
 import '../data/repository/category_repository.dart';
@@ -21,6 +23,8 @@ class CategoryCubit extends Cubit<CategoryState> {
 
   // UI State Variables
   int? selectedSizeType = 1;
+  File? selectedImageFile;
+  bool isUploadingImage = false;
 
   // Validation Error Variables
   String? nameError;
@@ -65,7 +69,64 @@ class CategoryCubit extends Cubit<CategoryState> {
     emit(CategoryValidationError());
   }
 
+  void selectImageFile(File? file) {
+    selectedImageFile = file;
+    emit(UpdateCategoryParams());
+  }
+
+  void clearImageFile() {
+    selectedImageFile = null;
+    emit(UpdateCategoryParams());
+  }
+
   // API Methods (NO emit - boilerplate handles state)
+  
+  /// 🚀 NEW METHOD: Create category with image (all in one)
+  Future<Result<CategoryModel>> createCategoryWithImage() async {
+    // Step 1: Create category first
+    print('📦 Step 1: Creating category...');
+    final categoryResult = await CreateCategoryUsecase(
+      CategoryRepository(),
+    ).call(params: createCategoryParams);
+
+    if (categoryResult.hasErrorOnly) {
+      print('❌ Category creation failed: ${categoryResult.error}');
+      return categoryResult;
+    }
+
+    final category = categoryResult.data!;
+    final categoryId = category.id;
+    print('✅ Category created: $categoryId');
+
+    // Step 2: Upload image if selected
+    if (selectedImageFile != null && categoryId != null) {
+      print('📤 Step 2: Uploading image...');
+      
+      isUploadingImage = true;
+      emit(UpdateCategoryParams());
+
+      final uploadResult = await FileUploadRepository().uploadFile(
+        file: selectedImageFile!,
+        entityId: categoryId,  // ✅ Real categoryId
+        entityType: 1,          // Category = 1
+        filePlacement: 'main',
+      );
+
+      isUploadingImage = false;
+      emit(UpdateCategoryParams());
+
+      if (uploadResult.hasDataOnly) {
+        print('✅ Image uploaded successfully');
+      } else {
+        print('⚠️ Image upload failed: ${uploadResult.error}');
+      }
+    }
+
+    print('✅ Process complete!');
+    return Result(data: category);
+  }
+
+  /// OLD METHOD: Create category only (no image handling)
   Future<Result<CategoryModel>> createCategory() async {
     return await CreateCategoryUsecase(
       CategoryRepository(),

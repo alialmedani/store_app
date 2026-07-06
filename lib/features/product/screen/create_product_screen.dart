@@ -29,7 +29,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   CreateModelCubit? createModelCubit;
   final ImagePicker _imagePicker = ImagePicker();
 
-  Future<void> _pickAndUploadImage(ProductCubit cubit) async {
+  /// 🖼️ NEW: Pick image only - upload happens after product creation
+  Future<void> _pickImage(ProductCubit cubit) async {
     try {
       final XFile? image = await _imagePicker.pickImage(
         source: ImageSource.gallery,
@@ -41,25 +42,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       if (image != null) {
         final file = File(image.path);
         cubit.selectImageFile(file);
-
-        // رفع الصورة تلقائياً
-        final uploadResult = await cubit.uploadProductImage();
-
-        if (uploadResult.hasErrorOnly && mounted) {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: const Text('خطأ'),
-              content: Text(uploadResult.error ?? 'فشل رفع الصورة'),
-              actions: [
-                PrimaryButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: const Text('حسناً'),
-                ),
-              ],
-            ),
-          );
-        }
       }
     } catch (e) {
       if (mounted) {
@@ -80,45 +62,9 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     }
   }
 
+  /// ✅ NEW: Simplified validation - no image upload check
   bool _validateFields(ProductCubit cubit) {
     bool isValid = true;
-
-    // Check if image is still uploading
-    if (cubit.isUploadingImage) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('انتظر'),
-          content: const Text('جارٍ رفع الصورة... يرجى الانتظار'),
-          actions: [
-            PrimaryButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('حسناً'),
-            ),
-          ],
-        ),
-      );
-      return false;
-    }
-
-    // Check if image was selected but upload failed
-    if (cubit.selectedImageFile != null &&
-        cubit.createProductParams.imageUrl.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('خطأ'),
-          content: const Text('فشل رفع الصورة. يرجى اختيار الصورة مرة أخرى'),
-          actions: [
-            PrimaryButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('حسناً'),
-            ),
-          ],
-        ),
-      );
-      return false;
-    }
 
     // Validate name
     if (_nameController.text.trim().isEmpty) {
@@ -426,7 +372,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                   OutlineButton(
                                     onPressed: cubit.isUploadingImage
                                         ? null
-                                        : () => _pickAndUploadImage(cubit),
+                                        : () => _pickImage(cubit),  // ✅ NEW
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -439,29 +385,11 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                           ).colorScheme.primary,
                                         ),
                                         const SizedBox(width: 8),
-                                        Text(
-                                          cubit.isUploadingImage
-                                              ? 'جاري الرفع...'
-                                              : 'اختر صورة',
-                                        ),
+                                        const Text('اختر صورة'),
                                       ],
                                     ),
                                   ),
-                                if (cubit
-                                        .createProductParams
-                                        .imageUrl
-                                        .isNotEmpty &&
-                                    !cubit.isUploadingImage)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      '✓ تم رفع الصورة بنجاح',
-                                      style: TextStyle(
-                                        color: const Color(0xFF10B981),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
+                                // ❌ Remove success message - upload happens after creation
                               ],
                             );
                           },
@@ -561,7 +489,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             return _validateFields(cubit);
                           },
                           useCaseCallBack: (data) {
-                            return cubit.createProduct();
+                            // 🚀 NEW: Use createProductWithImage()
+                            return cubit.createProductWithImage();
                           },
                           onSuccess: (productModel) {
                             // Clear form

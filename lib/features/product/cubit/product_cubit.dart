@@ -102,35 +102,66 @@ class ProductCubit extends Cubit<ProductState> {
     emit(UpdateProductParams());
   }
 
-  Future<Result<String>> uploadProductImage() async {
-    if (selectedImageFile == null) {
-      return Result(error: 'No image selected');
+  /// 🚀 NEW METHOD: Create product with image (all in one)
+  /// 1. Create product first
+  /// 2. If image selected, upload it with real productId
+  /// 3. Return the product with image URL
+  Future<Result<ProductModel>> createProductWithImage() async {
+    // Step 1: Create product first (without image)
+    print('📦 Step 1: Creating product...');
+    final productResult = await CreateProductUsecase(
+      ProductRepository(),
+    ).call(params: createProductParams);
+
+    if (productResult.hasErrorOnly) {
+      print('❌ Product creation failed: ${productResult.error}');
+      return productResult;
     }
 
-    isUploadingImage = true;
-    emit(UpdateProductParams());
+    final product = productResult.data!;
+    final productId = product.id;
+    print('✅ Product created: $productId');
 
-    final result = await FileUploadRepository().uploadFile(
-      file: selectedImageFile!,
-      entityId: 'temp-product',
-      entityType: 2, // Product = 2
-      filePlacement: 'product-main',
-    );
-
-    isUploadingImage = false;
-
-    if (result.hasDataOnly && result.data != null) {
-      createProductParams.imageUrl = result.data!.fileName ?? '';
+    // Step 2: Upload image if selected
+    if (selectedImageFile != null && productId != null) {
+      print('📤 Step 2: Uploading image...');
+      
+      isUploadingImage = true;
       emit(UpdateProductParams());
-      return Result(data: result.data!.fileName ?? '');
-    } else {
+
+      final uploadResult = await FileUploadRepository().uploadFile(
+        file: selectedImageFile!,
+        entityId: productId,  // ✅ Real productId
+        entityType: 2,         // Product = 2
+        filePlacement: 'main', // or 'product-main'
+      );
+
+      isUploadingImage = false;
       emit(UpdateProductParams());
-      return Result(error: result.error ?? 'Upload failed');
+
+      if (uploadResult.hasDataOnly) {
+        print('✅ Image uploaded successfully');
+      } else {
+        print('⚠️ Image upload failed: ${uploadResult.error}');
+        // Product still created, just no image
+      }
     }
+
+    print('✅ Process complete!');
+    return Result(data: product);
   }
 
   // API Methods (NO emit - boilerplate handles state)
+  
+  /// OLD METHOD: Create product only (no image handling)
+  /// Use createProductWithImage() instead for new features
   Future<Result<ProductModel>> createProduct() async {
+    print('📦 Creating product with params:');
+    print('   name: ${createProductParams.name}');
+    print('   imageUrl: ${createProductParams.imageUrl}');
+    print('   price: ${createProductParams.price}');
+    print('   categoryId: ${createProductParams.categoryId}');
+
     return await CreateProductUsecase(
       ProductRepository(),
     ).call(params: createProductParams);

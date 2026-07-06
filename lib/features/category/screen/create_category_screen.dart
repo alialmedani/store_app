@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import '../../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
@@ -19,7 +21,40 @@ class CreateCategoryScreen extends StatefulWidget {
 class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _imagePicker = ImagePicker();
   CreateModelCubit? createModelCubit;
+
+  Future<void> _pickImage(CategoryCubit cubit) async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        final file = File(image.path);
+        cubit.selectImageFile(file);
+      }
+    } catch (e) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('خطأ'),
+            content: Text('فشل اختيار الصورة: $e'),
+            actions: [
+              PrimaryButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('حسناً'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
 
   bool _validateFields(CategoryCubit cubit) {
     bool isValid = true;
@@ -146,6 +181,72 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                         ),
                         const SizedBox(height: 16),
 
+                        // Category Image Upload
+                        BlocBuilder<CategoryCubit, CategoryState>(
+                          builder: (context, state) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'صورة التصنيف (اختياري)',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                if (cubit.selectedImageFile != null)
+                                  Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.file(
+                                          cubit.selectedImageFile!,
+                                          height: 200,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            cubit.clearImageFile();
+                                          },
+                                          variance: ButtonVariance.destructive,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                else
+                                  OutlineButton(
+                                    onPressed: cubit.isUploadingImage
+                                        ? null
+                                        : () => _pickImage(cubit),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.image,
+                                          size: 20,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Text('اختر صورة'),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
                         // Size Type Selection
                         BlocBuilder<CategoryCubit, CategoryState>(
                           builder: (context, state) {
@@ -260,7 +361,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             return _validateFields(cubit);
                           },
                           useCaseCallBack: (data) {
-                            return cubit.createCategory();
+                            return cubit.createCategoryWithImage();
                           },
                           onSuccess: (categoryModel) {
                             // Clear form
@@ -269,6 +370,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             cubit.createCategoryParams.sizeType = 1;
                             cubit.createCategoryParams.isActive = true;
                             cubit.selectedSizeType = 1;
+                            cubit.clearImageFile();
                             cubit.clearAllErrors();
 
                             // Show success dialog
