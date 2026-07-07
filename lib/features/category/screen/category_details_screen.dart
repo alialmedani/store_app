@@ -7,6 +7,7 @@ import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
+import 'edit_category_screen.dart';
 
 /// Category Details Screen - Shows complete category information
 class CategoryDetailsScreen extends fw.StatelessWidget {
@@ -66,6 +67,30 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                               fontWeight: FontWeight.w700,
                               letterSpacing: -0.5,
                             ),
+                          ),
+                        ),
+                        // Edit Button
+                        Container(
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary.withOpacity(0.15),
+                            borderRadius: fw.BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.edit, size: 20),
+                            onPressed: () {
+                              fw.Navigator.push(
+                                context,
+                                fw.PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => BlocProvider(
+                                    create: (_) => CategoryCubit(),
+                                    child: EditCategoryScreen(categoryId: categoryId),
+                                  ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            },
+                            variance: ButtonVariance.ghost,
                           ),
                         ),
                       ],

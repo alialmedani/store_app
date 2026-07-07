@@ -9,6 +9,7 @@ import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
 import 'category_details_screen.dart';
 import 'create_category_screen.dart';
+import 'edit_category_screen.dart';
 
 /// Category List Screen - Shows all categories with pagination
 /// Uses PaginationList widget from boilerplate
@@ -262,6 +263,36 @@ class _CategoryCard extends StatelessWidget {
                         ],
                       ),
                     ],
+                  ),
+                ),
+                // Edit Button
+                fw.GestureDetector(
+                  onTap: () {
+                    if (category.id != null) {
+                      fw.Navigator.push(
+                        context,
+                        fw.PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => BlocProvider(
+                            create: (_) => CategoryCubit(),
+                            child: EditCategoryScreen(categoryId: category.id!),
+                          ),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.edit,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                 ),
               ],

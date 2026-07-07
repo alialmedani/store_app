@@ -7,7 +7,9 @@ import '../cubit/home_cubit.dart';
 import '../data/model/dashboard_summary_model.dart';
 import '../../auth/cubit/auth_cubit.dart';
 import '../../auth/screen/login_screen_shadcn.dart';
+import '../../category/cubit/category_cubit.dart';
 import '../../category/screen/category_list_screen.dart';
+import '../../category/screen/category_stock_summary_screen.dart';
 import '../../inventory/cubit/inventory_cubit.dart';
 import '../../inventory/screen/inventory_list_screen.dart';
 import '../../order/cubit/order_cubit.dart';
@@ -421,6 +423,25 @@ class HomeScreen extends StatelessWidget {
                           pageBuilder: (_, __, ___) => BlocProvider(
                             create: (_) => InventoryCubit(),
                             child: const InventoryListScreen(),
+                          ),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
+                  ),
+                  _MenuCard(
+                    icon: Icons.assessment_rounded,
+                    title: 'Category Stock',
+                    subtitle: 'Stock by category',
+                    color: const Color(0xFF8B5CF6),
+                    onTap: () {
+                      fw.Navigator.push(
+                        context,
+                        fw.PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => BlocProvider(
+                            create: (_) => CategoryCubit(),
+                            child: const CategoryStockSummaryScreen(),
                           ),
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,

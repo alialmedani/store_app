@@ -4,10 +4,13 @@ import 'dart:io';
 import '../../../core/repository/file_upload_repository.dart';
 import '../../../core/results/result.dart';
 import '../data/model/category_model.dart';
+import '../data/model/category_stock_summary_model.dart';
 import '../data/repository/category_repository.dart';
 import '../data/usecase/create_category_usecase.dart';
 import '../data/usecase/get_category_details_usecase.dart';
 import '../data/usecase/get_category_list_usecase.dart';
+import '../data/usecase/get_category_stock_summary_usecase.dart';
+import '../data/usecase/update_category_usecase.dart';
 
 part 'category_state.dart';
 
@@ -16,6 +19,13 @@ class CategoryCubit extends Cubit<CategoryState> {
 
   // Params
   CreateCategoryParams createCategoryParams = CreateCategoryParams(
+    name: '',
+    description: '',
+    sizeType: 1,
+    isActive: true,
+  );
+
+  UpdateCategoryParams updateCategoryParams = UpdateCategoryParams(
     name: '',
     description: '',
     sizeType: 1,
@@ -36,12 +46,12 @@ class CategoryCubit extends Cubit<CategoryState> {
     selectedSizeType = sizeType;
     createCategoryParams.sizeType = sizeType;
     clearSizeTypeError();
-    emit(UpdateCategoryParams());
+    emit(CategoryParamsUpdated());
   }
 
   void toggleIsActive(bool value) {
     createCategoryParams.isActive = value;
-    emit(UpdateCategoryParams());
+    emit(CategoryParamsUpdated());
   }
 
   void setNameError(String error) {
@@ -72,12 +82,12 @@ class CategoryCubit extends Cubit<CategoryState> {
 
   void selectImageFile(File? file) {
     selectedImageFile = file;
-    emit(UpdateCategoryParams());
+    emit(CategoryParamsUpdated());
   }
 
   void clearImageFile() {
     selectedImageFile = null;
-    emit(UpdateCategoryParams());
+    emit(CategoryParamsUpdated());
   }
 
   // API Methods (NO emit - boilerplate handles state)
@@ -104,7 +114,7 @@ class CategoryCubit extends Cubit<CategoryState> {
       print('📤 Step 2: Uploading image...');
 
       isUploadingImage = true;
-      emit(UpdateCategoryParams());
+      emit(CategoryParamsUpdated());
 
       final uploadResult = await FileUploadRepository().uploadFile(
         file: selectedImageFile!,
@@ -114,7 +124,7 @@ class CategoryCubit extends Cubit<CategoryState> {
       );
 
       isUploadingImage = false;
-      emit(UpdateCategoryParams());
+      emit(CategoryParamsUpdated());
 
       if (uploadResult.hasDataOnly) {
         print('✅ Image uploaded successfully');
@@ -144,5 +154,19 @@ class CategoryCubit extends Cubit<CategoryState> {
     return await GetCategoryDetailsUsecase(
       CategoryRepository(),
     ).call(params: GetCategoryDetailsParams(categoryId: categoryId));
+  }
+
+
+  Future<Result<CategoryModel>> updateCategory() async {
+    return await UpdateCategoryUsecase(
+      CategoryRepository(),
+    ).call(params: updateCategoryParams);
+  }
+  Future<Result<List<CategoryStockSummaryModel>>> fetchCategoryStockSummary(
+    data,
+  ) async {
+    return await GetCategoryStockSummaryUsecase(
+      CategoryRepository(),
+    ).call(params: GetCategoryStockSummaryParams(request: data));
   }
 }
