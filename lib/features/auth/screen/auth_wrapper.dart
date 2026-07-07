@@ -53,9 +53,9 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
           fw.PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 BlocProvider(
-              create: (context) => HomeCubit(),
-              child: const HomeScreen(),
-            ),
+                  create: (context) => HomeCubit(),
+                  child: const HomeScreen(),
+                ),
             transitionDuration: Duration.zero,
           ),
         );

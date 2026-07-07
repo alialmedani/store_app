@@ -7,14 +7,10 @@ import '../repository/inventory_repository.dart';
 class GetInventoryDetailsParams extends BaseParams {
   final String inventoryId;
 
-  GetInventoryDetailsParams({
-    required this.inventoryId,
-  });
+  GetInventoryDetailsParams({required this.inventoryId});
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': inventoryId,
-    };
+    return {'id': inventoryId};
   }
 }
 

@@ -91,10 +91,14 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             fw.Container(
                               decoration: fw.BoxDecoration(
-                                color: theme.colorScheme.muted.withOpacity(0.25),
+                                color: theme.colorScheme.muted.withOpacity(
+                                  0.25,
+                                ),
                                 borderRadius: fw.BorderRadius.circular(12),
                                 border: fw.Border.all(
-                                  color: theme.colorScheme.border.withOpacity(0.1),
+                                  color: theme.colorScheme.border.withOpacity(
+                                    0.1,
+                                  ),
                                   width: 1,
                                 ),
                               ),
@@ -112,10 +116,14 @@ class HomeScreen extends StatelessWidget {
                             const fw.SizedBox(width: 10),
                             fw.Container(
                               decoration: fw.BoxDecoration(
-                                color: theme.colorScheme.muted.withOpacity(0.25),
+                                color: theme.colorScheme.muted.withOpacity(
+                                  0.25,
+                                ),
                                 borderRadius: fw.BorderRadius.circular(12),
                                 border: fw.Border.all(
-                                  color: theme.colorScheme.border.withOpacity(0.1),
+                                  color: theme.colorScheme.border.withOpacity(
+                                    0.1,
+                                  ),
                                   width: 1,
                                 ),
                               ),
@@ -488,10 +496,7 @@ class _StatCard extends StatelessWidget {
               theme.colorScheme.card.withOpacity(0.98),
             ],
           ),
-          border: fw.Border.all(
-            color: color.withOpacity(0.15),
-            width: 1,
-          ),
+          border: fw.Border.all(color: color.withOpacity(0.15), width: 1),
           boxShadow: [
             fw.BoxShadow(
               color: color.withOpacity(0.08),
@@ -511,10 +516,7 @@ class _StatCard extends StatelessWidget {
                   gradient: fw.LinearGradient(
                     begin: fw.Alignment.topLeft,
                     end: fw.Alignment.bottomRight,
-                    colors: [
-                      color.withOpacity(0.15),
-                      color.withOpacity(0.08),
-                    ],
+                    colors: [color.withOpacity(0.15), color.withOpacity(0.08)],
                   ),
                   borderRadius: fw.BorderRadius.circular(12),
                   border: fw.Border.all(
@@ -598,10 +600,7 @@ class _MenuCard extends StatelessWidget {
                 theme.colorScheme.card.withOpacity(0.98),
               ],
             ),
-            border: fw.Border.all(
-              color: color.withOpacity(0.12),
-              width: 1,
-            ),
+            border: fw.Border.all(color: color.withOpacity(0.12), width: 1),
             boxShadow: [
               fw.BoxShadow(
                 color: color.withOpacity(0.06),

@@ -125,23 +125,14 @@ class MovementTypeLookup {
   final int? id;
   final String? name;
 
-  MovementTypeLookup({
-    this.id,
-    this.name,
-  });
+  MovementTypeLookup({this.id, this.name});
 
   factory MovementTypeLookup.fromJson(Map<String, dynamic> json) {
-    return MovementTypeLookup(
-      id: json['id'],
-      name: json['name'],
-    );
+    return MovementTypeLookup(id: json['id'], name: json['name']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    };
+    return {if (id != null) 'id': id, if (name != null) 'name': name};
   }
 }
 
@@ -150,22 +141,13 @@ class SourceTypeLookup {
   final int? id;
   final String? name;
 
-  SourceTypeLookup({
-    this.id,
-    this.name,
-  });
+  SourceTypeLookup({this.id, this.name});
 
   factory SourceTypeLookup.fromJson(Map<String, dynamic> json) {
-    return SourceTypeLookup(
-      id: json['id'],
-      name: json['name'],
-    );
+    return SourceTypeLookup(id: json['id'], name: json['name']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    };
+    return {if (id != null) 'id': id, if (name != null) 'name': name};
   }
 }

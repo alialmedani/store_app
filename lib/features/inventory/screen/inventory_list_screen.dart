@@ -136,7 +136,9 @@ class InventoryListScreen extends StatelessWidget {
                 withPagination: true,
                 withRefresh: true,
                 repositoryCallBack: (data) {
-                  return context.read<InventoryCubit>().fetchInventoryList(data);
+                  return context.read<InventoryCubit>().fetchInventoryList(
+                    data,
+                  );
                 },
                 noDataWidget: _buildEmptyState(theme),
                 listBuilder: (list) {
@@ -295,7 +297,8 @@ class _InventoryCard extends StatelessWidget {
                             height: 1.2,
                           ),
                         ),
-                        if (inventory.color != null || inventory.size != null) ...[
+                        if (inventory.color != null ||
+                            inventory.size != null) ...[
                           const fw.SizedBox(height: 6),
                           fw.Row(
                             children: [
@@ -306,7 +309,9 @@ class _InventoryCard extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: fw.BoxDecoration(
-                                    color: theme.colorScheme.muted.withOpacity(0.4),
+                                    color: theme.colorScheme.muted.withOpacity(
+                                      0.4,
+                                    ),
                                     borderRadius: fw.BorderRadius.circular(6),
                                   ),
                                   child: fw.Text(
@@ -328,7 +333,9 @@ class _InventoryCard extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: fw.BoxDecoration(
-                                    color: theme.colorScheme.muted.withOpacity(0.4),
+                                    color: theme.colorScheme.muted.withOpacity(
+                                      0.4,
+                                    ),
                                     borderRadius: fw.BorderRadius.circular(6),
                                   ),
                                   child: fw.Text(
@@ -564,8 +571,9 @@ class _InventoryCard extends StatelessWidget {
                     theme,
                     Icons.access_time_outlined,
                     inventory.creationTime != null
-                        ? DateFormat('MMM dd, yyyy • HH:mm')
-                            .format(inventory.creationTime!)
+                        ? DateFormat(
+                            'MMM dd, yyyy • HH:mm',
+                          ).format(inventory.creationTime!)
                         : 'N/A',
                   ),
                 ],
@@ -590,7 +598,9 @@ class _InventoryCard extends StatelessWidget {
                       fw.Icon(
                         Icons.note_outlined,
                         size: 16,
-                        color: theme.colorScheme.mutedForeground.withOpacity(0.7),
+                        color: theme.colorScheme.mutedForeground.withOpacity(
+                          0.7,
+                        ),
                       ),
                       const fw.SizedBox(width: 10),
                       fw.Expanded(

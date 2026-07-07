@@ -9,7 +9,8 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
   Future<Result> getDashboardSummary() async {
-    return await GetDashboardSummaryUsecase(HomeRepository())
-        .call(params: GetDashboardSummaryParams());
+    return await GetDashboardSummaryUsecase(
+      HomeRepository(),
+    ).call(params: GetDashboardSummaryParams());
   }
 }

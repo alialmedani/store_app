@@ -171,10 +171,8 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
 
                           // Login Button - Using CreateModel for state management
                           CreateModel<LoginModel>(
-                            
                             withValidation: true,
                             onTap: () {
-                              
                               return _validateFields();
                             },
                             useCaseCallBack: (data) {

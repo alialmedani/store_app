@@ -36,9 +36,7 @@ class AdjustStockUsecase extends UseCase<InventoryModel, AdjustStockParams> {
   AdjustStockUsecase(this.repository);
 
   @override
-  Future<Result<InventoryModel>> call({
-    required AdjustStockParams params,
-  }) {
+  Future<Result<InventoryModel>> call({required AdjustStockParams params}) {
     return repository.adjustStockRequest(params: params);
   }
 }
