@@ -29,7 +29,8 @@ String getFileByEntityUrl({
 // ========== Category URLs ==========
 const createCategoryUrl = '$baseUrl/api/app/category';
 const String getCategoryListUrl = '$baseUrl/api/app/category';
-const String getCategoryStockSummaryUrl = '$baseUrl/api/app/category/stock-summary';
+const String getCategoryStockSummaryUrl =
+    '$baseUrl/api/app/category/stock-summary';
 
 String getCategoryDetailsUrl(String id) => '$baseUrl/api/app/category/$id';
 

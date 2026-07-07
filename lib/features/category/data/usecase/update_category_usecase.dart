@@ -32,15 +32,14 @@ class UpdateCategoryParams extends BaseParams {
   }
 }
 
-class UpdateCategoryUsecase extends UseCase<CategoryModel, UpdateCategoryParams> {
+class UpdateCategoryUsecase
+    extends UseCase<CategoryModel, UpdateCategoryParams> {
   final CategoryRepository repository;
 
   UpdateCategoryUsecase(this.repository);
 
   @override
-  Future<Result<CategoryModel>> call({
-    required UpdateCategoryParams params,
-  }) {
+  Future<Result<CategoryModel>> call({required UpdateCategoryParams params}) {
     return repository.updateCategoryRequest(params: params);
   }
 }

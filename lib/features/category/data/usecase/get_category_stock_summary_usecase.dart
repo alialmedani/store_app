@@ -21,8 +21,11 @@ class GetCategoryStockSummaryParams extends BaseParams {
 }
 
 class GetCategoryStockSummaryUsecase
-    extends UseCase<List<CategoryStockSummaryModel>,
-        GetCategoryStockSummaryParams> {
+    extends
+        UseCase<
+          List<CategoryStockSummaryModel>,
+          GetCategoryStockSummaryParams
+        > {
   final CategoryRepository repository;
 
   GetCategoryStockSummaryUsecase(this.repository);

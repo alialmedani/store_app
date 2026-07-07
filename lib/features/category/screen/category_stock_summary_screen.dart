@@ -65,9 +65,9 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
                 withPagination: true,
                 withRefresh: true,
                 repositoryCallBack: (data) {
-                  return context.read<CategoryCubit>().fetchCategoryStockSummary(
-                    data,
-                  );
+                  return context
+                      .read<CategoryCubit>()
+                      .fetchCategoryStockSummary(data);
                 },
                 listBuilder: (list) {
                   return fw.ListView.builder(
@@ -524,10 +524,7 @@ class _StockStatusItem extends fw.StatelessWidget {
       decoration: fw.BoxDecoration(
         color: color.withOpacity(0.08),
         borderRadius: fw.BorderRadius.circular(10),
-        border: fw.Border.all(
-          color: color.withOpacity(0.2),
-          width: 1,
-        ),
+        border: fw.Border.all(color: color.withOpacity(0.2), width: 1),
       ),
       child: fw.Column(
         children: [

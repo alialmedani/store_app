@@ -61,22 +61,22 @@ class CategoryRepository extends CoreRepository {
   }
 
   Future<Result<List<CategoryStockSummaryModel>>>
-      getCategoryStockSummaryRequest({
+  getCategoryStockSummaryRequest({
     required GetCategoryStockSummaryParams params,
   }) async {
     final result =
         await RemoteDataSource.request<List<CategoryStockSummaryModel>>(
-      withAuthentication: true,
-      queryParameters: params.toJson(),
-      url: getCategoryStockSummaryUrl,
-      method: HttpMethod.GET,
-      converter: (json) {
-        final items = json['items'] as List;
-        return items
-            .map((item) => CategoryStockSummaryModel.fromJson(item))
-            .toList();
-      },
-    );
+          withAuthentication: true,
+          queryParameters: params.toJson(),
+          url: getCategoryStockSummaryUrl,
+          method: HttpMethod.GET,
+          converter: (json) {
+            final items = json['items'] as List;
+            return items
+                .map((item) => CategoryStockSummaryModel.fromJson(item))
+                .toList();
+          },
+        );
 
     return paginatedCall(result: result);
   }

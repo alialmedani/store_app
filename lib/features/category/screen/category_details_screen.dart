@@ -83,7 +83,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 fw.PageRouteBuilder(
                                   pageBuilder: (_, __, ___) => BlocProvider(
                                     create: (_) => CategoryCubit(),
-                                    child: EditCategoryScreen(categoryId: categoryId),
+                                    child: EditCategoryScreen(
+                                      categoryId: categoryId,
+                                    ),
                                   ),
                                   transitionDuration: Duration.zero,
                                   reverseTransitionDuration: Duration.zero,

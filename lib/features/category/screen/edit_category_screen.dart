@@ -168,7 +168,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                             BlocBuilder<CategoryCubit, CategoryState>(
                               builder: (context, state) {
                                 return fw.Column(
-                                  crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      fw.CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'Category Name',
@@ -180,7 +181,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                     const fw.SizedBox(height: 8),
                                     TextField(
                                       controller: _nameController,
-                                      placeholder: const Text('Enter category name'),
+                                      placeholder: const Text(
+                                        'Enter category name',
+                                      ),
                                       onChanged: (value) {
                                         cubit.updateCategoryParams.name = value;
                                         cubit.clearNameError();
@@ -188,7 +191,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                     ),
                                     if (cubit.nameError != null)
                                       fw.Padding(
-                                        padding: const fw.EdgeInsets.only(top: 4),
+                                        padding: const fw.EdgeInsets.only(
+                                          top: 4,
+                                        ),
                                         child: Text(
                                           cubit.nameError!,
                                           style: const fw.TextStyle(
@@ -214,7 +219,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                             const fw.SizedBox(height: 8),
                             TextField(
                               controller: _descriptionController,
-                              placeholder: const Text('Enter description (optional)'),
+                              placeholder: const Text(
+                                'Enter description (optional)',
+                              ),
                               maxLines: 3,
                               onChanged: (value) {
                                 cubit.updateCategoryParams.description = value;
@@ -226,7 +233,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                             BlocBuilder<CategoryCubit, CategoryState>(
                               builder: (context, state) {
                                 return fw.Column(
-                                  crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      fw.CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'Category Image (Optional)',
@@ -240,7 +248,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       fw.Stack(
                                         children: [
                                           fw.ClipRRect(
-                                            borderRadius: fw.BorderRadius.circular(12),
+                                            borderRadius:
+                                                fw.BorderRadius.circular(12),
                                             child: fw.Image.file(
                                               cubit.selectedImageFile!,
                                               height: 200,
@@ -253,12 +262,19 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                             right: 8,
                                             child: fw.Container(
                                               decoration: fw.BoxDecoration(
-                                                color: theme.colorScheme.destructive,
-                                                borderRadius: fw.BorderRadius.circular(8),
+                                                color: theme
+                                                    .colorScheme
+                                                    .destructive,
+                                                borderRadius:
+                                                    fw.BorderRadius.circular(8),
                                               ),
                                               child: IconButton(
-                                                icon: const fw.Icon(Icons.close, size: 18),
-                                                onPressed: () => cubit.clearImageFile(),
+                                                icon: const fw.Icon(
+                                                  Icons.close,
+                                                  size: 18,
+                                                ),
+                                                onPressed: () =>
+                                                    cubit.clearImageFile(),
                                                 variance: ButtonVariance.ghost,
                                               ),
                                             ),
@@ -272,25 +288,31 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                             height: 200,
                                             width: double.infinity,
                                             decoration: fw.BoxDecoration(
-                                              borderRadius: fw.BorderRadius.circular(12),
+                                              borderRadius:
+                                                  fw.BorderRadius.circular(12),
                                               border: fw.Border.all(
-                                                color: theme.colorScheme.border.withOpacity(0.3),
+                                                color: theme.colorScheme.border
+                                                    .withOpacity(0.3),
                                                 width: 1,
                                               ),
                                             ),
                                             child: fw.ClipRRect(
-                                              borderRadius: fw.BorderRadius.circular(12),
+                                              borderRadius:
+                                                  fw.BorderRadius.circular(12),
                                               child: AuthenticatedImage(
                                                 imageUrl: imageUrl,
                                                 width: double.infinity,
                                                 height: 200,
                                                 fit: fw.BoxFit.cover,
                                                 errorWidget: fw.Container(
-                                                  color: theme.colorScheme.muted.withOpacity(0.3),
+                                                  color: theme.colorScheme.muted
+                                                      .withOpacity(0.3),
                                                   child: fw.Icon(
                                                     Icons.category_outlined,
                                                     size: 64,
-                                                    color: theme.colorScheme.mutedForeground,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .mutedForeground,
                                                   ),
                                                 ),
                                               ),
@@ -300,9 +322,11 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                             bottom: 12,
                                             right: 12,
                                             child: OutlineButton(
-                                              onPressed: () => _pickImage(cubit),
+                                              onPressed: () =>
+                                                  _pickImage(cubit),
                                               child: const fw.Row(
-                                                mainAxisSize: fw.MainAxisSize.min,
+                                                mainAxisSize:
+                                                    fw.MainAxisSize.min,
                                                 children: [
                                                   fw.Icon(Icons.edit, size: 16),
                                                   fw.SizedBox(width: 6),
@@ -317,7 +341,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       OutlineButton(
                                         onPressed: () => _pickImage(cubit),
                                         child: fw.Row(
-                                          mainAxisAlignment: fw.MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              fw.MainAxisAlignment.center,
                                           children: [
                                             fw.Icon(
                                               Icons.image,
@@ -339,7 +364,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                             BlocBuilder<CategoryCubit, CategoryState>(
                               builder: (context, state) {
                                 return fw.Column(
-                                  crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      fw.CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'Size Type',
@@ -359,7 +385,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
-                                            cubit.updateCategoryParams.sizeType = value;
+                                            cubit
+                                                    .updateCategoryParams
+                                                    .sizeType =
+                                                value;
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -368,7 +397,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
-                                            cubit.updateCategoryParams.sizeType = value;
+                                            cubit
+                                                    .updateCategoryParams
+                                                    .sizeType =
+                                                value;
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -377,7 +409,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
-                                            cubit.updateCategoryParams.sizeType = value;
+                                            cubit
+                                                    .updateCategoryParams
+                                                    .sizeType =
+                                                value;
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -386,7 +421,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
-                                            cubit.updateCategoryParams.sizeType = value;
+                                            cubit
+                                                    .updateCategoryParams
+                                                    .sizeType =
+                                                value;
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -395,7 +433,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
-                                            cubit.updateCategoryParams.sizeType = value;
+                                            cubit
+                                                    .updateCategoryParams
+                                                    .sizeType =
+                                                value;
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -404,7 +445,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
-                                            cubit.updateCategoryParams.sizeType = value;
+                                            cubit
+                                                    .updateCategoryParams
+                                                    .sizeType =
+                                                value;
                                           },
                                         ),
                                       ],
@@ -419,7 +463,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                             BlocBuilder<CategoryCubit, CategoryState>(
                               builder: (context, state) {
                                 return fw.Row(
-                                  mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      fw.MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Active',
@@ -429,9 +474,11 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       ),
                                     ),
                                     Switch(
-                                      value: cubit.updateCategoryParams.isActive,
+                                      value:
+                                          cubit.updateCategoryParams.isActive,
                                       onChanged: (value) {
-                                        cubit.updateCategoryParams.isActive = value;
+                                        cubit.updateCategoryParams.isActive =
+                                            value;
                                         cubit.toggleIsActive(value);
                                       },
                                     ),
@@ -458,7 +505,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                   context: context,
                                   builder: (ctx) => AlertDialog(
                                     title: const Text('Success'),
-                                    content: const Text('Category updated successfully!'),
+                                    content: const Text(
+                                      'Category updated successfully!',
+                                    ),
                                     actions: [
                                       PrimaryButton(
                                         onPressed: () {
@@ -476,7 +525,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                   context: context,
                                   builder: (ctx) => AlertDialog(
                                     title: const Text('Error'),
-                                    content: Text('Failed to update category: $error'),
+                                    content: Text(
+                                      'Failed to update category: $error',
+                                    ),
                                     actions: [
                                       PrimaryButton(
                                         onPressed: () => fw.Navigator.pop(ctx),

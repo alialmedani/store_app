@@ -156,12 +156,12 @@ class CategoryCubit extends Cubit<CategoryState> {
     ).call(params: GetCategoryDetailsParams(categoryId: categoryId));
   }
 
-
   Future<Result<CategoryModel>> updateCategory() async {
     return await UpdateCategoryUsecase(
       CategoryRepository(),
     ).call(params: updateCategoryParams);
   }
+
   Future<Result<List<CategoryStockSummaryModel>>> fetchCategoryStockSummary(
     data,
   ) async {
