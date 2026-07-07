@@ -5,7 +5,10 @@ import '../../../../../core/repository/core_repository.dart';
 import '../../../../../core/results/result.dart';
 import '../model/order_model.dart';
 import '../usecase/create_order_usecase.dart';
+import '../usecase/get_order_details_usecase.dart';
 import '../usecase/get_order_list_usecase.dart';
+import '../usecase/update_order_item_usecase.dart';
+import '../usecase/update_order_usecase.dart';
 
 class OrderRepository extends CoreRepository {
   Future<Result<OrderModel>> createOrderRequest({
@@ -39,5 +42,52 @@ class OrderRepository extends CoreRepository {
     );
 
     return paginatedCall(result: result);
+  }
+
+  Future<Result<OrderModel>> getOrderDetailsRequest({
+    required GetOrderDetailsParams params,
+  }) async {
+    final result = await RemoteDataSource.request<OrderModel>(
+      withAuthentication: true,
+      url: getOrderDetailsUrl(params.orderId),
+      method: HttpMethod.GET,
+      converter: (json) {
+        return OrderModel.fromJson(json);
+      },
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<OrderModel>> updateOrderRequest({
+    required UpdateOrderParams params,
+  }) async {
+    final result = await RemoteDataSource.request<OrderModel>(
+      withAuthentication: true,
+      data: params.toJson(),
+      url: updateOrderUrl(params.orderId),
+      method: HttpMethod.PUT,
+      converter: (json) {
+        return OrderModel.fromJson(json);
+      },
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<OrderModel>> updateOrderItemRequest({
+    required UpdateOrderItemParams params,
+  }) async {
+    final result = await RemoteDataSource.request<OrderModel>(
+      withAuthentication: true,
+      data: params.toJson(),
+      url: updateOrderItemUrl(params.orderId, params.itemId),
+      method: HttpMethod.PUT,
+      converter: (json) {
+        return OrderModel.fromJson(json);
+      },
+    );
+
+    return call(result: result);
   }
 }

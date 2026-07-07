@@ -41,7 +41,6 @@ class _AuthenticatedImageState extends fw.State<AuthenticatedImage> {
 
   Future<void> _loadImage() async {
     try {
-      print('🔐 Loading authenticated image: ${widget.imageUrl}');
 
       final dio = Dio();
       final token = CacheHelper.token;
@@ -60,11 +59,8 @@ class _AuthenticatedImageState extends fw.State<AuthenticatedImage> {
           _isLoading = false;
           _hasError = false;
         });
-        print('✅ Image loaded successfully');
       }
-    } catch (e, stackTrace) {
-      print('❌ Failed to load image: $e');
-      print('   Stack: $stackTrace');
+    } catch (e) {
       if (mounted) {
         setState(() {
           _isLoading = false;

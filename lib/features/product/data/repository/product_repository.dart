@@ -5,7 +5,9 @@ import '../../../../../core/repository/core_repository.dart';
 import '../../../../../core/results/result.dart';
 import '../model/product_model.dart';
 import '../usecase/create_product_usecase.dart';
+import '../usecase/get_product_details_usecase.dart';
 import '../usecase/get_product_list_usecase.dart';
+import '../usecase/update_product_usecase.dart';
 
 class ProductRepository extends CoreRepository {
   Future<Result<ProductModel>> createProductRequest({
@@ -39,5 +41,36 @@ class ProductRepository extends CoreRepository {
     );
 
     return paginatedCall(result: result);
+  }
+
+  Future<Result<ProductModel>> getProductDetailsRequest({
+    required GetProductDetailsParams params,
+  }) async {
+    final result = await RemoteDataSource.request<ProductModel>(
+      withAuthentication: true,
+      url: getProductDetailsUrl(params.productId),
+      method: HttpMethod.GET,
+      converter: (json) {
+        return ProductModel.fromJson(json);
+      },
+    );
+
+    return call(result: result);
+  }
+
+  Future<Result<ProductModel>> updateProductRequest({
+    required UpdateProductParams params,
+  }) async {
+    final result = await RemoteDataSource.request<ProductModel>(
+      withAuthentication: true,
+      data: params.toJson(),
+      url: updateProductUrl(params.productId),
+      method: HttpMethod.PUT,
+      converter: (json) {
+        return ProductModel.fromJson(json);
+      },
+    );
+
+    return call(result: result);
   }
 }
