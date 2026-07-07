@@ -124,29 +124,29 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
                       },
                     )
                   : _selectedTabIndex == 1
-                  ? _ByProductView(
-                      selectedProductId: selectedProductId,
-                      selectedVariantId: selectedVariantId,
-                      onProductSelected: (id) {
-                        setState(() {
-                          selectedProductId = id;
-                          selectedVariantId = null;
-                        });
-                      },
-                      onVariantSelected: (id) {
-                        setState(() {
-                          selectedVariantId = id;
-                        });
-                      },
-                    )
-                  : _AllVariantsView(
-                      selectedVariantId: selectedVariantId,
-                      onVariantSelected: (id) {
-                        setState(() {
-                          selectedVariantId = id;
-                        });
-                      },
-                    ),
+                      ? _ByProductView(
+                          selectedProductId: selectedProductId,
+                          selectedVariantId: selectedVariantId,
+                          onProductSelected: (id) {
+                            setState(() {
+                              selectedProductId = id;
+                              selectedVariantId = null;
+                            });
+                          },
+                          onVariantSelected: (id) {
+                            setState(() {
+                              selectedVariantId = id;
+                            });
+                          },
+                        )
+                      : _AllVariantsView(
+                          selectedVariantId: selectedVariantId,
+                          onVariantSelected: (id) {
+                            setState(() {
+                              selectedVariantId = id;
+                            });
+                          },
+                        ),
             ),
             const fw.SizedBox(height: 16),
 
@@ -481,10 +481,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                 repositoryCallBack: (data) {
                   return context
                       .read<ProductVariantCubit>()
-                      .fetchProductVariantList(
-                        data,
-                        productId: selectedProductId,
-                      );
+                      .fetchProductVariantList(data, productId: selectedProductId);
                 },
                 listBuilder: (list) {
                   if (list.isEmpty) {
@@ -698,10 +695,7 @@ class _ByProductView extends fw.StatelessWidget {
                 repositoryCallBack: (data) {
                   return context
                       .read<ProductVariantCubit>()
-                      .fetchProductVariantList(
-                        data,
-                        productId: selectedProductId,
-                      );
+                      .fetchProductVariantList(data, productId: selectedProductId);
                 },
                 listBuilder: (list) {
                   if (list.isEmpty) {

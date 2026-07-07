@@ -5,7 +5,6 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../cubit/order_cubit.dart';
 import '../data/model/order_model.dart';
-import 'update_order_screen.dart';
 
 /// Order Details Screen - Shows full details of a single order
 /// Uses GetModel widget from boilerplate to handle loading/success/error states
@@ -22,79 +21,55 @@ class OrderDetailsScreen extends fw.StatelessWidget {
       create: (context) => OrderCubit(),
       child: Scaffold(
         child: SafeArea(
-          child: GetModel<OrderModel>(
-            useCaseCallBack: () =>
-                context.read<OrderCubit>().getOrderDetails(orderId),
-            modelBuilder: (order) {
-              return fw.Column(
-                children: [
-                  // App Bar
-                  fw.Container(
-                    padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
-                    decoration: fw.BoxDecoration(
-                      color: theme.colorScheme.background,
-                      border: fw.Border(
-                        bottom: fw.BorderSide(
-                          color: theme.colorScheme.border.withOpacity(0.1),
-                          width: 1,
+          child: fw.Column(
+            children: [
+              // App Bar
+              fw.Container(
+                padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
+                decoration: fw.BoxDecoration(
+                  color: theme.colorScheme.background,
+                  border: fw.Border(
+                    bottom: fw.BorderSide(
+                      color: theme.colorScheme.border.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: fw.Row(
+                  children: [
+                    fw.Container(
+                      decoration: fw.BoxDecoration(
+                        color: theme.colorScheme.muted.withOpacity(0.3),
+                        borderRadius: fw.BorderRadius.circular(12),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, size: 20),
+                        onPressed: () => fw.Navigator.pop(context),
+                        variance: ButtonVariance.ghost,
+                      ),
+                    ),
+                    const fw.SizedBox(width: 12),
+                    const fw.Expanded(
+                      child: Text(
+                        'Order Details',
+                        style: fw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: fw.FontWeight.w700,
+                          letterSpacing: -0.5,
                         ),
                       ),
                     ),
-                    child: fw.Row(
-                      children: [
-                        fw.Container(
-                          decoration: fw.BoxDecoration(
-                            color: theme.colorScheme.muted.withOpacity(0.3),
-                            borderRadius: fw.BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_back, size: 20),
-                            onPressed: () => fw.Navigator.pop(context),
-                            variance: ButtonVariance.ghost,
-                          ),
-                        ),
-                        const fw.SizedBox(width: 12),
-                        const fw.Expanded(
-                          child: Text(
-                            'Order Details',
-                            style: fw.TextStyle(
-                              fontSize: 24,
-                              fontWeight: fw.FontWeight.w700,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                        ),
-                        // Edit Button
-                        IconButton(
-                          icon: const Icon(Icons.edit, size: 20),
-                          onPressed: () async {
-                            final result = await fw.Navigator.of(context).push(
-                              fw.PageRouteBuilder(
-                                pageBuilder: (_, __, ___) => BlocProvider.value(
-                                  value: context.read<OrderCubit>(),
-                                  child: UpdateOrderScreen(order: order),
-                                ),
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                              ),
-                            );
+                  ],
+                ),
+              ),
 
-                            // Refresh details if order was updated
-                            if (result != null) {
-                              context.read<OrderCubit>().getOrderDetails(
-                                orderId,
-                              );
-                            }
-                          },
-                          variance: ButtonVariance.ghost,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Content
-                  fw.Expanded(
-                    child: fw.SingleChildScrollView(
+              // Content
+              fw.Expanded(
+                child: GetModel<OrderModel>(
+                  useCaseCallBack: () =>
+                      context.read<OrderCubit>().getOrderDetails(orderId),
+                  modelBuilder: (order) {
+                    return fw.SingleChildScrollView(
                       padding: const fw.EdgeInsets.all(20),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -429,11 +404,11 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              );
-            },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
