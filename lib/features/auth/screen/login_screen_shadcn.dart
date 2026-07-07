@@ -179,7 +179,7 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                               return context.read<AuthCubit>().login();
                             },
                             onSuccess: (loginModel) async {
-                              // Save token
+                              // Save token and expiry info
                               await CacheHelper.setToken(
                                 loginModel.accessToken,
                               );
@@ -187,6 +187,10 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                                 loginModel.refreshToken,
                               );
                               await CacheHelper.setExpiresIn(
+                                loginModel.expiresIn ?? 3600,
+                              );
+                              // ✅ حفظ تاريخ انتهاء الصلاحية الفعلي
+                              await CacheHelper.setDateWithExpiry(
                                 loginModel.expiresIn ?? 3600,
                               );
 
