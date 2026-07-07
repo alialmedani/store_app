@@ -72,3 +72,15 @@ String updateOrderUrl(String id) => '$baseUrl/api/app/order/$id';
 
 String updateOrderItemUrl(String id, String itemId) =>
     '$baseUrl/api/app/order/$id/item/$itemId';
+
+// ========== Inventory URLs ==========
+const getInventoryListUrl = '$baseUrl/api/app/inventory';
+const adjustStockUrl = '$baseUrl/api/app/inventory/adjust-stock';
+
+String getInventoryDetailsUrl(String id) => '$baseUrl/api/app/inventory/$id';
+
+String getInventoryVariantHistorySummaryUrl(String productVariantId) =>
+    '$baseUrl/api/app/inventory/variant-history-summary/$productVariantId';
+
+// ========== Dashboard URLs ==========
+const getDashboardSummaryUrl = '$baseUrl/api/app/product/dashboard-summary';

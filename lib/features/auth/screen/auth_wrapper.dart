@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart' as fw;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../../core/classes/cashe_helper.dart';
+import '../../home/cubit/home_cubit.dart';
 import '../../home/screen/home_screen.dart';
 import 'login_screen_shadcn.dart';
 
@@ -50,7 +52,10 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
           context,
           fw.PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const HomeScreen(),
+                BlocProvider(
+              create: (context) => HomeCubit(),
+              child: const HomeScreen(),
+            ),
             transitionDuration: Duration.zero,
           ),
         );

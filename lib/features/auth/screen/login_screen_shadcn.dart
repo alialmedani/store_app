@@ -3,6 +3,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../core/classes/cashe_helper.dart';
+import '../../home/cubit/home_cubit.dart';
 import '../../home/screen/home_screen.dart';
 import '../cubit/auth_cubit.dart';
 import '../data/model/login_model.dart';
@@ -203,7 +204,10 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const HomeScreen(),
+                                      builder: (context) => BlocProvider(
+                                        create: (context) => HomeCubit(),
+                                        child: const HomeScreen(),
+                                      ),
                                     ),
                                   );
                                 }
