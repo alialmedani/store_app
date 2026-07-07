@@ -49,27 +49,34 @@ class ProductListScreen extends StatelessWidget {
                         itemCount: list.length,
                         itemBuilder: (context, index) {
                           final product = list[index];
-                          final imageUrl =
-                              ImageHelper.getProductImageUrl(product.id ?? '');
+                          final imageUrl = ImageHelper.getProductImageUrl(
+                            product.id ?? '',
+                          );
 
                           final metaItems = <EntityMetaItem>[];
                           if (product.category?.name != null) {
-                            metaItems.add(EntityMetaItem(
-                              icon: Icons.category_outlined,
-                              text: product.category!.name!,
-                            ));
+                            metaItems.add(
+                              EntityMetaItem(
+                                icon: Icons.category_outlined,
+                                text: product.category!.name!,
+                              ),
+                            );
                           }
                           if (product.targetAudience?.name != null) {
-                            metaItems.add(EntityMetaItem(
-                              icon: Icons.people_outline,
-                              text: product.targetAudience!.name!,
-                            ));
+                            metaItems.add(
+                              EntityMetaItem(
+                                icon: Icons.people_outline,
+                                text: product.targetAudience!.name!,
+                              ),
+                            );
                           }
                           if (product.totalStockQuantity != null) {
-                            metaItems.add(EntityMetaItem(
-                              icon: Icons.inventory_2_outlined,
-                              text: 'Stock: ${product.totalStockQuantity}',
-                            ));
+                            metaItems.add(
+                              EntityMetaItem(
+                                icon: Icons.inventory_2_outlined,
+                                text: 'Stock: ${product.totalStockQuantity}',
+                              ),
+                            );
                           }
 
                           return fw.Padding(
@@ -100,8 +107,9 @@ class ProductListScreen extends StatelessWidget {
                                     ? StatusBadgeType.active
                                     : StatusBadgeType.inactive,
                               ),
-                              metaItems:
-                                  metaItems.isNotEmpty ? metaItems : null,
+                              metaItems: metaItems.isNotEmpty
+                                  ? metaItems
+                                  : null,
                               onTap: () {
                                 if (product.id != null) {
                                   fw.Navigator.push(
@@ -109,8 +117,8 @@ class ProductListScreen extends StatelessWidget {
                                     fw.PageRouteBuilder(
                                       pageBuilder: (_, __, ___) =>
                                           ProductDetailsScreen(
-                                        productId: product.id!,
-                                      ),
+                                            productId: product.id!,
+                                          ),
                                       transitionDuration: Duration.zero,
                                       reverseTransitionDuration: Duration.zero,
                                     ),

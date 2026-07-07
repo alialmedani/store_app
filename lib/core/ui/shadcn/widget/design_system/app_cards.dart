@@ -29,29 +29,25 @@ class AppCard extends fw.StatelessWidget {
     final theme = Theme.of(context);
 
     final card = fw.Container(
-      padding: padding ??
-          const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
+      padding: padding ?? const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
       decoration: fw.BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.card,
         borderRadius: fw.BorderRadius.circular(
           borderRadius ?? AppDesignTokens.cardRadius,
         ),
         border: fw.Border.all(
-          color: borderColor ??
-              theme.colorScheme.border.withOpacity(0.5),
+          color: borderColor ?? theme.colorScheme.border.withOpacity(0.5),
           width: 1,
         ),
-        boxShadow: boxShadow ??
+        boxShadow:
+            boxShadow ??
             AppDesignTokens.cardShadow(theme.colorScheme.foreground),
       ),
       child: child,
     );
 
     if (onTap != null) {
-      return fw.GestureDetector(
-        onTap: onTap,
-        child: card,
-      );
+      return fw.GestureDetector(onTap: onTap, child: card);
     }
 
     return card;
@@ -98,10 +94,7 @@ class StatCard extends fw.StatelessWidget {
               borderRadius: fw.BorderRadius.circular(
                 AppDesignTokens.iconBoxRadius,
               ),
-              border: fw.Border.all(
-                color: color.withOpacity(0.2),
-                width: 1,
-              ),
+              border: fw.Border.all(color: color.withOpacity(0.2), width: 1),
             ),
             child: fw.Icon(icon, size: 24, color: color),
           ),
@@ -183,18 +176,12 @@ class MenuTile extends fw.StatelessWidget {
               gradient: fw.LinearGradient(
                 begin: fw.Alignment.topLeft,
                 end: fw.Alignment.bottomRight,
-                colors: [
-                  color.withOpacity(0.15),
-                  color.withOpacity(0.08),
-                ],
+                colors: [color.withOpacity(0.15), color.withOpacity(0.08)],
               ),
               borderRadius: fw.BorderRadius.circular(
                 AppDesignTokens.iconBoxRadius,
               ),
-              border: fw.Border.all(
-                color: color.withOpacity(0.25),
-                width: 1,
-              ),
+              border: fw.Border.all(color: color.withOpacity(0.25), width: 1),
             ),
             child: fw.Icon(icon, size: 26, color: color),
           ),

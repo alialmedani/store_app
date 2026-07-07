@@ -234,7 +234,8 @@ class HomeScreen extends StatelessWidget {
                             title: 'In Stock',
                             value: '${summary.instockProducts ?? 0}',
                             color: AppDesignTokens.successColor,
-                            subtitle: '${summary.instockVariants ?? 0} variants',
+                            subtitle:
+                                '${summary.instockVariants ?? 0} variants',
                           ),
                         ),
                         const fw.SizedBox(width: AppDesignTokens.cardGap),
@@ -456,10 +457,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _handleLogout(
-    BuildContext context,
-    AuthCubit authCubit,
-  ) async {
+  Future<void> _handleLogout(BuildContext context, AuthCubit authCubit) async {
     // Show logout confirmation dialog
     final shouldLogout = await showDialog<bool>(
       context: context,

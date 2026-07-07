@@ -49,8 +49,9 @@ class CategoryListScreen extends StatelessWidget {
                         itemCount: list.length,
                         itemBuilder: (context, index) {
                           final category = list[index];
-                          final imageUrl =
-                              ImageHelper.getCategoryImageUrl(category.id ?? '');
+                          final imageUrl = ImageHelper.getCategoryImageUrl(
+                            category.id ?? '',
+                          );
 
                           return fw.Padding(
                             padding: const fw.EdgeInsets.only(
@@ -81,7 +82,8 @@ class CategoryListScreen extends StatelessWidget {
                                   ? [
                                       EntityMetaItem(
                                         icon: Icons.straighten,
-                                        text: 'Size Type: ${category.sizeTypeName}',
+                                        text:
+                                            'Size Type: ${category.sizeTypeName}',
                                       ),
                                     ]
                                   : null,
@@ -92,8 +94,8 @@ class CategoryListScreen extends StatelessWidget {
                                     fw.PageRouteBuilder(
                                       pageBuilder: (_, __, ___) =>
                                           CategoryDetailsScreen(
-                                        categoryId: category.id!,
-                                      ),
+                                            categoryId: category.id!,
+                                          ),
                                       transitionDuration: Duration.zero,
                                       reverseTransitionDuration: Duration.zero,
                                     ),
