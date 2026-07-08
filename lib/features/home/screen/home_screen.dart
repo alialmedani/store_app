@@ -2,43 +2,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:flutter/widgets.dart' as fw;
 
-import '../../../core/boilerplate/get_model/widgets/get_model.dart';
+import '../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
-import '../cubit/home_cubit.dart';
-import '../data/model/dashboard_summary_model.dart';
-import '../../auth/cubit/auth_cubit.dart';
-import '../../auth/screen/login_screen_shadcn.dart';
 import '../../category/cubit/category_cubit.dart';
-import '../../category/screen/category_list_screen.dart';
-import '../../category/screen/category_stock_summary_screen.dart';
-import '../../inventory/cubit/inventory_cubit.dart';
-import '../../inventory/screen/inventory_list_screen.dart';
-import '../../order/cubit/order_cubit.dart';
-import '../../order/screen/order_list_screen.dart';
+import '../../category/data/model/category_model.dart';
+import '../../category/screen/category_details_screen.dart';
+import '../../product/cubit/product_cubit.dart';
+import '../../product/data/model/product_model.dart';
+import '../../product/screen/product_details_screen.dart';
 import '../../product/screen/product_list_screen.dart';
-import '../../product_variant/screen/product_variant_list_screen.dart';
 
-/// Home Screen - Premium Main Dashboard
-/// Modern, clean design with professional shadcn components
-class HomeScreen extends StatelessWidget {
+/// Home Screen - Products and Categories
+class HomeScreen extends fw.StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
-    final authCubit = context.read<AuthCubit>();
-    final currentUser = authCubit.currentUser;
 
     return AppSliverScreen(
       slivers: [
-        // Premium App Bar with Gradient
+        // Header
         SliverToBoxAdapter(
           child: fw.Container(
             padding: const fw.EdgeInsets.fromLTRB(
+              AppDesignTokens.screenPaddingHorizontal,
               AppDesignTokens.screenPaddingHorizontal + 8,
-              AppDesignTokens.screenPaddingHorizontal + 8,
-              AppDesignTokens.screenPaddingHorizontal + 8,
-              AppDesignTokens.sectionGap + 12,
+              AppDesignTokens.screenPaddingHorizontal,
+              AppDesignTokens.sectionGap,
             ),
             decoration: fw.BoxDecoration(
               gradient: fw.LinearGradient(
@@ -46,135 +37,92 @@ class HomeScreen extends StatelessWidget {
                 end: fw.Alignment.bottomRight,
                 colors: [
                   theme.colorScheme.background,
-                  theme.colorScheme.background.withOpacity(0.95),
+                  theme.colorScheme.background.withValues(alpha: 0.95),
                 ],
               ),
               border: fw.Border(
                 bottom: fw.BorderSide(
-                  color: theme.colorScheme.border.withOpacity(0.08),
+                  color: theme.colorScheme.border.withValues(alpha: 0.08),
                   width: 1,
                 ),
               ),
-              boxShadow: [
-                fw.BoxShadow(
-                  color: theme.colorScheme.foreground.withOpacity(0.02),
-                  blurRadius: 10,
-                  offset: const fw.Offset(0, 2),
-                ),
-              ],
             ),
-            child: fw.Column(
-              crossAxisAlignment: fw.CrossAxisAlignment.start,
+            child: fw.Row(
+              mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: fw.CrossAxisAlignment.center,
               children: [
-                // Top bar with logout button
-                fw.Row(
-                  mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    fw.Container(
-                      padding: const fw.EdgeInsets.all(
-                        AppDesignTokens.iconBoxPadding,
-                      ),
-                      decoration: fw.BoxDecoration(
-                        gradient: fw.LinearGradient(
-                          begin: fw.Alignment.topLeft,
-                          end: fw.Alignment.bottomRight,
-                          colors: [
-                            theme.colorScheme.primary.withOpacity(0.15),
-                            theme.colorScheme.primary.withOpacity(0.08),
-                          ],
-                        ),
-                        borderRadius: fw.BorderRadius.circular(
-                          AppDesignTokens.buttonRadius,
-                        ),
-                        border: fw.Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.2),
-                          width: 1,
-                        ),
-                      ),
-                      child: fw.Icon(
-                        Icons.storefront_rounded,
-                        size: 28,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    fw.Row(
-                      children: [
-                        fw.Container(
-                          decoration: fw.BoxDecoration(
-                            color: theme.colorScheme.muted.withOpacity(0.25),
-                            borderRadius: fw.BorderRadius.circular(
-                              AppDesignTokens.inputRadius,
-                            ),
-                            border: fw.Border.all(
-                              color: theme.colorScheme.border.withOpacity(0.1),
-                              width: 1,
-                            ),
-                          ),
-                          child: IconButton(
-                            icon: const fw.Icon(
-                              Icons.notifications_outlined,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              // TODO: Navigate to notifications
-                            },
-                            variance: ButtonVariance.ghost,
-                          ),
-                        ),
-                        const fw.SizedBox(width: AppDesignTokens.smallGap + 2),
-                        fw.Container(
-                          decoration: fw.BoxDecoration(
-                            color: theme.colorScheme.muted.withOpacity(0.25),
-                            borderRadius: fw.BorderRadius.circular(
-                              AppDesignTokens.inputRadius,
-                            ),
-                            border: fw.Border.all(
-                              color: theme.colorScheme.border.withOpacity(0.1),
-                              width: 1,
-                            ),
-                          ),
-                          child: IconButton(
-                            icon: const fw.Icon(Icons.logout, size: 20),
-                            onPressed: () => _handleLogout(context, authCubit),
-                            variance: ButtonVariance.ghost,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const fw.SizedBox(height: AppDesignTokens.sectionGap + 4),
-                // Welcome Message
                 fw.Column(
                   crossAxisAlignment: fw.CrossAxisAlignment.start,
                   children: [
-                    fw.Text(
-                      'Welcome Back',
+                    const fw.Text(
+                      'Discover',
                       style: fw.TextStyle(
-                        fontSize: AppDesignTokens.bodyFontSize,
-                        fontWeight: AppDesignTokens.semiBold,
-                        color: theme.colorScheme.mutedForeground,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const fw.SizedBox(height: AppDesignTokens.smallGap),
-                    fw.Text(
-                      currentUser?.userName ?? 'User',
-                      style: const fw.TextStyle(
-                        fontSize: 32,
+                        fontSize: 28,
                         fontWeight: AppDesignTokens.extraBold,
-                        letterSpacing: -1,
+                        letterSpacing: -0.5,
                         height: 1.1,
                       ),
                     ),
-                    const fw.SizedBox(height: AppDesignTokens.smallGap),
+                    const fw.SizedBox(height: 4),
                     fw.Text(
-                      'Manage your store efficiently',
+                      'Browse products & categories',
                       style: fw.TextStyle(
-                        fontSize: AppDesignTokens.bodyFontSize,
-                        fontWeight: AppDesignTokens.medium,
+                        fontSize: 14,
                         color: theme.colorScheme.mutedForeground,
-                        letterSpacing: AppDesignTokens.bodyLetterSpacing,
+                      ),
+                    ),
+                  ],
+                ),
+                fw.Container(
+                  padding: const fw.EdgeInsets.all(10),
+                  decoration: fw.BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: fw.BorderRadius.circular(12),
+                    border: fw.Border.all(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: fw.Icon(
+                    Icons.shopping_bag_rounded,
+                    size: 24,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Categories Section Header
+        SliverToBoxAdapter(
+          child: fw.Padding(
+            padding: const fw.EdgeInsets.fromLTRB(
+              AppDesignTokens.screenPaddingHorizontal,
+              AppDesignTokens.sectionGap,
+              AppDesignTokens.screenPaddingHorizontal,
+              AppDesignTokens.cardGap,
+            ),
+            child: fw.Row(
+              mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+              children: [
+                fw.Row(
+                  children: [
+                    fw.Container(
+                      width: 3,
+                      height: 20,
+                      decoration: fw.BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        borderRadius: fw.BorderRadius.circular(1.5),
+                      ),
+                    ),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
+                    const fw.Text(
+                      'Categories',
+                      style: fw.TextStyle(
+                        fontSize: 20,
+                        fontWeight: AppDesignTokens.bold,
+                        letterSpacing: -0.3,
                       ),
                     ),
                   ],
@@ -184,114 +132,131 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
 
-        // Premium Quick Stats
+        // Categories Horizontal List
         SliverToBoxAdapter(
-          child: fw.Padding(
-            padding: const fw.EdgeInsets.fromLTRB(
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.sectionGap + 8,
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.sectionGap + 12,
-            ),
-            child: GetModel<DashboardSummaryModel>(
-              useCaseCallBack: () {
-                return context.read<HomeCubit>().getDashboardSummary();
+          child: fw.SizedBox(
+            height: 110,
+            child: PaginationList<CategoryModel>(
+              loadingWidget: fw.ListView.builder(
+                scrollDirection: fw.Axis.horizontal,
+                padding: const fw.EdgeInsets.symmetric(
+                  horizontal: AppDesignTokens.screenPaddingHorizontal,
+                ),
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return fw.Padding(
+                    padding: fw.EdgeInsets.only(
+                      right: index < 4 ? AppDesignTokens.cardGap : 0,
+                    ),
+                    child: fw.Container(
+                      width: 110,
+                      decoration: fw.BoxDecoration(
+                        color: AppDesignTokens.mutedSurfaceColor,
+                        borderRadius: fw.BorderRadius.circular(16),
+                        border: fw.Border.all(
+                          color: AppDesignTokens.borderColor.withValues(alpha: 0.2),
+                          width: 1,
+                        ),
+                      ),
+                      padding: const fw.EdgeInsets.all(12),
+                      child: fw.Column(
+                        mainAxisAlignment: fw.MainAxisAlignment.center,
+                        children: [
+                          const AppSkeletonBox(
+                            width: 48,
+                            height: 48,
+                            borderRadius: 12,
+                          ),
+                          const fw.SizedBox(height: 8),
+                          const AppSkeletonBox(
+                            width: 70,
+                            height: 13,
+                            borderRadius: 6,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+              repositoryCallBack: (data) {
+                return context.read<CategoryCubit>().fetchCategoryList(data);
               },
-              modelBuilder: (summary) {
-                return fw.Column(
-                  children: [
-                    // First Row: Products and Variants
-                    fw.Row(
-                      children: [
-                        fw.Expanded(
-                          child: StatCard(
-                            icon: Icons.inventory_2_rounded,
-                            title: 'Total Products',
-                            value: '${summary.totalProducts ?? 0}',
-                            color: const fw.Color(0xFF10B981),
-                            subtitle: '${summary.activeProducts ?? 0} active',
-                          ),
-                        ),
-                        const fw.SizedBox(width: AppDesignTokens.cardGap),
-                        fw.Expanded(
-                          child: StatCard(
-                            icon: Icons.style_rounded,
-                            title: 'Total Variants',
-                            value: '${summary.totalVariants ?? 0}',
-                            color: const fw.Color(0xFF06B6D4),
-                            subtitle: '${summary.activeVariants ?? 0} active',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const fw.SizedBox(height: AppDesignTokens.cardGap),
-                    // Second Row: Stock Status
-                    fw.Row(
-                      children: [
-                        fw.Expanded(
-                          child: StatCard(
-                            icon: Icons.check_circle_rounded,
-                            title: 'In Stock',
-                            value: '${summary.instockProducts ?? 0}',
-                            color: AppDesignTokens.successColor,
-                            subtitle:
-                                '${summary.instockVariants ?? 0} variants',
-                          ),
-                        ),
-                        const fw.SizedBox(width: AppDesignTokens.cardGap),
-                        fw.Expanded(
-                          child: StatCard(
-                            icon: Icons.warning_rounded,
-                            title: 'Low Stock',
-                            value: '${summary.lowStockProducts ?? 0}',
-                            color: AppDesignTokens.warningColor,
-                            subtitle: 'Needs attention',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+              listBuilder: (categories) {
+                return fw.ListView.builder(
+                  scrollDirection: fw.Axis.horizontal,
+                  padding: const fw.EdgeInsets.symmetric(
+                    horizontal: AppDesignTokens.screenPaddingHorizontal,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return fw.Padding(
+                      padding: fw.EdgeInsets.only(
+                        right: index < categories.length - 1
+                            ? AppDesignTokens.cardGap
+                            : 0,
+                      ),
+                      child: _CategoryCard(category: category),
+                    );
+                  },
                 );
               },
             ),
           ),
         ),
 
-        // Main Menu Header
+        // Products Section Header
         SliverToBoxAdapter(
           child: fw.Padding(
             padding: const fw.EdgeInsets.fromLTRB(
               AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.tinyGap,
+              AppDesignTokens.sectionGap,
               AppDesignTokens.screenPaddingHorizontal,
-              0,
+              AppDesignTokens.cardGap,
             ),
             child: fw.Row(
-              crossAxisAlignment: fw.CrossAxisAlignment.center,
+              mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
               children: [
-                fw.Container(
-                  width: 3,
-                  height: 22,
-                  decoration: fw.BoxDecoration(
-                    gradient: fw.LinearGradient(
-                      begin: fw.Alignment.topCenter,
-                      end: fw.Alignment.bottomCenter,
-                      colors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.primary.withOpacity(0.5),
-                      ],
+                fw.Row(
+                  children: [
+                    fw.Container(
+                      width: 3,
+                      height: 20,
+                      decoration: fw.BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        borderRadius: fw.BorderRadius.circular(1.5),
+                      ),
                     ),
-                    borderRadius: fw.BorderRadius.circular(1.5),
-                  ),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
+                    const fw.Text(
+                      'Products',
+                      style: fw.TextStyle(
+                        fontSize: 20,
+                        fontWeight: AppDesignTokens.bold,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                  ],
                 ),
-                const fw.SizedBox(width: AppDesignTokens.itemGap),
-                const fw.Text(
-                  'Main Menu',
-                  style: fw.TextStyle(
-                    fontSize: AppDesignTokens.largeTitleFontSize,
-                    fontWeight: AppDesignTokens.extraBold,
-                    letterSpacing: -0.5,
-                    height: 1.2,
+                fw.GestureDetector(
+                  onTap: () {
+                    fw.Navigator.push(
+                      context,
+                      fw.PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const ProductListScreen(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  child: fw.Text(
+                    'See All',
+                    style: fw.TextStyle(
+                      fontSize: 14,
+                      fontWeight: fw.FontWeight.w600,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                 ),
               ],
@@ -299,200 +264,325 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
 
-        const SliverToBoxAdapter(
-          child: fw.SizedBox(height: AppDesignTokens.cardGap + 2),
-        ),
-
-        // Premium Menu Items Grid
-        SliverPadding(
-          padding: const fw.EdgeInsets.symmetric(
-            horizontal: AppDesignTokens.screenPaddingHorizontal,
-          ),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 14,
-              mainAxisSpacing: 14,
-              mainAxisExtent: 145,
+        // Products Grid
+        SliverToBoxAdapter(
+          child: fw.SizedBox(
+            height: 550,
+            child: PaginationList<ProductModel>(
+              loadingWidget: fw.GridView.builder(
+                padding: const fw.EdgeInsets.fromLTRB(
+                  AppDesignTokens.screenPaddingHorizontal,
+                  0,
+                  AppDesignTokens.screenPaddingHorizontal,
+                  AppDesignTokens.sectionGap + 60,
+                ),
+                physics: const fw.NeverScrollableScrollPhysics(),
+                gridDelegate: const fw.SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  mainAxisExtent: 260,
+                ),
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return _ProductCardSkeleton();
+                },
+              ),
+              repositoryCallBack: (data) {
+                return context.read<ProductCubit>().fetchProductList(data);
+              },
+              listBuilder: (products) {
+                final displayProducts = products.take(6).toList();
+                return fw.GridView.builder(
+                  padding: const fw.EdgeInsets.fromLTRB(
+                    AppDesignTokens.screenPaddingHorizontal,
+                    0,
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.sectionGap + 60,
+                  ),
+                  physics: const fw.NeverScrollableScrollPhysics(),
+                  gridDelegate:
+                      const fw.SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        mainAxisExtent: 260,
+                      ),
+                  itemCount: displayProducts.length,
+                  itemBuilder: (context, index) {
+                    final product = displayProducts[index];
+                    return _ProductCard(product: product);
+                  },
+                );
+              },
             ),
-            delegate: SliverChildListDelegate([
-              MenuTile(
-                icon: Icons.category_rounded,
-                title: 'Categories',
-                subtitle: 'Manage categories',
-                color: theme.colorScheme.primary,
-                onTap: () {
-                  fw.Navigator.push(
-                    context,
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const CategoryListScreen(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-              ),
-              MenuTile(
-                icon: Icons.inventory_2_rounded,
-                title: 'Products',
-                subtitle: 'Manage products',
-                color: const fw.Color(0xFF10B981),
-                onTap: () {
-                  fw.Navigator.push(
-                    context,
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const ProductListScreen(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-              ),
-              MenuTile(
-                icon: Icons.style_rounded,
-                title: 'Product Variants',
-                subtitle: 'Manage variants',
-                color: const fw.Color(0xFF06B6D4),
-                onTap: () {
-                  fw.Navigator.push(
-                    context,
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) =>
-                          const ProductVariantListScreen(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-              ),
-              MenuTile(
-                icon: Icons.shopping_cart_rounded,
-                title: 'Orders',
-                subtitle: 'View orders',
-                color: const fw.Color(0xFF8B5CF6),
-                onTap: () {
-                  fw.Navigator.push(
-                    context,
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => BlocProvider(
-                        create: (_) => OrderCubit(),
-                        child: const OrderListScreen(),
-                      ),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-              ),
-              MenuTile(
-                icon: Icons.warehouse_rounded,
-                title: 'Inventory',
-                subtitle: 'Stock movements',
-                color: const fw.Color(0xFFEC4899),
-                onTap: () {
-                  fw.Navigator.push(
-                    context,
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => BlocProvider(
-                        create: (_) => InventoryCubit(),
-                        child: const InventoryListScreen(),
-                      ),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-              ),
-              MenuTile(
-                icon: Icons.assessment_rounded,
-                title: 'Category Stock',
-                subtitle: 'Stock by category',
-                color: const fw.Color(0xFF8B5CF6),
-                onTap: () {
-                  fw.Navigator.push(
-                    context,
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => BlocProvider(
-                        create: (_) => CategoryCubit(),
-                        child: const CategoryStockSummaryScreen(),
-                      ),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-              ),
-              MenuTile(
-                icon: Icons.bar_chart_rounded,
-                title: 'Reports',
-                subtitle: 'View analytics',
-                color: const fw.Color(0xFFF59E0B),
-                onTap: () {
-                  // TODO: Navigate to reports
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Coming Soon'),
-                      content: const Text(
-                        'Reports feature will be available soon.',
-                      ),
-                      actions: [
-                        PrimaryButton(
-                          onPressed: () => fw.Navigator.pop(ctx),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ]),
           ),
-        ),
-
-        const SliverToBoxAdapter(
-          child: fw.SizedBox(height: AppDesignTokens.sectionGap + 12),
         ),
       ],
     );
   }
+}
 
-  Future<void> _handleLogout(BuildContext context, AuthCubit authCubit) async {
-    // Show logout confirmation dialog
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          SecondaryButton(
-            onPressed: () => fw.Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+/// Category Card Widget
+class _CategoryCard extends fw.StatelessWidget {
+  final CategoryModel category;
+
+  const _CategoryCard({required this.category});
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    final theme = Theme.of(context);
+
+    return fw.GestureDetector(
+      onTap: () {
+        fw.Navigator.push(
+          context,
+          fw.PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                CategoryDetailsScreen(categoryId: category.id ?? ''),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
           ),
-          DestructiveButton(
-            onPressed: () => fw.Navigator.pop(ctx, true),
-            child: const Text('Logout'),
+        );
+      },
+      child: fw.Container(
+        width: 110,
+        decoration: fw.BoxDecoration(
+          color: theme.colorScheme.card,
+          borderRadius: fw.BorderRadius.circular(16),
+          border: fw.Border.all(
+            color: theme.colorScheme.border.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        padding: const fw.EdgeInsets.all(12),
+        child: fw.Column(
+          mainAxisAlignment: fw.MainAxisAlignment.center,
+          children: [
+            fw.Container(
+              width: 48,
+              height: 48,
+              decoration: fw.BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                borderRadius: fw.BorderRadius.circular(12),
+              ),
+              child: fw.Center(
+                child: fw.Icon(
+                  Icons.category_rounded,
+                  size: 24,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ),
+            const fw.SizedBox(height: 8),
+            fw.Text(
+              category.name ?? 'Unknown',
+              maxLines: 2,
+              textAlign: fw.TextAlign.center,
+              overflow: fw.TextOverflow.ellipsis,
+              style: const fw.TextStyle(
+                fontSize: 13,
+                fontWeight: fw.FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Product Card Widget
+class _ProductCard extends fw.StatelessWidget {
+  final ProductModel product;
+
+  const _ProductCard({required this.product});
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    final theme = Theme.of(context);
+
+    return fw.GestureDetector(
+      onTap: () {
+        fw.Navigator.push(
+          context,
+          fw.PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                ProductDetailsScreen(productId: product.id ?? ''),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        );
+      },
+      child: Card(
+        child: fw.Column(
+          crossAxisAlignment: fw.CrossAxisAlignment.start,
+          children: [
+            // Product Image
+            fw.Container(
+              height: 140,
+              decoration: fw.BoxDecoration(
+                color: theme.colorScheme.muted.withValues(alpha: 0.3),
+                borderRadius: const fw.BorderRadius.vertical(
+                  top: fw.Radius.circular(12),
+                ),
+              ),
+              child: fw.Center(
+                child: product.imageFullUrl != null
+                    ? fw.ClipRRect(
+                        borderRadius: const fw.BorderRadius.vertical(
+                          top: fw.Radius.circular(12),
+                        ),
+                        child: fw.Image.network(
+                          product.imageFullUrl!,
+                          height: 140,
+                          width: double.infinity,
+                          fit: fw.BoxFit.cover,
+                          errorBuilder: (_, __, ___) => fw.Icon(
+                            Icons.inventory_2_rounded,
+                            size: 48,
+                            color: theme.colorScheme.mutedForeground,
+                          ),
+                        ),
+                      )
+                    : fw.Icon(
+                        Icons.inventory_2_rounded,
+                        size: 48,
+                        color: theme.colorScheme.mutedForeground,
+                      ),
+              ),
+            ),
+            // Product Info
+            fw.Padding(
+              padding: const fw.EdgeInsets.all(8),
+              child: fw.Column(
+                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                children: [
+                  fw.Text(
+                    product.name ?? 'Unknown',
+                    maxLines: 1,
+                    overflow: fw.TextOverflow.ellipsis,
+                    style: const fw.TextStyle(
+                      fontSize: 14,
+                      fontWeight: fw.FontWeight.w600,
+                    ),
+                  ),
+                  const fw.SizedBox(height: 2),
+                  fw.Text(
+                    product.category?.name ?? '',
+                    maxLines: 1,
+                    overflow: fw.TextOverflow.ellipsis,
+                    style: fw.TextStyle(
+                      fontSize: 12,
+                      color: theme.colorScheme.mutedForeground,
+                    ),
+                  ),
+                  const fw.SizedBox(height: 4),
+                  fw.Row(
+                    mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      fw.Text(
+                        '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
+                        style: fw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: fw.FontWeight.w700,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      fw.Container(
+                        padding: const fw.EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: fw.BoxDecoration(
+                          color: (product.totalStockQuantity ?? 0) > 0
+                              ? AppDesignTokens.successColor.withValues(
+                                  alpha: 0.12,
+                                )
+                              : theme.colorScheme.muted.withValues(alpha: 0.5),
+                          borderRadius: fw.BorderRadius.circular(6),
+                        ),
+                        child: fw.Text(
+                          '${product.totalStockQuantity ?? 0}',
+                          style: fw.TextStyle(
+                            fontSize: 11,
+                            fontWeight: fw.FontWeight.w600,
+                            color: (product.totalStockQuantity ?? 0) > 0
+                                ? AppDesignTokens.successColor
+                                : theme.colorScheme.mutedForeground,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Product Card Skeleton for Home Screen
+class _ProductCardSkeleton extends fw.StatelessWidget {
+  const _ProductCardSkeleton();
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return Card(
+      child: fw.Column(
+        crossAxisAlignment: fw.CrossAxisAlignment.start,
+        children: [
+          // Product Image Skeleton
+          fw.Container(
+            height: 140,
+            decoration: const fw.BoxDecoration(
+              color: AppDesignTokens.mutedSurfaceColor,
+              borderRadius: fw.BorderRadius.vertical(
+                top: fw.Radius.circular(12),
+              ),
+            ),
+          ),
+          // Product Info Skeleton
+          fw.Padding(
+            padding: const fw.EdgeInsets.all(8),
+            child: fw.Column(
+              crossAxisAlignment: fw.CrossAxisAlignment.start,
+              children: [
+                const AppSkeletonBox(
+                  width: 100,
+                  height: 14,
+                  borderRadius: 6,
+                ),
+                const fw.SizedBox(height: 2),
+                const AppSkeletonBox(
+                  width: 70,
+                  height: 12,
+                  borderRadius: 6,
+                ),
+                const fw.SizedBox(height: 4),
+                fw.Row(
+                  mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    const AppSkeletonBox(
+                      width: 60,
+                      height: 16,
+                      borderRadius: 6,
+                    ),
+                    const AppSkeletonBox(
+                      width: 30,
+                      height: 18,
+                      borderRadius: 6,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
-
-    if (shouldLogout == true && context.mounted) {
-      // Perform logout
-      await authCubit.logout();
-
-      // Navigate to login screen
-      if (context.mounted) {
-        fw.Navigator.pushAndRemoveUntil(
-          context,
-          fw.PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const LoginScreenShadcn(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-          (route) => false,
-        );
-      }
-    }
   }
 }

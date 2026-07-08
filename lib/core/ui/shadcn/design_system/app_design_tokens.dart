@@ -61,7 +61,7 @@ class AppDesignTokens {
   // ========== Shadows ==========
   static List<fw.BoxShadow> cardShadow(fw.Color color) => [
     fw.BoxShadow(
-      color: color.withOpacity(0.04),
+      color: color.withValues(alpha: 0.04),
       blurRadius: 12,
       offset: const fw.Offset(0, 2),
     ),
@@ -69,7 +69,7 @@ class AppDesignTokens {
 
   static List<fw.BoxShadow> buttonShadow(fw.Color color) => [
     fw.BoxShadow(
-      color: color.withOpacity(0.15),
+      color: color.withValues(alpha: 0.15),
       blurRadius: 16,
       offset: const fw.Offset(0, 4),
     ),
@@ -77,7 +77,7 @@ class AppDesignTokens {
 
   static List<fw.BoxShadow> iconBoxShadow(fw.Color color) => [
     fw.BoxShadow(
-      color: color.withOpacity(0.08),
+      color: color.withValues(alpha: 0.08),
       blurRadius: 12,
       offset: const fw.Offset(0, 4),
     ),

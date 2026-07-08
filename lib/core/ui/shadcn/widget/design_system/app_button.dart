@@ -66,9 +66,7 @@ class AppButton extends fw.StatelessWidget {
               fw.SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
+                child: CircularProgressIndicator(strokeWidth: 2),
               ),
               const fw.SizedBox(width: AppDesignTokens.smallGap),
             ],
@@ -93,7 +91,7 @@ class AppButton extends fw.StatelessWidget {
   _ButtonColors _getColors(ThemeData theme, bool isDisabled) {
     if (isDisabled) {
       return _ButtonColors(
-        backgroundColor: theme.colorScheme.muted.withOpacity(0.3),
+        backgroundColor: theme.colorScheme.muted.withValues(alpha: 0.3),
         textColor: theme.colorScheme.mutedForeground,
       );
     }
@@ -122,20 +120,14 @@ class AppButton extends fw.StatelessWidget {
         );
       case AppButtonVariant.ghost:
         return _ButtonColors(
-          backgroundColor: theme.colorScheme.muted.withOpacity(0.1),
+          backgroundColor: theme.colorScheme.muted.withValues(alpha: 0.1),
           textColor: theme.colorScheme.foreground,
         );
     }
   }
 }
 
-enum AppButtonVariant {
-  primary,
-  secondary,
-  outlined,
-  destructive,
-  ghost,
-}
+enum AppButtonVariant { primary, secondary, outlined, destructive, ghost }
 
 class _ButtonColors {
   final fw.Color backgroundColor;

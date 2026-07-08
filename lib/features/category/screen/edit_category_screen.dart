@@ -114,14 +114,14 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
 
             return fw.Column(
               children: [
-                // App Bar
+                // Modern App Bar
                 fw.Container(
-                  padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
+                  padding: const fw.EdgeInsets.fromLTRB(20, 20, 24, 24),
                   decoration: fw.BoxDecoration(
                     color: theme.colorScheme.background,
                     border: fw.Border(
                       bottom: fw.BorderSide(
-                        color: theme.colorScheme.border.withOpacity(0.1),
+                        color: theme.colorScheme.border.withValues(alpha: 0.08),
                         width: 1,
                       ),
                     ),
@@ -129,9 +129,16 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                   child: fw.Row(
                     children: [
                       fw.Container(
+                        padding: const fw.EdgeInsets.all(2),
                         decoration: fw.BoxDecoration(
-                          color: theme.colorScheme.muted.withOpacity(0.3),
-                          borderRadius: fw.BorderRadius.circular(12),
+                          color: theme.colorScheme.muted.withValues(alpha: 0.5),
+                          borderRadius: fw.BorderRadius.circular(14),
+                          border: fw.Border.all(
+                            color: theme.colorScheme.border.withValues(
+                              alpha: 0.1,
+                            ),
+                            width: 1,
+                          ),
                         ),
                         child: IconButton(
                           icon: const fw.Icon(Icons.arrow_back, size: 20),
@@ -139,15 +146,30 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                           variance: ButtonVariance.ghost,
                         ),
                       ),
-                      const fw.SizedBox(width: 12),
-                      const fw.Expanded(
-                        child: Text(
-                          'Edit Category',
-                          style: fw.TextStyle(
-                            fontSize: 24,
-                            fontWeight: fw.FontWeight.w700,
-                            letterSpacing: -0.5,
-                          ),
+                      const fw.SizedBox(width: 16),
+                      fw.Expanded(
+                        child: fw.Column(
+                          crossAxisAlignment: fw.CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Edit Category',
+                              style: fw.TextStyle(
+                                fontSize: 28,
+                                fontWeight: fw.FontWeight.w700,
+                                letterSpacing: -0.8,
+                                height: 1.2,
+                              ),
+                            ),
+                            const fw.SizedBox(height: 4),
+                            Text(
+                              'Update category details',
+                              style: fw.TextStyle(
+                                fontSize: 14,
+                                color: theme.colorScheme.mutedForeground,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -157,10 +179,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                 // Form Content
                 fw.Expanded(
                   child: fw.SingleChildScrollView(
-                    padding: const fw.EdgeInsets.all(20),
+                    padding: const fw.EdgeInsets.all(24),
                     child: Card(
                       child: fw.Padding(
-                        padding: const fw.EdgeInsets.all(24),
+                        padding: const fw.EdgeInsets.all(32),
                         child: fw.Column(
                           crossAxisAlignment: fw.CrossAxisAlignment.stretch,
                           children: [
@@ -171,18 +193,33 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                   crossAxisAlignment:
                                       fw.CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Category Name',
-                                      style: fw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: fw.FontWeight.w600,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Category Name',
+                                          style: fw.TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: fw.FontWeight.w600,
+                                            letterSpacing: -0.2,
+                                          ),
+                                        ),
+                                        const fw.SizedBox(width: 4),
+                                        Text(
+                                          '*',
+                                          style: fw.TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: fw.FontWeight.w600,
+                                            color:
+                                                theme.colorScheme.destructive,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const fw.SizedBox(height: 8),
+                                    const fw.SizedBox(height: 10),
                                     TextField(
                                       controller: _nameController,
                                       placeholder: const Text(
-                                        'Enter category name',
+                                        'Enter a descriptive category name',
                                       ),
                                       onChanged: (value) {
                                         cubit.updateCategoryParams.name = value;
@@ -192,13 +229,15 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                     if (cubit.nameError != null)
                                       fw.Padding(
                                         padding: const fw.EdgeInsets.only(
-                                          top: 4,
+                                          top: 6,
                                         ),
                                         child: Text(
                                           cubit.nameError!,
-                                          style: const fw.TextStyle(
-                                            color: fw.Color(0xFFEF4444),
-                                            fontSize: 12,
+                                          style: fw.TextStyle(
+                                            color:
+                                                theme.colorScheme.destructive,
+                                            fontSize: 13,
+                                            fontWeight: fw.FontWeight.w500,
                                           ),
                                         ),
                                       ),
@@ -206,28 +245,29 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                 );
                               },
                             ),
-                            const fw.SizedBox(height: 16),
+                            const fw.SizedBox(height: 24),
 
                             // Description Field
-                            const Text(
+                            Text(
                               'Description',
                               style: fw.TextStyle(
-                                fontSize: 14,
+                                fontSize: 15,
                                 fontWeight: fw.FontWeight.w600,
+                                letterSpacing: -0.2,
                               ),
                             ),
-                            const fw.SizedBox(height: 8),
+                            const fw.SizedBox(height: 10),
                             TextField(
                               controller: _descriptionController,
                               placeholder: const Text(
-                                'Enter description (optional)',
+                                'Add a brief description about this category',
                               ),
-                              maxLines: 3,
+                              maxLines: 4,
                               onChanged: (value) {
                                 cubit.updateCategoryParams.description = value;
                               },
                             ),
-                            const fw.SizedBox(height: 16),
+                            const fw.SizedBox(height: 24),
 
                             // Category Image
                             BlocBuilder<CategoryCubit, CategoryState>(
@@ -236,129 +276,231 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                   crossAxisAlignment:
                                       fw.CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Category Image (Optional)',
+                                    Text(
+                                      'Category Image',
                                       style: fw.TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         fontWeight: fw.FontWeight.w600,
+                                        letterSpacing: -0.2,
                                       ),
                                     ),
-                                    const fw.SizedBox(height: 8),
+                                    const fw.SizedBox(height: 4),
+                                    Text(
+                                      'Optional — Recommended size: 800x600',
+                                      style: fw.TextStyle(
+                                        fontSize: 13,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
+                                      ),
+                                    ),
+                                    const fw.SizedBox(height: 12),
                                     if (cubit.selectedImageFile != null)
-                                      fw.Stack(
-                                        children: [
-                                          fw.ClipRRect(
-                                            borderRadius:
-                                                fw.BorderRadius.circular(12),
-                                            child: fw.Image.file(
-                                              cubit.selectedImageFile!,
-                                              height: 200,
-                                              width: double.infinity,
-                                              fit: fw.BoxFit.cover,
-                                            ),
+                                      fw.Container(
+                                        decoration: fw.BoxDecoration(
+                                          borderRadius:
+                                              fw.BorderRadius.circular(16),
+                                          border: fw.Border.all(
+                                            color: theme.colorScheme.border
+                                                .withValues(alpha: 0.2),
+                                            width: 2,
                                           ),
-                                          fw.Positioned(
-                                            top: 8,
-                                            right: 8,
-                                            child: fw.Container(
-                                              decoration: fw.BoxDecoration(
-                                                color: theme
-                                                    .colorScheme
-                                                    .destructive,
-                                                borderRadius:
-                                                    fw.BorderRadius.circular(8),
+                                        ),
+                                        child: fw.Stack(
+                                          children: [
+                                            fw.ClipRRect(
+                                              borderRadius:
+                                                  fw.BorderRadius.circular(14),
+                                              child: fw.Image.file(
+                                                cubit.selectedImageFile!,
+                                                height: 220,
+                                                width: double.infinity,
+                                                fit: fw.BoxFit.cover,
                                               ),
-                                              child: IconButton(
-                                                icon: const fw.Icon(
-                                                  Icons.close,
-                                                  size: 18,
+                                            ),
+                                            fw.Positioned(
+                                              top: 12,
+                                              right: 12,
+                                              child: fw.Container(
+                                                decoration: fw.BoxDecoration(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .destructive
+                                                      .withValues(alpha: 0.95),
+                                                  borderRadius:
+                                                      fw.BorderRadius.circular(
+                                                        10,
+                                                      ),
+                                                  boxShadow: [
+                                                    fw.BoxShadow(
+                                                      color: fw.Color(
+                                                        0x33000000,
+                                                      ),
+                                                      blurRadius: 8,
+                                                      offset: const fw.Offset(
+                                                        0,
+                                                        2,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                onPressed: () =>
-                                                    cubit.clearImageFile(),
-                                                variance: ButtonVariance.ghost,
+                                                child: IconButton(
+                                                  icon: const fw.Icon(
+                                                    Icons.close,
+                                                    size: 18,
+                                                  ),
+                                                  onPressed: () =>
+                                                      cubit.clearImageFile(),
+                                                  variance:
+                                                      ButtonVariance.ghost,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       )
                                     else if (imageUrl.isNotEmpty)
                                       fw.Stack(
                                         children: [
                                           fw.Container(
-                                            height: 200,
+                                            height: 220,
                                             width: double.infinity,
                                             decoration: fw.BoxDecoration(
                                               borderRadius:
-                                                  fw.BorderRadius.circular(12),
+                                                  fw.BorderRadius.circular(16),
                                               border: fw.Border.all(
                                                 color: theme.colorScheme.border
-                                                    .withOpacity(0.3),
-                                                width: 1,
+                                                    .withValues(alpha: 0.2),
+                                                width: 2,
                                               ),
                                             ),
                                             child: fw.ClipRRect(
                                               borderRadius:
-                                                  fw.BorderRadius.circular(12),
+                                                  fw.BorderRadius.circular(14),
                                               child: AuthenticatedImage(
                                                 imageUrl: imageUrl,
                                                 width: double.infinity,
-                                                height: 200,
+                                                height: 220,
                                                 fit: fw.BoxFit.cover,
                                                 errorWidget: fw.Container(
                                                   color: theme.colorScheme.muted
-                                                      .withOpacity(0.3),
-                                                  child: fw.Icon(
-                                                    Icons.category_outlined,
-                                                    size: 64,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .mutedForeground,
+                                                      .withValues(alpha: 0.3),
+                                                  child: fw.Center(
+                                                    child: fw.Icon(
+                                                      Icons.category_outlined,
+                                                      size: 72,
+                                                      color: theme
+                                                          .colorScheme
+                                                          .mutedForeground
+                                                          .withValues(
+                                                            alpha: 0.5,
+                                                          ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                           fw.Positioned(
-                                            bottom: 12,
-                                            right: 12,
-                                            child: OutlineButton(
-                                              onPressed: () =>
-                                                  _pickImage(cubit),
-                                              child: const fw.Row(
-                                                mainAxisSize:
-                                                    fw.MainAxisSize.min,
-                                                children: [
-                                                  fw.Icon(Icons.edit, size: 16),
-                                                  fw.SizedBox(width: 6),
-                                                  Text('Change Image'),
+                                            bottom: 16,
+                                            right: 16,
+                                            child: fw.Container(
+                                              decoration: fw.BoxDecoration(
+                                                borderRadius: fw
+                                                    .BorderRadius.circular(12),
+                                                boxShadow: [
+                                                  fw.BoxShadow(
+                                                    color: fw.Color(0x33000000),
+                                                    blurRadius: 12,
+                                                    offset: const fw.Offset(
+                                                      0,
+                                                      4,
+                                                    ),
+                                                  ),
                                                 ],
+                                              ),
+                                              child: SecondaryButton(
+                                                onPressed: () =>
+                                                    _pickImage(cubit),
+                                                child: const fw.Row(
+                                                  mainAxisSize:
+                                                      fw.MainAxisSize.min,
+                                                  children: [
+                                                    fw.Icon(
+                                                      Icons.edit,
+                                                      size: 16,
+                                                    ),
+                                                    fw.SizedBox(width: 8),
+                                                    Text('Change Image'),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ],
                                       )
                                     else
-                                      OutlineButton(
-                                        onPressed: () => _pickImage(cubit),
-                                        child: fw.Row(
-                                          mainAxisAlignment:
-                                              fw.MainAxisAlignment.center,
-                                          children: [
-                                            fw.Icon(
-                                              Icons.image,
-                                              size: 20,
-                                              color: theme.colorScheme.primary,
+                                      fw.GestureDetector(
+                                        onTap: () => _pickImage(cubit),
+                                        child: fw.Container(
+                                          height: 180,
+                                          decoration: fw.BoxDecoration(
+                                            color: theme.colorScheme.muted
+                                                .withValues(alpha: 0.3),
+                                            borderRadius:
+                                                fw.BorderRadius.circular(16),
+                                            border: fw.Border.all(
+                                              color: theme.colorScheme.border
+                                                  .withValues(alpha: 0.3),
+                                              width: 2,
+                                              style: fw.BorderStyle.solid,
                                             ),
-                                            const fw.SizedBox(width: 8),
-                                            const Text('Select Image'),
-                                          ],
+                                          ),
+                                          child: fw.Center(
+                                            child: fw.Column(
+                                              mainAxisAlignment:
+                                                  fw.MainAxisAlignment.center,
+                                              children: [
+                                                fw.Icon(
+                                                  Icons.cloud_upload_outlined,
+                                                  size: 48,
+                                                  color: theme
+                                                      .colorScheme
+                                                      .primary
+                                                      .withValues(alpha: 0.7),
+                                                ),
+                                                const fw.SizedBox(height: 12),
+                                                Text(
+                                                  'Click to upload image',
+                                                  style: fw.TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        fw.FontWeight.w600,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                                ),
+                                                const fw.SizedBox(height: 4),
+                                                Text(
+                                                  'PNG, JPG up to 10MB',
+                                                  style: fw.TextStyle(
+                                                    fontSize: 13,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .mutedForeground
+                                                        .withValues(alpha: 0.7),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
                                   ],
                                 );
                               },
                             ),
-                            const fw.SizedBox(height: 16),
+                            const fw.SizedBox(height: 24),
 
                             // Size Type Selection
                             BlocBuilder<CategoryCubit, CategoryState>(
@@ -367,17 +509,27 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                   crossAxisAlignment:
                                       fw.CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Size Type',
                                       style: fw.TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         fontWeight: fw.FontWeight.w600,
+                                        letterSpacing: -0.2,
                                       ),
                                     ),
-                                    const fw.SizedBox(height: 8),
+                                    const fw.SizedBox(height: 4),
+                                    Text(
+                                      'Choose the appropriate sizing system',
+                                      style: fw.TextStyle(
+                                        fontSize: 13,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
+                                      ),
+                                    ),
+                                    const fw.SizedBox(height: 12),
                                     fw.Wrap(
-                                      spacing: 8,
-                                      runSpacing: 8,
+                                      spacing: 10,
+                                      runSpacing: 10,
                                       children: [
                                         _SizeTypeChip(
                                           label: 'None',
@@ -457,36 +609,69 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                 );
                               },
                             ),
-                            const fw.SizedBox(height: 16),
+                            const fw.SizedBox(height: 24),
 
                             // Active Switch
                             BlocBuilder<CategoryCubit, CategoryState>(
                               builder: (context, state) {
-                                return fw.Row(
-                                  mainAxisAlignment:
-                                      fw.MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Active',
-                                      style: fw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: fw.FontWeight.w600,
+                                return fw.Container(
+                                  padding: const fw.EdgeInsets.all(20),
+                                  decoration: fw.BoxDecoration(
+                                    color: theme.colorScheme.muted.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    borderRadius: fw.BorderRadius.circular(14),
+                                    border: fw.Border.all(
+                                      color: theme.colorScheme.border
+                                          .withValues(alpha: 0.2),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: fw.Row(
+                                    mainAxisAlignment:
+                                        fw.MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      fw.Column(
+                                        crossAxisAlignment:
+                                            fw.CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Category Status',
+                                            style: fw.TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: fw.FontWeight.w600,
+                                              letterSpacing: -0.2,
+                                            ),
+                                          ),
+                                          const fw.SizedBox(height: 4),
+                                          Text(
+                                            cubit.updateCategoryParams.isActive
+                                                ? 'Visible to customers'
+                                                : 'Hidden from store',
+                                            style: fw.TextStyle(
+                                              fontSize: 13,
+                                              color: theme
+                                                  .colorScheme
+                                                  .mutedForeground,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    Switch(
-                                      value:
-                                          cubit.updateCategoryParams.isActive,
-                                      onChanged: (value) {
-                                        cubit.updateCategoryParams.isActive =
-                                            value;
-                                        cubit.toggleIsActive(value);
-                                      },
-                                    ),
-                                  ],
+                                      Switch(
+                                        value:
+                                            cubit.updateCategoryParams.isActive,
+                                        onChanged: (value) {
+                                          cubit.updateCategoryParams.isActive =
+                                              value;
+                                          cubit.toggleIsActive(value);
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 );
                               },
                             ),
-                            const fw.SizedBox(height: 32),
+                            const fw.SizedBox(height: 40),
 
                             // Submit Button
                             CreateModel<CategoryModel>(
@@ -512,7 +697,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       PrimaryButton(
                                         onPressed: () {
                                           fw.Navigator.pop(ctx);
-                                          fw.Navigator.pop(context); // Go back
+                                          fw.Navigator.pop(context);
                                         },
                                         child: const Text('OK'),
                                       ),
@@ -537,12 +722,16 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                   ),
                                 );
                               },
-                              child: PrimaryButton(
-                                child: const Text(
-                                  'Update Category',
-                                  style: fw.TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: fw.FontWeight.w600,
+                              child: fw.SizedBox(
+                                height: 52,
+                                child: PrimaryButton(
+                                  child: const Text(
+                                    'Update Category',
+                                    style: fw.TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: fw.FontWeight.w600,
+                                      letterSpacing: -0.3,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -562,7 +751,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
   }
 }
 
-/// Size Type Chip Widget
+/// Modern Size Type Chip Widget
 class _SizeTypeChip extends fw.StatelessWidget {
   final String label;
   final int value;
@@ -578,18 +767,40 @@ class _SizeTypeChip extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
+    final theme = Theme.of(context);
     final isSelected = selectedValue == value;
 
     if (isSelected) {
       return PrimaryButton(
         onPressed: () => onSelected(value),
-        child: Text(label),
+        child: fw.Padding(
+          padding: const fw.EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: Text(
+            label,
+            style: const fw.TextStyle(
+              fontSize: 14,
+              fontWeight: fw.FontWeight.w600,
+              letterSpacing: -0.2,
+            ),
+          ),
+        ),
       );
     }
 
     return OutlineButton(
       onPressed: () => onSelected(value),
-      child: Text(label),
+      child: fw.Padding(
+        padding: const fw.EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: Text(
+          label,
+          style: fw.TextStyle(
+            fontSize: 14,
+            fontWeight: fw.FontWeight.w500,
+            letterSpacing: -0.2,
+            color: theme.colorScheme.foreground.withValues(alpha: 0.8),
+          ),
+        ),
+      ),
     );
   }
 }

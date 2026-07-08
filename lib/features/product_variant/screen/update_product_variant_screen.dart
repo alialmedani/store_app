@@ -106,7 +106,9 @@ class _UpdateProductVariantScreenState
                               width: double.infinity,
                               padding: const fw.EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.muted.withOpacity(0.3),
+                                color: theme.colorScheme.muted.withValues(
+                                  alpha: 0.3,
+                                ),
                                 borderRadius: fw.BorderRadius.circular(8),
                                 border: Border.all(
                                   color: theme.colorScheme.border,

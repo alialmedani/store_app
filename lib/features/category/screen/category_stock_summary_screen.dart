@@ -95,8 +95,8 @@ class _StockSummaryCard extends fw.StatelessWidget {
                 ),
                 decoration: fw.BoxDecoration(
                   color: (summary.isActive ?? false)
-                      ? const fw.Color(0xFF10B981).withOpacity(0.12)
-                      : const fw.Color(0xFFEF4444).withOpacity(0.12),
+                      ? const fw.Color(0xFF10B981).withValues(alpha: 0.12)
+                      : const fw.Color(0xFFEF4444).withValues(alpha: 0.12),
                   borderRadius: fw.BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -123,10 +123,10 @@ class _StockSummaryCard extends fw.StatelessWidget {
                 vertical: 6,
               ),
               decoration: fw.BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.12),
+                color: theme.colorScheme.primary.withValues(alpha: 0.12),
                 borderRadius: fw.BorderRadius.circular(10),
                 border: fw.Border.all(
-                  color: theme.colorScheme.primary.withOpacity(0.3),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -157,10 +157,10 @@ class _StockSummaryCard extends fw.StatelessWidget {
           fw.Container(
             padding: const fw.EdgeInsets.all(16),
             decoration: fw.BoxDecoration(
-              color: theme.colorScheme.muted.withOpacity(0.2),
+              color: theme.colorScheme.muted.withValues(alpha: 0.2),
               borderRadius: fw.BorderRadius.circular(12),
               border: fw.Border.all(
-                color: theme.colorScheme.border.withOpacity(0.3),
+                color: theme.colorScheme.border.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -243,13 +243,13 @@ class _StockSummaryCard extends fw.StatelessWidget {
                 begin: fw.Alignment.topLeft,
                 end: fw.Alignment.bottomRight,
                 colors: [
-                  theme.colorScheme.primary.withOpacity(0.05),
-                  theme.colorScheme.primary.withOpacity(0.02),
+                  theme.colorScheme.primary.withValues(alpha: 0.05),
+                  theme.colorScheme.primary.withValues(alpha: 0.02),
                 ],
               ),
               borderRadius: fw.BorderRadius.circular(12),
               border: fw.Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.15),
+                color: theme.colorScheme.primary.withValues(alpha: 0.15),
                 width: 1,
               ),
             ),
@@ -325,7 +325,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     child: fw.Container(
                       padding: const fw.EdgeInsets.all(12),
                       decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.muted.withOpacity(0.2),
+                        color: theme.colorScheme.muted.withValues(alpha: 0.2),
                         borderRadius: fw.BorderRadius.circular(10),
                       ),
                       child: fw.Column(
@@ -360,7 +360,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     child: fw.Container(
                       padding: const fw.EdgeInsets.all(12),
                       decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.muted.withOpacity(0.2),
+                        color: theme.colorScheme.muted.withValues(alpha: 0.2),
                         borderRadius: fw.BorderRadius.circular(10),
                       ),
                       child: fw.Column(
@@ -464,9 +464,9 @@ class _StockStatusItem extends fw.StatelessWidget {
     return fw.Container(
       padding: const fw.EdgeInsets.all(10),
       decoration: fw.BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: fw.BorderRadius.circular(10),
-        border: fw.Border.all(color: color.withOpacity(0.2), width: 1),
+        border: fw.Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: fw.Column(
         children: [

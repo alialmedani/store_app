@@ -98,7 +98,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         border: fw.Border.all(
                           color: Theme.of(
                             context,
-                          ).colorScheme.border.withOpacity(0.3),
+                          ).colorScheme.border.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -198,7 +198,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
             fw.Container(
               padding: const fw.EdgeInsets.all(12),
               decoration: fw.BoxDecoration(
-                color: Theme.of(context).colorScheme.muted.withOpacity(0.5),
+                color: Theme.of(
+                  context,
+                ).colorScheme.muted.withValues(alpha: 0.5),
                 borderRadius: fw.BorderRadius.circular(8),
               ),
               child: Column(
@@ -308,7 +310,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                             fw.Container(
                               padding: const fw.EdgeInsets.all(10),
                               decoration: fw.BoxDecoration(
-                                color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                                color: const Color(
+                                  0xFF8B5CF6,
+                                ).withValues(alpha: 0.1),
                                 borderRadius: fw.BorderRadius.circular(8),
                               ),
                               child: const Icon(
@@ -370,7 +374,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                             fw.Container(
                               padding: const fw.EdgeInsets.all(16),
                               decoration: fw.BoxDecoration(
-                                color: theme.colorScheme.muted.withOpacity(0.5),
+                                color: theme.colorScheme.muted.withValues(
+                                  alpha: 0.5,
+                                ),
                                 borderRadius: fw.BorderRadius.circular(8),
                                 border: fw.Border.all(
                                   color: theme.colorScheme.border,
@@ -439,13 +445,13 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                       ),
                                       decoration: fw.BoxDecoration(
                                         color: theme.colorScheme.primary
-                                            .withOpacity(0.1),
+                                            .withValues(alpha: 0.1),
                                         borderRadius: fw.BorderRadius.circular(
                                           8,
                                         ),
                                         border: fw.Border.all(
                                           color: theme.colorScheme.primary
-                                              .withOpacity(0.3),
+                                              .withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: Row(
@@ -526,14 +532,14 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                       decoration: fw.BoxDecoration(
                                         color: const Color(
                                           0xFF10B981,
-                                        ).withOpacity(0.1),
+                                        ).withValues(alpha: 0.1),
                                         borderRadius: fw.BorderRadius.circular(
                                           8,
                                         ),
                                         border: fw.Border.all(
                                           color: const Color(
                                             0xFF10B981,
-                                          ).withOpacity(0.3),
+                                          ).withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: Row(

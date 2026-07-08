@@ -3,8 +3,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../core/classes/cashe_helper.dart';
-import '../../home/cubit/home_cubit.dart';
-import '../../home/screen/home_screen.dart';
+import '../../home/screen/main_navigation_screen.dart';
 import '../cubit/auth_cubit.dart';
 import '../data/model/login_model.dart';
 import 'register_screen_shadcn.dart';
@@ -201,15 +200,12 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                               if (userResult.hasDataOnly) {
                                 authCubit.currentUser = userResult.data;
 
-                                // Navigate to home
+                                // Navigate to main navigation
                                 if (context.mounted) {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => BlocProvider(
-                                        create: (context) => HomeCubit(),
-                                        child: const HomeScreen(),
-                                      ),
+                                      builder: (context) => const MainNavigationScreen(),
                                     ),
                                   );
                                 }
