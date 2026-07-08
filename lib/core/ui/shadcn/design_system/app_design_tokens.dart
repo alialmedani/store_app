@@ -25,6 +25,10 @@ class AppDesignTokens {
   static const double iconBoxSize = 48.0;
   static const double iconBoxSmall = 44.0;
 
+  // ========== List Bottom Padding ==========
+  // Normal bottom padding for list content when no sticky bottom action
+  static const double listBottomPadding = 20.0;
+
   // ========== Padding ==========
   static const double cardPadding = 16.0;
   static const double cardPaddingLarge = 20.0;

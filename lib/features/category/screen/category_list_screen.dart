@@ -21,31 +21,29 @@ class CategoryListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Stack(
+        child: fw.Column(
           children: [
-            fw.Column(
-              children: [
-                AppHeader(
-                  title: 'Categories',
-                  onBack: () => fw.Navigator.pop(context),
-                ),
-                fw.Expanded(
-                  child: PaginationList<CategoryModel>(
-                    withPagination: true,
-                    withRefresh: true,
-                    repositoryCallBack: (data) {
-                      return context.read<CategoryCubit>().fetchCategoryList(
-                        data,
-                      );
-                    },
-                    listBuilder: (list) {
-                      return fw.ListView.builder(
-                        padding: const fw.EdgeInsets.fromLTRB(
-                          AppDesignTokens.screenPaddingHorizontal,
-                          AppDesignTokens.screenPaddingHorizontal,
-                          AppDesignTokens.screenPaddingHorizontal,
-                          100,
-                        ),
+            AppHeader(
+              title: 'Categories',
+              onBack: () => fw.Navigator.pop(context),
+            ),
+            fw.Expanded(
+              child: PaginationList<CategoryModel>(
+                withPagination: true,
+                withRefresh: true,
+                repositoryCallBack: (data) {
+                  return context.read<CategoryCubit>().fetchCategoryList(
+                    data,
+                  );
+                },
+                listBuilder: (list) {
+                  return fw.ListView.builder(
+                    padding: const fw.EdgeInsets.fromLTRB(
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.listBottomPadding,
+                    ),
                         itemCount: list.length,
                         itemBuilder: (context, index) {
                           final category = list[index];
@@ -65,9 +63,11 @@ class CategoryListScreen extends StatelessWidget {
                                 width: 80,
                                 height: 80,
                                 fit: fw.BoxFit.cover,
-                                errorWidget: fw.Icon(
-                                  Icons.category_outlined,
-                                  size: 32,
+                                errorWidget: fw.Center(
+                                  child: fw.Icon(
+                                    Icons.category_outlined,
+                                    size: 32,
+                                  ),
                                 ),
                               ),
                               statusBadge: StatusBadge(
@@ -126,10 +126,8 @@ class CategoryListScreen extends StatelessWidget {
                     },
                   ),
                 ),
-              ],
-            ),
-            StickyBottomAction(
-              child: PrimaryButton(
+              StickyBottomAction(
+                child: PrimaryButton(
                 onPressed: () {
                   fw.Navigator.push(
                     context,

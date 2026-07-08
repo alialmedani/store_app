@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart' as fw;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../design_system/app_design_tokens.dart';
 
-/// Sticky bottom action button with safe area padding
-/// Floats above content with shadow for visual separation
+/// Sticky bottom action button container
+/// Use inside Column layout below Expanded scrollable content
 class StickyBottomAction extends fw.StatelessWidget {
   final fw.Widget child;
   final fw.EdgeInsetsGeometry? padding;
@@ -18,21 +18,26 @@ class StickyBottomAction extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    return fw.Positioned(
-      left: AppDesignTokens.screenPaddingHorizontal,
-      right: AppDesignTokens.screenPaddingHorizontal,
-      bottom: AppDesignTokens.screenPaddingHorizontal,
-      child: fw.Container(
-        decoration: fw.BoxDecoration(
-          boxShadow: AppDesignTokens.buttonShadow(
-            theme.colorScheme.foreground,
+    return fw.Container(
+      padding: padding ??
+          const fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
+      decoration: fw.BoxDecoration(
+        color: theme.colorScheme.background,
+        border: fw.Border(
+          top: fw.BorderSide(
+            color: theme.colorScheme.border.withOpacity(0.1),
+            width: 1,
           ),
         ),
-        child: fw.Padding(
-          padding: padding ?? fw.EdgeInsets.zero,
-          child: child,
-        ),
+        boxShadow: [
+          fw.BoxShadow(
+            color: theme.colorScheme.foreground.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const fw.Offset(0, -2),
+          ),
+        ],
       ),
+      child: child,
     );
   }
 }

@@ -21,31 +21,29 @@ class ProductListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Stack(
+        child: fw.Column(
           children: [
-            fw.Column(
-              children: [
-                AppHeader(
-                  title: 'Products',
-                  onBack: () => fw.Navigator.pop(context),
-                ),
-                fw.Expanded(
-                  child: PaginationList<ProductModel>(
-                    withPagination: true,
-                    withRefresh: true,
-                    repositoryCallBack: (data) {
-                      return context.read<ProductCubit>().fetchProductList(
-                        data,
-                      );
-                    },
-                    listBuilder: (list) {
-                      return fw.ListView.builder(
-                        padding: const fw.EdgeInsets.fromLTRB(
-                          AppDesignTokens.screenPaddingHorizontal,
-                          AppDesignTokens.screenPaddingHorizontal,
-                          AppDesignTokens.screenPaddingHorizontal,
-                          100,
-                        ),
+            AppHeader(
+              title: 'Products',
+              onBack: () => fw.Navigator.pop(context),
+            ),
+            fw.Expanded(
+              child: PaginationList<ProductModel>(
+                withPagination: true,
+                withRefresh: true,
+                repositoryCallBack: (data) {
+                  return context.read<ProductCubit>().fetchProductList(
+                    data,
+                  );
+                },
+                listBuilder: (list) {
+                  return fw.ListView.builder(
+                    padding: const fw.EdgeInsets.fromLTRB(
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.listBottomPadding,
+                    ),
                         itemCount: list.length,
                         itemBuilder: (context, index) {
                           final product = list[index];
@@ -94,9 +92,11 @@ class ProductListScreen extends StatelessWidget {
                                 width: 80,
                                 height: 80,
                                 fit: fw.BoxFit.cover,
-                                errorWidget: fw.Icon(
-                                  Icons.inventory_2_outlined,
-                                  size: 32,
+                                errorWidget: fw.Center(
+                                  child: fw.Icon(
+                                    Icons.inventory_2_outlined,
+                                    size: 32,
+                                  ),
                                 ),
                               ),
                               statusBadge: StatusBadge(
@@ -147,10 +147,8 @@ class ProductListScreen extends StatelessWidget {
                     },
                   ),
                 ),
-              ],
-            ),
-            StickyBottomAction(
-              child: PrimaryButton(
+              StickyBottomAction(
+                child: PrimaryButton(
                 onPressed: () {
                   fw.Navigator.push(
                     context,

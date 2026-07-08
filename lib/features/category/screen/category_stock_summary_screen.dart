@@ -3,6 +3,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:flutter/widgets.dart' as fw;
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
+import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_stock_summary_model.dart';
 
@@ -13,53 +14,14 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       child: SafeArea(
         child: fw.Column(
           children: [
-            // App Bar
-            fw.Container(
-              padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
-              decoration: fw.BoxDecoration(
-                color: theme.colorScheme.background,
-                border: fw.Border(
-                  bottom: fw.BorderSide(
-                    color: theme.colorScheme.border.withOpacity(0.1),
-                    width: 1,
-                  ),
-                ),
-              ),
-              child: fw.Row(
-                children: [
-                  fw.Container(
-                    decoration: fw.BoxDecoration(
-                      color: theme.colorScheme.muted.withOpacity(0.3),
-                      borderRadius: fw.BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      icon: const fw.Icon(Icons.arrow_back, size: 20),
-                      onPressed: () => fw.Navigator.pop(context),
-                      variance: ButtonVariance.ghost,
-                    ),
-                  ),
-                  const fw.SizedBox(width: 12),
-                  const fw.Expanded(
-                    child: Text(
-                      'Category Stock Summary',
-                      style: fw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: fw.FontWeight.w700,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            AppHeader(
+              title: 'Category Stock Summary',
+              onBack: () => fw.Navigator.pop(context),
             ),
-
-            // List
             fw.Expanded(
               child: PaginationList<CategoryStockSummaryModel>(
                 withPagination: true,
@@ -71,7 +33,12 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
                 },
                 listBuilder: (list) {
                   return fw.ListView.builder(
-                    padding: const fw.EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    padding: const fw.EdgeInsets.fromLTRB(
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                    ),
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final summary = list[index];
@@ -101,32 +68,8 @@ class _StockSummaryCard extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    return Card(
-      child: fw.Container(
-        padding: const fw.EdgeInsets.all(20),
-        decoration: fw.BoxDecoration(
-          borderRadius: fw.BorderRadius.circular(16),
-          gradient: fw.LinearGradient(
-            begin: fw.Alignment.topLeft,
-            end: fw.Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.card,
-              theme.colorScheme.card.withOpacity(0.98),
-            ],
-          ),
-          border: fw.Border.all(
-            color: theme.colorScheme.border.withOpacity(0.5),
-            width: 1,
-          ),
-          boxShadow: [
-            fw.BoxShadow(
-              color: theme.colorScheme.foreground.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const fw.Offset(0, 2),
-            ),
-          ],
-        ),
-        child: fw.Column(
+    return AppCard(
+      child: fw.Column(
           crossAxisAlignment: fw.CrossAxisAlignment.start,
           children: [
             // Header: Category Name + Status Badges
@@ -449,8 +392,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart' as fw;
 import 'package:intl/intl.dart';
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
+import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../cubit/inventory_cubit.dart';
 import '../data/model/inventory_model.dart';
 
@@ -14,123 +15,14 @@ class InventoryListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       child: SafeArea(
         child: fw.Column(
           children: [
-            // Premium App Bar
-            fw.Container(
-              padding: const fw.EdgeInsets.fromLTRB(20, 20, 24, 24),
-              decoration: fw.BoxDecoration(
-                gradient: fw.LinearGradient(
-                  begin: fw.Alignment.topLeft,
-                  end: fw.Alignment.bottomRight,
-                  colors: [
-                    theme.colorScheme.background,
-                    theme.colorScheme.background.withOpacity(0.95),
-                  ],
-                ),
-                border: fw.Border(
-                  bottom: fw.BorderSide(
-                    color: theme.colorScheme.border.withOpacity(0.08),
-                    width: 1,
-                  ),
-                ),
-                boxShadow: [
-                  fw.BoxShadow(
-                    color: theme.colorScheme.foreground.withOpacity(0.02),
-                    blurRadius: 8,
-                    offset: const fw.Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: fw.Column(
-                crossAxisAlignment: fw.CrossAxisAlignment.start,
-                children: [
-                  // Top Bar with Back Button
-                  fw.Row(
-                    children: [
-                      fw.Container(
-                        decoration: fw.BoxDecoration(
-                          color: theme.colorScheme.muted.withOpacity(0.25),
-                          borderRadius: fw.BorderRadius.circular(12),
-                          border: fw.Border.all(
-                            color: theme.colorScheme.border.withOpacity(0.1),
-                            width: 1,
-                          ),
-                        ),
-                        child: IconButton(
-                          icon: const fw.Icon(Icons.arrow_back, size: 20),
-                          onPressed: () => fw.Navigator.pop(context),
-                          variance: ButtonVariance.ghost,
-                        ),
-                      ),
-                      const fw.SizedBox(width: 16),
-                      // Warehouse Icon
-                      fw.Container(
-                        padding: const fw.EdgeInsets.all(10),
-                        decoration: fw.BoxDecoration(
-                          gradient: fw.LinearGradient(
-                            begin: fw.Alignment.topLeft,
-                            end: fw.Alignment.bottomRight,
-                            colors: [
-                              const Color(0xFFEC4899).withOpacity(0.15),
-                              const Color(0xFFEC4899).withOpacity(0.05),
-                            ],
-                          ),
-                          borderRadius: fw.BorderRadius.circular(12),
-                          border: fw.Border.all(
-                            color: const Color(0xFFEC4899).withOpacity(0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: const fw.Icon(
-                          Icons.warehouse_outlined,
-                          size: 24,
-                          color: Color(0xFFEC4899),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const fw.SizedBox(height: 20),
-                  // Title & Subtitle
-                  fw.Row(
-                    children: [
-                      fw.Expanded(
-                        child: fw.Column(
-                          crossAxisAlignment: fw.CrossAxisAlignment.start,
-                          children: [
-                            const fw.Text(
-                              'Inventory',
-                              style: fw.TextStyle(
-                                fontSize: 28,
-                                fontWeight: fw.FontWeight.w800,
-                                letterSpacing: -0.8,
-                                height: 1.1,
-                              ),
-                            ),
-                            const fw.SizedBox(height: 6),
-                            fw.Text(
-                              'Track all stock movements and changes',
-                              style: fw.TextStyle(
-                                fontSize: 14,
-                                fontWeight: fw.FontWeight.w500,
-                                color: theme.colorScheme.mutedForeground,
-                                letterSpacing: 0.1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            AppHeader(
+              title: 'Inventory',
+              onBack: () => fw.Navigator.pop(context),
             ),
-
-            // List with Premium Empty State
             fw.Expanded(
               child: PaginationList<InventoryModel>(
                 withPagination: true,
@@ -140,10 +32,14 @@ class InventoryListScreen extends StatelessWidget {
                     data,
                   );
                 },
-                noDataWidget: _buildEmptyState(theme),
                 listBuilder: (list) {
                   return fw.ListView.builder(
-                    padding: const fw.EdgeInsets.fromLTRB(20, 24, 20, 24),
+                    padding: const fw.EdgeInsets.fromLTRB(
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                    ),
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final inventory = list[index];
