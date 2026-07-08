@@ -274,6 +274,19 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                       ),
                                     ),
                                   ),
+                                  fw.GestureDetector(
+                                    onTap: () {
+                                      _showCategorySelector(context, cubit);
+                                    },
+                                    child: fw.Text(
+                                      'Select',
+                                      style: fw.TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                               const fw.SizedBox(
