@@ -109,7 +109,6 @@ class CategoryCubit extends Cubit<CategoryState> {
 
     // Step 2: Upload image if selected
     if (selectedImageFile != null && categoryId != null) {
-
       isUploadingImage = true;
       emit(CategoryParamsUpdated());
 
@@ -122,8 +121,6 @@ class CategoryCubit extends Cubit<CategoryState> {
 
       isUploadingImage = false;
       emit(CategoryParamsUpdated());
-
-      
     }
 
     return Result(data: category);

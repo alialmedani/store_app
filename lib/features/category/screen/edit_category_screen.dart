@@ -88,7 +88,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
     cubit.updateCategoryParams.description = category.description ?? '';
     cubit.updateCategoryParams.sizeType = category.sizeTypeId ?? 0;
     cubit.updateCategoryParams.isActive = category.isActive ?? true;
-    cubit.selectedSizeType = SizeType.fromInt(category.sizeTypeId) ?? SizeType.none;
+    cubit.selectedSizeType =
+        SizeType.fromInt(category.sizeTypeId) ?? SizeType.none;
 
     _isInitialized = true;
   }
@@ -539,9 +540,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value.toInt();
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -551,9 +552,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value.toInt();
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -563,9 +564,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value.toInt();
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -575,9 +576,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value.toInt();
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -587,9 +588,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value.toInt();
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
@@ -599,9 +600,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value.toInt();
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                       ],
