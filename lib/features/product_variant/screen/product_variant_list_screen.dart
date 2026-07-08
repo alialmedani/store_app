@@ -23,7 +23,35 @@ class ProductVariantListScreen extends StatelessWidget {
           children: [
             AppHeader(
               title: 'Product Variants',
-              onBack: () => fw.Navigator.of(context).pop(),
+              onBack: () => fw.Navigator.pop(context),
+              action: fw.GestureDetector(
+                onTap: () {
+                  fw.Navigator.push(
+                    context,
+                    fw.PageRouteBuilder(
+                      pageBuilder: (_, __, ___) =>
+                          const VariantCreationOptionsScreen(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
+                child: fw.Container(
+                  width: AppDesignTokens.headerActionButtonSize,
+                  height: AppDesignTokens.headerActionButtonSize,
+                  decoration: fw.BoxDecoration(
+                    color: AppDesignTokens.mutedSurfaceColor,
+                    borderRadius: fw.BorderRadius.circular(12),
+                  ),
+                  child: fw.Center(
+                    child: fw.Icon(
+                      Icons.add,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.foreground,
+                    ),
+                  ),
+                ),
+              ),
             ),
             fw.Expanded(
               child: PaginationList<ProductVariantModel>(
@@ -40,7 +68,7 @@ class ProductVariantListScreen extends StatelessWidget {
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.screenPaddingHorizontal,
-                      AppDesignTokens.listBottomPadding,
+                      AppDesignTokens.screenPaddingHorizontal,
                     ),
                     itemCount: list.length,
                     itemBuilder: (context, index) {
@@ -91,7 +119,8 @@ class ProductVariantListScreen extends StatelessWidget {
                           metaItems: metaItems.isNotEmpty ? metaItems : null,
                           onTap: () {
                             if (variant.id != null) {
-                              fw.Navigator.of(context).push(
+                              fw.Navigator.push(
+                                context,
                                 fw.PageRouteBuilder(
                                   pageBuilder: (_, __, ___) =>
                                       ProductVariantDetailsScreen(
@@ -104,7 +133,8 @@ class ProductVariantListScreen extends StatelessWidget {
                             }
                           },
                           onEdit: () {
-                            fw.Navigator.of(context).push(
+                            fw.Navigator.push(
+                              context,
                               fw.PageRouteBuilder(
                                 pageBuilder: (_, __, ___) => BlocProvider(
                                   create: (_) => ProductVariantCubit(),
@@ -122,28 +152,6 @@ class ProductVariantListScreen extends StatelessWidget {
                     },
                   );
                 },
-              ),
-            ),
-            StickyBottomAction(
-              child: PrimaryButton(
-                onPressed: () {
-                  fw.Navigator.of(context).push(
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) =>
-                          const VariantCreationOptionsScreen(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-                leading: const fw.Icon(Icons.add, size: 20),
-                child: const Text(
-                  'Add Variant',
-                  style: fw.TextStyle(
-                    fontSize: 15,
-                    fontWeight: AppDesignTokens.semiBold,
-                  ),
-                ),
               ),
             ),
           ],

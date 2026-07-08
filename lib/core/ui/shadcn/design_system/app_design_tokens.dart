@@ -24,6 +24,7 @@ class AppDesignTokens {
   static const double secondaryButtonHeight = 44.0;
   static const double iconBoxSize = 48.0;
   static const double iconBoxSmall = 44.0;
+  static const double headerActionButtonSize = 40.0;
 
   // ========== List Bottom Padding ==========
   // Normal bottom padding for list content when no sticky bottom action
@@ -82,11 +83,46 @@ class AppDesignTokens {
     ),
   ];
 
-  // ========== Status Colors ==========
-  static const activeColor = fw.Color(0xFF10B981);
-  static const inactiveColor = fw.Color(0xFFEF4444);
-  static const warningColor = fw.Color(0xFFF59E0B);
-  static const infoColor = fw.Color(0xFF06B6D4);
+  // ========== Semantic Color Tokens ==========
+  // Clean, minimal color system following shadcn principles
+  // Use these tokens for consistent coloring across the app
+
+  // Primary colors
+  static const primaryColor = fw.Color(0xFF3B82F6);
+  static const primarySoftColor = fw.Color(0xFFDEEBFF);
+
+  // Success colors (for active states, confirmations)
   static const successColor = fw.Color(0xFF10B981);
-  static const errorColor = fw.Color(0xFFEF4444);
+  static const successSoftColor = fw.Color(0xFFD1FAE5);
+
+  // Warning colors (for caution states, unpaid)
+  static const warningColor = fw.Color(0xFFF59E0B);
+  static const warningSoftColor = fw.Color(0xFFFEF3C7);
+
+  // Danger colors (for inactive, errors, out of stock)
+  static const dangerColor = fw.Color(0xFFEF4444);
+  static const dangerSoftColor = fw.Color(0xFFFEE2E2);
+
+  // Info colors (for draft, neutral states)
+  static const infoColor = fw.Color(0xFF06B6D4);
+  static const infoSoftColor = fw.Color(0xFFCFFAFE);
+
+  // Surface colors for backgrounds and containers
+  static const surfaceColor = fw.Color(0xFFF8FAFC);
+  static const mutedSurfaceColor = fw.Color(0xFFF1F5F9);
+
+  // Border colors
+  static const borderColor = fw.Color(0xFFE2E8F0);
+  static const mutedBorderColor = fw.Color(0xFFF1F5F9);
+
+  // Text colors
+  static const titleTextColor = fw.Color(0xFF0F172A);
+  static const mutedTextColor = fw.Color(0xFF64748B);
+  static const placeholderTextColor = fw.Color(0xFF94A3B8);
+
+  // ========== Status Colors ==========
+  // Legacy status colors (kept for backward compatibility)
+  static const activeColor = successColor;
+  static const inactiveColor = dangerColor;
+  static const errorColor = dangerColor;
 }

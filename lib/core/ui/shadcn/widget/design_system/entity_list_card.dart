@@ -48,12 +48,12 @@ class EntityListCard extends fw.StatelessWidget {
                   width: 80,
                   height: 80,
                   decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.muted.withOpacity(0.3),
+                    color: AppDesignTokens.mutedSurfaceColor,
                     borderRadius: fw.BorderRadius.circular(
                       AppDesignTokens.inputRadius,
                     ),
                     border: fw.Border.all(
-                      color: theme.colorScheme.border.withOpacity(0.3),
+                      color: AppDesignTokens.borderColor,
                       width: 1,
                     ),
                   ),
@@ -123,7 +123,7 @@ class EntityListCard extends fw.StatelessWidget {
                       child: fw.Container(
                         padding: const fw.EdgeInsets.all(8),
                         decoration: fw.BoxDecoration(
-                          color: theme.colorScheme.primary.withOpacity(0.1),
+                          color: AppDesignTokens.mutedSurfaceColor,
                           borderRadius: fw.BorderRadius.circular(
                             AppDesignTokens.badgeRadius,
                           ),
@@ -131,7 +131,7 @@ class EntityListCard extends fw.StatelessWidget {
                         child: fw.Icon(
                           Icons.edit,
                           size: 18,
-                          color: theme.colorScheme.primary,
+                          color: theme.colorScheme.foreground,
                         ),
                       ),
                     ),

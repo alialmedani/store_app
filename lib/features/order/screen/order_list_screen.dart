@@ -22,7 +22,37 @@ class OrderListScreen extends StatelessWidget {
       child: SafeArea(
         child: fw.Column(
           children: [
-            AppHeader(title: 'Orders', onBack: () => fw.Navigator.pop(context)),
+            AppHeader(
+              title: 'Orders',
+              onBack: () => fw.Navigator.pop(context),
+              action: fw.GestureDetector(
+                onTap: () {
+                  fw.Navigator.push(
+                    context,
+                    fw.PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => const CreateOrderScreen(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
+                child: fw.Container(
+                  width: AppDesignTokens.headerActionButtonSize,
+                  height: AppDesignTokens.headerActionButtonSize,
+                  decoration: fw.BoxDecoration(
+                    color: AppDesignTokens.mutedSurfaceColor,
+                    borderRadius: fw.BorderRadius.circular(12),
+                  ),
+                  child: fw.Center(
+                    child: fw.Icon(
+                      Icons.add,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.foreground,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             fw.Expanded(
               child: PaginationList<OrderModel>(
                 withPagination: true,
@@ -36,7 +66,7 @@ class OrderListScreen extends StatelessWidget {
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.screenPaddingHorizontal,
-                      AppDesignTokens.listBottomPadding,
+                      AppDesignTokens.screenPaddingHorizontal,
                     ),
                     itemCount: list.length,
                     itemBuilder: (context, index) {
@@ -50,28 +80,6 @@ class OrderListScreen extends StatelessWidget {
                     },
                   );
                 },
-              ),
-            ),
-            StickyBottomAction(
-              child: PrimaryButton(
-                onPressed: () {
-                  fw.Navigator.push(
-                    context,
-                    fw.PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const CreateOrderScreen(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-                leading: const fw.Icon(Icons.add, size: 20),
-                child: const Text(
-                  'Create Order',
-                  style: fw.TextStyle(
-                    fontSize: 15,
-                    fontWeight: AppDesignTokens.semiBold,
-                  ),
-                ),
               ),
             ),
           ],

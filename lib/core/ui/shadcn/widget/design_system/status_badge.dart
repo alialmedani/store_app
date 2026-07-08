@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Status badge for active/inactive/draft/paid/unpaid/lowStock/outOfStock
@@ -45,58 +44,58 @@ class StatusBadge extends fw.StatelessWidget {
     switch (type) {
       case StatusBadgeType.active:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.activeColor.withOpacity(0.12),
-          textColor: AppDesignTokens.activeColor,
+          backgroundColor: AppDesignTokens.successSoftColor,
+          textColor: AppDesignTokens.successColor,
         );
       case StatusBadgeType.inactive:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.inactiveColor.withOpacity(0.12),
-          textColor: AppDesignTokens.inactiveColor,
+          backgroundColor: AppDesignTokens.dangerSoftColor,
+          textColor: AppDesignTokens.dangerColor,
         );
       case StatusBadgeType.draft:
         return _BadgeColors(
-          backgroundColor: const fw.Color(0xFF94A3B8).withOpacity(0.12),
-          textColor: const fw.Color(0xFF94A3B8),
+          backgroundColor: AppDesignTokens.infoSoftColor,
+          textColor: AppDesignTokens.infoColor,
         );
       case StatusBadgeType.paid:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.successColor.withOpacity(0.12),
+          backgroundColor: AppDesignTokens.successSoftColor,
           textColor: AppDesignTokens.successColor,
         );
       case StatusBadgeType.unpaid:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.warningColor.withOpacity(0.12),
+          backgroundColor: AppDesignTokens.warningSoftColor,
           textColor: AppDesignTokens.warningColor,
         );
       case StatusBadgeType.lowStock:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.warningColor.withOpacity(0.12),
+          backgroundColor: AppDesignTokens.warningSoftColor,
           textColor: AppDesignTokens.warningColor,
         );
       case StatusBadgeType.outOfStock:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.errorColor.withOpacity(0.12),
-          textColor: AppDesignTokens.errorColor,
+          backgroundColor: AppDesignTokens.dangerSoftColor,
+          textColor: AppDesignTokens.dangerColor,
         );
       case StatusBadgeType.success:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.successColor.withOpacity(0.12),
+          backgroundColor: AppDesignTokens.successSoftColor,
           textColor: AppDesignTokens.successColor,
         );
       case StatusBadgeType.info:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.infoColor.withOpacity(0.12),
+          backgroundColor: AppDesignTokens.infoSoftColor,
           textColor: AppDesignTokens.infoColor,
         );
       case StatusBadgeType.warning:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.warningColor.withOpacity(0.12),
+          backgroundColor: AppDesignTokens.warningSoftColor,
           textColor: AppDesignTokens.warningColor,
         );
       case StatusBadgeType.error:
         return _BadgeColors(
-          backgroundColor: AppDesignTokens.errorColor.withOpacity(0.12),
-          textColor: AppDesignTokens.errorColor,
+          backgroundColor: AppDesignTokens.dangerSoftColor,
+          textColor: AppDesignTokens.dangerColor,
         );
     }
   }
