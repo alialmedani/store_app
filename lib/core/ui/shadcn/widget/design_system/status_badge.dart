@@ -20,10 +20,7 @@ class StatusBadge extends fw.StatelessWidget {
     final colors = _getColors();
 
     return fw.Container(
-      padding: const fw.EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
-      ),
+      padding: const fw.EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: fw.BoxDecoration(
         color: colors.backgroundColor,
         borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
@@ -119,8 +116,5 @@ class _BadgeColors {
   final fw.Color backgroundColor;
   final fw.Color textColor;
 
-  _BadgeColors({
-    required this.backgroundColor,
-    required this.textColor,
-  });
+  _BadgeColors({required this.backgroundColor, required this.textColor});
 }

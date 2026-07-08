@@ -193,8 +193,5 @@ class EntityMetaItem {
   final fw.IconData icon;
   final String text;
 
-  EntityMetaItem({
-    required this.icon,
-    required this.text,
-  });
+  EntityMetaItem({required this.icon, required this.text});
 }

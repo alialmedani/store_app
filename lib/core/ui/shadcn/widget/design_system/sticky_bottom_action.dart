@@ -34,10 +34,7 @@ class StickyBottomAction extends fw.StatelessWidget {
           ),
         ],
       ),
-      child: fw.SafeArea(
-        top: false,
-        child: child,
-      ),
+      child: fw.SafeArea(top: false, child: child),
     );
   }
 }
