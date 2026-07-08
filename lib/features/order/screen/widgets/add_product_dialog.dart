@@ -52,7 +52,7 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
             fw.Container(
               padding: const fw.EdgeInsets.all(4),
               decoration: fw.BoxDecoration(
-                color: theme.colorScheme.muted.withOpacity(0.3),
+                color: theme.colorScheme.muted.withValues(alpha: 0.3),
                 borderRadius: fw.BorderRadius.circular(12),
               ),
               child: fw.Row(
@@ -318,13 +318,13 @@ class _ByCategoryView extends fw.StatelessWidget {
                         padding: const fw.EdgeInsets.all(12),
                         decoration: fw.BoxDecoration(
                           color: isSelected
-                              ? theme.colorScheme.primary.withOpacity(0.15)
-                              : theme.colorScheme.muted.withOpacity(0.3),
+                              ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                              : theme.colorScheme.muted.withValues(alpha: 0.3),
                           borderRadius: fw.BorderRadius.circular(12),
                           border: fw.Border.all(
                             color: isSelected
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.border.withOpacity(0.2),
+                                : theme.colorScheme.border.withValues(alpha: 0.2),
                             width: isSelected ? 2 : 1,
                           ),
                         ),
@@ -425,13 +425,13 @@ class _ByCategoryView extends fw.StatelessWidget {
                           padding: const fw.EdgeInsets.all(10),
                           decoration: fw.BoxDecoration(
                             color: isSelected
-                                ? theme.colorScheme.primary.withOpacity(0.15)
-                                : theme.colorScheme.muted.withOpacity(0.3),
+                                ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                                : theme.colorScheme.muted.withValues(alpha: 0.3),
                             borderRadius: fw.BorderRadius.circular(10),
                             border: fw.Border.all(
                               color: isSelected
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.border.withOpacity(0.2),
+                                  : theme.colorScheme.border.withValues(alpha: 0.2),
                               width: isSelected ? 2 : 1,
                             ),
                           ),
@@ -513,13 +513,13 @@ class _ByCategoryView extends fw.StatelessWidget {
                           padding: const fw.EdgeInsets.all(12),
                           decoration: fw.BoxDecoration(
                             color: isSelected
-                                ? theme.colorScheme.primary.withOpacity(0.15)
-                                : theme.colorScheme.muted.withOpacity(0.3),
+                                ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                                : theme.colorScheme.muted.withValues(alpha: 0.3),
                             borderRadius: fw.BorderRadius.circular(10),
                             border: fw.Border.all(
                               color: isSelected
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.border.withOpacity(0.2),
+                                  : theme.colorScheme.border.withValues(alpha: 0.2),
                               width: isSelected ? 2 : 1,
                             ),
                           ),
@@ -633,13 +633,13 @@ class _ByProductView extends fw.StatelessWidget {
                         padding: const fw.EdgeInsets.all(12),
                         decoration: fw.BoxDecoration(
                           color: isSelected
-                              ? theme.colorScheme.primary.withOpacity(0.15)
-                              : theme.colorScheme.muted.withOpacity(0.3),
+                              ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                              : theme.colorScheme.muted.withValues(alpha: 0.3),
                           borderRadius: fw.BorderRadius.circular(10),
                           border: fw.Border.all(
                             color: isSelected
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.border.withOpacity(0.2),
+                                : theme.colorScheme.border.withValues(alpha: 0.2),
                             width: isSelected ? 2 : 1,
                           ),
                         ),
@@ -727,13 +727,13 @@ class _ByProductView extends fw.StatelessWidget {
                           padding: const fw.EdgeInsets.all(12),
                           decoration: fw.BoxDecoration(
                             color: isSelected
-                                ? theme.colorScheme.primary.withOpacity(0.15)
-                                : theme.colorScheme.muted.withOpacity(0.3),
+                                ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                                : theme.colorScheme.muted.withValues(alpha: 0.3),
                             borderRadius: fw.BorderRadius.circular(10),
                             border: fw.Border.all(
                               color: isSelected
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.border.withOpacity(0.2),
+                                  : theme.colorScheme.border.withValues(alpha: 0.2),
                               width: isSelected ? 2 : 1,
                             ),
                           ),
@@ -843,13 +843,13 @@ class _AllVariantsView extends fw.StatelessWidget {
                         padding: const fw.EdgeInsets.all(12),
                         decoration: fw.BoxDecoration(
                           color: isSelected
-                              ? theme.colorScheme.primary.withOpacity(0.15)
-                              : theme.colorScheme.muted.withOpacity(0.3),
+                              ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                              : theme.colorScheme.muted.withValues(alpha: 0.3),
                           borderRadius: fw.BorderRadius.circular(10),
                           border: fw.Border.all(
                             color: isSelected
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.border.withOpacity(0.2),
+                                : theme.colorScheme.border.withValues(alpha: 0.2),
                             width: isSelected ? 2 : 1,
                           ),
                         ),

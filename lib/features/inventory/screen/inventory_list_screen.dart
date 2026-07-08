@@ -73,62 +73,7 @@ class InventoryListScreen extends StatelessWidget {
     );
   }
 
-  fw.Widget _buildEmptyState(ThemeData theme) {
-    return fw.Center(
-      child: fw.Padding(
-        padding: const fw.EdgeInsets.all(48),
-        child: fw.Column(
-          mainAxisAlignment: fw.MainAxisAlignment.center,
-          children: [
-            fw.Container(
-              padding: const fw.EdgeInsets.all(24),
-              decoration: fw.BoxDecoration(
-                gradient: fw.LinearGradient(
-                  begin: fw.Alignment.topLeft,
-                  end: fw.Alignment.bottomRight,
-                  colors: [
-                    const Color(0xFFEC4899).withOpacity(0.1),
-                    const Color(0xFFEC4899).withOpacity(0.05),
-                  ],
-                ),
-                borderRadius: fw.BorderRadius.circular(20),
-                border: fw.Border.all(
-                  color: const Color(0xFFEC4899).withOpacity(0.15),
-                  width: 1.5,
-                ),
-              ),
-              child: const fw.Icon(
-                Icons.inventory_2_outlined,
-                size: 64,
-                color: Color(0xFFEC4899),
-              ),
-            ),
-            const fw.SizedBox(height: 24),
-            const fw.Text(
-              'No Inventory Movements',
-              style: fw.TextStyle(
-                fontSize: 20,
-                fontWeight: fw.FontWeight.w700,
-                letterSpacing: -0.3,
-              ),
-            ),
-            const fw.SizedBox(height: 8),
-            fw.Text(
-              'Stock movements will appear here when\nproducts are added, sold, or adjusted',
-              textAlign: fw.TextAlign.center,
-              style: fw.TextStyle(
-                fontSize: 14,
-                color: theme.colorScheme.mutedForeground,
-                height: 1.5,
-                letterSpacing: 0.1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+ }
 
 /// Premium Inventory Card Widget
 class _InventoryCard extends StatelessWidget {
@@ -152,11 +97,11 @@ class _InventoryCard extends StatelessWidget {
             end: fw.Alignment.bottomRight,
             colors: [
               theme.colorScheme.card,
-              theme.colorScheme.card.withOpacity(0.98),
+              theme.colorScheme.card.withValues(alpha: 0.98),
             ],
           ),
           border: fw.Border.all(
-            color: movementStyle.color.withOpacity(0.12),
+            color: movementStyle.color.withValues(alpha: 0.12),
             width: 1,
           ),
         ),
@@ -177,13 +122,13 @@ class _InventoryCard extends StatelessWidget {
                         begin: fw.Alignment.topLeft,
                         end: fw.Alignment.bottomRight,
                         colors: [
-                          movementStyle.color.withOpacity(0.15),
-                          movementStyle.color.withOpacity(0.08),
+                          movementStyle.color.withValues(alpha: 0.15),
+                          movementStyle.color.withValues(alpha: 0.08),
                         ],
                       ),
                       borderRadius: fw.BorderRadius.circular(12),
                       border: fw.Border.all(
-                        color: movementStyle.color.withOpacity(0.2),
+                        color: movementStyle.color.withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
@@ -220,8 +165,8 @@ class _InventoryCard extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: fw.BoxDecoration(
-                                    color: theme.colorScheme.muted.withOpacity(
-                                      0.4,
+                                    color: theme.colorScheme.muted.withValues(
+                                      alpha: 0.4,
                                     ),
                                     borderRadius: fw.BorderRadius.circular(6),
                                   ),
@@ -244,8 +189,8 @@ class _InventoryCard extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: fw.BoxDecoration(
-                                    color: theme.colorScheme.muted.withOpacity(
-                                      0.4,
+                                    color: theme.colorScheme.muted.withValues(
+                                      alpha: 0.4,
                                     ),
                                     borderRadius: fw.BorderRadius.circular(6),
                                   ),
@@ -277,13 +222,13 @@ class _InventoryCard extends StatelessWidget {
                           begin: fw.Alignment.topLeft,
                           end: fw.Alignment.bottomRight,
                           colors: [
-                            movementStyle.color.withOpacity(0.15),
-                            movementStyle.color.withOpacity(0.08),
+                            movementStyle.color.withValues(alpha: 0.15),
+                            movementStyle.color.withValues(alpha: 0.08),
                           ],
                         ),
                         borderRadius: fw.BorderRadius.circular(8),
                         border: fw.Border.all(
-                          color: movementStyle.color.withOpacity(0.25),
+                          color: movementStyle.color.withValues(alpha: 0.25),
                           width: 1,
                         ),
                       ),
@@ -309,7 +254,9 @@ class _InventoryCard extends StatelessWidget {
                     fw.Icon(
                       Icons.category_outlined,
                       size: 14,
-                      color: theme.colorScheme.mutedForeground.withOpacity(0.7),
+                      color: theme.colorScheme.mutedForeground.withValues(
+                        alpha: 0.7,
+                      ),
                     ),
                     const fw.SizedBox(width: 6),
                     fw.Container(
@@ -318,10 +265,14 @@ class _InventoryCard extends StatelessWidget {
                         vertical: 5,
                       ),
                       decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.secondary.withOpacity(0.12),
+                        color: theme.colorScheme.secondary.withValues(
+                          alpha: 0.12,
+                        ),
                         borderRadius: fw.BorderRadius.circular(6),
                         border: fw.Border.all(
-                          color: theme.colorScheme.secondary.withOpacity(0.2),
+                          color: theme.colorScheme.secondary.withValues(
+                            alpha: 0.2,
+                          ),
                           width: 1,
                         ),
                       ),
@@ -346,9 +297,9 @@ class _InventoryCard extends StatelessWidget {
                 decoration: fw.BoxDecoration(
                   gradient: fw.LinearGradient(
                     colors: [
-                      theme.colorScheme.border.withOpacity(0.0),
-                      theme.colorScheme.border.withOpacity(0.15),
-                      theme.colorScheme.border.withOpacity(0.0),
+                      theme.colorScheme.border.withValues(alpha: 0.0),
+                      theme.colorScheme.border.withValues(alpha: 0.15),
+                      theme.colorScheme.border.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -368,13 +319,13 @@ class _InventoryCard extends StatelessWidget {
                           begin: fw.Alignment.topLeft,
                           end: fw.Alignment.bottomRight,
                           colors: [
-                            movementStyle.color.withOpacity(0.08),
-                            movementStyle.color.withOpacity(0.04),
+                            movementStyle.color.withValues(alpha: 0.08),
+                            movementStyle.color.withValues(alpha: 0.04),
                           ],
                         ),
                         borderRadius: fw.BorderRadius.circular(10),
                         border: fw.Border.all(
-                          color: movementStyle.color.withOpacity(0.15),
+                          color: movementStyle.color.withValues(alpha: 0.15),
                           width: 1,
                         ),
                       ),
@@ -420,10 +371,12 @@ class _InventoryCard extends StatelessWidget {
                     child: fw.Container(
                       padding: const fw.EdgeInsets.all(14),
                       decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.muted.withOpacity(0.3),
+                        color: theme.colorScheme.muted.withValues(alpha: 0.3),
                         borderRadius: fw.BorderRadius.circular(10),
                         border: fw.Border.all(
-                          color: theme.colorScheme.border.withOpacity(0.15),
+                          color: theme.colorScheme.border.withValues(
+                            alpha: 0.15,
+                          ),
                           width: 1,
                         ),
                       ),
@@ -496,10 +449,10 @@ class _InventoryCard extends StatelessWidget {
                 fw.Container(
                   padding: const fw.EdgeInsets.all(12),
                   decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.muted.withOpacity(0.25),
+                    color: theme.colorScheme.muted.withValues(alpha: 0.25),
                     borderRadius: fw.BorderRadius.circular(10),
                     border: fw.Border.all(
-                      color: theme.colorScheme.border.withOpacity(0.12),
+                      color: theme.colorScheme.border.withValues(alpha: 0.12),
                       width: 1,
                     ),
                   ),
@@ -509,8 +462,8 @@ class _InventoryCard extends StatelessWidget {
                       fw.Icon(
                         Icons.note_outlined,
                         size: 16,
-                        color: theme.colorScheme.mutedForeground.withOpacity(
-                          0.7,
+                        color: theme.colorScheme.mutedForeground.withValues(
+                          alpha: 0.7,
                         ),
                       ),
                       const fw.SizedBox(width: 10),
@@ -543,7 +496,7 @@ class _InventoryCard extends StatelessWidget {
         fw.Icon(
           icon,
           size: 15,
-          color: theme.colorScheme.mutedForeground.withOpacity(0.7),
+          color: theme.colorScheme.mutedForeground.withValues(alpha: 0.7),
         ),
         const fw.SizedBox(width: 6),
         fw.Text(

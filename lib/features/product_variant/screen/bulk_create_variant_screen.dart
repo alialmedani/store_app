@@ -81,7 +81,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                         border: fw.Border.all(
                           color: Theme.of(
                             context,
-                          ).colorScheme.border.withOpacity(0.3),
+                          ).colorScheme.border.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -237,7 +237,9 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                             fw.Container(
                               padding: const fw.EdgeInsets.all(16),
                               decoration: fw.BoxDecoration(
-                                color: theme.colorScheme.muted.withOpacity(0.5),
+                                color: theme.colorScheme.muted.withValues(
+                                  alpha: 0.5,
+                                ),
                                 borderRadius: fw.BorderRadius.circular(8),
                                 border: fw.Border.all(
                                   color: theme.colorScheme.border,

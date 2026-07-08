@@ -1,13 +1,11 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../../core/classes/cashe_helper.dart';
-import '../../home/cubit/home_cubit.dart';
-import '../../home/screen/home_screen.dart';
+import '../../home/screen/main_navigation_screen.dart';
 import 'login_screen_shadcn.dart';
 
 /// Auth Wrapper - Checks if user is already logged in
-/// Shows HomeScreen if token exists, otherwise shows LoginScreen
+/// Shows MainNavigationScreen if token exists, otherwise shows LoginScreen
 class AuthWrapper extends fw.StatefulWidget {
   const AuthWrapper({super.key});
 
@@ -47,15 +45,12 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
     // Navigate based on token validity
     if (mounted) {
       if (isTokenValid) {
-        // Token exists and is valid - go to home
+        // Token exists and is valid - go to main navigation
         fw.Navigator.pushReplacement(
           context,
           fw.PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                BlocProvider(
-                  create: (context) => HomeCubit(),
-                  child: const HomeScreen(),
-                ),
+                const MainNavigationScreen(),
             transitionDuration: Duration.zero,
           ),
         );

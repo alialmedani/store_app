@@ -12,6 +12,7 @@ import 'package:store/features/product/cubit/product_cubit.dart';
 import 'core/classes/keys.dart';
 import 'features/auth/cubit/auth_cubit.dart';
 import 'features/category/cubit/category_cubit.dart';
+import 'features/home/cubit/home_cubit.dart';
 import 'features/product_variant/cubit/product_variant_cubit.dart';
 
 SharedPreferences? prefs;
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(create: (context) => AuthCubit()),
+        BlocProvider<HomeCubit>(create: (context) => HomeCubit()),
         BlocProvider<CategoryCubit>(create: (context) => CategoryCubit()),
         BlocProvider<ProductCubit>(create: (context) => ProductCubit()),
         BlocProvider<ProductVariantCubit>(

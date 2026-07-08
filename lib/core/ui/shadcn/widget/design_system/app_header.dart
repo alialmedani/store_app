@@ -36,7 +36,7 @@ class AppHeader extends fw.StatelessWidget {
               color: theme.colorScheme.background,
               border: fw.Border(
                 bottom: fw.BorderSide(
-                  color: theme.colorScheme.border.withOpacity(0.1),
+                  color: theme.colorScheme.border.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -47,7 +47,7 @@ class AppHeader extends fw.StatelessWidget {
           if (showBackButton) ...[
             fw.Container(
               decoration: fw.BoxDecoration(
-                color: theme.colorScheme.muted.withOpacity(0.3),
+                color: theme.colorScheme.muted.withValues(alpha: 0.3),
                 borderRadius: fw.BorderRadius.circular(
                   AppDesignTokens.inputRadius,
                 ),

@@ -36,7 +36,7 @@ class AppCard extends fw.StatelessWidget {
           borderRadius ?? AppDesignTokens.cardRadius,
         ),
         border: fw.Border.all(
-          color: borderColor ?? theme.colorScheme.border.withOpacity(0.5),
+          color: borderColor ?? theme.colorScheme.border.withValues(alpha: 0.5),
           width: 1,
         ),
         boxShadow:
@@ -77,7 +77,7 @@ class StatCard extends fw.StatelessWidget {
     final theme = Theme.of(context);
 
     return AppCard(
-      borderColor: color.withOpacity(0.15),
+      borderColor: color.withValues(alpha: 0.15),
       boxShadow: AppDesignTokens.iconBoxShadow(color),
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -89,12 +89,18 @@ class StatCard extends fw.StatelessWidget {
               gradient: fw.LinearGradient(
                 begin: fw.Alignment.topLeft,
                 end: fw.Alignment.bottomRight,
-                colors: [color.withOpacity(0.15), color.withOpacity(0.08)],
+                colors: [
+                  color.withValues(alpha: 0.15),
+                  color.withValues(alpha: 0.08),
+                ],
               ),
               borderRadius: fw.BorderRadius.circular(
                 AppDesignTokens.iconBoxRadius,
               ),
-              border: fw.Border.all(color: color.withOpacity(0.2), width: 1),
+              border: fw.Border.all(
+                color: color.withValues(alpha: 0.2),
+                width: 1,
+              ),
             ),
             child: fw.Icon(icon, size: 24, color: color),
           ),
@@ -162,7 +168,7 @@ class MenuTile extends fw.StatelessWidget {
 
     return AppCard(
       onTap: onTap,
-      borderColor: color.withOpacity(0.12),
+      borderColor: color.withValues(alpha: 0.12),
       boxShadow: AppDesignTokens.iconBoxShadow(color),
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
       child: fw.Column(
@@ -176,12 +182,18 @@ class MenuTile extends fw.StatelessWidget {
               gradient: fw.LinearGradient(
                 begin: fw.Alignment.topLeft,
                 end: fw.Alignment.bottomRight,
-                colors: [color.withOpacity(0.15), color.withOpacity(0.08)],
+                colors: [
+                  color.withValues(alpha: 0.15),
+                  color.withValues(alpha: 0.08),
+                ],
               ),
               borderRadius: fw.BorderRadius.circular(
                 AppDesignTokens.iconBoxRadius,
               ),
-              border: fw.Border.all(color: color.withOpacity(0.25), width: 1),
+              border: fw.Border.all(
+                color: color.withValues(alpha: 0.25),
+                width: 1,
+              ),
             ),
             child: fw.Icon(icon, size: 26, color: color),
           ),

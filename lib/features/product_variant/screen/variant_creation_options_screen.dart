@@ -211,7 +211,7 @@ class _OptionCard extends StatelessWidget {
                   fw.Container(
                     padding: const fw.EdgeInsets.all(12),
                     decoration: fw.BoxDecoration(
-                      color: buttonColor.withOpacity(0.1),
+                      color: buttonColor.withValues(alpha: 0.1),
                       borderRadius: fw.BorderRadius.circular(12),
                     ),
                     child: Icon(icon, size: 28, color: buttonColor),
@@ -246,7 +246,7 @@ class _OptionCard extends StatelessWidget {
               // Divider
               fw.Container(
                 height: 1,
-                color: theme.colorScheme.border.withOpacity(0.3),
+                color: theme.colorScheme.border.withValues(alpha: 0.3),
               ),
               const SizedBox(height: 16),
 

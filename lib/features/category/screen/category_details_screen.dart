@@ -40,7 +40,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                       color: theme.colorScheme.background,
                       border: Border(
                         bottom: BorderSide(
-                          color: theme.colorScheme.border.withOpacity(0.1),
+                          color: theme.colorScheme.border.withValues(
+                            alpha: 0.1,
+                          ),
                           width: 1,
                         ),
                       ),
@@ -49,7 +51,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.muted.withOpacity(0.3),
+                            color: theme.colorScheme.muted.withValues(
+                              alpha: 0.3,
+                            ),
                             borderRadius: fw.BorderRadius.circular(12),
                           ),
                           child: IconButton(
@@ -72,7 +76,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                         // Edit Button
                         Container(
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.15),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: fw.BorderRadius.circular(12),
                           ),
                           child: IconButton(
@@ -111,11 +117,13 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                             width: double.infinity,
                             height: 280,
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.muted.withOpacity(0.3),
+                              color: theme.colorScheme.muted.withValues(
+                                alpha: 0.3,
+                              ),
                               borderRadius: fw.BorderRadius.circular(20),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(
-                                  0.3,
+                                color: theme.colorScheme.border.withValues(
+                                  alpha: 0.3,
                                 ),
                                 width: 1,
                               ),
@@ -129,8 +137,8 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 fit: fw.BoxFit.cover,
                                 errorWidget: Container(
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.muted.withOpacity(
-                                      0.3,
+                                    color: theme.colorScheme.muted.withValues(
+                                      alpha: 0.3,
                                     ),
                                     borderRadius: fw.BorderRadius.circular(20),
                                   ),
@@ -167,19 +175,20 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: category.isActive == true
-                                        ? theme.colorScheme.primary.withOpacity(
-                                            0.1,
+                                        ? theme.colorScheme.primary.withValues(
+                                            alpha: 0.1,
                                           )
-                                        : theme.colorScheme.muted.withOpacity(
-                                            0.3,
+                                        : theme.colorScheme.muted.withValues(
+                                            alpha: 0.3,
                                           ),
                                     borderRadius: fw.BorderRadius.circular(12),
                                     border: Border.all(
                                       color: category.isActive == true
                                           ? theme.colorScheme.primary
-                                                .withOpacity(0.3)
-                                          : theme.colorScheme.border
-                                                .withOpacity(0.3),
+                                                .withValues(alpha: 0.3)
+                                          : theme.colorScheme.border.withValues(
+                                              alpha: 0.3,
+                                            ),
                                       width: 1,
                                     ),
                                   ),
@@ -224,11 +233,11 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.secondary
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                     borderRadius: fw.BorderRadius.circular(12),
                                     border: Border.all(
                                       color: theme.colorScheme.secondary
-                                          .withOpacity(0.3),
+                                          .withValues(alpha: 0.3),
                                       width: 1,
                                     ),
                                   ),
@@ -281,8 +290,8 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 color: theme.colorScheme.card,
                                 borderRadius: fw.BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: theme.colorScheme.border.withOpacity(
-                                    0.5,
+                                  color: theme.colorScheme.border.withValues(
+                                    alpha: 0.5,
                                   ),
                                   width: 1,
                                 ),
@@ -316,8 +325,8 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                               color: theme.colorScheme.card,
                               borderRadius: fw.BorderRadius.circular(16),
                               border: Border.all(
-                                color: theme.colorScheme.border.withOpacity(
-                                  0.5,
+                                color: theme.colorScheme.border.withValues(
+                                  alpha: 0.5,
                                 ),
                                 width: 1,
                               ),

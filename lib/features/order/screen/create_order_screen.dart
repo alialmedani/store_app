@@ -318,9 +318,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                   return Container(
                                     padding: const EdgeInsets.all(24),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.muted.withOpacity(0.3),
+                                      color: Theme.of(context).colorScheme.muted
+                                          .withValues(alpha: 0.3),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Center(
@@ -490,10 +489,10 @@ class _OrderItemTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.muted.withOpacity(0.3),
+        color: theme.colorScheme.muted.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.colorScheme.border.withOpacity(0.2),
+          color: theme.colorScheme.border.withValues(alpha: 0.2),
           width: 1,
         ),
       ),

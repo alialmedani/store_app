@@ -30,7 +30,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                   color: theme.colorScheme.background,
                   border: fw.Border(
                     bottom: fw.BorderSide(
-                      color: theme.colorScheme.border.withOpacity(0.1),
+                      color: theme.colorScheme.border.withValues(alpha: 0.1),
                       width: 1,
                     ),
                   ),
@@ -39,7 +39,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                   children: [
                     fw.Container(
                       decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.muted.withOpacity(0.3),
+                        color: theme.colorScheme.muted.withValues(alpha: 0.3),
                         borderRadius: fw.BorderRadius.circular(12),
                       ),
                       child: IconButton(
@@ -190,7 +190,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                                 ),
                                             decoration: fw.BoxDecoration(
                                               color: theme.colorScheme.primary
-                                                  .withOpacity(0.12),
+                                                  .withValues(alpha: 0.12),
                                               borderRadius:
                                                   fw.BorderRadius.circular(12),
                                             ),
@@ -236,7 +236,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                                 ),
                                             decoration: fw.BoxDecoration(
                                               color: theme.colorScheme.secondary
-                                                  .withOpacity(0.12),
+                                                  .withValues(alpha: 0.12),
                                               borderRadius:
                                                   fw.BorderRadius.circular(12),
                                             ),
@@ -319,7 +319,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                       border: fw.Border(
                                         top: fw.BorderSide(
                                           color: theme.colorScheme.border
-                                              .withOpacity(0.2),
+                                              .withValues(alpha: 0.2),
                                           width: 1,
                                         ),
                                       ),

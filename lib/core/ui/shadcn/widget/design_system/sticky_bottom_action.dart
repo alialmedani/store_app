@@ -22,13 +22,13 @@ class StickyBottomAction extends fw.StatelessWidget {
         color: theme.colorScheme.background,
         border: fw.Border(
           top: fw.BorderSide(
-            color: theme.colorScheme.border.withOpacity(0.1),
+            color: theme.colorScheme.border.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
         boxShadow: [
           fw.BoxShadow(
-            color: theme.colorScheme.foreground.withOpacity(0.05),
+            color: theme.colorScheme.foreground.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const fw.Offset(0, -2),
           ),

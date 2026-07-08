@@ -36,19 +36,19 @@ class EmptyState extends fw.StatelessWidget {
                 AppDesignTokens.iconBoxPadding * 2,
               ),
               decoration: fw.BoxDecoration(
-                color: theme.colorScheme.muted.withOpacity(0.3),
+                color: theme.colorScheme.muted.withValues(alpha: 0.3),
                 borderRadius: fw.BorderRadius.circular(
                   AppDesignTokens.cardRadius,
                 ),
                 border: fw.Border.all(
-                  color: theme.colorScheme.border.withOpacity(0.3),
+                  color: theme.colorScheme.border.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
               child: fw.Icon(
                 icon,
                 size: 64,
-                color: theme.colorScheme.mutedForeground.withOpacity(0.5),
+                color: theme.colorScheme.mutedForeground.withValues(alpha: 0.5),
               ),
             ),
             const fw.SizedBox(height: AppDesignTokens.sectionGap + 4),
