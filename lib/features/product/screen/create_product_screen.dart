@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:store/features/category/data/model/category_model.dart';
@@ -7,6 +8,7 @@ import 'dart:io';
 import '../../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
+import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../category/cubit/category_cubit.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
@@ -115,445 +117,489 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<ProductCubit>();
+    final theme = Theme.of(context);
 
     return Scaffold(
       child: SafeArea(
-        child: Column(
+        bottom: false, // Let StickyBottomAction handle bottom safe area
+        child: fw.Column(
           children: [
-            // App Bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: Text(
-                      'Create Product',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            AppHeader(
+              title: 'Create Product',
+              onBack: () => fw.Navigator.pop(context),
             ),
-
-            // Form Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Name Field
-                        BlocBuilder<ProductCubit, ProductState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Product Name',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+            const fw.SizedBox(height: AppDesignTokens.smallGap),
+            fw.Expanded(
+              child: fw.SingleChildScrollView(
+                padding: const fw.EdgeInsets.fromLTRB(
+                  AppDesignTokens.screenPaddingHorizontal,
+                  0,
+                  AppDesignTokens.screenPaddingHorizontal,
+                  120, // Extra bottom padding for sticky button + safe area
+                ),
+                child: AppCard(
+                  child: fw.Column(
+                    crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                    children: [
+                      // Name Field
+                      BlocBuilder<ProductCubit, ProductState>(
+                        builder: (context, state) {
+                          return fw.Column(
+                            crossAxisAlignment: fw.CrossAxisAlignment.start,
+                            children: [
+                              fw.Text(
+                                'Product Name',
+                                style: fw.TextStyle(
+                                  fontSize: AppDesignTokens.bodyFontSize,
+                                  fontWeight: AppDesignTokens.semiBold,
+                                  color: AppDesignTokens.titleTextColor,
+                                ),
+                              ),
+                              const fw.SizedBox(
+                                height: AppDesignTokens.smallGap,
+                              ),
+                              TextField(
+                                controller: _nameController,
+                                placeholder: const Text('Enter product name'),
+                                onChanged: (value) {
+                                  cubit.createProductParams.name = value;
+                                  cubit.clearNameError();
+                                },
+                              ),
+                              if (cubit.nameError != null)
+                                fw.Padding(
+                                  padding: const fw.EdgeInsets.only(
+                                    top: AppDesignTokens.tinyGap,
+                                  ),
+                                  child: fw.Text(
+                                    cubit.nameError!,
+                                    style: fw.TextStyle(
+                                      color: AppDesignTokens.dangerColor,
+                                      fontSize: AppDesignTokens.captionFontSize,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _nameController,
-                                  placeholder: const Text('Enter product name'),
-                                  onChanged: (value) {
-                                    cubit.createProductParams.name = value;
-                                    cubit.clearNameError();
-                                  },
+                            ],
+                          );
+                        },
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                      // Description Field
+                      fw.Text(
+                        'Description',
+                        style: fw.TextStyle(
+                          fontSize: AppDesignTokens.bodyFontSize,
+                          fontWeight: AppDesignTokens.semiBold,
+                          color: AppDesignTokens.titleTextColor,
+                        ),
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.smallGap),
+                      TextField(
+                        controller: _descriptionController,
+                        placeholder: const Text('Enter description (optional)'),
+                        maxLines: 3,
+                        onChanged: (value) {
+                          cubit.createProductParams.description = value;
+                        },
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                      // Price Field
+                      BlocBuilder<ProductCubit, ProductState>(
+                        builder: (context, state) {
+                          return fw.Column(
+                            crossAxisAlignment: fw.CrossAxisAlignment.start,
+                            children: [
+                              fw.Text(
+                                'Price',
+                                style: fw.TextStyle(
+                                  fontSize: AppDesignTokens.bodyFontSize,
+                                  fontWeight: AppDesignTokens.semiBold,
+                                  color: AppDesignTokens.titleTextColor,
                                 ),
-                                if (cubit.nameError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.nameError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
-                                        fontSize: 12,
+                              ),
+                              const fw.SizedBox(
+                                height: AppDesignTokens.smallGap,
+                              ),
+                              TextField(
+                                controller: _priceController,
+                                placeholder: const Text('Enter price'),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                onChanged: (value) {
+                                  final price = double.tryParse(value);
+                                  if (price != null) {
+                                    cubit.createProductParams.price = price;
+                                  }
+                                  cubit.clearPriceError();
+                                },
+                              ),
+                              if (cubit.priceError != null)
+                                fw.Padding(
+                                  padding: const fw.EdgeInsets.only(
+                                    top: AppDesignTokens.tinyGap,
+                                  ),
+                                  child: fw.Text(
+                                    cubit.priceError!,
+                                    style: fw.TextStyle(
+                                      color: AppDesignTokens.dangerColor,
+                                      fontSize: AppDesignTokens.captionFontSize,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                      // Category Selection
+                      BlocBuilder<ProductCubit, ProductState>(
+                        builder: (context, state) {
+                          return fw.Column(
+                            crossAxisAlignment: fw.CrossAxisAlignment.start,
+                            children: [
+                              fw.Row(
+                                children: [
+                                  fw.Expanded(
+                                    child: fw.Text(
+                                      'Category',
+                                      style: fw.TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
+                                        color: AppDesignTokens.titleTextColor,
                                       ),
                                     ),
                                   ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Description Field
-                        const Text(
-                          'Description',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: _descriptionController,
-                          placeholder: const Text(
-                            'Enter description (optional)',
-                          ),
-                          maxLines: 3,
-                          onChanged: (value) {
-                            cubit.createProductParams.description = value;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Price Field
-                        BlocBuilder<ProductCubit, ProductState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Price',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _priceController,
-                                  placeholder: const Text('Enter price'),
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
-                                  onChanged: (value) {
-                                    final price = double.tryParse(value);
-                                    if (price != null) {
-                                      cubit.createProductParams.price = price;
-                                    }
-                                    cubit.clearPriceError();
-                                  },
-                                ),
-                                if (cubit.priceError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.priceError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
-                                        fontSize: 12,
+                                  fw.GestureDetector(
+                                    onTap: () {
+                                      _showCategorySelector(context, cubit);
+                                    },
+                                    child: fw.Text(
+                                      'Select',
+                                      style: fw.TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
+                                        color: theme.colorScheme.primary,
                                       ),
                                     ),
                                   ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Category Selection
-                        BlocBuilder<ProductCubit, ProductState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Expanded(
-                                      child: Text(
-                                        'Category',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
+                                ],
+                              ),
+                              const fw.SizedBox(
+                                height: AppDesignTokens.smallGap,
+                              ),
+                              fw.GestureDetector(
+                                onTap: () {
+                                  _showCategorySelector(context, cubit);
+                                },
+                                child: fw.Container(
+                                  height: AppDesignTokens.inputHeight,
+                                  padding: const fw.EdgeInsets.symmetric(
+                                    horizontal: AppDesignTokens.cardPadding,
+                                  ),
+                                  decoration: fw.BoxDecoration(
+                                    color: theme.colorScheme.background,
+                                    borderRadius: fw.BorderRadius.circular(
+                                      AppDesignTokens.inputRadius,
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        _showCategorySelector(context, cubit);
-                                      },
-                                      child: Text(
-                                        'Select',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _categoryIdController,
-                                  placeholder: const Text('Select category'),
-                                  enabled: false,
-                                ),
-                                if (cubit.categoryError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.categoryError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
-                                        fontSize: 12,
-                                      ),
+                                    border: fw.Border.all(
+                                      color: theme.colorScheme.border,
+                                      width: 1,
                                     ),
                                   ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Product Image Upload
-                        BlocBuilder<ProductCubit, ProductState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'صورة المنتج (اختياري)',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                if (cubit.selectedImageFile != null)
-                                  Stack(
+                                  child: fw.Row(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Image.file(
-                                          cubit.selectedImageFile!,
-                                          height: 200,
-                                          width: double.infinity,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 8,
-                                        right: 8,
-                                        child: IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            cubit.clearImageFile();
-                                          },
-                                          variance: ButtonVariance.destructive,
-                                        ),
-                                      ),
-                                      if (cubit.isUploadingImage)
-                                        Positioned.fill(
-                                          child: Container(
-                                            color: Colors.black.withOpacity(
-                                              0.5,
-                                            ),
-                                            child: const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            ),
+                                      fw.Expanded(
+                                        child: fw.Text(
+                                          _categoryIdController.text.isEmpty
+                                              ? 'Select category'
+                                              : _categoryIdController.text,
+                                          style: fw.TextStyle(
+                                            fontSize:
+                                                AppDesignTokens.bodyFontSize,
+                                            color:
+                                                _categoryIdController
+                                                    .text
+                                                    .isEmpty
+                                                ? AppDesignTokens.mutedTextColor
+                                                : theme.colorScheme.foreground,
                                           ),
                                         ),
+                                      ),
+                                      fw.Icon(
+                                        Icons.keyboard_arrow_down,
+                                        size: 20,
+                                        color:
+                                            theme.colorScheme.mutedForeground,
+                                      ),
                                     ],
-                                  )
-                                else
-                                  OutlineButton(
-                                    onPressed: cubit.isUploadingImage
-                                        ? null
-                                        : () => _pickImage(cubit),  // ✅ NEW
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.image,
-                                          size: 20,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        const Text('اختر صورة'),
-                                      ],
-                                    ),
-                                  ),
-                                // ❌ Remove success message - upload happens after creation
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Target Audience Selection
-                        BlocBuilder<ProductCubit, ProductState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Target Audience',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
+                              ),
+                              if (cubit.categoryError != null)
+                                fw.Padding(
+                                  padding: const fw.EdgeInsets.only(
+                                    top: AppDesignTokens.tinyGap,
+                                  ),
+                                  child: fw.Text(
+                                    cubit.categoryError!,
+                                    style: fw.TextStyle(
+                                      color: AppDesignTokens.dangerColor,
+                                      fontSize: AppDesignTokens.captionFontSize,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                      // Product Image Upload
+                      BlocBuilder<ProductCubit, ProductState>(
+                        builder: (context, state) {
+                          return fw.Column(
+                            crossAxisAlignment: fw.CrossAxisAlignment.start,
+                            children: [
+                              fw.Text(
+                                'Product Image (Optional)',
+                                style: fw.TextStyle(
+                                  fontSize: AppDesignTokens.bodyFontSize,
+                                  fontWeight: AppDesignTokens.semiBold,
+                                  color: AppDesignTokens.titleTextColor,
+                                ),
+                              ),
+                              const fw.SizedBox(
+                                height: AppDesignTokens.smallGap,
+                              ),
+                              if (cubit.selectedImageFile != null)
+                                fw.Stack(
                                   children: [
-                                    _TargetAudienceChip(
-                                      label: 'All',
-                                      value: 0,
-                                      selectedValue:
-                                          cubit.selectedTargetAudience,
-                                      onSelected: (value) =>
-                                          cubit.selectTargetAudience(value),
+                                    fw.ClipRRect(
+                                      borderRadius: fw.BorderRadius.circular(
+                                        AppDesignTokens.inputRadius,
+                                      ),
+                                      child: fw.Image.file(
+                                        cubit.selectedImageFile!,
+                                        height: 200,
+                                        width: double.infinity,
+                                        fit: fw.BoxFit.cover,
+                                      ),
                                     ),
-                                    _TargetAudienceChip(
-                                      label: 'Men',
-                                      value: 1,
-                                      selectedValue:
-                                          cubit.selectedTargetAudience,
-                                      onSelected: (value) =>
-                                          cubit.selectTargetAudience(value),
+                                    fw.Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: IconButton(
+                                        icon: const fw.Icon(Icons.close),
+                                        onPressed: () {
+                                          cubit.clearImageFile();
+                                        },
+                                        variance: ButtonVariance.destructive,
+                                      ),
                                     ),
-                                    _TargetAudienceChip(
-                                      label: 'Women',
-                                      value: 2,
-                                      selectedValue:
-                                          cubit.selectedTargetAudience,
-                                      onSelected: (value) =>
-                                          cubit.selectTargetAudience(value),
-                                    ),
-                                    _TargetAudienceChip(
-                                      label: 'Kids',
-                                      value: 3,
-                                      selectedValue:
-                                          cubit.selectedTargetAudience,
-                                      onSelected: (value) =>
-                                          cubit.selectTargetAudience(value),
-                                    ),
+                                    if (cubit.isUploadingImage)
+                                      fw.Positioned.fill(
+                                        child: fw.Container(
+                                          color: fw.Color(0x80000000),
+                                          child: const fw.Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      ),
                                   ],
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Active Switch
-                        BlocBuilder<ProductCubit, ProductState>(
-                          builder: (context, state) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Active',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                )
+                              else
+                                OutlineButton(
+                                  onPressed: cubit.isUploadingImage
+                                      ? null
+                                      : () => _pickImage(cubit),
+                                  child: fw.Row(
+                                    mainAxisAlignment:
+                                        fw.MainAxisAlignment.center,
+                                    children: [
+                                      fw.Icon(
+                                        Icons.image,
+                                        size: 20,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                      const fw.SizedBox(
+                                        width: AppDesignTokens.smallGap,
+                                      ),
+                                      const Text('Choose Image'),
+                                    ],
                                   ),
                                 ),
-                                Switch(
-                                  value: cubit.createProductParams.isActive,
-                                  onChanged: (value) {
-                                    cubit.toggleIsActive(value);
-                                  },
+                            ],
+                          );
+                        },
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                      // Target Audience Selection
+                      BlocBuilder<ProductCubit, ProductState>(
+                        builder: (context, state) {
+                          return fw.Column(
+                            crossAxisAlignment: fw.CrossAxisAlignment.start,
+                            children: [
+                              fw.Text(
+                                'Target Audience',
+                                style: fw.TextStyle(
+                                  fontSize: AppDesignTokens.bodyFontSize,
+                                  fontWeight: AppDesignTokens.semiBold,
+                                  color: AppDesignTokens.titleTextColor,
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 32),
-
-                        // Submit Button
-                        CreateModel<ProductModel>(
-                          withValidation: true,
-                          onCubitCreated: (createCubit) {
-                            createModelCubit = createCubit;
-                          },
-                          onTap: () {
-                            return _validateFields(cubit);
-                          },
-                          useCaseCallBack: (data) {
-                            // 🚀 NEW: Use createProductWithImage()
-                            return cubit.createProductWithImage();
-                          },
-                          onSuccess: (productModel) {
-                            // Clear form
-                            cubit.createProductParams.name = '';
-                            cubit.createProductParams.description = '';
-                            cubit.createProductParams.price = 0.0;
-                            cubit.createProductParams.isActive = true;
-                            cubit.createProductParams.targetAudience = 0;
-                            cubit.createProductParams.categoryId = '';
-                            cubit.createProductParams.imageUrl = '';
-                            cubit.selectedTargetAudience = 0;
-                            cubit.selectedCategoryId = null;
-                            cubit.clearAllErrors();
-
-                            // Clear controllers
-                            _nameController.clear();
-                            _descriptionController.clear();
-                            _priceController.clear();
-                            _categoryIdController.clear();
-                            cubit.clearImageFile();
-
-                            // Show success dialog
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: const Text('Success'),
-                                content: const Text(
-                                  'Product created successfully!',
-                                ),
-                                actions: [
-                                  PrimaryButton(
-                                    onPressed: () {
-                                      Navigator.pop(ctx);
-                                      Navigator.pop(context); // Go back to list
-                                    },
-                                    child: const Text('OK'),
+                              ),
+                              const fw.SizedBox(
+                                height: AppDesignTokens.smallGap,
+                              ),
+                              fw.Wrap(
+                                spacing: AppDesignTokens.smallGap,
+                                runSpacing: AppDesignTokens.smallGap,
+                                children: [
+                                  _TargetAudienceChip(
+                                    label: 'All',
+                                    value: 0,
+                                    selectedValue: cubit.selectedTargetAudience,
+                                    onSelected: (value) =>
+                                        cubit.selectTargetAudience(value),
+                                  ),
+                                  _TargetAudienceChip(
+                                    label: 'Men',
+                                    value: 1,
+                                    selectedValue: cubit.selectedTargetAudience,
+                                    onSelected: (value) =>
+                                        cubit.selectTargetAudience(value),
+                                  ),
+                                  _TargetAudienceChip(
+                                    label: 'Women',
+                                    value: 2,
+                                    selectedValue: cubit.selectedTargetAudience,
+                                    onSelected: (value) =>
+                                        cubit.selectTargetAudience(value),
+                                  ),
+                                  _TargetAudienceChip(
+                                    label: 'Kids',
+                                    value: 3,
+                                    selectedValue: cubit.selectedTargetAudience,
+                                    onSelected: (value) =>
+                                        cubit.selectTargetAudience(value),
                                   ),
                                 ],
                               ),
-                            );
-                          },
-                          onError: (error) {
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: const Text('Error'),
-                                content: Text(
-                                  'Failed to create product: $error',
+                            ],
+                          );
+                        },
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                      // Active Switch
+                      BlocBuilder<ProductCubit, ProductState>(
+                        builder: (context, state) {
+                          return fw.Row(
+                            mainAxisAlignment:
+                                fw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              fw.Text(
+                                'Active',
+                                style: fw.TextStyle(
+                                  fontSize: AppDesignTokens.bodyFontSize,
+                                  fontWeight: AppDesignTokens.semiBold,
+                                  color: AppDesignTokens.titleTextColor,
                                 ),
-                                actions: [
-                                  PrimaryButton(
-                                    onPressed: () => Navigator.pop(ctx),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
                               ),
-                            );
+                              Switch(
+                                value: cubit.createProductParams.isActive,
+                                onChanged: (value) {
+                                  cubit.toggleIsActive(value);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            StickyBottomAction(
+              child: CreateModel<ProductModel>(
+                withValidation: true,
+                onCubitCreated: (createCubit) {
+                  createModelCubit = createCubit;
+                },
+                onTap: () {
+                  return _validateFields(cubit);
+                },
+                useCaseCallBack: (data) {
+                  return cubit.createProductWithImage();
+                },
+                onSuccess: (productModel) {
+                  // Clear form
+                  cubit.createProductParams.name = '';
+                  cubit.createProductParams.description = '';
+                  cubit.createProductParams.price = 0.0;
+                  cubit.createProductParams.isActive = true;
+                  cubit.createProductParams.targetAudience = 0;
+                  cubit.createProductParams.categoryId = '';
+                  cubit.createProductParams.imageUrl = '';
+                  cubit.selectedTargetAudience = 0;
+                  cubit.selectedCategoryId = null;
+                  cubit.clearAllErrors();
+
+                  // Clear controllers
+                  _nameController.clear();
+                  _descriptionController.clear();
+                  _priceController.clear();
+                  _categoryIdController.clear();
+                  cubit.clearImageFile();
+
+                  // Show success dialog
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Success'),
+                      content: const Text('Product created successfully!'),
+                      actions: [
+                        PrimaryButton(
+                          onPressed: () {
+                            fw.Navigator.pop(ctx);
+                            fw.Navigator.pop(context);
                           },
-                          child: PrimaryButton(
-                            child: const Text('Create Product'),
-                          ),
+                          child: const Text('OK'),
                         ),
                       ],
+                    ),
+                  );
+                },
+                onError: (error) {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Error'),
+                      content: Text('Failed to create product: $error'),
+                      actions: [
+                        PrimaryButton(
+                          onPressed: () => fw.Navigator.pop(ctx),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: fw.SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    child: const Text(
+                      'Create Product',
+                      style: fw.TextStyle(
+                        fontSize: 15,
+                        fontWeight: AppDesignTokens.semiBold,
+                      ),
                     ),
                   ),
                 ),
