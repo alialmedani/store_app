@@ -118,11 +118,8 @@ class DashboardScreen extends fw.StatelessWidget {
                           child: IconButton(
                             icon: const fw.Icon(
                               Icons.notifications_outlined,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              // TODO: Navigate to notifications
-                            },
+                              size: 20),
+                            onPressed: () {},
                             variance: ButtonVariance.ghost,
                           ),
                         ),

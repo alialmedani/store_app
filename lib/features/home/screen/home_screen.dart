@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart' as fw;
 
 import '../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import '../../../core/ui/widgets/authenticated_image.dart';
+import '../../../core/utils/image_helper.dart';
 import '../../category/cubit/category_cubit.dart';
 import '../../category/data/model/category_model.dart';
 import '../../category/screen/category_details_screen.dart';
@@ -137,6 +139,10 @@ class HomeScreen extends fw.StatelessWidget {
           child: fw.SizedBox(
             height: 110,
             child: PaginationList<CategoryModel>(
+              scrollDirection: fw.Axis.horizontal,
+              withPagination: false,
+              withRefresh: false,
+              physics: const fw.BouncingScrollPhysics(),
               loadingWidget: fw.ListView.builder(
                 scrollDirection: fw.Axis.horizontal,
                 padding: const fw.EdgeInsets.symmetric(
@@ -404,6 +410,7 @@ class _ProductCard extends fw.StatelessWidget {
   @override
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
+    final imageUrl = ImageHelper.getProductImageUrl(product.id ?? '');
 
     return fw.GestureDetector(
       onTap: () {
@@ -422,37 +429,31 @@ class _ProductCard extends fw.StatelessWidget {
           crossAxisAlignment: fw.CrossAxisAlignment.start,
           children: [
             // Product Image
-            fw.Container(
-              height: 140,
-              decoration: fw.BoxDecoration(
-                color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                borderRadius: const fw.BorderRadius.vertical(
-                  top: fw.Radius.circular(12),
-                ),
+            fw.ClipRRect(
+              borderRadius: const fw.BorderRadius.vertical(
+                top: fw.Radius.circular(12),
               ),
-              child: fw.Center(
-                child: product.imageFullUrl != null
-                    ? fw.ClipRRect(
-                        borderRadius: const fw.BorderRadius.vertical(
-                          top: fw.Radius.circular(12),
-                        ),
-                        child: fw.Image.network(
-                          product.imageFullUrl!,
-                          height: 140,
-                          width: double.infinity,
-                          fit: fw.BoxFit.cover,
-                          errorBuilder: (_, __, ___) => fw.Icon(
-                            Icons.inventory_2_rounded,
-                            size: 48,
-                            color: theme.colorScheme.mutedForeground,
-                          ),
-                        ),
-                      )
-                    : fw.Icon(
-                        Icons.inventory_2_rounded,
-                        size: 48,
-                        color: theme.colorScheme.mutedForeground,
-                      ),
+              child: AuthenticatedImage(
+                imageUrl: imageUrl,
+                width: double.infinity,
+                height: 140,
+                fit: fw.BoxFit.cover,
+                errorWidget: fw.Container(
+                  height: 140,
+                  decoration: fw.BoxDecoration(
+                    color: theme.colorScheme.muted.withValues(alpha: 0.3),
+                    borderRadius: const fw.BorderRadius.vertical(
+                      top: fw.Radius.circular(12),
+                    ),
+                  ),
+                  child: fw.Center(
+                    child: fw.Icon(
+                      Icons.inventory_2_rounded,
+                      size: 48,
+                      color: theme.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ),
               ),
             ),
             // Product Info
