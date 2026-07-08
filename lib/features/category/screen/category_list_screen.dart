@@ -21,112 +21,104 @@ class CategoryListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Stack(
+        child: fw.Column(
           children: [
-            fw.Column(
-              children: [
-                AppHeader(
-                  title: 'Categories',
-                  onBack: () => fw.Navigator.pop(context),
-                ),
-                fw.Expanded(
-                  child: PaginationList<CategoryModel>(
-                    withPagination: true,
-                    withRefresh: true,
-                    repositoryCallBack: (data) {
-                      return context.read<CategoryCubit>().fetchCategoryList(
-                        data,
+            AppHeader(
+              title: 'Categories',
+              onBack: () => fw.Navigator.pop(context),
+            ),
+            fw.Expanded(
+              child: PaginationList<CategoryModel>(
+                withPagination: true,
+                withRefresh: true,
+                repositoryCallBack: (data) {
+                  return context.read<CategoryCubit>().fetchCategoryList(data);
+                },
+                listBuilder: (list) {
+                  return fw.ListView.builder(
+                    padding: const fw.EdgeInsets.fromLTRB(
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.screenPaddingHorizontal,
+                      AppDesignTokens.listBottomPadding,
+                    ),
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final category = list[index];
+                      final imageUrl = ImageHelper.getCategoryImageUrl(
+                        category.id ?? '',
                       );
-                    },
-                    listBuilder: (list) {
-                      return fw.ListView.builder(
-                        padding: const fw.EdgeInsets.fromLTRB(
-                          AppDesignTokens.screenPaddingHorizontal,
-                          AppDesignTokens.screenPaddingHorizontal,
-                          AppDesignTokens.screenPaddingHorizontal,
-                          100,
-                        ),
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          final category = list[index];
-                          final imageUrl = ImageHelper.getCategoryImageUrl(
-                            category.id ?? '',
-                          );
 
-                          return fw.Padding(
-                            padding: const fw.EdgeInsets.only(
-                              bottom: AppDesignTokens.cardGap,
+                      return fw.Padding(
+                        padding: const fw.EdgeInsets.only(
+                          bottom: AppDesignTokens.cardGap,
+                        ),
+                        child: EntityListCard(
+                          title: category.name ?? 'N/A',
+                          description: category.description,
+                          image: AuthenticatedImage(
+                            imageUrl: imageUrl,
+                            width: 80,
+                            height: 80,
+                            fit: fw.BoxFit.cover,
+                            errorWidget: fw.Center(
+                              child: fw.Icon(Icons.category_outlined, size: 32),
                             ),
-                            child: EntityListCard(
-                              title: category.name ?? 'N/A',
-                              description: category.description,
-                              image: AuthenticatedImage(
-                                imageUrl: imageUrl,
-                                width: 80,
-                                height: 80,
-                                fit: fw.BoxFit.cover,
-                                errorWidget: fw.Icon(
-                                  Icons.category_outlined,
-                                  size: 32,
+                          ),
+                          statusBadge: StatusBadge(
+                            text: (category.isActive ?? false)
+                                ? 'Active'
+                                : 'Inactive',
+                            type: (category.isActive ?? false)
+                                ? StatusBadgeType.active
+                                : StatusBadgeType.inactive,
+                          ),
+                          metaItems: category.sizeTypeName != null
+                              ? [
+                                  EntityMetaItem(
+                                    icon: Icons.straighten,
+                                    text: 'Size Type: ${category.sizeTypeName}',
+                                  ),
+                                ]
+                              : null,
+                          onTap: () {
+                            if (category.id != null) {
+                              fw.Navigator.push(
+                                context,
+                                fw.PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      CategoryDetailsScreen(
+                                        categoryId: category.id!,
+                                      ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
                                 ),
-                              ),
-                              statusBadge: StatusBadge(
-                                text: (category.isActive ?? false)
-                                    ? 'Active'
-                                    : 'Inactive',
-                                type: (category.isActive ?? false)
-                                    ? StatusBadgeType.active
-                                    : StatusBadgeType.inactive,
-                              ),
-                              metaItems: category.sizeTypeName != null
-                                  ? [
-                                      EntityMetaItem(
-                                        icon: Icons.straighten,
-                                        text:
-                                            'Size Type: ${category.sizeTypeName}',
-                                      ),
-                                    ]
-                                  : null,
-                              onTap: () {
-                                if (category.id != null) {
-                                  fw.Navigator.push(
-                                    context,
-                                    fw.PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          CategoryDetailsScreen(
-                                            categoryId: category.id!,
-                                          ),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
+                              );
+                            }
+                          },
+                          onEdit: () {
+                            if (category.id != null) {
+                              fw.Navigator.push(
+                                context,
+                                fw.PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => BlocProvider(
+                                    create: (_) => CategoryCubit(),
+                                    child: EditCategoryScreen(
+                                      categoryId: category.id!,
                                     ),
-                                  );
-                                }
-                              },
-                              onEdit: () {
-                                if (category.id != null) {
-                                  fw.Navigator.push(
-                                    context,
-                                    fw.PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) => BlocProvider(
-                                        create: (_) => CategoryCubit(),
-                                        child: EditCategoryScreen(
-                                          categoryId: category.id!,
-                                        ),
-                                      ),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        },
+                                  ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       );
                     },
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
             StickyBottomAction(
               child: PrimaryButton(
