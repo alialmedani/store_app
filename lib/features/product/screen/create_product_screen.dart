@@ -259,101 +259,18 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       // Category Selection
                       BlocBuilder<ProductCubit, ProductState>(
                         builder: (context, state) {
-                          return fw.Column(
-                            crossAxisAlignment: fw.CrossAxisAlignment.start,
-                            children: [
-                              fw.Row(
-                                children: [
-                                  fw.Expanded(
-                                    child: fw.Text(
-                                      'Category',
-                                      style: fw.TextStyle(
-                                        fontSize: AppDesignTokens.bodyFontSize,
-                                        fontWeight: AppDesignTokens.semiBold,
-                                        color: AppDesignTokens.titleTextColor,
-                                      ),
-                                    ),
-                                  ),
-                                  fw.GestureDetector(
-                                    onTap: () {
-                                      _showCategorySelector(context, cubit);
-                                    },
-                                    child: fw.Text(
-                                      'Select',
-                                      style: fw.TextStyle(
-                                        fontSize: AppDesignTokens.bodyFontSize,
-                                        fontWeight: AppDesignTokens.semiBold,
-                                        color: theme.colorScheme.primary,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const fw.SizedBox(
-                                height: AppDesignTokens.smallGap,
-                              ),
-                              fw.GestureDetector(
-                                onTap: () {
-                                  _showCategorySelector(context, cubit);
-                                },
-                                child: fw.Container(
-                                  height: AppDesignTokens.inputHeight,
-                                  padding: const fw.EdgeInsets.symmetric(
-                                    horizontal: AppDesignTokens.cardPadding,
-                                  ),
-                                  decoration: fw.BoxDecoration(
-                                    color: theme.colorScheme.background,
-                                    borderRadius: fw.BorderRadius.circular(
-                                      AppDesignTokens.inputRadius,
-                                    ),
-                                    border: fw.Border.all(
-                                      color: theme.colorScheme.border,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: fw.Row(
-                                    children: [
-                                      fw.Expanded(
-                                        child: fw.Text(
-                                          _categoryIdController.text.isEmpty
-                                              ? 'Select category'
-                                              : _categoryIdController.text,
-                                          style: fw.TextStyle(
-                                            fontSize:
-                                                AppDesignTokens.bodyFontSize,
-                                            color:
-                                                _categoryIdController
-                                                    .text
-                                                    .isEmpty
-                                                ? AppDesignTokens.mutedTextColor
-                                                : theme.colorScheme.foreground,
-                                          ),
-                                        ),
-                                      ),
-                                      fw.Icon(
-                                        Icons.keyboard_arrow_down,
-                                        size: 20,
-                                        color:
-                                            theme.colorScheme.mutedForeground,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              if (cubit.categoryError != null)
-                                fw.Padding(
-                                  padding: const fw.EdgeInsets.only(
-                                    top: AppDesignTokens.tinyGap,
-                                  ),
-                                  child: fw.Text(
-                                    cubit.categoryError!,
-                                    style: fw.TextStyle(
-                                      color: AppDesignTokens.dangerColor,
-                                      fontSize: AppDesignTokens.captionFontSize,
-                                    ),
-                                  ),
-                                ),
-                            ],
+                          return AppSelectorField(
+                            label: 'Category',
+                            value: _categoryIdController.text.isNotEmpty
+                                ? _categoryIdController.text
+                                : null,
+                            placeholder: 'Select category',
+                            onTap: () {
+                              _showCategorySelector(context, cubit);
+                            },
+                            actionText: 'Select',
+                            errorText: cubit.categoryError,
+                            showRequired: true,
                           );
                         },
                       ),
@@ -612,56 +529,45 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   }
 
   void _showCategorySelector(BuildContext context, ProductCubit cubit) {
-    showDialog(
+    AppBottomSelector.show<CategoryModel>(
       context: context,
-      builder: (ctx) => BlocProvider(
+      title: 'Select Category',
+      content: BlocProvider(
         create: (context) => CategoryCubit(),
-        child: AlertDialog(
-          title: const Text('Select Category'),
-          content: SizedBox(
-            width: double.maxFinite,
-            height: 400,
-            child: PaginationList<CategoryModel>(
-              withPagination: true,
-              withRefresh: false,
-              repositoryCallBack: (data) {
-                return context.read<CategoryCubit>().fetchCategoryList(data);
-              },
-              listBuilder: (list) {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    final category = list[index];
-                    return GestureDetector(
-                      onTap: () {
-                        if (category.id != null && category.name != null) {
-                          cubit.selectCategory(category.id!);
-                          _categoryIdController.text = category.name!;
-                        }
-                        Navigator.pop(ctx);
-                      },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Text(
-                            category.name ?? 'N/A',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ),
-                    );
+        child: PaginationList<CategoryModel>(
+          withPagination: true,
+          withRefresh: false,
+          loadingWidget: AppSkeletonLoader.listItems(
+            itemCount: 6,
+            withLeading: false,
+            withSubtitle: true,
+          ),
+          repositoryCallBack: (data) {
+            return context.read<CategoryCubit>().fetchCategoryList(data);
+          },
+          listBuilder: (list) {
+            return fw.ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final category = list[index];
+
+                return AppBottomSelector.buildListItem<CategoryModel>(
+                  context: context,
+                  item: category,
+                  titleBuilder: (cat) => cat.name ?? 'N/A',
+                  subtitleBuilder: (cat) => cat.description,
+                  isSelected: (cat) => cat.id == cubit.selectedCategoryId,
+                  onTap: () {
+                    if (category.id != null && category.name != null) {
+                      cubit.selectCategory(category.id!);
+                      _categoryIdController.text = category.name!;
+                    }
+                    fw.Navigator.pop(context);
                   },
                 );
               },
-            ),
-          ),
-          actions: [
-            SecondaryButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
