@@ -32,9 +32,7 @@ class CategoryListScreen extends StatelessWidget {
                 withPagination: true,
                 withRefresh: true,
                 repositoryCallBack: (data) {
-                  return context.read<CategoryCubit>().fetchCategoryList(
-                    data,
-                  );
+                  return context.read<CategoryCubit>().fetchCategoryList(data);
                 },
                 listBuilder: (list) {
                   return fw.ListView.builder(
@@ -44,90 +42,86 @@ class CategoryListScreen extends StatelessWidget {
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.listBottomPadding,
                     ),
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          final category = list[index];
-                          final imageUrl = ImageHelper.getCategoryImageUrl(
-                            category.id ?? '',
-                          );
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final category = list[index];
+                      final imageUrl = ImageHelper.getCategoryImageUrl(
+                        category.id ?? '',
+                      );
 
-                          return fw.Padding(
-                            padding: const fw.EdgeInsets.only(
-                              bottom: AppDesignTokens.cardGap,
+                      return fw.Padding(
+                        padding: const fw.EdgeInsets.only(
+                          bottom: AppDesignTokens.cardGap,
+                        ),
+                        child: EntityListCard(
+                          title: category.name ?? 'N/A',
+                          description: category.description,
+                          image: AuthenticatedImage(
+                            imageUrl: imageUrl,
+                            width: 80,
+                            height: 80,
+                            fit: fw.BoxFit.cover,
+                            errorWidget: fw.Center(
+                              child: fw.Icon(Icons.category_outlined, size: 32),
                             ),
-                            child: EntityListCard(
-                              title: category.name ?? 'N/A',
-                              description: category.description,
-                              image: AuthenticatedImage(
-                                imageUrl: imageUrl,
-                                width: 80,
-                                height: 80,
-                                fit: fw.BoxFit.cover,
-                                errorWidget: fw.Center(
-                                  child: fw.Icon(
-                                    Icons.category_outlined,
-                                    size: 32,
+                          ),
+                          statusBadge: StatusBadge(
+                            text: (category.isActive ?? false)
+                                ? 'Active'
+                                : 'Inactive',
+                            type: (category.isActive ?? false)
+                                ? StatusBadgeType.active
+                                : StatusBadgeType.inactive,
+                          ),
+                          metaItems: category.sizeTypeName != null
+                              ? [
+                                  EntityMetaItem(
+                                    icon: Icons.straighten,
+                                    text: 'Size Type: ${category.sizeTypeName}',
                                   ),
+                                ]
+                              : null,
+                          onTap: () {
+                            if (category.id != null) {
+                              fw.Navigator.push(
+                                context,
+                                fw.PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      CategoryDetailsScreen(
+                                        categoryId: category.id!,
+                                      ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
                                 ),
-                              ),
-                              statusBadge: StatusBadge(
-                                text: (category.isActive ?? false)
-                                    ? 'Active'
-                                    : 'Inactive',
-                                type: (category.isActive ?? false)
-                                    ? StatusBadgeType.active
-                                    : StatusBadgeType.inactive,
-                              ),
-                              metaItems: category.sizeTypeName != null
-                                  ? [
-                                      EntityMetaItem(
-                                        icon: Icons.straighten,
-                                        text:
-                                            'Size Type: ${category.sizeTypeName}',
-                                      ),
-                                    ]
-                                  : null,
-                              onTap: () {
-                                if (category.id != null) {
-                                  fw.Navigator.push(
-                                    context,
-                                    fw.PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          CategoryDetailsScreen(
-                                            categoryId: category.id!,
-                                          ),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
+                              );
+                            }
+                          },
+                          onEdit: () {
+                            if (category.id != null) {
+                              fw.Navigator.push(
+                                context,
+                                fw.PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => BlocProvider(
+                                    create: (_) => CategoryCubit(),
+                                    child: EditCategoryScreen(
+                                      categoryId: category.id!,
                                     ),
-                                  );
-                                }
-                              },
-                              onEdit: () {
-                                if (category.id != null) {
-                                  fw.Navigator.push(
-                                    context,
-                                    fw.PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) => BlocProvider(
-                                        create: (_) => CategoryCubit(),
-                                        child: EditCategoryScreen(
-                                          categoryId: category.id!,
-                                        ),
-                                      ),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        },
+                                  ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       );
                     },
-                  ),
-                ),
-              StickyBottomAction(
-                child: PrimaryButton(
+                  );
+                },
+              ),
+            ),
+            StickyBottomAction(
+              child: PrimaryButton(
                 onPressed: () {
                   fw.Navigator.push(
                     context,

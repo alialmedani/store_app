@@ -22,10 +22,7 @@ class OrderListScreen extends StatelessWidget {
       child: SafeArea(
         child: fw.Column(
           children: [
-            AppHeader(
-              title: 'Orders',
-              onBack: () => fw.Navigator.pop(context),
-            ),
+            AppHeader(title: 'Orders', onBack: () => fw.Navigator.pop(context)),
             fw.Expanded(
               child: PaginationList<OrderModel>(
                 withPagination: true,
@@ -41,22 +38,22 @@ class OrderListScreen extends StatelessWidget {
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.listBottomPadding,
                     ),
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          final order = list[index];
-                          return fw.Padding(
-                            padding: const fw.EdgeInsets.only(
-                              bottom: AppDesignTokens.cardGap,
-                            ),
-                            child: _OrderCard(order: order),
-                          );
-                        },
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final order = list[index];
+                      return fw.Padding(
+                        padding: const fw.EdgeInsets.only(
+                          bottom: AppDesignTokens.cardGap,
+                        ),
+                        child: _OrderCard(order: order),
                       );
                     },
-                  ),
-                ),
-              StickyBottomAction(
-                child: PrimaryButton(
+                  );
+                },
+              ),
+            ),
+            StickyBottomAction(
+              child: PrimaryButton(
                 onPressed: () {
                   fw.Navigator.push(
                     context,
@@ -216,10 +213,7 @@ class _OrderCard extends StatelessWidget {
 
           // Total Amount
           fw.Container(
-            padding: const fw.EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
-            ),
+            padding: const fw.EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: fw.BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: fw.BorderRadius.circular(8),

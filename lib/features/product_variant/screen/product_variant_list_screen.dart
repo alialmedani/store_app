@@ -42,87 +42,90 @@ class ProductVariantListScreen extends StatelessWidget {
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.listBottomPadding,
                     ),
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          final variant = list[index];
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final variant = list[index];
 
-                          final metaItems = <EntityMetaItem>[];
-                          if (variant.color != null &&
-                              variant.color!.isNotEmpty) {
-                            metaItems.add(EntityMetaItem(
-                              icon: Icons.palette_outlined,
-                              text: variant.color!,
-                            ));
-                          }
-                          if (variant.size != null &&
-                              variant.size!.isNotEmpty) {
-                            metaItems.add(EntityMetaItem(
-                              icon: Icons.straighten,
-                              text: variant.size!,
-                            ));
-                          }
-                          if (variant.stockQuantity != null) {
-                            metaItems.add(EntityMetaItem(
-                              icon: Icons.inventory_2_outlined,
-                              text: 'Stock: ${variant.stockQuantity}',
-                            ));
-                          }
+                      final metaItems = <EntityMetaItem>[];
+                      if (variant.color != null && variant.color!.isNotEmpty) {
+                        metaItems.add(
+                          EntityMetaItem(
+                            icon: Icons.palette_outlined,
+                            text: variant.color!,
+                          ),
+                        );
+                      }
+                      if (variant.size != null && variant.size!.isNotEmpty) {
+                        metaItems.add(
+                          EntityMetaItem(
+                            icon: Icons.straighten,
+                            text: variant.size!,
+                          ),
+                        );
+                      }
+                      if (variant.stockQuantity != null) {
+                        metaItems.add(
+                          EntityMetaItem(
+                            icon: Icons.inventory_2_outlined,
+                            text: 'Stock: ${variant.stockQuantity}',
+                          ),
+                        );
+                      }
 
-                          return fw.Padding(
-                            padding: const fw.EdgeInsets.only(
-                              bottom: AppDesignTokens.cardGap,
-                            ),
-                            child: EntityListCard(
-                              title: variant.productName ?? 'N/A',
-                              statusBadge: variant.isActive != null
-                                  ? StatusBadge(
-                                      text: variant.isActive!
-                                          ? 'Active'
-                                          : 'Inactive',
-                                      type: variant.isActive!
-                                          ? StatusBadgeType.active
-                                          : StatusBadgeType.inactive,
-                                    )
-                                  : null,
-                              metaItems:
-                                  metaItems.isNotEmpty ? metaItems : null,
-                              onTap: () {
-                                if (variant.id != null) {
-                                  fw.Navigator.of(context).push(
-                                    fw.PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          ProductVariantDetailsScreen(
+                      return fw.Padding(
+                        padding: const fw.EdgeInsets.only(
+                          bottom: AppDesignTokens.cardGap,
+                        ),
+                        child: EntityListCard(
+                          title: variant.productName ?? 'N/A',
+                          statusBadge: variant.isActive != null
+                              ? StatusBadge(
+                                  text: variant.isActive!
+                                      ? 'Active'
+                                      : 'Inactive',
+                                  type: variant.isActive!
+                                      ? StatusBadgeType.active
+                                      : StatusBadgeType.inactive,
+                                )
+                              : null,
+                          metaItems: metaItems.isNotEmpty ? metaItems : null,
+                          onTap: () {
+                            if (variant.id != null) {
+                              fw.Navigator.of(context).push(
+                                fw.PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      ProductVariantDetailsScreen(
                                         productVariantId: variant.id!,
                                       ),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
-                                    ),
-                                  );
-                                }
-                              },
-                              onEdit: () {
-                                fw.Navigator.of(context).push(
-                                  fw.PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => BlocProvider(
-                                      create: (_) => ProductVariantCubit(),
-                                      child: UpdateProductVariantScreen(
-                                        variant: variant,
-                                      ),
-                                    ),
-                                    transitionDuration: Duration.zero,
-                                    reverseTransitionDuration: Duration.zero,
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            }
+                          },
+                          onEdit: () {
+                            fw.Navigator.of(context).push(
+                              fw.PageRouteBuilder(
+                                pageBuilder: (_, __, ___) => BlocProvider(
+                                  create: (_) => ProductVariantCubit(),
+                                  child: UpdateProductVariantScreen(
+                                    variant: variant,
                                   ),
-                                );
-                              },
-                            ),
-                          );
-                        },
+                                ),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                        ),
                       );
                     },
-                  ),
-                ),
-              StickyBottomAction(
-                child: PrimaryButton(
+                  );
+                },
+              ),
+            ),
+            StickyBottomAction(
+              child: PrimaryButton(
                 onPressed: () {
                   fw.Navigator.of(context).push(
                     fw.PageRouteBuilder(

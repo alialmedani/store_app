@@ -8,18 +8,15 @@ class StickyBottomAction extends fw.StatelessWidget {
   final fw.Widget child;
   final fw.EdgeInsetsGeometry? padding;
 
-  const StickyBottomAction({
-    super.key,
-    required this.child,
-    this.padding,
-  });
+  const StickyBottomAction({super.key, required this.child, this.padding});
 
   @override
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
     return fw.Container(
-      padding: padding ??
+      padding:
+          padding ??
           const fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
       decoration: fw.BoxDecoration(
         color: theme.colorScheme.background,

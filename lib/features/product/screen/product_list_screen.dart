@@ -32,9 +32,7 @@ class ProductListScreen extends StatelessWidget {
                 withPagination: true,
                 withRefresh: true,
                 repositoryCallBack: (data) {
-                  return context.read<ProductCubit>().fetchProductList(
-                    data,
-                  );
+                  return context.read<ProductCubit>().fetchProductList(data);
                 },
                 listBuilder: (list) {
                   return fw.ListView.builder(
@@ -44,111 +42,107 @@ class ProductListScreen extends StatelessWidget {
                       AppDesignTokens.screenPaddingHorizontal,
                       AppDesignTokens.listBottomPadding,
                     ),
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          final product = list[index];
-                          final imageUrl = ImageHelper.getProductImageUrl(
-                            product.id ?? '',
-                          );
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final product = list[index];
+                      final imageUrl = ImageHelper.getProductImageUrl(
+                        product.id ?? '',
+                      );
 
-                          final metaItems = <EntityMetaItem>[];
-                          if (product.category?.name != null) {
-                            metaItems.add(
-                              EntityMetaItem(
-                                icon: Icons.category_outlined,
-                                text: product.category!.name!,
-                              ),
-                            );
-                          }
-                          if (product.targetAudience?.name != null) {
-                            metaItems.add(
-                              EntityMetaItem(
-                                icon: Icons.people_outline,
-                                text: product.targetAudience!.name!,
-                              ),
-                            );
-                          }
-                          if (product.totalStockQuantity != null) {
-                            metaItems.add(
-                              EntityMetaItem(
-                                icon: Icons.inventory_2_outlined,
-                                text: 'Stock: ${product.totalStockQuantity}',
-                              ),
-                            );
-                          }
+                      final metaItems = <EntityMetaItem>[];
+                      if (product.category?.name != null) {
+                        metaItems.add(
+                          EntityMetaItem(
+                            icon: Icons.category_outlined,
+                            text: product.category!.name!,
+                          ),
+                        );
+                      }
+                      if (product.targetAudience?.name != null) {
+                        metaItems.add(
+                          EntityMetaItem(
+                            icon: Icons.people_outline,
+                            text: product.targetAudience!.name!,
+                          ),
+                        );
+                      }
+                      if (product.totalStockQuantity != null) {
+                        metaItems.add(
+                          EntityMetaItem(
+                            icon: Icons.inventory_2_outlined,
+                            text: 'Stock: ${product.totalStockQuantity}',
+                          ),
+                        );
+                      }
 
-                          return fw.Padding(
-                            padding: const fw.EdgeInsets.only(
-                              bottom: AppDesignTokens.cardGap,
+                      return fw.Padding(
+                        padding: const fw.EdgeInsets.only(
+                          bottom: AppDesignTokens.cardGap,
+                        ),
+                        child: EntityListCard(
+                          title: product.name ?? 'N/A',
+                          subtitle: product.price != null
+                              ? '\$${product.price!.toStringAsFixed(2)}'
+                              : null,
+                          description: product.description,
+                          image: AuthenticatedImage(
+                            imageUrl: imageUrl,
+                            width: 80,
+                            height: 80,
+                            fit: fw.BoxFit.cover,
+                            errorWidget: fw.Center(
+                              child: fw.Icon(
+                                Icons.inventory_2_outlined,
+                                size: 32,
+                              ),
                             ),
-                            child: EntityListCard(
-                              title: product.name ?? 'N/A',
-                              subtitle: product.price != null
-                                  ? '\$${product.price!.toStringAsFixed(2)}'
-                                  : null,
-                              description: product.description,
-                              image: AuthenticatedImage(
-                                imageUrl: imageUrl,
-                                width: 80,
-                                height: 80,
-                                fit: fw.BoxFit.cover,
-                                errorWidget: fw.Center(
-                                  child: fw.Icon(
-                                    Icons.inventory_2_outlined,
-                                    size: 32,
-                                  ),
-                                ),
-                              ),
-                              statusBadge: StatusBadge(
-                                text: (product.isActive ?? false)
-                                    ? 'Active'
-                                    : 'Inactive',
-                                type: (product.isActive ?? false)
-                                    ? StatusBadgeType.active
-                                    : StatusBadgeType.inactive,
-                              ),
-                              metaItems: metaItems.isNotEmpty
-                                  ? metaItems
-                                  : null,
-                              onTap: () {
-                                if (product.id != null) {
-                                  fw.Navigator.push(
-                                    context,
-                                    fw.PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          ProductDetailsScreen(
-                                            productId: product.id!,
-                                          ),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
-                                    ),
-                                  );
-                                }
-                              },
-                              onEdit: () {
-                                fw.Navigator.push(
-                                  context,
-                                  fw.PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => BlocProvider(
-                                      create: (_) => ProductCubit(),
-                                      child: UpdateProductScreen(
-                                        product: product,
+                          ),
+                          statusBadge: StatusBadge(
+                            text: (product.isActive ?? false)
+                                ? 'Active'
+                                : 'Inactive',
+                            type: (product.isActive ?? false)
+                                ? StatusBadgeType.active
+                                : StatusBadgeType.inactive,
+                          ),
+                          metaItems: metaItems.isNotEmpty ? metaItems : null,
+                          onTap: () {
+                            if (product.id != null) {
+                              fw.Navigator.push(
+                                context,
+                                fw.PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      ProductDetailsScreen(
+                                        productId: product.id!,
                                       ),
-                                    ),
-                                    transitionDuration: Duration.zero,
-                                    reverseTransitionDuration: Duration.zero,
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            }
+                          },
+                          onEdit: () {
+                            fw.Navigator.push(
+                              context,
+                              fw.PageRouteBuilder(
+                                pageBuilder: (_, __, ___) => BlocProvider(
+                                  create: (_) => ProductCubit(),
+                                  child: UpdateProductScreen(product: product),
+                                ),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                        ),
                       );
                     },
-                  ),
-                ),
-              StickyBottomAction(
-                child: PrimaryButton(
+                  );
+                },
+              ),
+            ),
+            StickyBottomAction(
+              child: PrimaryButton(
                 onPressed: () {
                   fw.Navigator.push(
                     context,
