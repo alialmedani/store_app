@@ -28,9 +28,7 @@ class AppSkeletonLoader {
 
   /// Creates skeleton list for entity cards (like product list)
   /// Shows multiple skeleton cards that mimic EntityListCard structure
-  static fw.Widget entityListItems({
-    int itemCount = 5,
-  }) {
+  static fw.Widget entityListItems({int itemCount = 5}) {
     return fw.ListView.builder(
       padding: const fw.EdgeInsets.fromLTRB(
         AppDesignTokens.screenPaddingHorizontal,
@@ -41,9 +39,7 @@ class AppSkeletonLoader {
       itemCount: itemCount,
       itemBuilder: (context, index) {
         return fw.Padding(
-          padding: const fw.EdgeInsets.only(
-            bottom: AppDesignTokens.cardGap,
-          ),
+          padding: const fw.EdgeInsets.only(bottom: AppDesignTokens.cardGap),
           child: const _SkeletonEntityCard(),
         );
       },
@@ -82,10 +78,7 @@ class _SkeletonEntityCard extends fw.StatelessWidget {
       decoration: fw.BoxDecoration(
         color: const fw.Color(0xFFFFFFFF),
         borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
-        border: fw.Border.all(
-          color: AppDesignTokens.borderColor,
-          width: 1,
-        ),
+        border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
       ),
       child: fw.Row(
         crossAxisAlignment: fw.CrossAxisAlignment.start,

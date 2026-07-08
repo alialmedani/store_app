@@ -58,9 +58,7 @@ class ProductListScreen extends StatelessWidget {
               child: PaginationList<ProductModel>(
                 withPagination: true,
                 withRefresh: true,
-                loadingWidget: AppSkeletonLoader.entityListItems(
-                  itemCount: 5,
-                ),
+                loadingWidget: AppSkeletonLoader.entityListItems(itemCount: 5),
                 repositoryCallBack: (data) {
                   return context.read<ProductCubit>().fetchProductList(data);
                 },

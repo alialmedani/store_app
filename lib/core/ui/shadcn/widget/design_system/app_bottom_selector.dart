@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:flutter/material.dart' show showModalBottomSheet; // Required for bottom sheet API
+import 'package:flutter/material.dart'
+    show showModalBottomSheet; // Required for bottom sheet API
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../design_system/app_design_tokens.dart';
 
