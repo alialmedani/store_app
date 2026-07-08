@@ -137,7 +137,7 @@ class HomeScreen extends fw.StatelessWidget {
         // Categories Horizontal List
         SliverToBoxAdapter(
           child: fw.SizedBox(
-            height: 110,
+            height: 120,
             child: PaginationList<CategoryModel>(
               scrollDirection: fw.Axis.horizontal,
               withPagination: false,
@@ -341,6 +341,7 @@ class _CategoryCard extends fw.StatelessWidget {
   @override
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
+    final imageUrl = ImageHelper.getCategoryImageUrl(category.id ?? '');
 
     return fw.GestureDetector(
       onTap: () {
@@ -368,18 +369,27 @@ class _CategoryCard extends fw.StatelessWidget {
         child: fw.Column(
           mainAxisAlignment: fw.MainAxisAlignment.center,
           children: [
-            fw.Container(
-              width: 48,
-              height: 48,
-              decoration: fw.BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                borderRadius: fw.BorderRadius.circular(12),
-              ),
-              child: fw.Center(
-                child: fw.Icon(
-                  Icons.category_rounded,
-                  size: 24,
-                  color: theme.colorScheme.primary,
+            fw.ClipRRect(
+              borderRadius: fw.BorderRadius.circular(12),
+              child: AuthenticatedImage(
+                imageUrl: imageUrl,
+                width: 48,
+                height: 48,
+                fit: fw.BoxFit.cover,
+                errorWidget: fw.Container(
+                  width: 48,
+                  height: 48,
+                  decoration: fw.BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                    borderRadius: fw.BorderRadius.circular(12),
+                  ),
+                  child: fw.Center(
+                    child: fw.Icon(
+                      Icons.category_rounded,
+                      size: 24,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
                 ),
               ),
             ),

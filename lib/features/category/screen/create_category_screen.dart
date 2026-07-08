@@ -5,6 +5,7 @@ import 'dart:io';
 
 import '../../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
+import '../../../../core/constant/enum/enum.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
 
@@ -267,45 +268,39 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                   children: [
                                     _SizeTypeChip(
                                       label: 'None',
-                                      value: 1,
+                                      value: SizeType.none,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) =>
-                                          cubit.selectSizeType(value),
+                                      onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
                                       label: 'Clothing',
-                                      value: 2,
+                                      value: SizeType.clothing,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) =>
-                                          cubit.selectSizeType(value),
+                                      onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
                                       label: 'Shoes',
-                                      value: 3,
+                                      value: SizeType.shoes,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) =>
-                                          cubit.selectSizeType(value),
+                                      onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
                                       label: 'One Size',
-                                      value: 4,
+                                      value: SizeType.oneSize,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) =>
-                                          cubit.selectSizeType(value),
+                                      onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
                                       label: 'Kids Age',
-                                      value: 5,
+                                      value: SizeType.kidsAge,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) =>
-                                          cubit.selectSizeType(value),
+                                      onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
                                       label: 'Custom',
-                                      value: 6,
+                                      value: SizeType.custom,
                                       selectedValue: cubit.selectedSizeType,
-                                      onSelected: (value) =>
-                                          cubit.selectSizeType(value),
+                                      onSelected: cubit.selectSizeType,
                                     ),
                                   ],
                                 ),
@@ -367,9 +362,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             // Clear form
                             cubit.createCategoryParams.name = '';
                             cubit.createCategoryParams.description = '';
-                            cubit.createCategoryParams.sizeType = 1;
+                            cubit.createCategoryParams.sizeType = 0;
                             cubit.createCategoryParams.isActive = true;
-                            cubit.selectedSizeType = 1;
+                            cubit.selectedSizeType = SizeType.none;
                             cubit.clearImageFile();
                             cubit.clearAllErrors();
 
@@ -430,9 +425,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
 /// Size Type Chip Widget for selection
 class _SizeTypeChip extends StatelessWidget {
   final String label;
-  final int value;
-  final int? selectedValue;
-  final Function(int) onSelected;
+  final SizeType value;
+  final SizeType? selectedValue;
+  final Function(SizeType) onSelected;
 
   const _SizeTypeChip({
     required this.label,

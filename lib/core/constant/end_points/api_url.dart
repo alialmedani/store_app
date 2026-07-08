@@ -1,4 +1,9 @@
-const String baseUrl = 'http://10.0.2.2:5000';
+// const String baseUrl = 'http://10.0.2.2:5000';
+
+//mobile 
+
+const String baseUrl = 'http://10.200.0.112:5000';
+
 const loginUrl = '$baseUrl/connect/token';
 const registerUrl = '$baseUrl/api/account/register';
 const appConfigUrl = '$baseUrl/api/abp/application-configuration';
