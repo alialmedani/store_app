@@ -196,11 +196,7 @@ class InventoryMovementCardSkeleton extends fw.StatelessWidget {
             crossAxisAlignment: fw.CrossAxisAlignment.start,
             children: [
               // Icon placeholder
-              const AppSkeletonBox(
-                width: 48,
-                height: 48,
-                borderRadius: 12,
-              ),
+              const AppSkeletonBox(width: 48, height: 48, borderRadius: 12),
               const fw.SizedBox(width: 14),
               // Product Details
               fw.Expanded(
@@ -238,7 +234,9 @@ class InventoryMovementCardSkeleton extends fw.StatelessWidget {
                 child: fw.Container(
                   padding: const fw.EdgeInsets.all(12),
                   decoration: fw.BoxDecoration(
-                    color: AppDesignTokens.mutedSurfaceColor.withValues(alpha: 0.3),
+                    color: AppDesignTokens.mutedSurfaceColor.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: fw.BorderRadius.circular(10),
                     border: fw.Border.all(
                       color: AppDesignTokens.borderColor,
@@ -260,7 +258,9 @@ class InventoryMovementCardSkeleton extends fw.StatelessWidget {
                 child: fw.Container(
                   padding: const fw.EdgeInsets.all(12),
                   decoration: fw.BoxDecoration(
-                    color: AppDesignTokens.mutedSurfaceColor.withValues(alpha: 0.3),
+                    color: AppDesignTokens.mutedSurfaceColor.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: fw.BorderRadius.circular(10),
                     border: fw.Border.all(
                       color: AppDesignTokens.borderColor,

@@ -6,12 +6,12 @@ import '../../design_system/app_design_tokens.dart';
 
 /// Generic reusable bottom sheet selector for mobile
 /// Fully customizable for any entity type T
-/// 
+///
 /// Each selector can provide:
 /// - Custom itemBuilder to match the real item layout
 /// - Custom loadingBuilder for skeleton that matches the item shape
 /// - Custom emptyBuilder for empty state
-/// 
+///
 /// Usage example:
 /// ```dart
 /// AppBottomSelector.show<CategoryModel>(
@@ -30,7 +30,7 @@ import '../../design_system/app_design_tokens.dart';
 /// ```
 class AppBottomSelector {
   /// Shows a generic bottom sheet selector
-  /// 
+  ///
   /// [title] - Header title
   /// [content] - Main content widget (usually a PaginationList or ListView)
   /// [height] - Optional custom height (default: 75% of screen)
@@ -115,7 +115,7 @@ class AppBottomSelector {
 
   /// Helper to build a standard selectable list item
   /// Use this for simple cases, or create custom item widgets for complex layouts
-  /// 
+  ///
   /// For complex selectors (products, customers), create custom item widgets instead
   static fw.Widget buildStandardItem<T>({
     required fw.BuildContext context,
