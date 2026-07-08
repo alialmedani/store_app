@@ -57,6 +57,23 @@ class OrderListScreen extends StatelessWidget {
               child: PaginationList<OrderModel>(
                 withPagination: true,
                 withRefresh: true,
+                loadingWidget: fw.ListView.builder(
+                  padding: const fw.EdgeInsets.fromLTRB(
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                  ),
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return const fw.Padding(
+                      padding: fw.EdgeInsets.only(
+                        bottom: AppDesignTokens.cardGap,
+                      ),
+                      child: OrderCardSkeleton(),
+                    );
+                  },
+                ),
                 repositoryCallBack: (data) {
                   return context.read<OrderCubit>().fetchOrderList(data);
                 },

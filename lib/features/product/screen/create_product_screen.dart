@@ -537,10 +537,17 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         child: PaginationList<CategoryModel>(
           withPagination: true,
           withRefresh: false,
-          loadingWidget: AppSkeletonLoader.listItems(
+          loadingWidget: fw.ListView.builder(
+            padding: const fw.EdgeInsets.symmetric(
+              vertical: AppDesignTokens.smallGap,
+            ),
             itemCount: 6,
-            withLeading: false,
-            withSubtitle: true,
+            itemBuilder: (context, index) {
+              return const SelectorItemSkeleton(
+                withLeading: false,
+                withSubtitle: true,
+              );
+            },
           ),
           repositoryCallBack: (data) {
             return context.read<CategoryCubit>().fetchCategoryList(data);
@@ -550,13 +557,14 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final category = list[index];
+                final isSelected = category.id == cubit.selectedCategoryId;
 
-                return AppBottomSelector.buildListItem<CategoryModel>(
+                return AppBottomSelector.buildStandardItem<CategoryModel>(
                   context: context,
                   item: category,
                   titleBuilder: (cat) => cat.name ?? 'N/A',
                   subtitleBuilder: (cat) => cat.description,
-                  isSelected: (cat) => cat.id == cubit.selectedCategoryId,
+                  isSelected: isSelected,
                   onTap: () {
                     if (category.id != null && category.name != null) {
                       cubit.selectCategory(category.id!);

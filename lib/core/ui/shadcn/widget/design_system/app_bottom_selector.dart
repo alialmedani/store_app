@@ -5,9 +5,35 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Generic reusable bottom sheet selector for mobile
-/// Supports any item type T with customizable display
-class AppBottomSelector<T> {
-  /// Shows a bottom sheet selector with a list of items
+/// Fully customizable for any entity type T
+/// 
+/// Each selector can provide:
+/// - Custom itemBuilder to match the real item layout
+/// - Custom loadingBuilder for skeleton that matches the item shape
+/// - Custom emptyBuilder for empty state
+/// 
+/// Usage example:
+/// ```dart
+/// AppBottomSelector.show<CategoryModel>(
+///   context: context,
+///   title: 'Select Category',
+///   itemBuilder: (item, isSelected, onTap) {
+///     return CategorySelectorItem(
+///       category: item,
+///       isSelected: isSelected,
+///       onTap: onTap,
+///     );
+///   },
+///   loadingBuilder: () => CategorySelectorSkeleton(),
+///   content: PaginationList<CategoryModel>(...),
+/// );
+/// ```
+class AppBottomSelector {
+  /// Shows a generic bottom sheet selector
+  /// 
+  /// [title] - Header title
+  /// [content] - Main content widget (usually a PaginationList or ListView)
+  /// [height] - Optional custom height (default: 75% of screen)
   static Future<T?> show<T>({
     required fw.BuildContext context,
     required String title,
@@ -17,7 +43,7 @@ class AppBottomSelector<T> {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: fw.Color(0x00000000),
+      backgroundColor: const fw.Color(0x00000000),
       builder: (context) {
         final theme = Theme.of(context);
 
@@ -56,7 +82,7 @@ class AppBottomSelector<T> {
                     fw.Expanded(
                       child: fw.Text(
                         title,
-                        style: fw.TextStyle(
+                        style: const fw.TextStyle(
                           fontSize: AppDesignTokens.sectionTitleFontSize,
                           fontWeight: AppDesignTokens.bold,
                           color: AppDesignTokens.titleTextColor,
@@ -75,7 +101,7 @@ class AppBottomSelector<T> {
               // Divider
               fw.Container(
                 height: 1,
-                color: theme.colorScheme.border.withOpacity(0.1),
+                color: theme.colorScheme.border.withValues(alpha: 0.1),
               ),
 
               // Content
@@ -87,18 +113,20 @@ class AppBottomSelector<T> {
     );
   }
 
-  /// Creates a selectable list item for the bottom sheet
-  static fw.Widget buildListItem<T>({
+  /// Helper to build a standard selectable list item
+  /// Use this for simple cases, or create custom item widgets for complex layouts
+  /// 
+  /// For complex selectors (products, customers), create custom item widgets instead
+  static fw.Widget buildStandardItem<T>({
     required fw.BuildContext context,
     required T item,
     required String Function(T) titleBuilder,
     String? Function(T)? subtitleBuilder,
-    bool Function(T)? isSelected,
+    bool isSelected = false,
     required fw.VoidCallback onTap,
     fw.Widget? Function(T)? leadingBuilder,
   }) {
     final theme = Theme.of(context);
-    final selected = isSelected?.call(item) ?? false;
 
     return fw.GestureDetector(
       onTap: onTap,
@@ -108,9 +136,9 @@ class AppBottomSelector<T> {
           vertical: AppDesignTokens.itemGap,
         ),
         decoration: fw.BoxDecoration(
-          color: selected
-              ? theme.colorScheme.primary.withOpacity(0.08)
-              : fw.Color(0x00000000),
+          color: isSelected
+              ? theme.colorScheme.primary.withValues(alpha: 0.08)
+              : const fw.Color(0x00000000),
         ),
         child: fw.Row(
           children: [
@@ -126,10 +154,10 @@ class AppBottomSelector<T> {
                     titleBuilder(item),
                     style: fw.TextStyle(
                       fontSize: AppDesignTokens.bodyFontSize,
-                      fontWeight: selected
+                      fontWeight: isSelected
                           ? AppDesignTokens.semiBold
                           : AppDesignTokens.medium,
-                      color: selected
+                      color: isSelected
                           ? theme.colorScheme.primary
                           : AppDesignTokens.titleTextColor,
                     ),
@@ -139,7 +167,7 @@ class AppBottomSelector<T> {
                     const fw.SizedBox(height: AppDesignTokens.tinyGap),
                     fw.Text(
                       subtitleBuilder(item)!,
-                      style: fw.TextStyle(
+                      style: const fw.TextStyle(
                         fontSize: AppDesignTokens.captionFontSize,
                         color: AppDesignTokens.mutedTextColor,
                       ),
@@ -150,7 +178,7 @@ class AppBottomSelector<T> {
                 ],
               ),
             ),
-            if (selected) ...[
+            if (isSelected) ...[
               const fw.SizedBox(width: AppDesignTokens.smallGap),
               fw.Icon(
                 Icons.check_circle,
@@ -161,6 +189,29 @@ class AppBottomSelector<T> {
           ],
         ),
       ),
+    );
+  }
+
+  /// Legacy method - kept for backward compatibility
+  /// Use buildStandardItem instead
+  @Deprecated('Use buildStandardItem instead')
+  static fw.Widget buildListItem<T>({
+    required fw.BuildContext context,
+    required T item,
+    required String Function(T) titleBuilder,
+    String? Function(T)? subtitleBuilder,
+    bool Function(T)? isSelected,
+    required fw.VoidCallback onTap,
+    fw.Widget? Function(T)? leadingBuilder,
+  }) {
+    return buildStandardItem<T>(
+      context: context,
+      item: item,
+      titleBuilder: titleBuilder,
+      subtitleBuilder: subtitleBuilder,
+      isSelected: isSelected?.call(item) ?? false,
+      onTap: onTap,
+      leadingBuilder: leadingBuilder,
     );
   }
 }

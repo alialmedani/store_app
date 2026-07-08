@@ -58,7 +58,23 @@ class ProductListScreen extends StatelessWidget {
               child: PaginationList<ProductModel>(
                 withPagination: true,
                 withRefresh: true,
-                loadingWidget: AppSkeletonLoader.entityListItems(itemCount: 5),
+                loadingWidget: fw.ListView.builder(
+                  padding: const fw.EdgeInsets.fromLTRB(
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                  ),
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return const fw.Padding(
+                      padding: fw.EdgeInsets.only(
+                        bottom: AppDesignTokens.cardGap,
+                      ),
+                      child: ProductCardSkeleton(),
+                    );
+                  },
+                ),
                 repositoryCallBack: (data) {
                   return context.read<ProductCubit>().fetchProductList(data);
                 },

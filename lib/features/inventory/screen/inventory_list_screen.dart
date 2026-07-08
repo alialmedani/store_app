@@ -27,6 +27,21 @@ class InventoryListScreen extends StatelessWidget {
               child: PaginationList<InventoryModel>(
                 withPagination: true,
                 withRefresh: true,
+                loadingWidget: fw.ListView.builder(
+                  padding: const fw.EdgeInsets.fromLTRB(
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                    AppDesignTokens.screenPaddingHorizontal,
+                  ),
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return const fw.Padding(
+                      padding: fw.EdgeInsets.only(bottom: 16),
+                      child: InventoryMovementCardSkeleton(),
+                    );
+                  },
+                ),
                 repositoryCallBack: (data) {
                   return context.read<InventoryCubit>().fetchInventoryList(
                     data,
