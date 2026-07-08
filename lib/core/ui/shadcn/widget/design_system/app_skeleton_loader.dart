@@ -118,18 +118,10 @@ class ProductVariantCardSkeleton extends fw.StatelessWidget {
               ),
               const fw.SizedBox(width: AppDesignTokens.smallGap),
               // Status badge
-              const AppSkeletonBox(
-                width: 60,
-                height: 22,
-                borderRadius: 8,
-              ),
+              const AppSkeletonBox(width: 60, height: 22, borderRadius: 8),
               const fw.SizedBox(width: AppDesignTokens.smallGap),
               // Edit button
-              const AppSkeletonBox(
-                width: 34,
-                height: 34,
-                borderRadius: 8,
-              ),
+              const AppSkeletonBox(width: 34, height: 34, borderRadius: 8),
             ],
           ),
           const fw.SizedBox(height: AppDesignTokens.itemGap),
@@ -193,9 +185,7 @@ class OrderCardSkeleton extends fw.StatelessWidget {
           fw.Row(
             mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
             children: [
-              const fw.Expanded(
-                child: AppSkeletonBox(width: 120, height: 18),
-              ),
+              const fw.Expanded(child: AppSkeletonBox(width: 120, height: 18)),
               const AppSkeletonBox(width: 70, height: 12),
               const fw.SizedBox(width: 8),
               const AppSkeletonBox(width: 32, height: 32, borderRadius: 8),
@@ -208,9 +198,7 @@ class OrderCardSkeleton extends fw.StatelessWidget {
             children: [
               const AppSkeletonBox(width: 16, height: 16, borderRadius: 4),
               const fw.SizedBox(width: 8),
-              const fw.Expanded(
-                child: AppSkeletonBox(width: 150, height: 14),
-              ),
+              const fw.Expanded(child: AppSkeletonBox(width: 150, height: 14)),
             ],
           ),
           const fw.SizedBox(height: 8),
@@ -244,11 +232,7 @@ class OrderCardSkeleton extends fw.StatelessWidget {
           const fw.SizedBox(height: AppDesignTokens.itemGap),
 
           // Total Amount container
-          const AppSkeletonBox(
-            width: 120,
-            height: 32,
-            borderRadius: 8,
-          ),
+          const AppSkeletonBox(width: 120, height: 32, borderRadius: 8),
         ],
       ),
     );

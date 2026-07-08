@@ -154,7 +154,9 @@ class HomeScreen extends fw.StatelessWidget {
                         color: AppDesignTokens.mutedSurfaceColor,
                         borderRadius: fw.BorderRadius.circular(16),
                         border: fw.Border.all(
-                          color: AppDesignTokens.borderColor.withValues(alpha: 0.2),
+                          color: AppDesignTokens.borderColor.withValues(
+                            alpha: 0.2,
+                          ),
                           width: 1,
                         ),
                       ),
@@ -277,12 +279,13 @@ class HomeScreen extends fw.StatelessWidget {
                   AppDesignTokens.sectionGap + 60,
                 ),
                 physics: const fw.NeverScrollableScrollPhysics(),
-                gridDelegate: const fw.SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  mainAxisExtent: 260,
-                ),
+                gridDelegate:
+                    const fw.SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      mainAxisExtent: 260,
+                    ),
                 itemCount: 6,
                 itemBuilder: (context, index) {
                   return _ProductCardSkeleton();
@@ -551,17 +554,9 @@ class _ProductCardSkeleton extends fw.StatelessWidget {
             child: fw.Column(
               crossAxisAlignment: fw.CrossAxisAlignment.start,
               children: [
-                const AppSkeletonBox(
-                  width: 100,
-                  height: 14,
-                  borderRadius: 6,
-                ),
+                const AppSkeletonBox(width: 100, height: 14, borderRadius: 6),
                 const fw.SizedBox(height: 2),
-                const AppSkeletonBox(
-                  width: 70,
-                  height: 12,
-                  borderRadius: 6,
-                ),
+                const AppSkeletonBox(width: 70, height: 12, borderRadius: 6),
                 const fw.SizedBox(height: 4),
                 fw.Row(
                   mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,

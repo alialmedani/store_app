@@ -466,7 +466,10 @@ class DashboardScreen extends fw.StatelessWidget {
     );
   }
 
-  Future<void> _handleLogout(fw.BuildContext context, AuthCubit authCubit) async {
+  Future<void> _handleLogout(
+    fw.BuildContext context,
+    AuthCubit authCubit,
+  ) async {
     // Show logout confirmation dialog
     final shouldLogout = await showDialog<bool>(
       context: context,

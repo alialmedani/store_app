@@ -205,7 +205,8 @@ class _LoginScreenShadcnState extends State<LoginScreenShadcn> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const MainNavigationScreen(),
+                                      builder: (context) =>
+                                          const MainNavigationScreen(),
                                     ),
                                   );
                                 }

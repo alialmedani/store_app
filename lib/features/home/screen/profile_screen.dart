@@ -65,7 +65,9 @@ class ProfileScreen extends fw.StatelessWidget {
                           AppDesignTokens.inputRadius,
                         ),
                         border: fw.Border.all(
-                          color: theme.colorScheme.border.withValues(alpha: 0.1),
+                          color: theme.colorScheme.border.withValues(
+                            alpha: 0.1,
+                          ),
                           width: 1,
                         ),
                       ),
@@ -213,9 +215,7 @@ class ProfileScreen extends fw.StatelessWidget {
                     context: context,
                     builder: (ctx) => AlertDialog(
                       title: const Text('Coming Soon'),
-                      content: const Text(
-                        'Settings will be available soon.',
-                      ),
+                      content: const Text('Settings will be available soon.'),
                       actions: [
                         PrimaryButton(
                           onPressed: () => fw.Navigator.pop(ctx),
@@ -262,7 +262,10 @@ class ProfileScreen extends fw.StatelessWidget {
     );
   }
 
-  Future<void> _handleLogout(fw.BuildContext context, AuthCubit authCubit) async {
+  Future<void> _handleLogout(
+    fw.BuildContext context,
+    AuthCubit authCubit,
+  ) async {
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -331,11 +334,7 @@ class _ProfileMenuItem extends fw.StatelessWidget {
                   color: itemColor.withValues(alpha: 0.1),
                   borderRadius: fw.BorderRadius.circular(10),
                 ),
-                child: fw.Icon(
-                  icon,
-                  size: 20,
-                  color: itemColor,
-                ),
+                child: fw.Icon(icon, size: 20, color: itemColor),
               ),
               const fw.SizedBox(width: AppDesignTokens.itemGap),
               fw.Expanded(

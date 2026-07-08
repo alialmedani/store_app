@@ -12,8 +12,7 @@ class MainNavigationScreen extends fw.StatefulWidget {
   const MainNavigationScreen({super.key});
 
   @override
-  fw.State<MainNavigationScreen> createState() =>
-      _MainNavigationScreenState();
+  fw.State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
@@ -33,9 +32,7 @@ class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
 
     return fw.Column(
       children: [
-        fw.Expanded(
-          child: _screens[_currentIndex],
-        ),
+        fw.Expanded(child: _screens[_currentIndex]),
         // Bottom Navigation Bar
         fw.Container(
           decoration: fw.BoxDecoration(
@@ -145,7 +142,9 @@ class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
                 label,
                 style: fw.TextStyle(
                   fontSize: 12,
-                  fontWeight: isSelected ? fw.FontWeight.w600 : fw.FontWeight.w500,
+                  fontWeight: isSelected
+                      ? fw.FontWeight.w600
+                      : fw.FontWeight.w500,
                   color: isSelected
                       ? theme.colorScheme.primary
                       : theme.colorScheme.mutedForeground,
