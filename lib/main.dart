@@ -1,19 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:store/core/classes/cashe_helper.dart';
-import 'package:store/features/home/cubit/home_cubit.dart';
-import 'package:store/features/store/brands/cubit/brands_cubit.dart';
-import 'package:store/features/store/categories/cubit/categories_cubit.dart';
-import 'package:store/features/store/create_product/cubit/create_product_cubit.dart';
-import 'package:store/features/store/lookups/cubit/lookups_cubit.dart';
-import 'package:store/features/store/product_details/cubit/product_details_cubit.dart';
-import 'package:store/features/store/root/cubit/store_root_cubit.dart';
-import 'package:store/features/store/root/screen/store_root_screen.dart';
+import 'package:store/features/auth/screen/auth_wrapper.dart';
+import 'package:store/features/inventory/cubit/inventory_cubit.dart';
+import 'package:store/features/order/cubit/order_cubit.dart';
+import 'package:store/features/product/cubit/product_cubit.dart';
+
 import 'core/classes/keys.dart';
-import 'core/constant/app_theme/app_theme.dart';
+import 'features/auth/cubit/auth_cubit.dart';
+import 'features/category/cubit/category_cubit.dart';
+import 'features/home/cubit/home_cubit.dart';
+import 'features/product_variant/cubit/product_variant_cubit.dart';
 
 SharedPreferences? prefs;
 
@@ -44,28 +44,32 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => HomeCubit()),
-        BlocProvider(create: (context) => ProductDetailsCubit()),
-        BlocProvider(create: (context) => CreateProductCubit()),
-        BlocProvider(create: (context) => LookupsCubit()),
-        BlocProvider(create: (context) => StoreRootCubit()),
-        BlocProvider(create: (context) => CategoriesCubit()),
-        BlocProvider(create: (context) => BrandsCubit()),
+        BlocProvider<AuthCubit>(create: (context) => AuthCubit()),
+        BlocProvider<HomeCubit>(create: (context) => HomeCubit()),
+        BlocProvider<CategoryCubit>(create: (context) => CategoryCubit()),
+        BlocProvider<ProductCubit>(create: (context) => ProductCubit()),
+        BlocProvider<ProductVariantCubit>(
+          create: (context) => ProductVariantCubit(),
+        ),
+        BlocProvider<OrderCubit>(create: (context) => OrderCubit()),
+        BlocProvider<InventoryCubit>(create: (context) => InventoryCubit()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,
         useInheritedMediaQuery: true,
         splitScreenMode: false,
         builder: (BuildContext context, Widget? child) {
-          return MaterialApp(
-            locale: context.locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
+          return ShadcnApp(
             debugShowCheckedModeBanner: false,
             navigatorKey: Keys.navigatorKey,
-            title: 'Task App',
-            theme: appThemeData[AppTheme.light],
-            home: const StoreRootScreen(),
+            title: 'Store Management',
+            themeMode: ThemeMode.light,
+            theme: ThemeData(colorScheme: ColorSchemes.lightZinc, radius: 0.5),
+            darkTheme: ThemeData(
+              colorScheme: ColorSchemes.darkZinc,
+              radius: 0.5,
+            ),
+            home: const AuthWrapper(),
           );
         },
       ),

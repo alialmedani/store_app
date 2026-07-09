@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -102,13 +101,13 @@ class PaginationListState<Model> extends State<PaginationList<Model>> {
       },
       builder: (context, state) {
         if (state is Loading) {
-          return Center(
-            child: LoadingWidget(
-              width: widget.loadingWidth,
-              height: widget.loadingHeight,
-          
-            ),
-          );
+          return widget.loadingWidget ??
+              Center(
+                child: LoadingWidget(
+                  width: widget.loadingWidth,
+                  height: widget.loadingHeight,
+                ),
+              );
         } else if (state is GetListSuccessfully) {
           return smartRefresher(state.list as List<Model>);
         } else if (state is Error) {

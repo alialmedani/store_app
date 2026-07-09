@@ -1,0 +1,385 @@
+# Copilot Feature Workflow
+
+ 
+============================================================
+A) NEW FEATURE
+============================================================
+ 
+============================================================
+
+### A1 — NEW FEATURE — PLAN ONLY
+
+Follow .github/copilot-instructions.md.
+
+I want to implement a new feature: FEATURE_NAME.
+
+Use my existing architecture:
+Model → Params → UseCase → Repository → Cubit → Screen
+
+Use:
+- api_url.dart for endpoints
+- CreateModel for create/update/delete
+- PaginationList for list
+- GetModel for details if needed
+- shadcn_flutter for UI
+
+Rules:
+- Do not use setState
+- Do not call Dio directly from UI
+- Do not invent a new architecture
+- Do not hardcode URLs outside api_url.dart
+- Do not manually emit Loading/Success/Error in API methods
+- Use emit only for UI state like validation errors, selections, toggles
+- Do not mix Material UI widgets with shadcn_flutter
+- Do not use InkWell, TextButton, FloatingActionButton, or DropdownButtonFormField
+- Do not use shadcn Select unless the exact installed API is verified
+- Avoid importing package:flutter/material.dart
+- Use package:flutter/widgets.dart for base widgets/layout/navigation if needed
+- Do not use MaterialPageRoute
+- Read existing similar feature files first, only as a reference for architecture and naming patterns
+- Do not modify unrelated features
+
+API details:
+PASTE_SWAGGER_ENDPOINTS_REQUEST_BODY_RESPONSE_HERE
+
+First give me the file-by-file plan only.
+Do not modify code yet.
+
+============================================================
+
+### A2 — NEW FEATURE — PHASE 1 DATA LAYER
+
+Good. Proceed in phases.
+
+Start with Phase 1 only: Data Layer for the same feature from the previous plan.
+
+Create/update only the Data Layer files mentioned in your plan:
+- model file
+- create usecase file
+- get/list usecase file
+- update usecase file if needed
+- delete usecase file if needed
+- repository file
+
+Rules:
+- Follow .github/copilot-instructions.md
+- Do not modify Cubit files yet
+- Do not modify Screen files yet
+- Do not change unrelated files
+- Add/use endpoints only in api_url.dart
+- Do not hardcode URLs
+- Use withAuthentication: true if the API requires token
+- Use withAuthentication: false only for public APIs
+- Use call(result: result) for create/update/delete/single responses
+- Use paginatedCall(result: result) for list responses
+- Params must be mutable, not final
+- Model must handle nullable values safely
+- Use String for Guid values
+- Use DateTime? for date fields
+- Match JSON keys exactly from the API
+- Reuse existing shared lookup/basic models if they already exist
+- Do not duplicate models unnecessarily
+
+Apply the Phase 1 changes directly to the workspace files.
+Do not paste full file contents in chat.
+Do not print full files unless I explicitly ask for them.
+
+After applying, respond only with:
+1. Files created/modified
+2. Short summary of what changed
+3. Any compile errors or manual steps needed
+
+============================================================
+
+### A3 — NEW FEATURE — PHASE 2 CUBIT LAYER
+
+Good. Now proceed with Phase 2 only: Cubit Layer for the same feature from the previous plan.
+
+Create/update only the Cubit Layer files mentioned in your plan:
+- cubit file
+- state file
+
+Rules:
+- Follow .github/copilot-instructions.md
+- Use the Phase 1 files already created
+- Do not modify repository/usecase/model unless there is a compile error
+- Do not create screens yet
+- API methods must return Future<Result> or Future<Result<T>>
+- Do not manually emit Loading/Success/Error in API methods
+- Use emit only for UI state:
+  - validation errors
+  - clearing validation errors
+  - dropdown/selector changes
+  - checkbox/switch changes
+  - selected item changes
+- Keep params objects inside Cubit
+- Add validation error variables for required fields
+- Add selection/toggle variables when needed
+- Preserve the existing project Cubit naming style
+- Do not add unnecessary state classes if the current project pattern does not use them
+
+Apply the Phase 2 changes directly to the workspace files.
+Do not paste full file contents in chat.
+Do not print full files unless I explicitly ask for them.
+
+After applying, respond only with:
+1. Files created/modified
+2. Short summary of what changed
+3. Any compile errors or manual steps needed
+
+============================================================
+
+### A4 — NEW FEATURE — PHASE 3 SCREEN LAYER
+
+Good. Now proceed with Phase 3 only: Screen Layer for the same feature from the previous plan.
+
+Create/update only the Screen Layer files mentioned in your plan:
+- list screen if this feature has list API
+- create screen if this feature has create API
+- detail screen if this feature has get-by-id API
+- update screen if needed
+
+Rules:
+- Follow .github/copilot-instructions.md
+- Use the existing Cubit, UseCases, Repository, and Model
+- Do not modify Data Layer or Cubit unless required for a compile error
+- Use shadcn_flutter
+- Do not mix Material UI widgets with shadcn_flutter
+- Do not use InkWell, TextButton, FloatingActionButton, or DropdownButtonFormField
+- Avoid importing package:flutter/material.dart
+- Use package:flutter/widgets.dart for base widgets/layout/navigation if needed
+- Do not use MaterialPageRoute
+- Use GestureDetector around shadcn Card for clickable cards
+- Use shadcn PrimaryButton, SecondaryButton, OutlineButton, DestructiveButton
+- Use shadcn AlertDialog for success/error/confirmation
+- Do not use setState
+- Use BlocBuilder for UI state
+- Use PaginationList for list screen
+- Use CreateModel for create/update/delete
+- Use GetModel for details if needed
+- Use TextField for text inputs
+- Do not use shadcn Select unless the exact installed API is verified
+- For dropdown-like choices, prefer Wrap + PrimaryButton + OutlineButton selector
+- Use Switch or Checkbox for boolean fields
+- Validate required fields before submit
+- Make the UI premium, clean, professional, and user-friendly
+- Use Theme.of(context) and shadcn colorScheme when possible
+- Avoid random hardcoded colors
+- Preserve existing project navigation style if one already exists
+
+Apply the Phase 3 changes directly to the workspace files.
+Do not paste full file contents in chat.
+Do not print full files unless I explicitly ask for them.
+
+After applying, respond only with:
+1. Files created/modified
+2. Short summary of what changed
+3. Any compile errors or manual steps needed
+
+============================================================
+B) ADD TO EXISTING FEATURE
+============================================================
+
+Use this when the feature already exists and you only want to add a new API operation.
+
+Examples:
+- Product exists and you want to add Update
+- Product exists and you want to add GetById
+- Category exists and you want to add Delete
+- Order exists and you want to add Cancel
+- Order exists and you want to add Confirm
+
+Important:
+Do not use the New Feature prompt here.
+Use Extend Existing Feature.
+
+============================================================
+
+### B1 — ADD TO EXISTING FEATURE — PLAN ONLY
+
+Follow .github/copilot-instructions.md.
+
+I want to extend the existing FEATURE_NAME feature.
+
+This feature already exists, so do not recreate it from scratch.
+
+First read the existing folder:
+lib/features/FEATURE_FOLDER/
+
+Understand the current structure, naming, models, usecases, repository, cubit, and screens.
+
+I want to add this new API operation only:
+OPERATION_NAME
+
+API details:
+PASTE_SWAGGER_ENDPOINT_REQUEST_BODY_RESPONSE_HERE
+
+Rules:
+- Do not create a new feature folder
+- Do not duplicate existing models/repository/cubit
+- Reuse the existing model if possible
+- Add only the missing Params / UseCase / Repository method / Cubit method / Screen changes needed
+- Use api_url.dart for endpoint constants/functions
+- Do not hardcode URLs
+- Do not call Dio directly from UI
+- Do not use setState
+- Do not manually emit Loading/Success/Error in API methods
+- Preserve existing create/get/list functionality
+- Do not modify unrelated files
+- Do not mix Material UI widgets with shadcn_flutter
+- Avoid importing package:flutter/material.dart
+- Use package:flutter/widgets.dart for base widgets/layout/navigation if needed
+- Do not use MaterialPageRoute
+
+First give me the file-by-file plan only.
+Do not modify code yet.
+
+============================================================
+
+### B2 — ADD TO EXISTING FEATURE — PHASE 1 DATA LAYER UPDATE
+
+Good. Proceed with Phase 1 only for this new operation.
+
+Update only the Data Layer files needed for the existing feature and operation from the previous plan.
+
+Rules:
+- Follow .github/copilot-instructions.md
+- Do not recreate existing files from scratch unless needed
+- Add only missing endpoint/usecase/repository method/params
+- Reuse existing model if possible
+- Do not modify Cubit files yet
+- Do not modify Screen files yet
+- Preserve existing functionality
+- Use api_url.dart for endpoint constants/functions
+- Do not hardcode URLs
+- Use withAuthentication: true if the API requires token
+- Use withAuthentication: false only for public APIs
+- Use call(result: result) for create/update/delete/single responses
+- Use paginatedCall(result: result) for list responses when needed
+- Params must be mutable, not final
+- Match JSON keys exactly from the API
+- Do not duplicate existing Params if they can be safely reused
+- Do not duplicate existing Model if it already matches the response
+
+Apply the Phase 1 changes directly to the workspace files.
+Do not paste full file contents in chat.
+Do not print full files unless I explicitly ask for them.
+
+After applying, respond only with:
+1. Files created/modified
+2. Short summary of what changed
+3. Any compile errors or manual steps needed
+
+============================================================
+
+### B3 — ADD TO EXISTING FEATURE — PHASE 2 CUBIT LAYER UPDATE
+
+Good. Now proceed with Phase 2 only.
+
+Update only the existing Cubit/State files needed for this new operation from the previous plan.
+
+Rules:
+- Follow .github/copilot-instructions.md
+- Do not manually emit Loading/Success/Error in API methods
+- API method must return Future<Result> or Future<Result<T>>
+- Use emit only for UI state if needed
+- Preserve existing methods
+- Preserve existing create/get/list functionality
+- Do not modify Data Layer unless required for a compile error
+- Do not rename existing Cubit methods unless required
+- Do not break current screens that already use this Cubit
+
+Apply the Phase 2 changes directly to the workspace files.
+Do not paste full file contents in chat.
+Do not print full files unless I explicitly ask for them.
+
+After applying, respond only with:
+1. Files created/modified
+2. Short summary of what changed
+3. Any compile errors or manual steps needed
+
+============================================================
+
+### B4 — ADD TO EXISTING FEATURE — PHASE 3 SCREEN LAYER UPDATE
+
+Good. Now proceed with Phase 3 only.
+
+Update/create only the Screen files needed for this new operation from the previous plan.
+
+Rules:
+- Follow .github/copilot-instructions.md
+- Use shadcn_flutter
+- Do not use setState
+- Use GetModel for get-by-id
+- Use CreateModel for update/delete
+- Use PaginationList for list if needed
+- Do not mix Material UI widgets with shadcn_flutter
+- Do not use InkWell, TextButton, FloatingActionButton, or DropdownButtonFormField
+- Avoid importing package:flutter/material.dart
+- Use package:flutter/widgets.dart for base widgets/layout/navigation if needed
+- Do not use MaterialPageRoute
+- Use GestureDetector around shadcn Card for clickable cards
+- Use shadcn PrimaryButton, SecondaryButton, OutlineButton, DestructiveButton
+- Use shadcn AlertDialog for success/error/confirmation
+- Preserve existing UI and navigation unless needed
+- Make the UI premium, clean, professional, and user-friendly
+- Use Theme.of(context) and shadcn colorScheme when possible
+- Avoid random hardcoded colors
+- Do not break existing screens
+
+Apply the Phase 3 changes directly to the workspace files.
+Do not paste full file contents in chat.
+Do not print full files unless I explicitly ask for them.
+
+After applying, respond only with:
+1. Files created/modified
+2. Short summary of what changed
+3. Any compile errors or manual steps needed
+
+============================================================
+QUICK USAGE
+============================================================
+
+### New Feature
+
+Replace:
+- FEATURE_NAME
+- PASTE_SWAGGER_ENDPOINTS_REQUEST_BODY_RESPONSE_HERE
+
+Example:
+- FEATURE_NAME = Product
+
+Use prompts in order:
+A1 → A2 → A3 → A4
+
+============================================================
+
+### Add to Existing Feature
+
+Replace:
+- FEATURE_NAME
+- FEATURE_FOLDER
+- OPERATION_NAME
+- PASTE_SWAGGER_ENDPOINT_REQUEST_BODY_RESPONSE_HERE
+
+Example:
+- FEATURE_NAME = Product
+- FEATURE_FOLDER = product
+- OPERATION_NAME = Update Product
+
+Use prompts in order:
+B1 → B2 → B3 → B4
+
+============================================================
+IMPORTANT NOTES
+============================================================
+
+- If the feature folder does not exist, use New Feature.
+- If the feature folder already exists, use Add to Existing Feature.
+- In the first prompt, Copilot should only give the plan.
+- In Phase 1, Phase 2, and Phase 3, Copilot should apply changes directly to files.
+- Copilot should not paste full files in chat unless I explicitly ask for them.
+- Always check compile errors after each phase before moving to the next phase.
+- When copying a prompt to Copilot, copy only the text under the step title.
+- Do not copy separator lines if you do not need them.
+- Do not copy this whole file into Copilot every time.

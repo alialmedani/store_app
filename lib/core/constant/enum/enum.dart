@@ -1,56 +1,25 @@
-enum EntityType {
-  drink,
-  user,
-  other;
+enum SizeType {
+  none,
+  clothing,
+  shoes,
+  oneSize,
+  kidsAge,
+  custom;
 
-  static EntityType? fromInt(int? value) {
-    switch (value) {
-      case 1:
-        return EntityType.drink;
-      case 2:
-        return EntityType.user;
-      case 3:
-        return EntityType.other;
-
-      default:
-        return null;
-    }
-  }
-
-  int toInt() {
-    switch (this) {
-      case EntityType.drink:
-        return 1;
-      case EntityType.user:
-        return 2;
-      case EntityType.other:
-        return 3;
-    }
-  }
-}
-
-enum OrderStatus {
-  draft,
-  submitted,
-  inPreparation,
-  ready,
-  delivered,
-  canceled;
-
-  static OrderStatus? fromInt(int? value) {
+  static SizeType? fromInt(int? value) {
     switch (value) {
       case 0:
-        return OrderStatus.draft;
+        return SizeType.none;
       case 1:
-        return OrderStatus.submitted;
+        return SizeType.clothing;
       case 2:
-        return OrderStatus.inPreparation;
+        return SizeType.shoes;
       case 3:
-        return OrderStatus.ready;
+        return SizeType.oneSize;
       case 4:
-        return OrderStatus.delivered;
+        return SizeType.kidsAge;
       case 5:
-        return OrderStatus.canceled;
+        return SizeType.custom;
 
       default:
         return null;
@@ -59,38 +28,38 @@ enum OrderStatus {
 
   int toInt() {
     switch (this) {
-      case OrderStatus.draft:
+      case SizeType.none:
         return 0;
-      case OrderStatus.submitted:
+      case SizeType.clothing:
         return 1;
-      case OrderStatus.inPreparation:
+      case SizeType.shoes:
         return 2;
-      case OrderStatus.ready:
+      case SizeType.oneSize:
         return 3;
-      case OrderStatus.delivered:
+      case SizeType.kidsAge:
         return 4;
-      case OrderStatus.canceled:
+      case SizeType.custom:
         return 5;
     }
   }
 }
 
-enum SugarLevel {
-  none,
-  light,
-  medium,
-  high;
+enum TargetAudience {
+  all,
+  men,
+  women,
+  kids;
 
-  static SugarLevel? fromInt(int? value) {
+  static TargetAudience? fromInt(int? value) {
     switch (value) {
       case 0:
-        return SugarLevel.none;
+        return TargetAudience.all;
       case 1:
-        return SugarLevel.light;
+        return TargetAudience.men;
       case 2:
-        return SugarLevel.medium;
+        return TargetAudience.women;
       case 3:
-        return SugarLevel.high;
+        return TargetAudience.kids;
 
       default:
         return null;
@@ -99,59 +68,27 @@ enum SugarLevel {
 
   int toInt() {
     switch (this) {
-      case SugarLevel.none:
+      case TargetAudience.all:
         return 0;
-      case SugarLevel.light:
+      case TargetAudience.men:
         return 1;
-      case SugarLevel.medium:
+      case TargetAudience.women:
         return 2;
-      case SugarLevel.high:
+      case TargetAudience.kids:
         return 3;
-    }
-  }
-}
-
-enum RoleType {
-  user,
-  officeBoy;
-
-  static RoleType? fromString(String? value) {
-    if (value == null) return null;
-    final v = value.trim().toLowerCase().replaceAll(' ', '');
-    switch (v) {
-      case 'user':
-        return RoleType.user;
-      case 'officeboy':
-        return RoleType.officeBoy;
-      default:
-        return null;
-    }
-  }
-
-  String toApiString() {
-    switch (this) {
-      case RoleType.user:
-        return 'User';
-      case RoleType.officeBoy:
-        return 'OfficeBoy';
     }
   }
 
   String displayString() {
     switch (this) {
-      case RoleType.user:
-        return 'User';
-      case RoleType.officeBoy:
-        return 'Office Boy';
+      case TargetAudience.all:
+        return 'All';
+      case TargetAudience.men:
+        return 'Men';
+      case TargetAudience.women:
+        return 'Women';
+      case TargetAudience.kids:
+        return 'Kids';
     }
-  }
-
-  static List<RoleType> listFromApi(List<String>? apiRoles) {
-    if (apiRoles == null) return [];
-    return apiRoles.map(fromString).whereType<RoleType>().toList();
-  }
-
-  static List<String> listToApi(List<RoleType> roles) {
-    return roles.map((e) => e.toApiString()).toList();
   }
 }

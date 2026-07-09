@@ -1,27 +1,24 @@
+import '../../../../../core/constant/end_points/api_url.dart';
 import '../../../../../core/data_source/remote_data_source.dart';
 import '../../../../../core/http/http_method.dart';
 import '../../../../../core/repository/core_repository.dart';
 import '../../../../../core/results/result.dart';
-import '../model/product_model.dart';
-import '../usecase/get_products_usecase.dart';
-
-const String getProductsUrl = 'http://10.200.0.112:7151/api/Products';
+import '../model/dashboard_summary_model.dart';
+import '../usecase/get_dashboard_summary_usecase.dart';
 
 class HomeRepository extends CoreRepository {
-  Future<Result<List<ProductModel>>> getProductsRequest({
-    required GetProductsParams params,
+  Future<Result<DashboardSummaryModel>> getDashboardSummaryRequest({
+    required GetDashboardSummaryParams params,
   }) async {
-    final result = await RemoteDataSource.request<List<ProductModel>>(
-      withAuthentication: false,
-      url: getProductsUrl,
+    final result = await RemoteDataSource.request<DashboardSummaryModel>(
+      withAuthentication: true,
+      url: getDashboardSummaryUrl,
       method: HttpMethod.GET,
-      queryParameters: params.toJson(),
       converter: (json) {
-        final List<dynamic> data = json['items'] ?? [];
-        return data.map((item) => ProductModel.fromJson(item)).toList();
+        return DashboardSummaryModel.fromJson(json);
       },
     );
 
-    return paginatedCall(result: result);
+    return call(result: result);
   }
 }
