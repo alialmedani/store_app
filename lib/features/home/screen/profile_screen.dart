@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:flutter/widgets.dart' as fw;
@@ -49,9 +50,9 @@ class ProfileScreen extends fw.StatelessWidget {
                   mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: fw.CrossAxisAlignment.start,
                   children: [
-                    const fw.Text(
-                      'Profile',
-                      style: fw.TextStyle(
+                    fw.Text(
+                      'prfile'.tr(),
+                      style: const fw.TextStyle(
                         fontSize: 28,
                         fontWeight: AppDesignTokens.extraBold,
                         letterSpacing: -0.5,
@@ -143,7 +144,7 @@ class ProfileScreen extends fw.StatelessWidget {
             delegate: SliverChildListDelegate([
               _ProfileMenuItem(
                 icon: Icons.person_outline,
-                title: 'Edit Profile',
+                title: 'edit_profile'.tr(),
                 onTap: () {
                   showDialog(
                     context: context,
@@ -165,7 +166,7 @@ class ProfileScreen extends fw.StatelessWidget {
               const fw.SizedBox(height: AppDesignTokens.itemGap),
               _ProfileMenuItem(
                 icon: Icons.lock_outline,
-                title: 'Change Password',
+                title: 'change_password'.tr(),
                 onTap: () {
                   showDialog(
                     context: context,
@@ -177,7 +178,7 @@ class ProfileScreen extends fw.StatelessWidget {
                       actions: [
                         PrimaryButton(
                           onPressed: () => fw.Navigator.pop(ctx),
-                          child: const Text('OK'),
+                          child: Text('ok'.tr()),
                         ),
                       ],
                     ),
@@ -187,19 +188,19 @@ class ProfileScreen extends fw.StatelessWidget {
               const fw.SizedBox(height: AppDesignTokens.itemGap),
               _ProfileMenuItem(
                 icon: Icons.notifications_none,
-                title: 'Notifications',
+                title: 'notifications'.tr(),
                 onTap: () {
                   showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Coming Soon'),
+                      title: Text('coming_soon'.tr()),
                       content: const Text(
                         'Notifications settings will be available soon.',
                       ),
                       actions: [
                         PrimaryButton(
                           onPressed: () => fw.Navigator.pop(ctx),
-                          child: const Text('OK'),
+                          child: Text('ok'.tr()),
                         ),
                       ],
                     ),
@@ -209,17 +210,17 @@ class ProfileScreen extends fw.StatelessWidget {
               const fw.SizedBox(height: AppDesignTokens.itemGap),
               _ProfileMenuItem(
                 icon: Icons.settings_outlined,
-                title: 'Settings',
+                title: 'settings'.tr(),
                 onTap: () {
                   showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Coming Soon'),
+                      title: Text('coimng_soon'.tr()),
                       content: const Text('Settings will be available soon.'),
                       actions: [
                         PrimaryButton(
                           onPressed: () => fw.Navigator.pop(ctx),
-                          child: const Text('OK'),
+                          child: Text('ok'.tr()),
                         ),
                       ],
                     ),
