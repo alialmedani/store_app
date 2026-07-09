@@ -135,9 +135,10 @@ class HomeScreen extends fw.StatelessWidget {
         ),
 
         // Categories Horizontal List
+        // Categories Horizontal List
         SliverToBoxAdapter(
           child: fw.SizedBox(
-            height: 120,
+  height: 160,
             child: PaginationList<CategoryModel>(
               scrollDirection: fw.Axis.horizontal,
               withPagination: false,
@@ -151,39 +152,8 @@ class HomeScreen extends fw.StatelessWidget {
                 itemCount: 5,
                 itemBuilder: (context, index) {
                   return fw.Padding(
-                    padding: fw.EdgeInsets.only(
-                      right: index < 4 ? AppDesignTokens.cardGap : 0,
-                    ),
-                    child: fw.Container(
-                      width: 110,
-                      decoration: fw.BoxDecoration(
-                        color: AppDesignTokens.mutedSurfaceColor,
-                        borderRadius: fw.BorderRadius.circular(16),
-                        border: fw.Border.all(
-                          color: AppDesignTokens.borderColor.withValues(
-                            alpha: 0.2,
-                          ),
-                          width: 1,
-                        ),
-                      ),
-                      padding: const fw.EdgeInsets.all(12),
-                      child: fw.Column(
-                        mainAxisAlignment: fw.MainAxisAlignment.center,
-                        children: [
-                          const AppSkeletonBox(
-                            width: 48,
-                            height: 48,
-                            borderRadius: 12,
-                          ),
-                          const fw.SizedBox(height: 8),
-                          const AppSkeletonBox(
-                            width: 70,
-                            height: 13,
-                            borderRadius: 6,
-                          ),
-                        ],
-                      ),
-                    ),
+                    padding: fw.EdgeInsets.only(right: index < 4 ? 14 : 0),
+                    child: const _CategoryCardSkeleton(),
                   );
                 },
               ),
@@ -199,11 +169,10 @@ class HomeScreen extends fw.StatelessWidget {
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
                     final category = categories[index];
+
                     return fw.Padding(
                       padding: fw.EdgeInsets.only(
-                        right: index < categories.length - 1
-                            ? AppDesignTokens.cardGap
-                            : 0,
+                        right: index < categories.length - 1 ? 14 : 0,
                       ),
                       child: _CategoryCard(category: category),
                     );
@@ -213,7 +182,6 @@ class HomeScreen extends fw.StatelessWidget {
             ),
           ),
         ),
-
         // Products Section Header
         SliverToBoxAdapter(
           child: fw.Padding(
@@ -332,6 +300,63 @@ class HomeScreen extends fw.StatelessWidget {
   }
 }
 
+/// Category Card Skeleton
+class _CategoryCardSkeleton extends fw.StatelessWidget {
+  const _CategoryCardSkeleton();
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    final theme = Theme.of(context);
+
+    return fw.Container(
+      width: 220,
+      height: 150,
+      decoration: fw.BoxDecoration(
+        color: theme.colorScheme.card,
+        borderRadius: fw.BorderRadius.circular(26),
+        border: fw.Border.all(
+          color: theme.colorScheme.border.withValues(alpha: 0.12),
+        ),
+      ),
+      child: fw.ClipRRect(
+        borderRadius: fw.BorderRadius.circular(26),
+        child: fw.Stack(
+          children: [
+            const fw.Positioned.fill(
+              child: AppSkeletonBox(
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: 0,
+              ),
+            ),
+            fw.Positioned(
+              left: 16,
+              right: 16,
+              bottom: 16,
+              child: fw.Column(
+                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                mainAxisSize: fw.MainAxisSize.min,
+                children: const [
+                  AppSkeletonBox(
+                    width: 120,
+                    height: 18,
+                    borderRadius: 8,
+                  ),
+                  fw.SizedBox(height: 8),
+                  AppSkeletonBox(
+                    width: 100,
+                    height: 24,
+                    borderRadius: 999,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 /// Category Card Widget
 class _CategoryCard extends fw.StatelessWidget {
   final CategoryModel category;
@@ -356,61 +381,159 @@ class _CategoryCard extends fw.StatelessWidget {
         );
       },
       child: fw.Container(
-        width: 110,
+        width: 220,
+        height: 150,
         decoration: fw.BoxDecoration(
-          color: theme.colorScheme.card,
-          borderRadius: fw.BorderRadius.circular(16),
-          border: fw.Border.all(
-            color: theme.colorScheme.border.withValues(alpha: 0.2),
-            width: 1,
-          ),
+          borderRadius: fw.BorderRadius.circular(26),
+          boxShadow: [
+            fw.BoxShadow(
+              color: fw.Color(0xFF000000).withValues(alpha: 0.10),
+              blurRadius: 28,
+              offset: const fw.Offset(0, 16),
+            ),
+          ],
         ),
-        padding: const fw.EdgeInsets.all(12),
-        child: fw.Column(
-          mainAxisAlignment: fw.MainAxisAlignment.center,
-          children: [
-            fw.ClipRRect(
-              borderRadius: fw.BorderRadius.circular(12),
-              child: AuthenticatedImage(
-                imageUrl: imageUrl,
-                width: 48,
-                height: 48,
-                fit: fw.BoxFit.cover,
-                errorWidget: fw.Container(
-                  width: 48,
-                  height: 48,
-                  decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                    borderRadius: fw.BorderRadius.circular(12),
-                  ),
-                  child: fw.Center(
-                    child: fw.Icon(
-                      Icons.category_rounded,
-                      size: 24,
-                      color: theme.colorScheme.primary,
+        child: fw.ClipRRect(
+          borderRadius: fw.BorderRadius.circular(26),
+          child: fw.Stack(
+            children: [
+              fw.Positioned.fill(
+                child: AuthenticatedImage(
+                  imageUrl: imageUrl,
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: fw.BoxFit.cover,
+                  errorWidget: fw.Container(
+                    decoration: fw.BoxDecoration(
+                      gradient: fw.LinearGradient(
+                        begin: fw.Alignment.topLeft,
+                        end: fw.Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.primary.withValues(alpha: 0.20),
+                          theme.colorScheme.primary.withValues(alpha: 0.06),
+                          theme.colorScheme.card,
+                        ],
+                      ),
+                    ),
+                    child: fw.Center(
+                      child: fw.Icon(
+                        Icons.category_rounded,
+                        size: 52,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            const fw.SizedBox(height: 8),
-            fw.Text(
-              category.name ?? 'Unknown',
-              maxLines: 2,
-              textAlign: fw.TextAlign.center,
-              overflow: fw.TextOverflow.ellipsis,
-              style: const fw.TextStyle(
-                fontSize: 13,
-                fontWeight: fw.FontWeight.w600,
+
+              // Image luxury overlay
+              fw.Positioned.fill(
+                child: fw.Container(
+                  decoration: fw.BoxDecoration(
+                    gradient: fw.LinearGradient(
+                      begin: fw.Alignment.topCenter,
+                      end: fw.Alignment.bottomCenter,
+                      colors: [
+                        fw.Color(0xFF000000).withValues(alpha: 0.05),
+                        fw.Color(0xFF000000).withValues(alpha: 0.22),
+                        fw.Color(0xFF000000).withValues(alpha: 0.58),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
+
+              // Soft side glow
+              fw.Positioned(
+                top: -35,
+                right: -30,
+                child: fw.Container(
+                  width: 100,
+                  height: 100,
+                  decoration: fw.BoxDecoration(
+                    shape: fw.BoxShape.circle,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.22),
+                  ),
+                ),
+              ),
+
+              // Arrow
+              fw.Positioned(
+                top: 12,
+                right: 12,
+                child: fw.Container(
+                  width: 34,
+                  height: 34,
+                  decoration: fw.BoxDecoration(
+                    color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.88),
+                    borderRadius: fw.BorderRadius.circular(999),
+                    border: fw.Border.all(
+                      color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.45),
+                    ),
+                  ),
+                  child: fw.Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+
+              // Text
+              fw.Positioned(
+                left: 16,
+                right: 16,
+                bottom: 16,
+                child: fw.Column(
+                  crossAxisAlignment: fw.CrossAxisAlignment.start,
+                  mainAxisSize: fw.MainAxisSize.min,
+                  children: [
+                    fw.Text(
+                      category.name ?? 'Unknown',
+                      maxLines: 1,
+                      overflow: fw.TextOverflow.ellipsis,
+                      style: const fw.TextStyle(
+                        fontSize: 18,
+                        height: 1.05,
+                        fontWeight: fw.FontWeight.w900,
+                        letterSpacing: -0.4,
+                        color: fw.Color(0xFFFFFFFF),
+                      ),
+                    ),
+                    const fw.SizedBox(height: 6),
+                    fw.Container(
+                      padding: const fw.EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: fw.BoxDecoration(
+                        color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.18),
+                        borderRadius: fw.BorderRadius.circular(999),
+                        border: fw.Border.all(
+                          color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.22),
+                        ),
+                      ),
+                      child: const fw.Text(
+                        'Explore collection',
+                        maxLines: 1,
+                        overflow: fw.TextOverflow.ellipsis,
+                        style: fw.TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: fw.FontWeight.w700,
+                          color: fw.Color(0xFFFFFFFF),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
 /// Product Card Widget
 class _ProductCard extends fw.StatelessWidget {
   final ProductModel product;
