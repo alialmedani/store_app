@@ -138,7 +138,7 @@ class HomeScreen extends fw.StatelessWidget {
         // Categories Horizontal List
         SliverToBoxAdapter(
           child: fw.SizedBox(
-  height: 160,
+            height: 160,
             child: PaginationList<CategoryModel>(
               scrollDirection: fw.Axis.horizontal,
               withPagination: false,
@@ -337,17 +337,9 @@ class _CategoryCardSkeleton extends fw.StatelessWidget {
                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                 mainAxisSize: fw.MainAxisSize.min,
                 children: const [
-                  AppSkeletonBox(
-                    width: 120,
-                    height: 18,
-                    borderRadius: 8,
-                  ),
+                  AppSkeletonBox(width: 120, height: 18, borderRadius: 8),
                   fw.SizedBox(height: 8),
-                  AppSkeletonBox(
-                    width: 100,
-                    height: 24,
-                    borderRadius: 999,
-                  ),
+                  AppSkeletonBox(width: 100, height: 24, borderRadius: 999),
                 ],
               ),
             ),
@@ -357,6 +349,7 @@ class _CategoryCardSkeleton extends fw.StatelessWidget {
     );
   }
 }
+
 /// Category Card Widget
 class _CategoryCard extends fw.StatelessWidget {
   final CategoryModel category;
@@ -534,6 +527,7 @@ class _CategoryCard extends fw.StatelessWidget {
     );
   }
 }
+
 /// Product Card Widget
 class _ProductCard extends fw.StatelessWidget {
   final ProductModel product;
