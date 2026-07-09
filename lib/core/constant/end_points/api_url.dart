@@ -1,8 +1,8 @@
 //emulator
-// const String baseUrl = 'http://10.0.2.2:5000';
+const String baseUrl = 'http://10.0.2.2:5000';
 
 //mobile
-const String baseUrl = 'http://10.200.0.112:5000';
+// const String baseUrl = 'http://10.200.0.112:5000';
 
 const loginUrl = '$baseUrl/connect/token';
 const registerUrl = '$baseUrl/api/account/register';
@@ -31,7 +31,7 @@ String getFileByEntityUrl({
   return url;
 }
 
-// ========== Category URLs ==========
+//  ========== Category URLs ==========
 const createCategoryUrl = '$baseUrl/api/app/category';
 const getCategoryListUrl = '$baseUrl/api/app/category';
 const getCategoryStockSummaryUrl = '$baseUrl/api/app/category/stock-summary';
