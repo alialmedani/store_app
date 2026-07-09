@@ -50,7 +50,7 @@ class CategoryRepository extends CoreRepository {
   }) async {
     final result = await RemoteDataSource.request<CategoryModel>(
       withAuthentication: true,
-      url: getCategoryDetailsUrl(params.categoryId),
+      url:  (params.categoryId),
       method: HttpMethod.GET,
       converter: (json) {
         return CategoryModel.fromJson(json);

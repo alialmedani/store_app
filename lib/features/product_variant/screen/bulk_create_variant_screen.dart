@@ -8,6 +8,7 @@ import '../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../product/cubit/product_cubit.dart';
 import '../../product/data/model/product_model.dart';
 import '../cubit/product_variant_cubit.dart';
+import '../data/model/product_variant_model.dart';
 import '../data/usecase/bulk_create_product_variant_usecase.dart';
 
 /// Bulk Create Variant Screen
@@ -295,7 +296,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                     const SizedBox(height: 24),
 
                     // Submit Button
-                    CreateModel<List<ProductModel>>(
+                    CreateModel<List<ProductVariantModel>>(
                       withValidation: true,
                       onTap: () {
                         return _validateForm();

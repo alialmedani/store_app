@@ -8,3 +8,4 @@ final class CategoryInitial extends CategoryState {}
 final class CategoryParamsUpdated extends CategoryState {}
 
 final class CategoryValidationError extends CategoryState {}
+final class SizeTypeChangedState extends CategoryState {}

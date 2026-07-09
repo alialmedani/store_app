@@ -7,6 +7,7 @@ import 'dart:io';
 import '../../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../../core/boilerplate/get_model/widgets/get_model.dart';
+import '../../../../core/constant/enum/enum.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/category_cubit.dart';
@@ -85,9 +86,10 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
     cubit.updateCategoryParams.id = category.id;
     cubit.updateCategoryParams.name = category.name ?? '';
     cubit.updateCategoryParams.description = category.description ?? '';
-    cubit.updateCategoryParams.sizeType = category.sizeTypeId ?? 1;
+    cubit.updateCategoryParams.sizeType = category.sizeTypeId ?? 0;
     cubit.updateCategoryParams.isActive = category.isActive ?? true;
-    cubit.selectedSizeType = category.sizeTypeId ?? 1;
+    cubit.selectedSizeType =
+        SizeType.fromInt(category.sizeTypeId) ?? SizeType.none;
 
     _isInitialized = true;
   }
@@ -533,74 +535,74 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       children: [
                                         _SizeTypeChip(
                                           label: 'None',
-                                          value: 1,
+                                          value: SizeType.none,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value;
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
                                           label: 'Clothing',
-                                          value: 2,
+                                          value: SizeType.clothing,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value;
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
                                           label: 'Shoes',
-                                          value: 3,
+                                          value: SizeType.shoes,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value;
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
                                           label: 'One Size',
-                                          value: 4,
+                                          value: SizeType.oneSize,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value;
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
                                           label: 'Kids Age',
-                                          value: 5,
+                                          value: SizeType.kidsAge,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value;
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                         _SizeTypeChip(
                                           label: 'Custom',
-                                          value: 6,
+                                          value: SizeType.custom,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
                                             cubit.selectSizeType(value);
                                             cubit
-                                                    .updateCategoryParams
-                                                    .sizeType =
-                                                value;
+                                                .updateCategoryParams
+                                                .sizeType = value
+                                                .toInt();
                                           },
                                         ),
                                       ],
@@ -754,9 +756,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
 /// Modern Size Type Chip Widget
 class _SizeTypeChip extends fw.StatelessWidget {
   final String label;
-  final int value;
-  final int? selectedValue;
-  final fw.ValueChanged<int> onSelected;
+  final SizeType value;
+  final SizeType? selectedValue;
+  final fw.ValueChanged<SizeType> onSelected;
 
   const _SizeTypeChip({
     required this.label,
