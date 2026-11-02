@@ -197,7 +197,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                   Stack(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(AppDesignTokens.badgeRadius),
                                         child: Image.file(
                                           cubit.selectedImageFile!,
                                           height: 200,
@@ -449,7 +449,7 @@ class _SizeTypeChip extends StatelessWidget {
                 : theme.colorScheme.border,
             width: isSelected ? 2 : 1,
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppDesignTokens.badgeRadius),
         ),
         child: Text(
           label,

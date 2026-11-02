@@ -124,28 +124,6 @@ class DashboardScreen extends fw.StatelessWidget {
                             variance: ButtonVariance.ghost,
                           ),
                         ),
-                        const fw.SizedBox(width: AppDesignTokens.smallGap + 2),
-                        fw.Container(
-                          decoration: fw.BoxDecoration(
-                            color: theme.colorScheme.muted.withValues(
-                              alpha: 0.25,
-                            ),
-                            borderRadius: fw.BorderRadius.circular(
-                              AppDesignTokens.inputRadius,
-                            ),
-                            border: fw.Border.all(
-                              color: theme.colorScheme.border.withValues(
-                                alpha: 0.1,
-                              ),
-                              width: 1,
-                            ),
-                          ),
-                          child: IconButton(
-                            icon: const fw.Icon(Icons.logout, size: 20),
-                            onPressed: () => _handleLogout(context, authCubit),
-                            variance: ButtonVariance.ghost,
-                          ),
-                        ),
                       ],
                     ),
                   ],

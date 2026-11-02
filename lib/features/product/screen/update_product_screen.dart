@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:store/features/category/data/model/category_model.dart';
 import 'package:flutter/widgets.dart' as fw;
@@ -7,6 +9,8 @@ import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../category/cubit/category_cubit.dart';
 import '../cubit/product_cubit.dart';
+import '../../../core/ui/widgets/authenticated_image.dart';
+import '../../../core/utils/image_helper.dart';
 import '../data/model/product_model.dart';
 import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -53,6 +57,35 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
     _descriptionController.text = widget.product.description ?? '';
     _priceController.text = widget.product.price?.toString() ?? '';
     _categoryIdController.text = widget.product.category?.name ?? '';
+  }
+
+  final ImagePicker _imagePicker = ImagePicker();
+
+  Future<void> _pickImage(ProductCubit cubit) async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        imageQuality: 85,
+      );
+      if (image != null) cubit.selectImageFile(File(image.path));
+    } catch (e) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('error_2'.tr()),
+          content: Text('failed_to_select_image'.tr(args: ['$e'])),
+          actions: [
+            PrimaryButton(
+              onPressed: () => fw.Navigator.pop(ctx),
+              child: Text('ok'.tr()),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   bool _validateFields(ProductCubit cubit) {
@@ -142,6 +175,113 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                     child: fw.Column(
                       crossAxisAlignment: fw.CrossAxisAlignment.stretch,
                       children: [
+                        // Product image (current one, or the newly picked file)
+                        BlocBuilder<ProductCubit, ProductState>(
+                          builder: (context, state) {
+                            final picked = cubit.selectedImageFile;
+                            return fw.Column(
+                              crossAxisAlignment: fw.CrossAxisAlignment.start,
+                              children: [
+                                fw.GestureDetector(
+                                  onTap: cubit.isUploadingImage
+                                      ? null
+                                      : () => _pickImage(cubit),
+                                  child: fw.Container(
+                                    height: 200,
+                                    width: double.infinity,
+                                    decoration: AppDesignTokens.glassDecoration(),
+                                    child: fw.ClipRRect(
+                                      borderRadius: fw.BorderRadius.circular(
+                                        AppDesignTokens.cardRadius,
+                                      ),
+                                      child: fw.Stack(
+                                        fit: fw.StackFit.expand,
+                                        children: [
+                                          if (picked != null)
+                                            fw.Image.file(
+                                              picked,
+                                              fit: fw.BoxFit.cover,
+                                            )
+                                          else
+                                            AuthenticatedImage(
+                                              imageUrl:
+                                                  ImageHelper.getProductImageUrl(
+                                                    widget.product.id ?? '',
+                                                  ),
+                                              width: double.infinity,
+                                              height: 200,
+                                              fit: fw.BoxFit.cover,
+                                              errorWidget: fw.Center(
+                                                child: fw.Icon(
+                                                  Icons.inventory_2_outlined,
+                                                  size: 56,
+                                                  color: AppDesignTokens
+                                                      .mutedTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                          fw.Positioned(
+                                            left: 12,
+                                            bottom: 12,
+                                            child: fw.Container(
+                                              padding:
+                                                  const fw.EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 8,
+                                                  ),
+                                              decoration: fw.BoxDecoration(
+                                                gradient: AppDesignTokens
+                                                    .primaryGradient,
+                                                borderRadius:
+                                                    fw.BorderRadius.circular(
+                                                      AppDesignTokens
+                                                          .badgeRadius,
+                                                    ),
+                                              ),
+                                              child: fw.Row(
+                                                mainAxisSize:
+                                                    fw.MainAxisSize.min,
+                                                children: [
+                                                  const fw.Icon(
+                                                    Icons.photo_camera_rounded,
+                                                    size: 16,
+                                                    color: fw.Color(0xFFFFFFFF),
+                                                  ),
+                                                  const fw.SizedBox(width: 6),
+                                                  Text(
+                                                    'change_image'.tr(),
+                                                    style: const fw.TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          fw.FontWeight.w700,
+                                                      color: fw.Color(
+                                                        0xFFFFFFFF,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          if (cubit.isUploadingImage)
+                                            fw.Container(
+                                              color: const fw.Color(0x80000000),
+                                              child: const fw.Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        const fw.SizedBox(height: 16),
+
                         // Name Field
                         BlocBuilder<ProductCubit, ProductState>(
                           builder: (context, state) {
@@ -458,7 +598,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
             child: PaginationList<CategoryModel>(
               withPagination: true,
               withRefresh: false,
-              repositoryCallBack: (data) {
+              loadingWidget: SelectorListSkeleton(withSubtitle: false),
+            repositoryCallBack: (data) {
                 return context.read<CategoryCubit>().fetchCategoryList(data);
               },
               listBuilder: (list) {
@@ -467,8 +608,9 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                   itemCount: list.length,
                   itemBuilder: (context, index) {
                     final category = list[index];
-                    return fw.GestureDetector(
-                      onTap: () {
+                    return SelectorTile(
+                    title: category.name ?? 'N/A',
+                    onTap: () {
                         if (category.id != null && category.name != null) {
                           cubit.selectCategory(category.id!);
                           cubit.updateProductParams.categoryId = category.id!;
@@ -476,16 +618,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                         }
                         fw.Navigator.pop(ctx);
                       },
-                      child: Card(
-                        child: Padding(
-                          padding: const fw.EdgeInsets.all(12),
-                          child: Text(
-                            category.name ?? 'N/A',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ),
-                    );
+                  );
                   },
                 );
               },

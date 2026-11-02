@@ -3,7 +3,7 @@ import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 import 'app_motion.dart';
 
-/// Unified card (Soft Bento): flat surface, big radius, soft shadow.
+/// Unified card (Aurora): glass gradient surface, glass hairline, soft shadow.
 /// Tappable cards press-scale.
 class AppCard extends fw.StatelessWidget {
   final fw.Widget child;
@@ -32,13 +32,17 @@ class AppCard extends fw.StatelessWidget {
     final card = fw.Container(
       padding: padding ?? const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
       decoration: fw.BoxDecoration(
-        color: backgroundColor ?? theme.colorScheme.card,
+        color: backgroundColor,
+        gradient: backgroundColor == null
+            ? AppDesignTokens.glassGradient
+            : null,
         borderRadius: fw.BorderRadius.circular(
           borderRadius ?? AppDesignTokens.cardRadius,
         ),
-        border: borderColor == null
-            ? null
-            : fw.Border.all(color: borderColor!, width: 1),
+        border: fw.Border.all(
+          color: borderColor ?? AppDesignTokens.glassBorder,
+          width: 1,
+        ),
         boxShadow:
             boxShadow ??
             AppDesignTokens.cardShadow(theme.colorScheme.foreground),
@@ -72,7 +76,7 @@ class AppIconChip extends fw.StatelessWidget {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.iconBoxPadding - 1),
       decoration: fw.BoxDecoration(
-        color: color.withValues(alpha: 0.14),
+        color: color.withValues(alpha: 0.16),
         borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
       ),
       child: fw.Icon(icon, size: size, color: color),

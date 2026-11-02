@@ -543,34 +543,25 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         child: PaginationList<CategoryModel>(
           withPagination: true,
           withRefresh: false,
-          loadingWidget: fw.ListView.builder(
-            padding: const fw.EdgeInsets.symmetric(
-              vertical: AppDesignTokens.smallGap,
-            ),
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              return const SelectorItemSkeleton(
-                withLeading: false,
-                withSubtitle: true,
-              );
-            },
+          loadingWidget: const SelectorListSkeleton(
+            withSubtitle: true,
+            padding: fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
           ),
           repositoryCallBack: (data) {
             return context.read<CategoryCubit>().fetchCategoryList(data);
           },
           listBuilder: (list) {
             return fw.ListView.builder(
+              padding: const fw.EdgeInsets.all(
+                AppDesignTokens.screenPaddingHorizontal,
+              ),
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final category = list[index];
-                final isSelected = category.id == cubit.selectedCategoryId;
-
-                return AppBottomSelector.buildStandardItem<CategoryModel>(
-                  context: context,
-                  item: category,
-                  titleBuilder: (cat) => cat.name ?? 'N/A',
-                  subtitleBuilder: (cat) => cat.description,
-                  isSelected: isSelected,
+                return SelectorTile(
+                  title: category.name ?? 'N/A',
+                  subtitle: category.description,
+                  isSelected: category.id == cubit.selectedCategoryId,
                   onTap: () {
                     if (category.id != null && category.name != null) {
                       cubit.selectCategory(category.id!);

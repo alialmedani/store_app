@@ -14,17 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 String _money(double value) => '\$${value.toStringAsFixed(2)}';
 
-fw.Widget _sectionTitle(String text, ThemeData theme) {
-  return Text(
-    text,
-    style: fw.TextStyle(
-      fontSize: 11,
-      fontWeight: fw.FontWeight.w700,
-      color: theme.colorScheme.mutedForeground,
-      letterSpacing: 0.8,
-    ),
-  );
-}
+fw.Widget _sectionTitle(String text, ThemeData theme) => AppSectionTitle(text);
 
 /// Items card: lists order lines. When the order is a draft the lines can be
 /// edited / removed and new items can be added.

@@ -400,5 +400,6 @@
   "variants_count": "المتغيرات",
   "no_variants_yet": "لا توجد متغيرات بعد. أضف متغيرات لتظهر كميات المخزون هنا.",
   "no_color": "بدون لون",
-  "pieces_count": "{} قطعة"
+  "pieces_count": "{} قطعة",
+  "image_upload_failed": "فشل رفع الصورة"
 }

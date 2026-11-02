@@ -25,6 +25,10 @@ class AuthenticatedImage extends fw.StatefulWidget {
     this.errorWidget,
   });
 
+  /// Bumped after an upload so every mounted image reloads its bytes
+  static final fw.ValueNotifier<int> _revision = fw.ValueNotifier<int>(0);
+  static void refreshAll() => _revision.value++;
+
   @override
   fw.State<AuthenticatedImage> createState() => _AuthenticatedImageState();
 }
@@ -38,6 +42,28 @@ class _AuthenticatedImageState extends fw.State<AuthenticatedImage> {
   void initState() {
     super.initState();
     _loadImage();
+    AuthenticatedImage._revision.addListener(_onRevision);
+  }
+
+  @override
+  void dispose() {
+    AuthenticatedImage._revision.removeListener(_onRevision);
+    super.dispose();
+  }
+
+  // Keep showing the old bytes while the new ones load
+  void _onRevision() => _loadImage();
+
+  @override
+  void didUpdateWidget(AuthenticatedImage old) {
+    super.didUpdateWidget(old);
+    if (old.imageUrl != widget.imageUrl) {
+      setState(() {
+        _isLoading = true;
+        _hasError = false;
+      });
+      _loadImage();
+    }
   }
 
   Future<void> _loadImage() async {

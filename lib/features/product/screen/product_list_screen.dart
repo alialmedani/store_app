@@ -7,6 +7,7 @@ import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
+import '../../category/screen/category_details_screen.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
 import 'create_product_screen.dart';
@@ -17,7 +18,11 @@ import 'package:easy_localization/easy_localization.dart';
 /// Product List Screen - Shows all products with pagination
 /// Uses PaginationList widget from boilerplate
 class ProductListScreen extends fw.StatefulWidget {
-  const ProductListScreen({super.key});
+  /// When set, only the products of this category are listed
+  final String? categoryId;
+  final String? categoryName;
+
+  const ProductListScreen({super.key, this.categoryId, this.categoryName});
 
   @override
   fw.State<ProductListScreen> createState() => _ProductListScreenState();
@@ -37,9 +42,29 @@ class _ProductListScreenState extends fw.State<ProductListScreen> {
       child: SafeArea(
         child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'products'.tr(),
+              title: widget.categoryName ?? 'products'.tr(),
               onBack: () => fw.Navigator.pop(context),
-              action: fw.GestureDetector(
+              action: fw.Row(
+                mainAxisSize: fw.MainAxisSize.min,
+                children: [
+                  if (widget.categoryId != null) ...[
+                    IconButton(
+                      icon: const fw.Icon(Icons.info_outline_rounded, size: 20),
+                      onPressed: () => fw.Navigator.push(
+                        context,
+                        fw.PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => CategoryDetailsScreen(
+                            categoryId: widget.categoryId!,
+                          ),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      ),
+                      variance: ButtonVariance.ghost,
+                    ),
+                    const fw.SizedBox(width: 8),
+                  ],
+                  fw.GestureDetector(
                 onTap: () async {
                   await fw.Navigator.push(
                     context,
@@ -56,7 +81,7 @@ class _ProductListScreenState extends fw.State<ProductListScreen> {
                   height: AppDesignTokens.headerActionButtonSize,
                   decoration: fw.BoxDecoration(
                     color: AppDesignTokens.mutedSurfaceColor,
-                    borderRadius: fw.BorderRadius.circular(12),
+                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                   ),
                   child: fw.Center(
                     child: fw.Icon(
@@ -66,6 +91,8 @@ class _ProductListScreenState extends fw.State<ProductListScreen> {
                     ),
                   ),
                 ),
+              ),
+                ],
               ),
             )]), body: PaginationList<ProductModel>(
                 onCubitCreated: (cubit) => _listCubit = cubit,
@@ -89,7 +116,10 @@ class _ProductListScreenState extends fw.State<ProductListScreen> {
                   },
                 ),
                 repositoryCallBack: (data) {
-                  return context.read<ProductCubit>().fetchProductList(data);
+                  return context.read<ProductCubit>().fetchProductList(
+                    data,
+                    categoryId: widget.categoryId,
+                  );
                 },
                 listBuilder: (list) {
                   return fw.ListView.builder(

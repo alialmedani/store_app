@@ -55,7 +55,7 @@ class _ProductVariantListScreenState extends fw.State<ProductVariantListScreen> 
                   height: AppDesignTokens.headerActionButtonSize,
                   decoration: fw.BoxDecoration(
                     color: AppDesignTokens.mutedSurfaceColor,
-                    borderRadius: fw.BorderRadius.circular(12),
+                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                   ),
                   child: fw.Center(
                     child: fw.Icon(

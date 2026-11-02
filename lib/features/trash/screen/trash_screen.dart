@@ -67,7 +67,7 @@ class _TrashScreenState extends fw.State<TrashScreen> {
                 padding: const fw.EdgeInsets.all(4),
                 decoration: fw.BoxDecoration(
                   color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                  borderRadius: fw.BorderRadius.circular(12),
+                  borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                 ),
                 child: fw.Row(
                   children: [
@@ -102,6 +102,7 @@ class _TrashScreenState extends fw.State<TrashScreen> {
           onCubitCreated: (c) => _listCubit = c,
           withPagination: true,
           withRefresh: true,
+          loadingWidget: const _TrashSkeleton(),
           repositoryCallBack: (data) => cubit.fetchDeletedCategoryList(data),
           listBuilder: (list) => _buildList<CategoryModel>(
             list,
@@ -120,6 +121,7 @@ class _TrashScreenState extends fw.State<TrashScreen> {
           onCubitCreated: (c) => _listCubit = c,
           withPagination: true,
           withRefresh: true,
+          loadingWidget: const _TrashSkeleton(),
           repositoryCallBack: (data) => cubit.fetchDeletedProductList(data),
           listBuilder: (list) => _buildList<ProductModel>(
             list,
@@ -138,6 +140,7 @@ class _TrashScreenState extends fw.State<TrashScreen> {
           onCubitCreated: (c) => _listCubit = c,
           withPagination: true,
           withRefresh: true,
+          loadingWidget: const _TrashSkeleton(),
           repositoryCallBack: (data) =>
               cubit.fetchDeletedProductVariantList(data),
           listBuilder: (list) => _buildList<ProductVariantModel>(
@@ -207,6 +210,41 @@ class _TrashScreenState extends fw.State<TrashScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+/// Skeleton with the same structure as the trash rows
+class _TrashSkeleton extends fw.StatelessWidget {
+  const _TrashSkeleton();
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return fw.ListView.builder(
+      physics: const fw.NeverScrollableScrollPhysics(),
+      padding: const fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
+      itemCount: 6,
+      itemBuilder: (context, i) => fw.Padding(
+        padding: const fw.EdgeInsets.only(bottom: AppDesignTokens.cardGap),
+        child: AppCard(
+          child: fw.Row(
+            children: [
+              fw.Expanded(
+                child: fw.Column(
+                  crossAxisAlignment: fw.CrossAxisAlignment.start,
+                  children: const [
+                    AppSkeletonBox(width: 140, height: 16, borderRadius: 6),
+                    fw.SizedBox(height: 6),
+                    AppSkeletonBox(width: 90, height: 12, borderRadius: 6),
+                  ],
+                ),
+              ),
+              const fw.SizedBox(width: 12),
+              const AppSkeletonBox(width: 80, height: 40, borderRadius: 14),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -5,11 +5,13 @@ import 'package:store/core/ui/kit/app_kit.dart';
 import '../../../../core/ui/dialogs/action_helpers.dart';
 import '../../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
+import '../../../../core/ui/widgets/image_viewer.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
 import 'edit_category_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/design_system.dart';
 
 /// Category Details Screen - Shows complete category information
 class CategoryDetailsScreen extends fw.StatelessWidget {
@@ -34,46 +36,11 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
               );
 
               return ScrollAwayHeader(header: fw.Column(children: [
-                  // App Bar
-                  Container(
-                    padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: theme.colorScheme.border.withValues(
-                            alpha: 0.1,
-                          ),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: fw.Row(
+                  AppHeader(
+                    title: 'category_details'.tr(),
+                    action: fw.Row(
+                      mainAxisSize: fw.MainAxisSize.min,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.muted.withValues(
-                              alpha: 0.3,
-                            ),
-                            borderRadius: fw.BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_back, size: 20),
-                            onPressed: () => fw.Navigator.of(context).pop(),
-                            variance: ButtonVariance.ghost,
-                          ),
-                        ),
-                        const fw.SizedBox(width: 12),
-                        fw.Expanded(
-                          child: Text(
-                            'category_details'.tr(),
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                        ),
                         // Delete Button
                         IconButton(
                           icon: const Icon(Icons.delete_outline, size: 20),
@@ -98,17 +65,10 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                           variance: ButtonVariance.ghost,
                         ),
                         // Edit Button
-                        Container(
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(
-                              alpha: 0.15,
-                            ),
-                            borderRadius: fw.BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
+                        IconButton(
                             icon: const Icon(Icons.edit, size: 20),
-                            onPressed: () {
-                              fw.Navigator.push(
+                            onPressed: () async {
+                              await fw.Navigator.push(
                                 context,
                                 fw.PageRouteBuilder(
                                   pageBuilder: (_, __, ___) => BlocProvider(
@@ -121,10 +81,14 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                   reverseTransitionDuration: Duration.zero,
                                 ),
                               );
+                              if (context.mounted) {
+                                context
+                                    .read<CategoryCubit>()
+                                    .getCategoryDetails(categoryId);
+                              }
                             },
                             variance: ButtonVariance.ghost,
                           ),
-                        ),
                       ],
                     ),
                   )]), body: fw.SingleChildScrollView(
@@ -132,254 +96,154 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
-                          // Category Image
-                          Container(
+                          // Hero image
+                          fw.GestureDetector(
+                            onTap: () => showImageViewer(context, imageUrl),
+                            child: fw.Container(
                             width: double.infinity,
-                            height: 280,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.muted.withValues(
-                                alpha: 0.3,
+                            height: 260,
+                            decoration: fw.BoxDecoration(
+                              borderRadius: fw.BorderRadius.circular(
+                                AppDesignTokens.cardRadius + 4,
                               ),
-                              borderRadius: fw.BorderRadius.circular(20),
-                              border: Border.all(
-                                color: theme.colorScheme.border.withValues(
-                                  alpha: 0.3,
-                                ),
-                                width: 1,
-                              ),
+                              boxShadow: AppDesignTokens.glowShadow,
                             ),
                             child: fw.ClipRRect(
-                              borderRadius: fw.BorderRadius.circular(20),
-                              child: AuthenticatedImage(
-                                imageUrl: imageUrl,
-                                width: double.infinity,
-                                height: 280,
-                                fit: fw.BoxFit.cover,
-                                errorWidget: Container(
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.muted.withValues(
-                                      alpha: 0.3,
+                              borderRadius: fw.BorderRadius.circular(
+                                AppDesignTokens.cardRadius + 4,
+                              ),
+                              child: fw.Stack(
+                                fit: fw.StackFit.expand,
+                                children: [
+                                  fw.DecoratedBox(
+                                    decoration: const fw.BoxDecoration(
+                                      gradient: AppDesignTokens.primaryGradient,
                                     ),
-                                    borderRadius: fw.BorderRadius.circular(20),
+                                    child: fw.Center(
+                                      child: fw.Icon(
+                                        Icons.category_rounded,
+                                        size: 72,
+                                        color: const fw.Color(0xFFFFFFFF)
+                                            .withValues(alpha: 0.25),
+                                      ),
+                                    ),
                                   ),
-                                  child: Icon(
-                                    Icons.category_outlined,
-                                    color: theme.colorScheme.mutedForeground,
-                                    size: 80,
+                                  AuthenticatedImage(
+                                    imageUrl: imageUrl,
+                                    width: double.infinity,
+                                    height: 260,
+                                    fit: fw.BoxFit.cover,
+                                    errorWidget: const fw.SizedBox.shrink(),
+                                  ),
+                                  fw.DecoratedBox(
+                                    decoration: fw.BoxDecoration(
+                                      gradient: fw.LinearGradient(
+                                        begin: fw.Alignment.center,
+                                        end: fw.Alignment.bottomCenter,
+                                        colors: [
+                                          const fw.Color(0x00000000),
+                                          const fw.Color(0xFF0B0D24)
+                                              .withValues(alpha: 0.7),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  fw.Positioned(
+                                    left: 18,
+                                    right: 18,
+                                    bottom: 16,
+                                    child: fw.Text(
+                                      category.name ?? 'N/A',
+                                      maxLines: 2,
+                                      overflow: fw.TextOverflow.ellipsis,
+                                      style: const fw.TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: fw.FontWeight.w800,
+                                        letterSpacing: -0.4,
+                                        color: fw.Color(0xFFFFFFFF),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )),
+                          const fw.SizedBox(height: 16),
+
+                          fw.IntrinsicHeight(
+                            child: fw.Row(
+                              crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                              children: [
+                                fw.Expanded(
+                                  child: AppStatTile(
+                                    label: 'status'.tr(),
+                                    value: category.isActive == true
+                                        ? 'active'.tr()
+                                        : 'inactive'.tr(),
+                                    icon: category.isActive == true
+                                        ? Icons.check_circle_rounded
+                                        : Icons.pause_circle_rounded,
+                                    highlight: true,
                                   ),
                                 ),
-                              ),
+                                const fw.SizedBox(width: 12),
+                                fw.Expanded(
+                                  child: AppStatTile(
+                                    label: 'size_type'.tr(),
+                                    value: category.sizeTypeName ?? 'N/A',
+                                    icon: Icons.straighten_rounded,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const fw.SizedBox(height: 24),
 
-                          // Category Name
-                          Text(
-                            category.name ?? 'N/A',
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                          const fw.SizedBox(height: 12),
-
-                          // Status & Size Type Row
-                          fw.Row(
-                            children: [
-                              fw.Expanded(
-                                child: Container(
-                                  padding: const fw.EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: category.isActive == true
-                                        ? theme.colorScheme.primary.withValues(
-                                            alpha: 0.1,
-                                          )
-                                        : theme.colorScheme.muted.withValues(
-                                            alpha: 0.3,
-                                          ),
-                                    borderRadius: fw.BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: category.isActive == true
-                                          ? theme.colorScheme.primary
-                                                .withValues(alpha: 0.3)
-                                          : theme.colorScheme.border.withValues(
-                                              alpha: 0.3,
-                                            ),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: fw.Column(
-                                    crossAxisAlignment:
-                                        fw.CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'status'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color:
-                                              theme.colorScheme.mutedForeground,
-                                        ),
-                                      ),
-                                      const fw.SizedBox(height: 4),
-                                      Text(
-                                        category.isActive == true
-                                            ? 'active'.tr()
-                                            : 'inactive'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: category.isActive == true
-                                              ? theme.colorScheme.primary
-                                              : theme
-                                                    .colorScheme
-                                                    .mutedForeground,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const fw.SizedBox(width: 12),
-                              fw.Expanded(
-                                child: Container(
-                                  padding: const fw.EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.secondary
-                                        .withValues(alpha: 0.1),
-                                    borderRadius: fw.BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: theme.colorScheme.secondary
-                                          .withValues(alpha: 0.3),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: fw.Column(
-                                    crossAxisAlignment:
-                                        fw.CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'size_type'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color:
-                                              theme.colorScheme.mutedForeground,
-                                        ),
-                                      ),
-                                      const fw.SizedBox(height: 4),
-                                      Text(
-                                        category.sizeTypeName ?? 'N/A',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: theme.colorScheme.foreground,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const fw.SizedBox(height: 24),
-
-                          // Description Section
                           if (category.description != null &&
                               category.description!.isNotEmpty) ...[
-                            Text(
-                              'description'.tr(),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
+                            AppSectionTitle('description'.tr()),
                             const fw.SizedBox(height: 12),
-                            Container(
+                            fw.Container(
                               width: double.infinity,
                               padding: const fw.EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.card,
-                                borderRadius: fw.BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: theme.colorScheme.border.withValues(
-                                    alpha: 0.5,
-                                  ),
-                                  width: 1,
-                                ),
-                              ),
+                              decoration: AppDesignTokens.glassDecoration(),
                               child: Text(
                                 category.description!,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  height: 1.6,
-                                  color: theme.colorScheme.foreground,
+                                style: fw.TextStyle(
+                                  fontSize: 14.5,
+                                  height: 1.65,
+                                  color: AppDesignTokens.titleTextColor
+                                      .withValues(alpha: 0.88),
                                 ),
                               ),
                             ),
                             const fw.SizedBox(height: 24),
                           ],
 
-                          // Details Section
-                          Text(
-                            'details'.tr(),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
+                          AppSectionTitle('details'.tr()),
                           const fw.SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            padding: const fw.EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.card,
-                              borderRadius: fw.BorderRadius.circular(16),
-                              border: Border.all(
-                                color: theme.colorScheme.border.withValues(
-                                  alpha: 0.5,
-                                ),
-                                width: 1,
+                          AppInfoSection(
+                            children: [
+                              AppInfoRow(
+                                icon: Icons.tag_rounded,
+                                label: 'size_type_id'.tr(),
+                                value: category.sizeTypeId?.toString() ?? 'N/A',
                               ),
-                            ),
-                            child: fw.Column(
-                              children: [
-                                _DetailRow(
-                                  label: 'size_type_id'.tr(),
-                                  value:
-                                      category.sizeTypeId?.toString() ?? 'N/A',
-                                  theme: theme,
+                              if (category.creationTime != null)
+                                AppInfoRow(
+                                  icon: Icons.calendar_today_rounded,
+                                  label: 'created'.tr(),
+                                  value: _formatDate(category.creationTime!),
                                 ),
-                                if (category.creationTime != null) ...[
-                                  const fw.SizedBox(height: 16),
-                                  _DetailRow(
-                                    label: 'created'.tr(),
-                                    value: _formatDate(category.creationTime!),
-                                    theme: theme,
-                                  ),
-                                ],
-                                if (category.lastModificationTime != null) ...[
-                                  const fw.SizedBox(height: 16),
-                                  _DetailRow(
-                                    label: 'last_modified'.tr(),
-                                    value: _formatDate(
-                                      category.lastModificationTime!,
-                                    ),
-                                    theme: theme,
-                                  ),
-                                ],
-                              ],
-                            ),
+                              if (category.lastModificationTime != null)
+                                AppInfoRow(
+                                  icon: Icons.update_rounded,
+                                  label: 'last_modified'.tr(),
+                                  value: _formatDate(category.lastModificationTime!),
+                                ),
+                            ],
                           ),
+                          const fw.SizedBox(height: 24),
                         ],
                       ),
                     ));
@@ -392,48 +256,5 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
-  }
-}
-
-class _DetailRow extends fw.StatelessWidget {
-  final String label;
-  final String value;
-  final ThemeData theme;
-
-  const _DetailRow({
-    required this.label,
-    required this.value,
-    required this.theme,
-  });
-
-  @override
-  fw.Widget build(fw.BuildContext context) {
-    return fw.Row(
-      crossAxisAlignment: fw.CrossAxisAlignment.start,
-      children: [
-        fw.Expanded(
-          flex: 2,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.mutedForeground,
-            ),
-          ),
-        ),
-        fw.Expanded(
-          flex: 3,
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.foreground,
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

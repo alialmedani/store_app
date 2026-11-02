@@ -400,5 +400,6 @@
   "variants_count": "Variants",
   "no_variants_yet": "No variants yet. Add variants to see stock here.",
   "no_color": "No color",
-  "pieces_count": "{} pcs"
+  "pieces_count": "{} pcs",
+  "image_upload_failed": "Image upload failed"
 }

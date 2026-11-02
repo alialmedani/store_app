@@ -5,6 +5,7 @@ import 'package:store/core/ui/kit/app_kit.dart';
 import '../../../../core/ui/dialogs/action_helpers.dart';
 import '../../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
+import '../../../../core/ui/widgets/image_viewer.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
@@ -14,7 +15,7 @@ import '../../../core/boilerplate/pagination/models/get_list_request.dart';
 import '../../product_variant/data/model/product_variant_model.dart';
 import '../../product_variant/data/repository/product_variant_repository.dart';
 import '../../product_variant/data/usecase/get_product_variant_list_usecase.dart';
-import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/design_system.dart';
 
 /// Product Details Screen - Shows complete product information
 class ProductDetailsScreen extends fw.StatelessWidget {
@@ -37,46 +38,11 @@ class ProductDetailsScreen extends fw.StatelessWidget {
               final imageUrl = ImageHelper.getProductImageUrl(product.id ?? '');
 
               return ScrollAwayHeader(header: fw.Column(children: [
-                  // App Bar
-                  Container(
-                    padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: theme.colorScheme.border.withValues(
-                            alpha: 0.1,
-                          ),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: fw.Row(
+                  AppHeader(
+                    title: 'product_details'.tr(),
+                    action: fw.Row(
+                      mainAxisSize: fw.MainAxisSize.min,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.muted.withValues(
-                              alpha: 0.3,
-                            ),
-                            borderRadius: fw.BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_back, size: 20),
-                            onPressed: () => fw.Navigator.of(context).pop(),
-                            variance: ButtonVariance.ghost,
-                          ),
-                        ),
-                        const fw.SizedBox(width: 12),
-                        fw.Expanded(
-                          child: Text(
-                            'product_details'.tr(),
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                        ),
                         // Delete Button
                         IconButton(
                           icon: const Icon(Icons.delete_outline, size: 20),
@@ -131,192 +97,142 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
-                          // Product Image
-                          Container(
+                          // Hero image
+                          fw.GestureDetector(
+                            onTap: () => showImageViewer(context, imageUrl),
+                            child: fw.Container(
                             width: double.infinity,
-                            height: 280,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.muted.withValues(
-                                alpha: 0.3,
+                            height: 300,
+                            decoration: fw.BoxDecoration(
+                              borderRadius: fw.BorderRadius.circular(
+                                AppDesignTokens.cardRadius + 4,
                               ),
-                              borderRadius: fw.BorderRadius.circular(20),
-                              border: Border.all(
-                                color: theme.colorScheme.border.withValues(
-                                  alpha: 0.3,
-                                ),
-                                width: 1,
-                              ),
+                              boxShadow: AppDesignTokens.glowShadow,
                             ),
                             child: fw.ClipRRect(
-                              borderRadius: fw.BorderRadius.circular(20),
-                              child: AuthenticatedImage(
-                                imageUrl: imageUrl,
-                                width: double.infinity,
-                                height: 280,
-                                fit: fw.BoxFit.cover,
-                                errorWidget: Container(
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.muted.withValues(
-                                      alpha: 0.3,
+                              borderRadius: fw.BorderRadius.circular(
+                                AppDesignTokens.cardRadius + 4,
+                              ),
+                              child: fw.Stack(
+                                fit: fw.StackFit.expand,
+                                children: [
+                                  fw.DecoratedBox(
+                                    decoration: fw.BoxDecoration(
+                                      color: AppDesignTokens.mutedSurfaceColor,
                                     ),
-                                    borderRadius: fw.BorderRadius.circular(20),
+                                    child: fw.Center(
+                                      child: fw.Icon(
+                                        Icons.inventory_2_outlined,
+                                        color: AppDesignTokens.mutedTextColor,
+                                        size: 72,
+                                      ),
+                                    ),
                                   ),
-                                  child: Icon(
-                                    Icons.inventory_2_outlined,
-                                    color: theme.colorScheme.mutedForeground,
-                                    size: 80,
+                                  AuthenticatedImage(
+                                    imageUrl: imageUrl,
+                                    width: double.infinity,
+                                    height: 300,
+                                    fit: fw.BoxFit.cover,
+                                    errorWidget: const fw.SizedBox.shrink(),
                                   ),
-                                ),
+                                  fw.DecoratedBox(
+                                    decoration: fw.BoxDecoration(
+                                      gradient: fw.LinearGradient(
+                                        begin: fw.Alignment.center,
+                                        end: fw.Alignment.bottomCenter,
+                                        colors: [
+                                          const fw.Color(0x00000000),
+                                          const fw.Color(0xFF0B0D24)
+                                              .withValues(alpha: 0.7),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  fw.Positioned(
+                                    left: 18,
+                                    right: 18,
+                                    bottom: 16,
+                                    child: fw.Column(
+                                      crossAxisAlignment:
+                                          fw.CrossAxisAlignment.start,
+                                      children: [
+                                        fw.Text(
+                                          product.name ?? 'N/A',
+                                          maxLines: 2,
+                                          overflow: fw.TextOverflow.ellipsis,
+                                          style: const fw.TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: fw.FontWeight.w800,
+                                            letterSpacing: -0.4,
+                                            color: fw.Color(0xFFFFFFFF),
+                                          ),
+                                        ),
+                                        if (product.category?.name != null) ...[
+                                          const fw.SizedBox(height: 4),
+                                          fw.Text(
+                                            product.category!.name!,
+                                            style: fw.TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: fw.FontWeight.w600,
+                                              color: const fw.Color(0xFFFFFFFF)
+                                                  .withValues(alpha: 0.78),
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          const fw.SizedBox(height: 24),
+                          )),
+                          const fw.SizedBox(height: 16),
 
-                          // Product Name
-                          Text(
-                            product.name ?? 'N/A',
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                          const fw.SizedBox(height: 12),
-
-                          // Price & Status Row
+                          // Price & status
                           fw.Row(
                             children: [
                               fw.Expanded(
-                                child: Container(
-                                  padding: const fw.EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary.withValues(
-                                      alpha: 0.1,
-                                    ),
-                                    borderRadius: fw.BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: theme.colorScheme.primary
-                                          .withValues(alpha: 0.3),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: fw.Column(
-                                    crossAxisAlignment:
-                                        fw.CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'price'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color:
-                                              theme.colorScheme.mutedForeground,
-                                        ),
-                                      ),
-                                      const fw.SizedBox(height: 4),
-                                      Text(
-                                        '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                flex: 3,
+                                child: AppStatTile(
+                                  label: 'price'.tr(),
+                                  value:
+                                      '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
+                                  icon: Icons.sell_rounded,
+                                  highlight: true,
                                 ),
                               ),
                               const fw.SizedBox(width: 12),
-                              Container(
-                                padding: const fw.EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: product.isActive == true
-                                      ? theme.colorScheme.primary.withValues(
-                                          alpha: 0.1,
-                                        )
-                                      : theme.colorScheme.muted.withValues(
-                                          alpha: 0.3,
-                                        ),
-                                  borderRadius: fw.BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: product.isActive == true
-                                        ? theme.colorScheme.primary.withValues(
-                                            alpha: 0.3,
-                                          )
-                                        : theme.colorScheme.border.withValues(
-                                            alpha: 0.3,
-                                          ),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: fw.Column(
-                                  children: [
-                                    Text(
-                                      'status'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            theme.colorScheme.mutedForeground,
-                                      ),
-                                    ),
-                                    const fw.SizedBox(height: 4),
-                                    Text(
-                                      product.isActive == true
-                                          ? 'active'.tr()
-                                          : 'inactive'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: product.isActive == true
-                                            ? theme.colorScheme.primary
-                                            : theme.colorScheme.mutedForeground,
-                                      ),
-                                    ),
-                                  ],
+                              fw.Expanded(
+                                flex: 2,
+                                child: AppStatTile(
+                                  label: 'status'.tr(),
+                                  value: product.isActive == true
+                                      ? 'active'.tr()
+                                      : 'inactive'.tr(),
+                                  icon: product.isActive == true
+                                      ? Icons.check_circle_rounded
+                                      : Icons.pause_circle_rounded,
                                 ),
                               ),
                             ],
                           ),
                           const fw.SizedBox(height: 24),
 
-                          // Description Section
+                          // Description
                           if (product.description != null &&
                               product.description!.isNotEmpty) ...[
-                            Text(
-                              'description'.tr(),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
+                            AppSectionTitle('description'.tr()),
                             const fw.SizedBox(height: 12),
-                            Container(
+                            fw.Container(
                               width: double.infinity,
                               padding: const fw.EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.card,
-                                borderRadius: fw.BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: theme.colorScheme.border.withValues(
-                                    alpha: 0.5,
-                                  ),
-                                  width: 1,
-                                ),
-                              ),
+                              decoration: AppDesignTokens.glassDecoration(),
                               child: Text(
                                 product.description!,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  height: 1.6,
-                                  color: theme.colorScheme.foreground,
+                                style: fw.TextStyle(
+                                  fontSize: 14.5,
+                                  height: 1.65,
+                                  color: AppDesignTokens.titleTextColor.withValues(alpha: 0.88),
                                 ),
                               ),
                             ),
@@ -326,68 +242,43 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                           _StockBreakdown(productId: product.id ?? ''),
                           const fw.SizedBox(height: 24),
 
-                          // Details Section
-                          Text(
-                            'details'.tr(),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
+                          // Details
+                          AppSectionTitle('details'.tr()),
                           const fw.SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            padding: const fw.EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.card,
-                              borderRadius: fw.BorderRadius.circular(16),
-                              border: Border.all(
-                                color: theme.colorScheme.border.withValues(
-                                  alpha: 0.5,
-                                ),
-                                width: 1,
+                          AppInfoSection(
+                            children: [
+                              AppInfoRow(
+                                icon: Icons.category_rounded,
+                                label: 'category'.tr(),
+                                value: product.category?.name ?? 'N/A',
                               ),
-                            ),
-                            child: fw.Column(
-                              children: [
-                                _DetailRow(
-                                  label: 'category'.tr(),
-                                  value: product.category?.name ?? 'N/A',
-                                  theme: theme,
+                              AppInfoRow(
+                                icon: Icons.inventory_2_rounded,
+                                label: 'stock_quantity'.tr(),
+                                value:
+                                    product.totalStockQuantity?.toString() ??
+                                    '0',
+                              ),
+                              AppInfoRow(
+                                icon: Icons.verified_rounded,
+                                label: 'availability'.tr(),
+                                value:
+                                    product.availabilityStatus?.name ?? 'N/A',
+                              ),
+                              AppInfoRow(
+                                icon: Icons.groups_rounded,
+                                label: 'target_audience'.tr(),
+                                value: product.targetAudience?.name ?? 'N/A',
+                              ),
+                              if (product.creationTime != null)
+                                AppInfoRow(
+                                  icon: Icons.calendar_today_rounded,
+                                  label: 'created'.tr(),
+                                  value: _formatDate(product.creationTime!),
                                 ),
-                                const fw.SizedBox(height: 16),
-                                _DetailRow(
-                                  label: 'stock_quantity'.tr(),
-                                  value:
-                                      product.totalStockQuantity?.toString() ??
-                                      '0',
-                                  theme: theme,
-                                ),
-                                const fw.SizedBox(height: 16),
-                                _DetailRow(
-                                  label: 'availability'.tr(),
-                                  value:
-                                      product.availabilityStatus?.name ?? 'N/A',
-                                  theme: theme,
-                                ),
-                                const fw.SizedBox(height: 16),
-                                _DetailRow(
-                                  label: 'target_audience'.tr(),
-                                  value: product.targetAudience?.name ?? 'N/A',
-                                  theme: theme,
-                                ),
-                                if (product.creationTime != null) ...[
-                                  const fw.SizedBox(height: 16),
-                                  _DetailRow(
-                                    label: 'created'.tr(),
-                                    value: _formatDate(product.creationTime!),
-                                    theme: theme,
-                                  ),
-                                ],
-                              ],
-                            ),
+                            ],
                           ),
+                          const fw.SizedBox(height: 24),
                         ],
                       ),
                     ));
@@ -400,49 +291,6 @@ class ProductDetailsScreen extends fw.StatelessWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
-  }
-}
-
-class _DetailRow extends fw.StatelessWidget {
-  final String label;
-  final String value;
-  final ThemeData theme;
-
-  const _DetailRow({
-    required this.label,
-    required this.value,
-    required this.theme,
-  });
-
-  @override
-  fw.Widget build(fw.BuildContext context) {
-    return fw.Row(
-      crossAxisAlignment: fw.CrossAxisAlignment.start,
-      children: [
-        fw.Expanded(
-          flex: 2,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.mutedForeground,
-            ),
-          ),
-        ),
-        fw.Expanded(
-          flex: 3,
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.foreground,
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }
 
@@ -486,14 +334,7 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    fw.Widget title() => Text(
-      'stock_overview'.tr(),
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.3,
-      ),
-    );
+    fw.Widget title() => AppSectionTitle('stock_overview'.tr());
 
     if (_variants == null && !_failed) {
       return fw.Column(
@@ -501,9 +342,23 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
         children: [
           title(),
           const fw.SizedBox(height: 12),
-          const AppSkeletonBox(width: double.infinity, height: 90, borderRadius: 20),
+          fw.Row(
+            children: const [
+              fw.Expanded(
+                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 20),
+              ),
+              fw.SizedBox(width: 10),
+              fw.Expanded(
+                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 20),
+              ),
+              fw.SizedBox(width: 10),
+              fw.Expanded(
+                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 20),
+              ),
+            ],
+          ),
           const fw.SizedBox(height: 12),
-          const AppSkeletonBox(width: double.infinity, height: 110, borderRadius: 20),
+          const AppSkeletonBox(width: double.infinity, height: 96, borderRadius: 24),
         ],
       );
     }
@@ -519,13 +374,10 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
           fw.Container(
             width: double.infinity,
             padding: const fw.EdgeInsets.all(16),
-            decoration: fw.BoxDecoration(
-              color: theme.colorScheme.card,
-              borderRadius: fw.BorderRadius.circular(20),
-            ),
+            decoration: AppDesignTokens.glassDecoration(),
             child: Text(
               'no_variants_yet'.tr(),
-              style: TextStyle(color: theme.colorScheme.mutedForeground),
+              style: fw.TextStyle(color: AppDesignTokens.mutedTextColor),
             ),
           ),
         ],
@@ -545,91 +397,87 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
     }
     final colorCount = byColor.keys.where((c) => c.isNotEmpty).length;
 
-    fw.Widget stat(String label, String value) => fw.Expanded(
-      child: fw.Container(
-        padding: const fw.EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        decoration: fw.BoxDecoration(
-          color: theme.colorScheme.card,
-          borderRadius: fw.BorderRadius.circular(20),
-        ),
-        child: fw.Column(
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const fw.SizedBox(height: 2),
-            Text(
-              label,
-              textAlign: fw.TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: theme.colorScheme.mutedForeground,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    fw.Widget stat(String label, String value, IconData icon, {bool hi = false}) =>
+        fw.Expanded(
+          child: AppStatTile(label: label, value: value, icon: icon, highlight: hi),
+        );
 
     return fw.Column(
       crossAxisAlignment: fw.CrossAxisAlignment.start,
       children: [
         title(),
         const fw.SizedBox(height: 12),
-        fw.Row(
-          children: [
-            stat('total_pieces'.tr(), '$total'),
-            const fw.SizedBox(width: 10),
-            if (colorCount > 0) ...[
-              stat('colors_count'.tr(), '$colorCount'),
+        fw.IntrinsicHeight(
+          child: fw.Row(
+            crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+            children: [
+              stat('total_pieces'.tr(), '$total', Icons.inventory_2_rounded, hi: true),
               const fw.SizedBox(width: 10),
+              if (colorCount > 0) ...[
+                stat('colors_count'.tr(), '$colorCount', Icons.palette_rounded),
+                const fw.SizedBox(width: 10),
+              ],
+              stat('variants_count'.tr(), '${variants.length}', Icons.style_rounded),
             ],
-            stat('variants_count'.tr(), '${variants.length}'),
-          ],
+          ),
         ),
         const fw.SizedBox(height: 12),
         for (final entry in byColor.entries) ...[
           fw.Container(
             width: double.infinity,
             padding: const fw.EdgeInsets.all(16),
-            decoration: fw.BoxDecoration(
-              color: theme.colorScheme.card,
-              borderRadius: fw.BorderRadius.circular(20),
-            ),
+            decoration: AppDesignTokens.glassDecoration(),
             child: fw.Column(
               crossAxisAlignment: fw.CrossAxisAlignment.start,
               children: [
                 fw.Row(
                   children: [
+                    fw.Container(
+                      width: 10,
+                      height: 10,
+                      decoration: const fw.BoxDecoration(
+                        gradient: AppDesignTokens.primaryGradient,
+                        shape: fw.BoxShape.circle,
+                      ),
+                    ),
+                    const fw.SizedBox(width: 10),
                     fw.Expanded(
                       child: Text(
                         entry.key.isEmpty ? 'no_color'.tr() : entry.key,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                        style: fw.TextStyle(
+                          fontSize: 15.5,
+                          fontWeight: AppDesignTokens.bold,
+                          color: AppDesignTokens.titleTextColor,
                         ),
                       ),
                     ),
-                    Text(
-                      'pieces_count'.tr(
-                        args: ['${entry.value.values.fold<int>(0, (a, b) => a + b)}'],
+                    fw.Container(
+                      padding: const fw.EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
                       ),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.primary,
+                      decoration: fw.BoxDecoration(
+                        color: AppDesignTokens.primaryColor.withValues(alpha: 0.14),
+                        borderRadius: fw.BorderRadius.circular(
+                          AppDesignTokens.badgeRadius,
+                        ),
+                      ),
+                      child: Text(
+                        'pieces_count'.tr(
+                          args: ['${entry.value.values.fold<int>(0, (a, b) => a + b)}'],
+                        ),
+                        style: fw.TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: AppDesignTokens.bold,
+                          color: AppDesignTokens.primaryColor,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 if (entry.value.keys.any((k) => k.isNotEmpty)) ...[
-                  const fw.SizedBox(height: 10),
-                  Wrap(
+                  const fw.SizedBox(height: 12),
+                  fw.Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: [
@@ -638,21 +486,35 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
                           fw.Container(
                             padding: const fw.EdgeInsets.symmetric(
                               horizontal: 12,
-                              vertical: 6,
+                              vertical: 7,
                             ),
                             decoration: fw.BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.12,
+                              color: AppDesignTokens.mutedSurfaceColor,
+                              borderRadius: fw.BorderRadius.circular(
+                                AppDesignTokens.badgeRadius + 2,
                               ),
-                              borderRadius: fw.BorderRadius.circular(99),
                             ),
-                            child: Text(
-                              '${sz.key}  ×${sz.value}',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                                color: theme.colorScheme.primary,
-                              ),
+                            child: fw.Row(
+                              mainAxisSize: fw.MainAxisSize.min,
+                              children: [
+                                Text(
+                                  sz.key,
+                                  style: fw.TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: AppDesignTokens.bold,
+                                    color: AppDesignTokens.titleTextColor,
+                                  ),
+                                ),
+                                const fw.SizedBox(width: 6),
+                                Text(
+                                  '×${sz.value}',
+                                  style: fw.TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: AppDesignTokens.bold,
+                                    color: AppDesignTokens.primaryColor,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                     ],

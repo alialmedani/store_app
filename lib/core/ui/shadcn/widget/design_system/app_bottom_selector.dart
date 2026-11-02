@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
+import 'app_skeleton_loader.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 /// Generic reusable bottom sheet selector for mobile
@@ -211,6 +212,144 @@ class AppBottomSelector {
       isSelected: isSelected?.call(item) ?? false,
       onTap: onTap,
       leadingBuilder: leadingBuilder,
+    );
+  }
+}
+
+/// Selectable row used in every selector list/dialog.
+/// Real item and [SelectorListSkeleton] share the same geometry.
+class SelectorTile extends fw.StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final bool isSelected;
+  final fw.VoidCallback onTap;
+
+  const SelectorTile({
+    super.key,
+    required this.title,
+    required this.onTap,
+    this.subtitle,
+    this.isSelected = false,
+  });
+
+  static const double verticalPadding = 14;
+  static const double gap = 10;
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    final primary = AppDesignTokens.primaryColor;
+    return fw.Padding(
+      padding: const fw.EdgeInsets.only(bottom: gap),
+      child: fw.GestureDetector(
+        behavior: fw.HitTestBehavior.opaque,
+        onTap: onTap,
+        child: fw.Container(
+          padding: const fw.EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: verticalPadding,
+          ),
+          decoration: fw.BoxDecoration(
+            color: isSelected
+                ? primary.withValues(alpha: 0.12)
+                : AppDesignTokens.mutedSurfaceColor.withValues(alpha: 0.55),
+            borderRadius: fw.BorderRadius.circular(AppDesignTokens.inputRadius),
+            border: fw.Border.all(
+              color: isSelected
+                  ? primary.withValues(alpha: 0.7)
+                  : AppDesignTokens.borderColor.withValues(alpha: 0.5),
+              width: isSelected ? 1.4 : 1,
+            ),
+          ),
+          child: fw.Row(
+            children: [
+              fw.Expanded(
+                child: fw.Column(
+                  crossAxisAlignment: fw.CrossAxisAlignment.start,
+                  children: [
+                    fw.Text(
+                      title,
+                      maxLines: 1,
+                      overflow: fw.TextOverflow.ellipsis,
+                      style: fw.TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: isSelected
+                            ? AppDesignTokens.bold
+                            : AppDesignTokens.semiBold,
+                        color: isSelected
+                            ? primary
+                            : AppDesignTokens.titleTextColor,
+                      ),
+                    ),
+                    if (subtitle != null && subtitle!.isNotEmpty) ...[
+                      const fw.SizedBox(height: 3),
+                      fw.Text(
+                        subtitle!,
+                        maxLines: 1,
+                        overflow: fw.TextOverflow.ellipsis,
+                        style: fw.TextStyle(
+                          fontSize: 12,
+                          color: AppDesignTokens.mutedTextColor,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              if (isSelected)
+                fw.Icon(Icons.check_circle_rounded, size: 20, color: primary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Skeleton with exactly the same geometry as [SelectorTile].
+class SelectorListSkeleton extends fw.StatelessWidget {
+  final int count;
+  final bool withSubtitle;
+  final fw.EdgeInsetsGeometry padding;
+  const SelectorListSkeleton({
+    super.key,
+    this.count = 6,
+    this.withSubtitle = false,
+    this.padding = fw.EdgeInsets.zero,
+  });
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return fw.ListView.builder(
+      physics: const fw.NeverScrollableScrollPhysics(),
+      padding: padding,
+      itemCount: count,
+      itemBuilder: (context, i) => fw.Padding(
+        padding: const fw.EdgeInsets.only(bottom: SelectorTile.gap),
+        child: fw.Container(
+          width: double.infinity,
+          padding: const fw.EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: SelectorTile.verticalPadding,
+          ),
+          decoration: fw.BoxDecoration(
+            color: AppDesignTokens.mutedSurfaceColor.withValues(alpha: 0.55),
+            borderRadius: fw.BorderRadius.circular(AppDesignTokens.inputRadius),
+            border: fw.Border.all(
+              color: AppDesignTokens.borderColor.withValues(alpha: 0.5),
+            ),
+          ),
+          child: fw.Column(
+            crossAxisAlignment: fw.CrossAxisAlignment.start,
+            children: [
+              const AppSkeletonBox(width: 140, height: 16, borderRadius: 6),
+              if (withSubtitle) ...[
+                const fw.SizedBox(height: 3),
+                const AppSkeletonBox(width: 90, height: 12, borderRadius: 6),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

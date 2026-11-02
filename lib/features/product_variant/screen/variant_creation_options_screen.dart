@@ -261,8 +261,8 @@ class _OptionCard extends StatelessWidget {
                   fw.Container(
                     padding: const fw.EdgeInsets.all(12),
                     decoration: fw.BoxDecoration(
-                      color: buttonColor.withValues(alpha: 0.1),
-                      borderRadius: fw.BorderRadius.circular(12),
+                      color: buttonColor.withValues(alpha: 0.16),
+                      borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                     ),
                     child: Icon(icon, size: 28, color: buttonColor),
                   ),
@@ -353,7 +353,7 @@ class _OptionCard extends StatelessWidget {
                     ),
                     decoration: fw.BoxDecoration(
                       color: buttonColor,
-                      borderRadius: fw.BorderRadius.circular(8),
+                      borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

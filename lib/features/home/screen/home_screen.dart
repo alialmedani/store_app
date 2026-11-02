@@ -8,7 +8,7 @@ import '../../../core/ui/widgets/authenticated_image.dart';
 import '../../../core/utils/image_helper.dart';
 import '../../category/cubit/category_cubit.dart';
 import '../../category/data/model/category_model.dart';
-import '../../category/screen/category_details_screen.dart';
+import '../../category/screen/category_list_screen.dart';
 import '../../product/cubit/product_cubit.dart';
 import '../../product/data/model/product_model.dart';
 import '../../product/screen/product_details_screen.dart';
@@ -27,73 +27,10 @@ class HomeScreen extends fw.StatelessWidget {
       slivers: [
         // Header
         SliverToBoxAdapter(
-          child: fw.Container(
-            padding: const fw.EdgeInsets.fromLTRB(
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.screenPaddingHorizontal + 8,
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.sectionGap,
-            ),
-            decoration: fw.BoxDecoration(
-              gradient: fw.LinearGradient(
-                begin: fw.Alignment.topLeft,
-                end: fw.Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.surface,
-                  theme.colorScheme.surface.withValues(alpha: 0.95),
-                ],
-              ),
-              border: fw.Border(
-                bottom: fw.BorderSide(
-                  color: theme.colorScheme.border.withValues(alpha: 0.08),
-                  width: 1,
-                ),
-              ),
-            ),
-            child: fw.Row(
-              mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: fw.CrossAxisAlignment.center,
-              children: [
-                fw.Column(
-                  crossAxisAlignment: fw.CrossAxisAlignment.start,
-                  children: [
-                    fw.Text(
-                      'discover'.tr(),
-                      style: fw.TextStyle(
-                        fontSize: 28,
-                        fontWeight: AppDesignTokens.extraBold,
-                        letterSpacing: -0.5,
-                        height: 1.1,
-                      ),
-                    ),
-                    const fw.SizedBox(height: 4),
-                    fw.Text(
-                      'browse_products_categories'.tr(),
-                      style: fw.TextStyle(
-                        fontSize: 14,
-                        color: theme.colorScheme.mutedForeground,
-                      ),
-                    ),
-                  ],
-                ),
-                fw.Container(
-                  padding: const fw.EdgeInsets.all(10),
-                  decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: fw.BorderRadius.circular(12),
-                    border: fw.Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: fw.Icon(
-                    Icons.shopping_bag_rounded,
-                    size: 24,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
+          child: AppTabHeader(
+            title: 'discover'.tr(),
+            subtitle: 'browse_products_categories'.tr(),
+            icon: Icons.shopping_bag_rounded,
           ),
         ),
 
@@ -115,7 +52,7 @@ class HomeScreen extends fw.StatelessWidget {
                       width: 3,
                       height: 20,
                       decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.primary,
+                        gradient: AppDesignTokens.primaryGradient,
                         borderRadius: fw.BorderRadius.circular(1.5),
                       ),
                     ),
@@ -130,6 +67,26 @@ class HomeScreen extends fw.StatelessWidget {
                     ),
                   ],
                 ),
+                fw.GestureDetector(
+                  onTap: () {
+                    fw.Navigator.push(
+                      context,
+                      fw.PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const CategoryListScreen(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  child: fw.Text(
+                    'see_all'.tr(),
+                    style: fw.TextStyle(
+                      fontSize: 14,
+                      fontWeight: fw.FontWeight.w600,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -139,7 +96,7 @@ class HomeScreen extends fw.StatelessWidget {
         // Categories Horizontal List
         SliverToBoxAdapter(
           child: fw.SizedBox(
-            height: 160,
+            height: 150,
             child: PaginationList<CategoryModel>(
               scrollDirection: fw.Axis.horizontal,
               withPagination: false,
@@ -153,7 +110,7 @@ class HomeScreen extends fw.StatelessWidget {
                 itemCount: 5,
                 itemBuilder: (context, index) {
                   return fw.Padding(
-                    padding: fw.EdgeInsets.only(right: index < 4 ? 14 : 0),
+                    padding: fw.EdgeInsetsDirectional.only(end: index < 4 ? 14 : 0),
                     child: const _CategoryCardSkeleton(),
                   );
                 },
@@ -172,8 +129,8 @@ class HomeScreen extends fw.StatelessWidget {
                     final category = categories[index];
 
                     return fw.Padding(
-                      padding: fw.EdgeInsets.only(
-                        right: index < categories.length - 1 ? 14 : 0,
+                      padding: fw.EdgeInsetsDirectional.only(
+                        end: index < categories.length - 1 ? 14 : 0,
                       ),
                       child: _CategoryCard(category: category),
                     );
@@ -201,7 +158,7 @@ class HomeScreen extends fw.StatelessWidget {
                       width: 3,
                       height: 20,
                       decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.primary,
+                        gradient: AppDesignTokens.primaryGradient,
                         borderRadius: fw.BorderRadius.circular(1.5),
                       ),
                     ),
@@ -244,14 +201,14 @@ class HomeScreen extends fw.StatelessWidget {
         // Products Grid
         SliverToBoxAdapter(
           child: fw.SizedBox(
-            height: 550,
+            height: 3 * 276 + 2 * 12 + AppDesignTokens.sectionGap + 8,
             child: PaginationList<ProductModel>(
               loadingWidget: fw.GridView.builder(
                 padding: const fw.EdgeInsets.fromLTRB(
                   AppDesignTokens.screenPaddingHorizontal,
                   0,
                   AppDesignTokens.screenPaddingHorizontal,
-                  AppDesignTokens.sectionGap + 60,
+                  AppDesignTokens.sectionGap,
                 ),
                 physics: const fw.NeverScrollableScrollPhysics(),
                 gridDelegate:
@@ -263,7 +220,7 @@ class HomeScreen extends fw.StatelessWidget {
                     ),
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return _ProductCardSkeleton();
+                  return const _ProductCardSkeleton();
                 },
               ),
               repositoryCallBack: (data) {
@@ -276,7 +233,7 @@ class HomeScreen extends fw.StatelessWidget {
                     AppDesignTokens.screenPaddingHorizontal,
                     0,
                     AppDesignTokens.screenPaddingHorizontal,
-                    AppDesignTokens.sectionGap + 60,
+                    AppDesignTokens.sectionGap,
                   ),
                   physics: const fw.NeverScrollableScrollPhysics(),
                   gridDelegate:
@@ -301,235 +258,129 @@ class HomeScreen extends fw.StatelessWidget {
   }
 }
 
-/// Category Card Skeleton
+/// Category Card Skeleton - same geometry as [_CategoryCard]
 class _CategoryCardSkeleton extends fw.StatelessWidget {
   const _CategoryCardSkeleton();
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    final theme = Theme.of(context);
-
-    return fw.Container(
-      width: 220,
-      height: 150,
-      decoration: fw.BoxDecoration(
-        color: theme.colorScheme.card,
-        borderRadius: fw.BorderRadius.circular(26),
-        border: fw.Border.all(
-          color: theme.colorScheme.border.withValues(alpha: 0.12),
-        ),
-      ),
-      child: fw.ClipRRect(
-        borderRadius: fw.BorderRadius.circular(26),
-        child: fw.Stack(
-          children: [
-            const fw.Positioned.fill(
-              child: AppSkeletonBox(
-                width: double.infinity,
-                height: double.infinity,
-                borderRadius: 0,
-              ),
-            ),
-            fw.Positioned(
-              left: 16,
-              right: 16,
-              bottom: 16,
-              child: fw.Column(
-                crossAxisAlignment: fw.CrossAxisAlignment.start,
-                mainAxisSize: fw.MainAxisSize.min,
-                children: const [
-                  AppSkeletonBox(width: 120, height: 18, borderRadius: 8),
-                  fw.SizedBox(height: 8),
-                  AppSkeletonBox(width: 100, height: 24, borderRadius: 999),
-                ],
-              ),
-            ),
-          ],
-        ),
+    return const fw.SizedBox(
+      width: _CategoryCard.itemWidth,
+      child: fw.Column(
+        children: [
+          AppSkeletonBox(width: _CategoryCard.circle, height: _CategoryCard.circle, borderRadius: _CategoryCard.circle / 2),
+          fw.SizedBox(height: 10),
+          AppSkeletonBox(width: 64, height: 13, borderRadius: 6),
+          fw.SizedBox(height: 6),
+          AppSkeletonBox(width: 48, height: 11, borderRadius: 6),
+        ],
       ),
     );
   }
 }
 
-/// Category Card Widget
+/// Category Card Widget - Aurora circle with the category initial, name below
 class _CategoryCard extends fw.StatelessWidget {
   final CategoryModel category;
 
   const _CategoryCard({required this.category});
 
+  static const double itemWidth = 96;
+  static const double circle = 84;
+
   @override
   fw.Widget build(fw.BuildContext context) {
-    final theme = Theme.of(context);
-    final imageUrl = ImageHelper.getCategoryImageUrl(category.id ?? '');
+    final name = (category.name ?? '').trim();
+    final initial = name.isEmpty ? '#' : name.substring(0, 1).toUpperCase();
 
     return fw.GestureDetector(
       onTap: () {
         fw.Navigator.push(
           context,
           fw.PageRouteBuilder(
-            pageBuilder: (_, __, ___) =>
-                CategoryDetailsScreen(categoryId: category.id ?? ''),
+            pageBuilder: (_, __, ___) => ProductListScreen(
+              categoryId: category.id,
+              categoryName: category.name,
+            ),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
         );
       },
-      child: fw.Container(
-        width: 220,
-        height: 150,
-        decoration: fw.BoxDecoration(
-          borderRadius: fw.BorderRadius.circular(26),
-          boxShadow: [
-            fw.BoxShadow(
-              color: fw.Color(0xFF000000).withValues(alpha: 0.10),
-              blurRadius: 28,
-              offset: const fw.Offset(0, 16),
+      child: fw.SizedBox(
+        width: itemWidth,
+        child: fw.Column(
+          children: [
+            fw.Container(
+              width: circle,
+              height: circle,
+              alignment: fw.Alignment.center,
+              decoration: fw.BoxDecoration(
+                gradient: AppDesignTokens.primaryGradient,
+                shape: fw.BoxShape.circle,
+                boxShadow: AppDesignTokens.glowShadow,
+                border: fw.Border.all(
+                  color: const fw.Color(0xFFFFFFFF).withValues(alpha: 0.35),
+                  width: 2,
+                ),
+              ),
+              child: fw.Stack(
+                alignment: fw.Alignment.center,
+                children: [
+                  fw.Positioned(
+                    top: -18,
+                    right: -10,
+                    child: fw.Container(
+                      width: 56,
+                      height: 56,
+                      decoration: fw.BoxDecoration(
+                        shape: fw.BoxShape.circle,
+                        color: const fw.Color(0xFFFFFFFF).withValues(alpha: 0.16),
+                      ),
+                    ),
+                  ),
+                  fw.Text(
+                    initial,
+                    style: const fw.TextStyle(
+                      fontSize: 30,
+                      fontWeight: fw.FontWeight.w800,
+                      color: fw.Color(0xFFFFFFFF),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const fw.SizedBox(height: 10),
+            fw.Text(
+              category.name ?? 'unknown'.tr(),
+              maxLines: 1,
+              textAlign: fw.TextAlign.center,
+              overflow: fw.TextOverflow.ellipsis,
+              style: fw.TextStyle(
+                fontSize: 13.5,
+                fontWeight: fw.FontWeight.w700,
+                color: AppDesignTokens.titleTextColor,
+              ),
+            ),
+            const fw.SizedBox(height: 2),
+            fw.Text(
+              'explore_collection'.tr(),
+              maxLines: 1,
+              textAlign: fw.TextAlign.center,
+              overflow: fw.TextOverflow.ellipsis,
+              style: fw.TextStyle(
+                fontSize: 11.5,
+                color: AppDesignTokens.mutedTextColor,
+              ),
             ),
           ],
-        ),
-        child: fw.ClipRRect(
-          borderRadius: fw.BorderRadius.circular(26),
-          child: fw.Stack(
-            children: [
-              fw.Positioned.fill(
-                child: AuthenticatedImage(
-                  imageUrl: imageUrl,
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: fw.BoxFit.cover,
-                  errorWidget: fw.Container(
-                    decoration: fw.BoxDecoration(
-                      gradient: fw.LinearGradient(
-                        begin: fw.Alignment.topLeft,
-                        end: fw.Alignment.bottomRight,
-                        colors: [
-                          theme.colorScheme.primary.withValues(alpha: 0.20),
-                          theme.colorScheme.primary.withValues(alpha: 0.06),
-                          theme.colorScheme.card,
-                        ],
-                      ),
-                    ),
-                    child: fw.Center(
-                      child: fw.Icon(
-                        Icons.category_rounded,
-                        size: 52,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Image luxury overlay
-              fw.Positioned.fill(
-                child: fw.Container(
-                  decoration: fw.BoxDecoration(
-                    gradient: fw.LinearGradient(
-                      begin: fw.Alignment.topCenter,
-                      end: fw.Alignment.bottomCenter,
-                      colors: [
-                        fw.Color(0xFF000000).withValues(alpha: 0.05),
-                        fw.Color(0xFF000000).withValues(alpha: 0.22),
-                        fw.Color(0xFF000000).withValues(alpha: 0.58),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // Soft side glow
-              fw.Positioned(
-                top: -35,
-                right: -30,
-                child: fw.Container(
-                  width: 100,
-                  height: 100,
-                  decoration: fw.BoxDecoration(
-                    shape: fw.BoxShape.circle,
-                    color: theme.colorScheme.primary.withValues(alpha: 0.22),
-                  ),
-                ),
-              ),
-
-              // Arrow
-              fw.Positioned(
-                top: 12,
-                right: 12,
-                child: fw.Container(
-                  width: 34,
-                  height: 34,
-                  decoration: fw.BoxDecoration(
-                    color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.88),
-                    borderRadius: fw.BorderRadius.circular(999),
-                    border: fw.Border.all(
-                      color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.45),
-                    ),
-                  ),
-                  child: fw.Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 18,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ),
-
-              // Text
-              fw.Positioned(
-                left: 16,
-                right: 16,
-                bottom: 16,
-                child: fw.Column(
-                  crossAxisAlignment: fw.CrossAxisAlignment.start,
-                  mainAxisSize: fw.MainAxisSize.min,
-                  children: [
-                    fw.Text(
-                      category.name ?? 'unknown'.tr(),
-                      maxLines: 1,
-                      overflow: fw.TextOverflow.ellipsis,
-                      style: const fw.TextStyle(
-                        fontSize: 18,
-                        height: 1.05,
-                        fontWeight: fw.FontWeight.w900,
-                        letterSpacing: -0.4,
-                        color: fw.Color(0xFFFFFFFF),
-                      ),
-                    ),
-                    const fw.SizedBox(height: 6),
-                    fw.Container(
-                      padding: const fw.EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: fw.BoxDecoration(
-                        color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.18),
-                        borderRadius: fw.BorderRadius.circular(999),
-                        border: fw.Border.all(
-                          color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.22),
-                        ),
-                      ),
-                      child: fw.Text(
-                        'explore_collection'.tr(),
-                        maxLines: 1,
-                        overflow: fw.TextOverflow.ellipsis,
-                        style: fw.TextStyle(
-                          fontSize: 11.5,
-                          fontWeight: fw.FontWeight.w700,
-                          color: fw.Color(0xFFFFFFFF),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
 }
 
-/// Product Card Widget
+/// Product Card Widget - Aurora glass card
 class _ProductCard extends fw.StatelessWidget {
   final ProductModel product;
 
@@ -537,8 +388,12 @@ class _ProductCard extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    final theme = Theme.of(context);
     final imageUrl = ImageHelper.getProductImageUrl(product.id ?? '');
+    final stock = product.totalStockQuantity ?? 0;
+    final inStock = stock > 0;
+    final stockColor = inStock
+        ? AppDesignTokens.successColor
+        : AppDesignTokens.mutedTextColor;
 
     return fw.GestureDetector(
       onTap: () {
@@ -552,41 +407,83 @@ class _ProductCard extends fw.StatelessWidget {
           ),
         );
       },
-      child: Card(
+      child: fw.Container(
+        padding: const fw.EdgeInsets.all(8),
+        decoration: AppDesignTokens.glassDecoration(),
         child: fw.Column(
           crossAxisAlignment: fw.CrossAxisAlignment.start,
           children: [
-            // Product Image
-            fw.ClipRRect(
-              borderRadius: const fw.BorderRadius.vertical(
-                top: fw.Radius.circular(12),
-              ),
-              child: AuthenticatedImage(
-                imageUrl: imageUrl,
-                width: double.infinity,
-                height: 140,
-                fit: fw.BoxFit.cover,
-                errorWidget: fw.Container(
-                  height: 140,
-                  decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                    borderRadius: const fw.BorderRadius.vertical(
-                      top: fw.Radius.circular(12),
+            fw.Expanded(
+              child: fw.Stack(
+                children: [
+                  fw.Positioned.fill(
+                    child: fw.ClipRRect(
+                      borderRadius: fw.BorderRadius.circular(
+                        AppDesignTokens.cardRadius - 8,
+                      ),
+                      child: AuthenticatedImage(
+                        imageUrl: imageUrl,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: fw.BoxFit.cover,
+                        errorWidget: fw.Container(
+                          decoration: fw.BoxDecoration(
+                            color: AppDesignTokens.mutedSurfaceColor,
+                          ),
+                          child: fw.Center(
+                            child: fw.Icon(
+                              Icons.inventory_2_rounded,
+                              size: 40,
+                              color: AppDesignTokens.mutedTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  child: fw.Center(
-                    child: fw.Icon(
-                      Icons.inventory_2_rounded,
-                      size: 48,
-                      color: theme.colorScheme.mutedForeground,
+                  fw.Positioned(
+                    top: 8,
+                    left: 8,
+                    child: fw.Container(
+                      padding: const fw.EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
+                      decoration: fw.BoxDecoration(
+                        color: AppDesignTokens.cardColor.withValues(alpha: 0.88),
+                        borderRadius: fw.BorderRadius.circular(
+                          AppDesignTokens.badgeRadius,
+                        ),
+                      ),
+                      child: fw.Row(
+                        mainAxisSize: fw.MainAxisSize.min,
+                        children: [
+                          fw.Container(
+                            width: 6,
+                            height: 6,
+                            decoration: fw.BoxDecoration(
+                              color: stockColor,
+                              shape: fw.BoxShape.circle,
+                            ),
+                          ),
+                          const fw.SizedBox(width: 5),
+                          fw.Text(
+                            '$stock',
+                            style: fw.TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: fw.FontWeight.w700,
+                              color: stockColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            // Product Info
             fw.Padding(
-              padding: const fw.EdgeInsets.all(8),
+              padding: const fw.EdgeInsets.fromLTRB(6, 10, 6, 4),
               child: fw.Column(
                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                 children: [
@@ -594,9 +491,10 @@ class _ProductCard extends fw.StatelessWidget {
                     product.name ?? 'unknown'.tr(),
                     maxLines: 1,
                     overflow: fw.TextOverflow.ellipsis,
-                    style: const fw.TextStyle(
+                    style: fw.TextStyle(
                       fontSize: 14,
-                      fontWeight: fw.FontWeight.w600,
+                      fontWeight: fw.FontWeight.w700,
+                      color: AppDesignTokens.titleTextColor,
                     ),
                   ),
                   const fw.SizedBox(height: 2),
@@ -606,46 +504,29 @@ class _ProductCard extends fw.StatelessWidget {
                     overflow: fw.TextOverflow.ellipsis,
                     style: fw.TextStyle(
                       fontSize: 12,
-                      color: theme.colorScheme.mutedForeground,
+                      color: AppDesignTokens.mutedTextColor,
                     ),
                   ),
-                  const fw.SizedBox(height: 4),
-                  fw.Row(
-                    mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      fw.Text(
-                        '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
-                        style: fw.TextStyle(
-                          fontSize: 16,
-                          fontWeight: fw.FontWeight.w700,
-                          color: theme.colorScheme.primary,
-                        ),
+                  const fw.SizedBox(height: 8),
+                  fw.Container(
+                    padding: const fw.EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: fw.BoxDecoration(
+                      gradient: AppDesignTokens.primaryGradient,
+                      borderRadius: fw.BorderRadius.circular(
+                        AppDesignTokens.badgeRadius,
                       ),
-                      fw.Container(
-                        padding: const fw.EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: fw.BoxDecoration(
-                          color: (product.totalStockQuantity ?? 0) > 0
-                              ? AppDesignTokens.successColor.withValues(
-                                  alpha: 0.12,
-                                )
-                              : theme.colorScheme.muted.withValues(alpha: 0.5),
-                          borderRadius: fw.BorderRadius.circular(6),
-                        ),
-                        child: fw.Text(
-                          '${product.totalStockQuantity ?? 0}',
-                          style: fw.TextStyle(
-                            fontSize: 11,
-                            fontWeight: fw.FontWeight.w600,
-                            color: (product.totalStockQuantity ?? 0) > 0
-                                ? AppDesignTokens.successColor
-                                : theme.colorScheme.mutedForeground,
-                          ),
-                        ),
+                    ),
+                    child: fw.Text(
+                      '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
+                      style: const fw.TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: fw.FontWeight.w800,
+                        color: fw.Color(0xFFFFFFFF),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
@@ -657,51 +538,35 @@ class _ProductCard extends fw.StatelessWidget {
   }
 }
 
-/// Product Card Skeleton for Home Screen
+/// Product Card Skeleton - same geometry as [_ProductCard]
 class _ProductCardSkeleton extends fw.StatelessWidget {
   const _ProductCardSkeleton();
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    return Card(
+    return fw.Container(
+      padding: const fw.EdgeInsets.all(8),
+      decoration: AppDesignTokens.glassDecoration(),
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
-        children: [
-          // Product Image Skeleton
-          fw.Container(
-            height: 140,
-            decoration: fw.BoxDecoration(
-              color: AppDesignTokens.mutedSurfaceColor,
-              borderRadius: fw.BorderRadius.vertical(
-                top: fw.Radius.circular(12),
-              ),
+        children: const [
+          fw.Expanded(
+            child: AppSkeletonBox(
+              width: double.infinity,
+              height: double.infinity,
+              borderRadius: AppDesignTokens.cardRadius - 8,
             ),
           ),
-          // Product Info Skeleton
           fw.Padding(
-            padding: const fw.EdgeInsets.all(8),
+            padding: fw.EdgeInsets.fromLTRB(6, 10, 6, 4),
             child: fw.Column(
               crossAxisAlignment: fw.CrossAxisAlignment.start,
               children: [
-                const AppSkeletonBox(width: 100, height: 14, borderRadius: 6),
-                const fw.SizedBox(height: 2),
-                const AppSkeletonBox(width: 70, height: 12, borderRadius: 6),
-                const fw.SizedBox(height: 4),
-                fw.Row(
-                  mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    const AppSkeletonBox(
-                      width: 60,
-                      height: 16,
-                      borderRadius: 6,
-                    ),
-                    const AppSkeletonBox(
-                      width: 30,
-                      height: 18,
-                      borderRadius: 6,
-                    ),
-                  ],
-                ),
+                AppSkeletonBox(width: 100, height: 14, borderRadius: 6),
+                fw.SizedBox(height: 4),
+                AppSkeletonBox(width: 70, height: 12, borderRadius: 6),
+                fw.SizedBox(height: 8),
+                AppSkeletonBox(width: 64, height: 24, borderRadius: 10),
               ],
             ),
           ),

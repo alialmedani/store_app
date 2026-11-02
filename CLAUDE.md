@@ -35,8 +35,9 @@ Guides in repo: `API_INTEGRATION_GUID.md`, `SHADCN_UI_INTEGRATION_GUIDE.md`, `.g
    directly in screens. Use the kit's `Scaffold(child:)`, `Card`, `PrimaryButton`, `SecondaryButton`, `OutlineButton`, `DestructiveButton`,
    `IconButton(variance:)`, `TextField(placeholder:)`, `AlertDialog`; they already follow `AppDesignTokens`. Base widgets still via
    `import 'package:flutter/widgets.dart' as fw;`. Do NOT add a third-party UI kit.
-6. **Design = "Soft Bento" in two themes (light + dark).** Big rounded cards (radius 26) with soft shadows and no borders, pill buttons (54 high),
-   rounded inputs (radius 18), pastel tinted icon tiles, dark floating pill dock, one indigo accent. Themes live in `lib/core/ui/shadcn/design_system/app_pro_theme.dart`
+6. **Design = "Aurora" in two themes (light + dark).** Glass-gradient cards (radius 24, glass hairline, soft shadow), violet->blue gradient
+   primary buttons with glow (radius 18, 54 high), rounded inputs (radius 18), tinted icon tiles, glass floating dock. Use `AppDesignTokens.glassDecoration()`,
+   `primaryGradient`, `glowShadow`; skeletons must use the same glass shapes. Themes live in `lib/core/ui/shadcn/design_system/app_pro_theme.dart`
    (`AppProTheme.dark` / `.light`); the user choice (light/dark/system, persisted) is `theme_controller.dart` and is switched from
    Profile > Settings. Color tokens are GETTERS that follow `AppDesignTokens.isDark`, so they can NOT be used in `const`
    expressions (drop the `const` on the enclosing widget). Font `IBMPlexSansArabic`, bundled in `assets/fonts`. Colors/radii/motion come ONLY from

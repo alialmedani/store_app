@@ -54,7 +54,7 @@ class _OrderListScreenState extends fw.State<OrderListScreen> {
                   height: AppDesignTokens.headerActionButtonSize,
                   decoration: fw.BoxDecoration(
                     color: AppDesignTokens.mutedSurfaceColor,
-                    borderRadius: fw.BorderRadius.circular(12),
+                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                   ),
                   child: fw.Center(
                     child: fw.Icon(
@@ -254,7 +254,7 @@ class _OrderCard extends StatelessWidget {
             padding: const fw.EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: fw.BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: fw.BorderRadius.circular(8),
+              borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
             ),
             child: fw.Row(
               mainAxisSize: fw.MainAxisSize.min,

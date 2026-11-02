@@ -47,7 +47,12 @@ class AppButton extends fw.StatelessWidget {
           horizontal: AppDesignTokens.buttonPaddingHorizontal,
         ),
         decoration: fw.BoxDecoration(
-          color: colors.backgroundColor,
+          color: variant == AppButtonVariant.primary && !isDisabled
+              ? null
+              : colors.backgroundColor,
+          gradient: variant == AppButtonVariant.primary && !isDisabled
+              ? AppDesignTokens.primaryGradient
+              : null,
           borderRadius: fw.BorderRadius.circular(AppDesignTokens.buttonRadius),
           border: colors.borderColor != null
               ? fw.Border.all(color: colors.borderColor!, width: 1)
@@ -102,7 +107,7 @@ class AppButton extends fw.StatelessWidget {
       case AppButtonVariant.primary:
         return _ButtonColors(
           backgroundColor: theme.colorScheme.primary,
-          textColor: theme.colorScheme.primaryForeground,
+          textColor: const fw.Color(0xFFFFFFFF),
         );
       case AppButtonVariant.secondary:
         return _ButtonColors(

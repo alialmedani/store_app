@@ -82,7 +82,7 @@ class AppSelectorField extends fw.StatelessWidget {
                 color: errorText != null
                     ? AppDesignTokens.dangerColor
                     : AppDesignTokens.hairlineStrong,
-                width: 1.5,
+                width: 1,
               ),
             ),
             child: fw.Row(

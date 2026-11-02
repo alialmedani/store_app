@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_design_tokens.dart';
 
 /// App themes (plain Flutter Material, styled by tokens).
-/// Soft Bento: big rounded cards, pill buttons, pastel tiles.
+/// Aurora: big rounded cards, pill buttons, pastel tiles.
 /// - [dark]: deep graphite canvas, indigo-lilac accent
 /// - [light]: warm off-white canvas, white cards, indigo accent
 ///

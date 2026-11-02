@@ -61,25 +61,6 @@ class ProfileScreen extends fw.StatelessWidget {
                         height: 1.1,
                       ),
                     ),
-                    fw.Container(
-                      decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.muted.withValues(alpha: 0.25),
-                        borderRadius: fw.BorderRadius.circular(
-                          AppDesignTokens.inputRadius,
-                        ),
-                        border: fw.Border.all(
-                          color: theme.colorScheme.border.withValues(
-                            alpha: 0.1,
-                          ),
-                          width: 1,
-                        ),
-                      ),
-                      child: IconButton(
-                        icon: const fw.Icon(Icons.logout, size: 20),
-                        onPressed: () => _handleLogout(context, authCubit),
-                        variance: ButtonVariance.ghost,
-                      ),
-                    ),
                   ],
                 ),
                 const fw.SizedBox(height: AppDesignTokens.sectionGap + 8),
@@ -357,7 +338,7 @@ class _ProfileMenuItem extends fw.StatelessWidget {
                 padding: const fw.EdgeInsets.all(10),
                 decoration: fw.BoxDecoration(
                   color: itemColor.withValues(alpha: 0.1),
-                  borderRadius: fw.BorderRadius.circular(10),
+                  borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                 ),
                 child: fw.Icon(icon, size: 20, color: itemColor),
               ),
@@ -441,8 +422,9 @@ class _SegmentedPicker<T> extends fw.StatelessWidget {
     return fw.Container(
       padding: const fw.EdgeInsets.all(4),
       decoration: fw.BoxDecoration(
-        color: AppDesignTokens.mutedSurfaceColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.pillRadius),
+        color: AppDesignTokens.cardColor,
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.inputRadius),
+        border: fw.Border.all(color: AppDesignTokens.glassBorder),
       ),
       child: fw.Row(
         children: [
@@ -456,17 +438,10 @@ class _SegmentedPicker<T> extends fw.StatelessWidget {
                   height: 38,
                   alignment: fw.Alignment.center,
                   decoration: fw.BoxDecoration(
-                    color: item.$1 == selected
-                        ? AppDesignTokens.cardColor
-                        : const fw.Color(0x00000000),
-                    borderRadius: fw.BorderRadius.circular(
-                      AppDesignTokens.pillRadius,
-                    ),
-                    boxShadow: item.$1 == selected
-                        ? AppDesignTokens.cardShadow(
-                            AppDesignTokens.titleTextColor,
-                          )
+                    gradient: item.$1 == selected
+                        ? AppDesignTokens.primaryGradient
                         : null,
+                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                   ),
                   child: fw.Text(
                     item.$2,
@@ -474,7 +449,7 @@ class _SegmentedPicker<T> extends fw.StatelessWidget {
                       fontSize: AppDesignTokens.captionFontSize + 1,
                       fontWeight: AppDesignTokens.semiBold,
                       color: item.$1 == selected
-                          ? AppDesignTokens.titleTextColor
+                          ? const fw.Color(0xFFFFFFFF)
                           : AppDesignTokens.mutedTextColor,
                     ),
                   ),

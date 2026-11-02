@@ -121,6 +121,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
           child: PaginationList<ProductModel>(
             withPagination: true,
             withRefresh: true,
+            loadingWidget: SelectorListSkeleton(withSubtitle: false),
             repositoryCallBack: (data) {
               return context.read<ProductCubit>().fetchProductList(data);
             },
@@ -129,7 +130,8 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                 itemCount: list.length,
                 itemBuilder: (context, index) {
                   final product = list[index];
-                  return fw.GestureDetector(
+                  return SelectorTile(
+                    title: product.name ?? 'N/A',
                     onTap: () {
                       setState(() {
                         selectedProduct = product;
@@ -137,23 +139,6 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                       });
                       fw.Navigator.of(dialogContext).pop();
                     },
-                    child: fw.Container(
-                      margin: const fw.EdgeInsets.only(bottom: 8),
-                      padding: const fw.EdgeInsets.all(12),
-                      decoration: fw.BoxDecoration(
-                        color: Theme.of(context).colorScheme.muted,
-                        borderRadius: fw.BorderRadius.circular(8),
-                        border: fw.Border.all(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.border.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Text(
-                        product.name ?? 'N/A',
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ),
                   );
                 },
               );

@@ -24,6 +24,17 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
             )]), body: PaginationList<CategoryStockSummaryModel>(
                 withPagination: true,
                 withRefresh: true,
+                loadingWidget: fw.ListView.builder(
+                  physics: const fw.NeverScrollableScrollPhysics(),
+                  padding: const fw.EdgeInsets.all(
+                    AppDesignTokens.screenPaddingHorizontal,
+                  ),
+                  itemCount: 3,
+                  itemBuilder: (context, i) => const fw.Padding(
+                    padding: fw.EdgeInsets.only(bottom: 16),
+                    child: _StockSummarySkeleton(),
+                  ),
+                ),
                 repositoryCallBack: (data) {
                   return context
                       .read<CategoryCubit>()
@@ -92,7 +103,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                   color: (summary.isActive ?? false)
                       ? AppDesignTokens.successColor.withValues(alpha: 0.12)
                       : AppDesignTokens.dangerColor.withValues(alpha: 0.12),
-                  borderRadius: fw.BorderRadius.circular(8),
+                  borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                 ),
                 child: Text(
                   (summary.isActive ?? false) ? 'active'.tr() : 'inactive'.tr(),
@@ -119,7 +130,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
               ),
               decoration: fw.BoxDecoration(
                 color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                borderRadius: fw.BorderRadius.circular(10),
+                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                 border: fw.Border.all(
                   color: theme.colorScheme.primary.withValues(alpha: 0.3),
                   width: 1,
@@ -153,7 +164,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
             padding: const fw.EdgeInsets.all(16),
             decoration: fw.BoxDecoration(
               color: theme.colorScheme.muted.withValues(alpha: 0.2),
-              borderRadius: fw.BorderRadius.circular(12),
+              borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
               border: fw.Border.all(
                 color: theme.colorScheme.border.withValues(alpha: 0.3),
                 width: 1,
@@ -242,7 +253,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                   theme.colorScheme.primary.withValues(alpha: 0.02),
                 ],
               ),
-              borderRadius: fw.BorderRadius.circular(12),
+              borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
               border: fw.Border.all(
                 color: theme.colorScheme.primary.withValues(alpha: 0.15),
                 width: 1,
@@ -321,7 +332,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                       padding: const fw.EdgeInsets.all(12),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.2),
-                        borderRadius: fw.BorderRadius.circular(10),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                       ),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -356,7 +367,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                       padding: const fw.EdgeInsets.all(12),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.2),
-                        borderRadius: fw.BorderRadius.circular(10),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                       ),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -460,7 +471,7 @@ class _StockStatusItem extends fw.StatelessWidget {
       padding: const fw.EdgeInsets.all(10),
       decoration: fw.BoxDecoration(
         color: color.withValues(alpha: 0.08),
-        borderRadius: fw.BorderRadius.circular(10),
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
         border: fw.Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: fw.Column(
@@ -493,6 +504,46 @@ class _StockStatusItem extends fw.StatelessWidget {
               color: color,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Skeleton with the same structure as [_StockSummaryCard]
+class _StockSummarySkeleton extends fw.StatelessWidget {
+  const _StockSummarySkeleton();
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    fw.Widget statRow() => fw.Row(
+      children: const [
+        fw.Expanded(child: AppSkeletonBox(width: double.infinity, height: 44, borderRadius: 12)),
+        fw.SizedBox(width: 12),
+        fw.Expanded(child: AppSkeletonBox(width: double.infinity, height: 44, borderRadius: 12)),
+        fw.SizedBox(width: 12),
+        fw.Expanded(child: AppSkeletonBox(width: double.infinity, height: 44, borderRadius: 12)),
+      ],
+    );
+    return AppCard(
+      child: fw.Column(
+        crossAxisAlignment: fw.CrossAxisAlignment.start,
+        children: [
+          fw.Row(
+            mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+            children: const [
+              AppSkeletonBox(width: 150, height: 20, borderRadius: 8),
+              AppSkeletonBox(width: 60, height: 24, borderRadius: 8),
+            ],
+          ),
+          const fw.SizedBox(height: 16),
+          const AppSkeletonBox(width: 110, height: 28, borderRadius: 10),
+          const fw.SizedBox(height: 16),
+          statRow(),
+          const fw.SizedBox(height: 12),
+          statRow(),
+          const fw.SizedBox(height: 16),
+          const AppSkeletonBox(width: double.infinity, height: 70, borderRadius: 12),
         ],
       ),
     );

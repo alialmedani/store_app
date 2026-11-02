@@ -46,11 +46,7 @@ class ProductCardSkeleton extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: fw.BoxDecoration(
-        color: AppDesignTokens.cardColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
-        border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
-      ),
+      decoration: AppDesignTokens.glassDecoration(),
       child: fw.Row(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
@@ -98,11 +94,7 @@ class ProductVariantCardSkeleton extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: fw.BoxDecoration(
-        color: AppDesignTokens.cardColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
-        border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
-      ),
+      decoration: AppDesignTokens.glassDecoration(),
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
@@ -175,11 +167,7 @@ class OrderCardSkeleton extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: fw.BoxDecoration(
-        color: AppDesignTokens.cardColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
-        border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
-      ),
+      decoration: AppDesignTokens.glassDecoration(),
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
@@ -455,10 +443,7 @@ class DetailSkeleton extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     fw.Widget card(double h) => fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: fw.BoxDecoration(
-        color: AppDesignTokens.cardColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
-      ),
+      decoration: AppDesignTokens.glassDecoration(),
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
@@ -492,6 +477,30 @@ class DetailSkeleton extends fw.StatelessWidget {
           const fw.SizedBox(height: AppDesignTokens.cardGap),
           card(60),
         ],
+      ),
+    );
+  }
+}
+
+/// Skeleton for a horizontal strip of selectable chips/cards
+class ChipsRowSkeleton extends fw.StatelessWidget {
+  final double width;
+  final int count;
+  const ChipsRowSkeleton({super.key, required this.width, this.count = 4});
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return fw.ListView.builder(
+      scrollDirection: fw.Axis.horizontal,
+      physics: const fw.NeverScrollableScrollPhysics(),
+      itemCount: count,
+      itemBuilder: (context, i) => fw.Padding(
+        padding: const fw.EdgeInsetsDirectional.only(end: 8),
+        child: AppSkeletonBox(
+          width: width,
+          height: double.infinity,
+          borderRadius: AppDesignTokens.inputRadius,
+        ),
       ),
     );
   }

@@ -23,7 +23,7 @@ class StatusBadge extends fw.StatelessWidget {
       padding: const fw.EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: fw.BoxDecoration(
         color: colors.backgroundColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.pillRadius),
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
       ),
       child: fw.Text(
         text,

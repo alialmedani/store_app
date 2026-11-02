@@ -79,6 +79,7 @@ class _CreateProductVariantScreenState
           child: PaginationList<ProductModel>(
             withPagination: true,
             withRefresh: true,
+            loadingWidget: SelectorListSkeleton(withSubtitle: true),
             repositoryCallBack: (data) {
               return context.read<ProductCubit>().fetchProductList(data);
             },
@@ -87,44 +88,14 @@ class _CreateProductVariantScreenState
                 itemCount: list.length,
                 itemBuilder: (context, index) {
                   final product = list[index];
-                  return fw.GestureDetector(
+                  return SelectorTile(
+                    title: product.name ?? 'N/A',
+                    subtitle: product.description,
                     onTap: () {
                       cubit.selectProduct(product);
                       _productIdController.text = product.name ?? '';
                       fw.Navigator.of(dialogContext).pop();
                     },
-                    child: Card(
-                      child: fw.Padding(
-                        padding: const fw.EdgeInsets.all(12),
-                        child: fw.Column(
-                          crossAxisAlignment: fw.CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product.name ?? 'N/A',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            if (product.description != null &&
-                                product.description!.isNotEmpty) ...[
-                              const fw.SizedBox(height: 4),
-                              Text(
-                                product.description!,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.mutedForeground,
-                                ),
-                                maxLines: 2,
-                                overflow: fw.TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
                   );
                 },
               );

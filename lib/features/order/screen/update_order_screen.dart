@@ -139,7 +139,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 color: theme.colorScheme.muted.withValues(
                                   alpha: 0.3,
                                 ),
-                                borderRadius: fw.BorderRadius.circular(8),
+                                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                                 border: Border.all(
                                   color: theme.colorScheme.border,
                                   width: 1,

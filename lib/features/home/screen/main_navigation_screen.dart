@@ -9,7 +9,7 @@ import 'profile_screen.dart';
 import 'explore_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-/// Main Navigation Screen with floating dark pill dock (Soft Bento)
+/// Main Navigation Screen with floating dark pill dock (Aurora)
 class MainNavigationScreen extends fw.StatefulWidget {
   const MainNavigationScreen({super.key});
 
@@ -40,20 +40,29 @@ class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    return fw.Column(
+    final mq = fw.MediaQuery.of(context);
+    // Space reserved so scrollable content ends above the floating dock
+    const dockSpace = 92.0;
+
+    return fw.Stack(
       children: [
-        fw.Expanded(
-          child: fw.AnimatedSwitcher(
-            duration: AppDesignTokens.motionBase,
-            switchInCurve: AppDesignTokens.easeOut,
-            child: fw.KeyedSubtree(
-              key: fw.ValueKey<int>(_currentIndex),
-              child: _screens[_currentIndex],
+        fw.Positioned.fill(
+          child: DockInset(
+            bottom: dockSpace + mq.padding.bottom,
+            child: fw.AnimatedSwitcher(
+              duration: AppDesignTokens.motionBase,
+              switchInCurve: AppDesignTokens.easeOut,
+              child: fw.KeyedSubtree(
+                key: fw.ValueKey<int>(_currentIndex),
+                child: _screens[_currentIndex],
+              ),
             ),
           ),
         ),
-        fw.Container(
-          color: theme.colorScheme.surface,
+        fw.Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
           child: fw.SafeArea(
             top: false,
             child: fw.Padding(
@@ -63,9 +72,7 @@ class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
                 padding: const fw.EdgeInsets.symmetric(horizontal: 10),
                 decoration: fw.BoxDecoration(
                   color: AppDesignTokens.navBackgroundColor,
-                  borderRadius: fw.BorderRadius.circular(
-                    AppDesignTokens.pillRadius,
-                  ),
+                  borderRadius: fw.BorderRadius.circular(26),
                   boxShadow: const [
                     fw.BoxShadow(
                       color: fw.Color(0x47000000),
@@ -99,21 +106,20 @@ class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
       },
       child: fw.AnimatedContainer(
         duration: AppDesignTokens.motionBase,
-        curve: AppDesignTokens.easeSpring,
+        curve: AppDesignTokens.easeOut,
         width: 48,
         height: 48,
         transform: fw.Matrix4.translationValues(0, isSelected ? -2 : 0, 0),
         decoration: fw.BoxDecoration(
-          shape: fw.BoxShape.circle,
-          color: isSelected
-              ? AppDesignTokens.primaryColor
-              : const fw.Color(0x00000000),
+          borderRadius: fw.BorderRadius.circular(AppDesignTokens.inputRadius),
+          gradient: isSelected ? AppDesignTokens.primaryGradient : null,
+          boxShadow: isSelected ? AppDesignTokens.glowShadow : null,
         ),
         child: fw.Icon(
           def.icon,
           size: 22,
           color: isSelected
-              ? AppDesignTokens.onAccentColor
+              ? const fw.Color(0xFFFFFFFF)
               : AppDesignTokens.navMutedColor,
         ),
       ),

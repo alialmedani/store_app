@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'dart:io';
 import '../../../core/constant/enum/enum.dart';
 import '../../../core/repository/file_upload_repository.dart';
+import '../../../core/ui/widgets/authenticated_image.dart';
 import '../../../core/results/result.dart';
 import '../data/model/category_model.dart';
 import '../data/model/category_stock_summary_model.dart';
@@ -149,9 +150,33 @@ class CategoryCubit extends Cubit<CategoryState> {
   }
 
   Future<Result<CategoryModel>> updateCategory() async {
-    return await UpdateCategoryUsecase(
+    final result = await UpdateCategoryUsecase(
       CategoryRepository(),
     ).call(params: updateCategoryParams);
+
+    // Upload the newly picked image (the backend serves the latest upload)
+    final id = updateCategoryParams.id;
+    if (!result.hasErrorOnly && selectedImageFile != null && id != null) {
+      isUploadingImage = true;
+      emit(CategoryParamsUpdated());
+
+      final upload = await FileUploadRepository().uploadFile(
+        file: selectedImageFile!,
+        entityId: id,
+        entityType: 1, // Category = 1
+        filePlacement: 'main',
+      );
+
+      isUploadingImage = false;
+      if (upload.hasErrorOnly) {
+        emit(CategoryParamsUpdated());
+        return Result(error: upload.error ?? 'image_upload_failed');
+      }
+      selectedImageFile = null;
+      AuthenticatedImage.refreshAll();
+      emit(CategoryParamsUpdated());
+    }
+    return result;
   }
 
   Future<Result<List<CategoryStockSummaryModel>>> fetchCategoryStockSummary(

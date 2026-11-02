@@ -16,73 +16,10 @@ class ExploreScreen extends fw.StatelessWidget {
       slivers: [
         // Header
         SliverToBoxAdapter(
-          child: fw.Container(
-            padding: const fw.EdgeInsets.fromLTRB(
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.screenPaddingHorizontal + 8,
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.sectionGap,
-            ),
-            decoration: fw.BoxDecoration(
-              gradient: fw.LinearGradient(
-                begin: fw.Alignment.topLeft,
-                end: fw.Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.surface,
-                  theme.colorScheme.surface.withValues(alpha: 0.95),
-                ],
-              ),
-              border: fw.Border(
-                bottom: fw.BorderSide(
-                  color: theme.colorScheme.border.withValues(alpha: 0.08),
-                  width: 1,
-                ),
-              ),
-            ),
-            child: fw.Row(
-              mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: fw.CrossAxisAlignment.center,
-              children: [
-                fw.Column(
-                  crossAxisAlignment: fw.CrossAxisAlignment.start,
-                  children: [
-                    fw.Text(
-                      'explore'.tr(),
-                      style: fw.TextStyle(
-                        fontSize: 28,
-                        fontWeight: AppDesignTokens.extraBold,
-                        letterSpacing: -0.5,
-                        height: 1.1,
-                      ),
-                    ),
-                    const fw.SizedBox(height: 4),
-                    fw.Text(
-                      'discover_new_features'.tr(),
-                      style: fw.TextStyle(
-                        fontSize: 14,
-                        color: theme.colorScheme.mutedForeground,
-                      ),
-                    ),
-                  ],
-                ),
-                fw.Container(
-                  padding: const fw.EdgeInsets.all(10),
-                  decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: fw.BorderRadius.circular(12),
-                    border: fw.Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: fw.Icon(
-                    Icons.explore_rounded,
-                    size: 24,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
+          child: AppTabHeader(
+            title: 'explore'.tr(),
+            subtitle: 'discover_new_features'.tr(),
+            icon: Icons.explore_rounded,
           ),
         ),
 
@@ -96,18 +33,7 @@ class ExploreScreen extends fw.StatelessWidget {
               child: fw.Column(
                 mainAxisAlignment: fw.MainAxisAlignment.center,
                 children: [
-                  fw.Container(
-                    padding: const fw.EdgeInsets.all(24),
-                    decoration: fw.BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: fw.BorderRadius.circular(100),
-                    ),
-                    child: fw.Icon(
-                      Icons.explore_outlined,
-                      size: 64,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
+                  const AppHeroIcon(Icons.explore_rounded),
                   const fw.SizedBox(height: AppDesignTokens.sectionGap),
                   fw.Text(
                     'coming_soon'.tr(),

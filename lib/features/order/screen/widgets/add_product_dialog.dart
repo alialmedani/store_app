@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/core/ui/kit/app_kit.dart';
 
+import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../category/cubit/category_cubit.dart';
 import '../../../category/data/model/category_model.dart';
@@ -296,7 +297,8 @@ class _ByCategoryView extends fw.StatelessWidget {
             child: PaginationList<CategoryModel>(
               withPagination: false,
               withRefresh: false,
-              repositoryCallBack: (data) {
+              loadingWidget: const ChipsRowSkeleton(width: 140),
+repositoryCallBack: (data) {
                 return context.read<CategoryCubit>().fetchCategoryList(data);
               },
               listBuilder: (list) {
@@ -315,7 +317,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                       },
                       child: fw.Container(
                         width: 140,
-                        margin: const fw.EdgeInsets.only(right: 8),
+                        margin: const fw.EdgeInsetsDirectional.only(end: 8),
                         padding: const fw.EdgeInsets.all(12),
                         decoration: fw.BoxDecoration(
                           color: isSelected
@@ -388,7 +390,8 @@ class _ByCategoryView extends fw.StatelessWidget {
               child: PaginationList<ProductModel>(
                 withPagination: false,
                 withRefresh: false,
-                repositoryCallBack: (data) {
+                loadingWidget: const ChipsRowSkeleton(width: 120),
+repositoryCallBack: (data) {
                   return context.read<ProductCubit>().fetchProductList(
                     data,
                     categoryId: selectedCategoryId,
@@ -422,7 +425,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                         },
                         child: fw.Container(
                           width: 120,
-                          margin: const fw.EdgeInsets.only(right: 8),
+                          margin: const fw.EdgeInsetsDirectional.only(end: 8),
                           padding: const fw.EdgeInsets.all(10),
                           decoration: fw.BoxDecoration(
                             color: isSelected
@@ -479,7 +482,8 @@ class _ByCategoryView extends fw.StatelessWidget {
               child: PaginationList<ProductVariantModel>(
                 withPagination: false,
                 withRefresh: false,
-                repositoryCallBack: (data) {
+                loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                   return context
                       .read<ProductVariantCubit>()
                       .fetchProductVariantList(data, productId: selectedProductId);
@@ -613,7 +617,8 @@ class _ByProductView extends fw.StatelessWidget {
             child: PaginationList<ProductModel>(
               withPagination: true,
               withRefresh: false,
-              repositoryCallBack: (data) {
+              loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                 return context.read<ProductCubit>().fetchProductList(data);
               },
               listBuilder: (list) {
@@ -693,7 +698,8 @@ class _ByProductView extends fw.StatelessWidget {
               child: PaginationList<ProductVariantModel>(
                 withPagination: false,
                 withRefresh: false,
-                repositoryCallBack: (data) {
+                loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                   return context
                       .read<ProductVariantCubit>()
                       .fetchProductVariantList(data, productId: selectedProductId);
@@ -821,7 +827,8 @@ class _AllVariantsView extends fw.StatelessWidget {
             child: PaginationList<ProductVariantModel>(
               withPagination: true,
               withRefresh: false,
-              repositoryCallBack: (data) {
+              loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                 return context
                     .read<ProductVariantCubit>()
                     .fetchProductVariantList(data);

@@ -317,7 +317,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).colorScheme.muted
                                           .withValues(alpha: 0.3),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                                     ),
                                     child: Center(
                                       child: Column(
@@ -483,10 +483,10 @@ class _OrderItemTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.muted.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(8),
+        color: AppDesignTokens.mutedSurfaceColor.withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(AppDesignTokens.inputRadius),
         border: Border.all(
-          color: theme.colorScheme.border.withValues(alpha: 0.2),
+          color: AppDesignTokens.borderColor.withValues(alpha: 0.5),
           width: 1,
         ),
       ),

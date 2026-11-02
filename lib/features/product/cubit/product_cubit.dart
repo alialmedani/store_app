@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 import '../../../core/repository/file_upload_repository.dart';
+import '../../../core/ui/widgets/authenticated_image.dart';
 import '../../../core/results/result.dart';
 import '../data/model/product_model.dart';
 import '../data/repository/product_repository.dart';
@@ -198,9 +199,33 @@ class ProductCubit extends Cubit<ProductState> {
   }
 
   Future<Result<ProductModel>> updateProduct() async {
-    return await UpdateProductUsecase(
+    final result = await UpdateProductUsecase(
       ProductRepository(),
     ).call(params: updateProductParams);
+
+    // Upload the newly picked image (the backend serves the latest upload)
+    final id = updateProductParams.productId;
+    if (!result.hasErrorOnly && selectedImageFile != null && id.isNotEmpty) {
+      isUploadingImage = true;
+      emit(ProductParamsUpdated());
+
+      final upload = await FileUploadRepository().uploadFile(
+        file: selectedImageFile!,
+        entityId: id,
+        entityType: 2, // Product = 2
+        filePlacement: 'main',
+      );
+
+      isUploadingImage = false;
+      if (upload.hasErrorOnly) {
+        emit(ProductParamsUpdated());
+        return Result(error: upload.error ?? 'image_upload_failed');
+      }
+      selectedImageFile = null;
+      AuthenticatedImage.refreshAll();
+      emit(ProductParamsUpdated());
+    }
+    return result;
   }
 
   Future<Result<bool>> deleteProduct(String id) async {

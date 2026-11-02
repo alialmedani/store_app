@@ -1,5 +1,5 @@
 // App UI kit: Flutter Material + our own thin widgets that follow
-// AppDesignTokens (Soft Bento, light + dark).
+// AppDesignTokens (Aurora, light + dark).
 //
 // Screens import ONLY this file for UI primitives (never material.dart
 // directly). Names that Material also defines are hidden here and replaced by
@@ -86,11 +86,14 @@ class Card extends fw.StatelessWidget {
     return fw.Container(
       padding: padding,
       clipBehavior: fw.Clip.antiAlias,
-      decoration: fw.BoxDecoration(
-        color: color ?? AppDesignTokens.cardColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
-        boxShadow: AppDesignTokens.cardShadow(AppDesignTokens.titleTextColor),
-      ),
+      decoration: color == null
+          ? AppDesignTokens.glassDecoration()
+          : fw.BoxDecoration(
+              color: color,
+              borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
+              border: fw.Border.all(color: AppDesignTokens.glassBorder),
+              boxShadow: AppDesignTokens.cardShadow(AppDesignTokens.titleTextColor),
+            ),
       child: child,
     );
   }
@@ -115,18 +118,31 @@ class PrimaryButton extends fw.StatelessWidget {
   const PrimaryButton({super.key, this.onPressed, required this.child});
 
   @override
-  fw.Widget build(fw.BuildContext context) => m.FilledButton(
-    onPressed: onPressed,
-    style: m.FilledButton.styleFrom(
-      backgroundColor: AppDesignTokens.primaryColor,
-      foregroundColor: AppDesignTokens.onAccentColor,
-      disabledBackgroundColor: AppDesignTokens.mutedSurfaceColor,
-      disabledForegroundColor: AppDesignTokens.mutedTextColor,
-      minimumSize: const fw.Size(0, AppDesignTokens.primaryButtonHeight),
-      shape: _btnShape(),
-    ),
-    child: child,
-  );
+  fw.Widget build(fw.BuildContext context) {
+    final enabled = onPressed != null;
+    final radius = fw.BorderRadius.circular(AppDesignTokens.buttonRadius);
+    return fw.DecoratedBox(
+      decoration: fw.BoxDecoration(
+        gradient: enabled ? AppDesignTokens.primaryGradient : null,
+        color: enabled ? null : AppDesignTokens.mutedSurfaceColor,
+        borderRadius: radius,
+        boxShadow: enabled ? AppDesignTokens.glowShadow : null,
+      ),
+      child: m.FilledButton(
+        onPressed: onPressed,
+        style: m.FilledButton.styleFrom(
+          backgroundColor: const fw.Color(0x00000000),
+          shadowColor: const fw.Color(0x00000000),
+          foregroundColor: const fw.Color(0xFFFFFFFF),
+          disabledBackgroundColor: const fw.Color(0x00000000),
+          disabledForegroundColor: AppDesignTokens.mutedTextColor,
+          minimumSize: const fw.Size(0, AppDesignTokens.primaryButtonHeight),
+          shape: _btnShape(),
+        ),
+        child: child,
+      ),
+    );
+  }
 }
 
 class SecondaryButton extends fw.StatelessWidget {
@@ -181,6 +197,7 @@ class OutlineButton extends fw.StatelessWidget {
       foregroundColor: AppDesignTokens.titleTextColor,
       disabledForegroundColor: AppDesignTokens.mutedTextColor,
       minimumSize: const fw.Size(0, AppDesignTokens.primaryButtonHeight),
+      backgroundColor: AppDesignTokens.cardColor,
       side: fw.BorderSide(color: AppDesignTokens.hairlineStrong),
       shape: _btnShape(),
     ),
@@ -234,13 +251,18 @@ class IconButton extends fw.StatelessWidget {
       style: m.IconButton.styleFrom(
         backgroundColor: bg ?? AppDesignTokens.cardColor,
         foregroundColor: fg,
-        shape: const fw.CircleBorder(),
+        shape: fw.RoundedRectangleBorder(
+          borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
+          side: bg == null
+              ? fw.BorderSide(color: AppDesignTokens.glassBorder)
+              : fw.BorderSide.none,
+        ),
       ),
     );
     if (bg != null) return button;
     return fw.DecoratedBox(
       decoration: fw.BoxDecoration(
-        shape: fw.BoxShape.circle,
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
         boxShadow: AppDesignTokens.cardShadow(AppDesignTokens.titleTextColor),
       ),
       child: button,
@@ -320,10 +342,12 @@ class TextField extends fw.StatelessWidget {
           horizontal: 16,
           vertical: 16,
         ),
-        border: border(AppDesignTokens.hairlineStrong, 1.5),
-        enabledBorder: border(AppDesignTokens.hairlineStrong, 1.5),
+        border: border(AppDesignTokens.glassBorder),
+        enabledBorder: border(AppDesignTokens.isDark
+            ? AppDesignTokens.hairlineStrong
+            : AppDesignTokens.hairlineStrong),
         disabledBorder: border(AppDesignTokens.mutedBorderColor),
-        focusedBorder: border(AppDesignTokens.primaryColor, 2),
+        focusedBorder: border(AppDesignTokens.primaryColor, 1.6),
       ),
     );
   }
@@ -345,7 +369,8 @@ class AlertDialog extends fw.StatelessWidget {
       backgroundColor: AppDesignTokens.cardColor,
       surfaceTintColor: const fw.Color(0x00000000),
       shape: fw.RoundedRectangleBorder(
-        borderRadius: fw.BorderRadius.circular(30),
+        borderRadius: fw.BorderRadius.circular(28),
+        side: fw.BorderSide(color: AppDesignTokens.glassBorder),
       ),
       titleTextStyle: fw.TextStyle(
         fontSize: AppDesignTokens.sectionTitleFontSize,
