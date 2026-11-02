@@ -168,6 +168,17 @@ class ApiProvider {
           );
           break;
       }
+      // Empty successful body (e.g. DELETE / action endpoints returning 204/200 with no content)
+      final okStatus = (response.statusCode ?? 0) > 199 &&
+          (response.statusCode ?? 0) < 300;
+      if (okStatus &&
+          (response.data == null || response.data.toString().isEmpty)) {
+        if (converter2 != null) {
+          return Right(converter2(null));
+        }
+        return Right(converter!(<String, dynamic>{}));
+      }
+
       var decodedJson;
 
       if (response.data is String) {

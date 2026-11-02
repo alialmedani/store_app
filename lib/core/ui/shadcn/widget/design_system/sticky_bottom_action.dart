@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Sticky bottom action button container
@@ -19,20 +19,15 @@ class StickyBottomAction extends fw.StatelessWidget {
           padding ??
           const fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
       decoration: fw.BoxDecoration(
-        color: theme.colorScheme.background,
-        border: fw.Border(
-          top: fw.BorderSide(
-            color: theme.colorScheme.border.withValues(alpha: 0.1),
-            width: 1,
-          ),
+        gradient: fw.LinearGradient(
+          begin: fw.Alignment.topCenter,
+          end: fw.Alignment.bottomCenter,
+          stops: const [0.0, 0.3],
+          colors: [
+            theme.colorScheme.surface.withValues(alpha: 0),
+            theme.colorScheme.surface,
+          ],
         ),
-        boxShadow: [
-          fw.BoxShadow(
-            color: theme.colorScheme.foreground.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const fw.Offset(0, -2),
-          ),
-        ],
       ),
       child: fw.SafeArea(top: false, child: child),
     );

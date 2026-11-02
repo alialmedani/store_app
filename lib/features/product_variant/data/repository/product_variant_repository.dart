@@ -11,6 +11,9 @@ import '../usecase/get_product_variant_details_usecase.dart';
 import '../usecase/get_product_variant_list_usecase.dart';
 import '../usecase/update_product_variant_usecase.dart';
 
+import '../usecase/delete_product_variant_usecase.dart';
+import '../usecase/restore_product_variant_usecase.dart';
+
 class ProductVariantRepository extends CoreRepository {
   Future<Result<ProductVariantModel>> createProductVariantRequest({
     required CreateProductVariantParams params,
@@ -116,5 +119,45 @@ class ProductVariantRepository extends CoreRepository {
     );
 
     return call(result: result);
+  }
+
+  Future<Result<bool>> deleteProductVariantRequest({
+    required DeleteProductVariantParams params,
+  }) async {
+    final result = await RemoteDataSource.request<bool>(
+      withAuthentication: true,
+      url: deleteProductVariantUrl(params.id),
+      method: HttpMethod.DELETE,
+      converter: (json) => true,
+    );
+    return call(result: result);
+  }
+
+  Future<Result<bool>> restoreProductVariantRequest({
+    required RestoreProductVariantParams params,
+  }) async {
+    final result = await RemoteDataSource.request<bool>(
+      withAuthentication: true,
+      url: restoreProductVariantUrl(params.id),
+      method: HttpMethod.POST,
+      converter: (json) => true,
+    );
+    return call(result: result);
+  }
+
+  Future<Result<List<ProductVariantModel>>> getDeletedProductVariantListRequest({
+    required GetProductVariantListParams params,
+  }) async {
+    final result = await RemoteDataSource.request<List<ProductVariantModel>>(
+      withAuthentication: true,
+      queryParameters: params.toJson(),
+      url: getDeletedProductVariantListUrl,
+      method: HttpMethod.GET,
+      converter: (json) {
+        final items = json['items'] as List;
+        return items.map((item) => ProductVariantModel.fromJson(item)).toList();
+      },
+    );
+    return paginatedCall(result: result);
   }
 }

@@ -1,16 +1,19 @@
 //emulator
-const String baseUrl = 'http://10.0.2.2:5000';
+// const String baseUrl = 'http://10.0.2.2:5000';
+// dotnet run --project src/StoreManagement.Web --launch-profile StoreManagement.Web
 
+
+// mobile 
+// dotnet run --project src/StoreManagement.Web --urls "http://0.0.0.0:5000"
 //mobile
-// const String baseUrl = 'http://10.200.0.112:5000';
+const String baseUrl = 'http://10.200.0.91:5000';
 
 const loginUrl = '$baseUrl/connect/token';
 const registerUrl = '$baseUrl/api/account/register';
 const appConfigUrl = '$baseUrl/api/abp/application-configuration';
 const setDeviceIdUrl = '$baseUrl/api/app/user-device/set-device-id';
 
-// ========== Fil
-//e Upload URLs ==========
+// ========== File Upload URLs ==========
 const uploadFileUrl = '$baseUrl/api/app/file/upload';
 
 String getFileByNameUrl(String fileName) =>
@@ -82,3 +85,25 @@ String getInventoryVariantHistorySummaryUrl(String productVariantId) =>
 
 // ========== Dashboard URLs ==========
 const getDashboardSummaryUrl = '$baseUrl/api/app/product/dashboard-summary';
+
+// ========== Order Action URLs ==========
+String confirmOrderUrl(String id) => '$baseUrl/api/app/order/$id/confirm';
+String cancelOrderUrl(String id) => '$baseUrl/api/app/order/$id/cancel';
+String recordOrderPaymentUrl(String id) =>
+    '$baseUrl/api/app/order/$id/record-payment';
+String addOrderItemUrl(String id) => '$baseUrl/api/app/order/$id/item';
+String removeOrderItemUrl(String id, String itemId) =>
+    '$baseUrl/api/app/order/$id/item/$itemId';
+String deleteOrderUrl(String id) => '$baseUrl/api/app/order/$id';
+
+// ========== Deleted (Trash) / Restore URLs ==========
+const getDeletedCategoryListUrl = '$baseUrl/api/app/category/deleted-list';
+String restoreCategoryUrl(String id) => '$baseUrl/api/app/category/$id/restore';
+
+const getDeletedProductListUrl = '$baseUrl/api/app/product/deleted-list';
+String restoreProductUrl(String id) => '$baseUrl/api/app/product/$id/restore';
+
+const getDeletedProductVariantListUrl =
+    '$baseUrl/api/app/product-variant/deleted-list';
+String restoreProductVariantUrl(String id) =>
+    '$baseUrl/api/app/product-variant/$id/restore';

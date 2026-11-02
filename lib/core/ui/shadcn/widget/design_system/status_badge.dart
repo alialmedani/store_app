@@ -20,16 +20,16 @@ class StatusBadge extends fw.StatelessWidget {
     final colors = _getColors();
 
     return fw.Container(
-      padding: const fw.EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const fw.EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: fw.BoxDecoration(
         color: colors.backgroundColor,
-        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.pillRadius),
       ),
       child: fw.Text(
         text,
         style: fw.TextStyle(
           fontSize: fontSize ?? AppDesignTokens.smallCaptionFontSize,
-          fontWeight: AppDesignTokens.bold,
+          fontWeight: AppDesignTokens.semiBold,
           color: colors.textColor,
           letterSpacing: AppDesignTokens.captionLetterSpacing,
         ),

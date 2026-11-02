@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 
+import '../../../../core/boilerplate/pagination/cubits/pagination_cubit.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
@@ -11,24 +12,36 @@ import '../data/model/product_model.dart';
 import 'create_product_screen.dart';
 import 'product_details_screen.dart';
 import 'update_product_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Product List Screen - Shows all products with pagination
 /// Uses PaginationList widget from boilerplate
-class ProductListScreen extends StatelessWidget {
+class ProductListScreen extends fw.StatefulWidget {
   const ProductListScreen({super.key});
+
+  @override
+  fw.State<ProductListScreen> createState() => _ProductListScreenState();
+}
+
+class _ProductListScreenState extends fw.State<ProductListScreen> {
+  PaginationCubit? _listCubit;
+
+  /// Reload the first page (after returning from details / edit / create)
+  void _reloadList() {
+    _listCubit?.getList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'Products',
+              title: 'products'.tr(),
               onBack: () => fw.Navigator.pop(context),
               action: fw.GestureDetector(
-                onTap: () {
-                  fw.Navigator.push(
+                onTap: () async {
+                  await fw.Navigator.push(
                     context,
                     fw.PageRouteBuilder(
                       pageBuilder: (_, __, ___) => const CreateProductScreen(),
@@ -36,6 +49,7 @@ class ProductListScreen extends StatelessWidget {
                       reverseTransitionDuration: Duration.zero,
                     ),
                   );
+                  _reloadList();
                 },
                 child: fw.Container(
                   width: AppDesignTokens.headerActionButtonSize,
@@ -53,9 +67,8 @@ class ProductListScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            fw.Expanded(
-              child: PaginationList<ProductModel>(
+            )]), body: PaginationList<ProductModel>(
+                onCubitCreated: (cubit) => _listCubit = cubit,
                 withPagination: true,
                 withRefresh: true,
                 loadingWidget: fw.ListView.builder(
@@ -114,7 +127,7 @@ class ProductListScreen extends StatelessWidget {
                         metaItems.add(
                           EntityMetaItem(
                             icon: Icons.inventory_2_outlined,
-                            text: 'Stock: ${product.totalStockQuantity}',
+                            text: 'stock'.tr(args: ['${product.totalStockQuantity}']),
                           ),
                         );
                       }
@@ -143,16 +156,16 @@ class ProductListScreen extends StatelessWidget {
                           ),
                           statusBadge: StatusBadge(
                             text: (product.isActive ?? false)
-                                ? 'Active'
-                                : 'Inactive',
+                                ? 'active'.tr()
+                                : 'inactive'.tr(),
                             type: (product.isActive ?? false)
                                 ? StatusBadgeType.active
                                 : StatusBadgeType.inactive,
                           ),
                           metaItems: metaItems.isNotEmpty ? metaItems : null,
-                          onTap: () {
+                          onTap: () async {
                             if (product.id != null) {
-                              fw.Navigator.push(
+                              await fw.Navigator.push(
                                 context,
                                 fw.PageRouteBuilder(
                                   pageBuilder: (_, __, ___) =>
@@ -164,9 +177,10 @@ class ProductListScreen extends StatelessWidget {
                                 ),
                               );
                             }
+                            _reloadList();
                           },
-                          onEdit: () {
-                            fw.Navigator.push(
+                          onEdit: () async {
+                            await fw.Navigator.push(
                               context,
                               fw.PageRouteBuilder(
                                 pageBuilder: (_, __, ___) => BlocProvider(
@@ -177,16 +191,14 @@ class ProductListScreen extends StatelessWidget {
                                 reverseTransitionDuration: Duration.zero,
                               ),
                             );
+                            _reloadList();
                           },
                         ),
                       );
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }

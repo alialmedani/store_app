@@ -9,6 +9,9 @@ import '../usecase/get_product_details_usecase.dart';
 import '../usecase/get_product_list_usecase.dart';
 import '../usecase/update_product_usecase.dart';
 
+import '../usecase/delete_product_usecase.dart';
+import '../usecase/restore_product_usecase.dart';
+
 class ProductRepository extends CoreRepository {
   Future<Result<ProductModel>> createProductRequest({
     required CreateProductParams params,
@@ -72,5 +75,45 @@ class ProductRepository extends CoreRepository {
     );
 
     return call(result: result);
+  }
+
+  Future<Result<bool>> deleteProductRequest({
+    required DeleteProductParams params,
+  }) async {
+    final result = await RemoteDataSource.request<bool>(
+      withAuthentication: true,
+      url: deleteProductUrl(params.id),
+      method: HttpMethod.DELETE,
+      converter: (json) => true,
+    );
+    return call(result: result);
+  }
+
+  Future<Result<bool>> restoreProductRequest({
+    required RestoreProductParams params,
+  }) async {
+    final result = await RemoteDataSource.request<bool>(
+      withAuthentication: true,
+      url: restoreProductUrl(params.id),
+      method: HttpMethod.POST,
+      converter: (json) => true,
+    );
+    return call(result: result);
+  }
+
+  Future<Result<List<ProductModel>>> getDeletedProductListRequest({
+    required GetProductListParams params,
+  }) async {
+    final result = await RemoteDataSource.request<List<ProductModel>>(
+      withAuthentication: true,
+      queryParameters: params.toJson(),
+      url: getDeletedProductListUrl,
+      method: HttpMethod.GET,
+      converter: (json) {
+        final items = json['items'] as List;
+        return items.map((item) => ProductModel.fromJson(item)).toList();
+      },
+    );
+    return paginatedCall(result: result);
   }
 }

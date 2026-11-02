@@ -10,6 +10,12 @@ import '../data/usecase/get_order_list_usecase.dart';
 import '../data/usecase/update_order_item_usecase.dart';
 import '../data/usecase/update_order_usecase.dart';
 
+import '../data/usecase/confirm_order_usecase.dart';
+import '../data/usecase/cancel_order_usecase.dart';
+import '../data/usecase/record_order_payment_usecase.dart';
+import '../data/usecase/add_order_item_usecase.dart';
+import '../data/usecase/remove_order_item_usecase.dart';
+import '../data/usecase/delete_order_usecase.dart';
 part 'order_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
@@ -160,5 +166,69 @@ class OrderCubit extends Cubit<OrderState> {
     return await UpdateOrderItemUsecase(
       OrderRepository(),
     ).call(params: updateOrderItemParams);
+  }
+
+  // ---- Order actions ----
+  Future<Result<OrderModel>> confirmOrder(String orderId) async {
+    return await ConfirmOrderUsecase(
+      OrderRepository(),
+    ).call(params: ConfirmOrderParams(orderId: orderId));
+  }
+
+  Future<Result<OrderModel>> cancelOrder(String orderId, String reason) async {
+    return await CancelOrderUsecase(
+      OrderRepository(),
+    ).call(params: CancelOrderParams(orderId: orderId, reason: reason));
+  }
+
+  Future<Result<OrderModel>> recordOrderPayment(
+    RecordOrderPaymentParams params,
+  ) async {
+    return await RecordOrderPaymentUsecase(
+      OrderRepository(),
+    ).call(params: params);
+  }
+
+  Future<Result<OrderModel>> addOrderItemToOrder(
+    String orderId,
+    String productVariantId,
+    int quantity,
+  ) async {
+    return await AddOrderItemUsecase(OrderRepository()).call(
+      params: AddOrderItemParams(
+        orderId: orderId,
+        productVariantId: productVariantId,
+        quantity: quantity,
+      ),
+    );
+  }
+
+  Future<Result<OrderModel>> removeOrderItemFromOrder(
+    String orderId,
+    String itemId,
+  ) async {
+    return await RemoveOrderItemUsecase(
+      OrderRepository(),
+    ).call(params: RemoveOrderItemParams(orderId: orderId, itemId: itemId));
+  }
+
+  Future<Result<bool>> deleteOrder(String orderId) async {
+    return await DeleteOrderUsecase(
+      OrderRepository(),
+    ).call(params: DeleteOrderParams(orderId: orderId));
+  }
+
+  Future<Result<OrderModel>> changeOrderItemQuantity(
+    String orderId,
+    String itemId,
+    int quantity,
+  ) async {
+    return await UpdateOrderItemUsecase(OrderRepository()).call(
+      params: UpdateOrderItemParams(
+        orderId: orderId,
+        itemId: itemId,
+        quantity: quantity,
+      ),
+    );
   }
 }

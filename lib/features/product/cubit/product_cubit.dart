@@ -10,6 +10,9 @@ import '../data/usecase/get_product_details_usecase.dart';
 import '../data/usecase/get_product_list_usecase.dart';
 import '../data/usecase/update_product_usecase.dart';
 
+import '../data/usecase/delete_product_usecase.dart';
+import '../data/usecase/restore_product_usecase.dart';
+import '../data/usecase/get_deleted_product_list_usecase.dart';
 part 'product_state.dart';
 
 class ProductCubit extends Cubit<ProductState> {
@@ -198,5 +201,23 @@ class ProductCubit extends Cubit<ProductState> {
     return await UpdateProductUsecase(
       ProductRepository(),
     ).call(params: updateProductParams);
+  }
+
+  Future<Result<bool>> deleteProduct(String id) async {
+    return await DeleteProductUsecase(
+      ProductRepository(),
+    ).call(params: DeleteProductParams(id: id));
+  }
+
+  Future<Result<bool>> restoreProduct(String id) async {
+    return await RestoreProductUsecase(
+      ProductRepository(),
+    ).call(params: RestoreProductParams(id: id));
+  }
+
+  Future<Result<List<ProductModel>>> fetchDeletedProductList(data) async {
+    return await GetDeletedProductListUsecase(
+      ProductRepository(),
+    ).call(params: GetProductListParams(request: data));
   }
 }

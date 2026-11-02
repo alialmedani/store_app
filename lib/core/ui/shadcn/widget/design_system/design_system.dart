@@ -15,3 +15,4 @@ export 'app_text_field.dart';
 export 'app_selector_field.dart';
 export 'app_bottom_selector.dart';
 export 'app_skeleton_loader.dart';
+export 'app_motion.dart';

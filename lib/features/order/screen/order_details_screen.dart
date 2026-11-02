@@ -1,33 +1,48 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
+import '../../../core/boilerplate/get_model/cubits/get_model_cubit.dart';
 import '../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../cubit/order_cubit.dart';
 import '../data/model/order_model.dart';
+import 'widgets/order_sections.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Order Details Screen - Shows full details of a single order
 /// Uses GetModel widget from boilerplate to handle loading/success/error states
-class OrderDetailsScreen extends fw.StatelessWidget {
+class OrderDetailsScreen extends fw.StatefulWidget {
   final String orderId;
 
   const OrderDetailsScreen({super.key, required this.orderId});
 
   @override
+  fw.State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
+}
+
+class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
+  GetModelCubit? _detailsCubit;
+
+  /// Re-fetch the order after an action (confirm, pay, cancel, items...)
+  void _reload() {
+    _detailsCubit?.getModel();
+  }
+
+  @override
   fw.Widget build(fw.BuildContext context) {
+    final orderId = widget.orderId;
     final theme = Theme.of(context);
 
     return BlocProvider(
       create: (context) => OrderCubit(),
       child: Scaffold(
         child: SafeArea(
-          child: fw.Column(
-            children: [
+          child: ScrollAwayHeader(header: fw.Column(children: [
               // App Bar
               fw.Container(
                 padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
                 decoration: fw.BoxDecoration(
-                  color: theme.colorScheme.background,
+                  color: theme.colorScheme.surface,
                   border: fw.Border(
                     bottom: fw.BorderSide(
                       color: theme.colorScheme.border.withValues(alpha: 0.1),
@@ -49,9 +64,9 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                       ),
                     ),
                     const fw.SizedBox(width: 12),
-                    const fw.Expanded(
+                    fw.Expanded(
                       child: Text(
-                        'Order Details',
+                        'order_details'.tr(),
                         style: fw.TextStyle(
                           fontSize: 24,
                           fontWeight: fw.FontWeight.w700,
@@ -61,11 +76,8 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-
-              // Content
-              fw.Expanded(
-                child: GetModel<OrderModel>(
+              )]), body: GetModel<OrderModel>(
+                  onCubitCreated: (cubit) => _detailsCubit = cubit,
                   useCaseCallBack: () =>
                       context.read<OrderCubit>().getOrderDetails(orderId),
                   modelBuilder: (order) {
@@ -83,7 +95,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Order Number',
+                                    'order_number'.tr(),
                                     style: fw.TextStyle(
                                       fontSize: 12,
                                       fontWeight: fw.FontWeight.w600,
@@ -115,7 +127,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'CUSTOMER INFORMATION',
+                                    'customer_information_2'.tr(),
                                     style: fw.TextStyle(
                                       fontSize: 11,
                                       fontWeight: fw.FontWeight.w700,
@@ -126,21 +138,21 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                   const fw.SizedBox(height: 16),
                                   _InfoRow(
                                     icon: Icons.person_outline,
-                                    label: 'Name',
+                                    label: 'name'.tr(),
                                     value: order.customerName ?? 'N/A',
                                     theme: theme,
                                   ),
                                   const fw.SizedBox(height: 12),
                                   _InfoRow(
                                     icon: Icons.phone_outlined,
-                                    label: 'Phone',
+                                    label: 'phone'.tr(),
                                     value: order.customerPhone ?? 'N/A',
                                     theme: theme,
                                   ),
                                   const fw.SizedBox(height: 12),
                                   _InfoRow(
                                     icon: Icons.location_on_outlined,
-                                    label: 'Address',
+                                    label: 'address'.tr(),
                                     value: order.customerAddress ?? 'N/A',
                                     theme: theme,
                                   ),
@@ -149,7 +161,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                     const fw.SizedBox(height: 12),
                                     _InfoRow(
                                       icon: Icons.note_outlined,
-                                      label: 'Note',
+                                      label: 'note'.tr(),
                                       value: order.note!,
                                       theme: theme,
                                     ),
@@ -157,6 +169,14 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                 ],
                               ),
                             ),
+                          ),
+                          const fw.SizedBox(height: 16),
+
+                          // Items (editable while the order is a draft)
+                          OrderItemsSection(
+                            order: order,
+                            theme: theme,
+                            onChanged: _reload,
                           ),
                           const fw.SizedBox(height: 16),
 
@@ -169,7 +189,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'STATUS',
+                                    'status_2'.tr(),
                                     style: fw.TextStyle(
                                       fontSize: 11,
                                       fontWeight: fw.FontWeight.w700,
@@ -199,7 +219,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                                   fw.CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  'Order Status',
+                                                  'order_status'.tr(),
                                                   style: fw.TextStyle(
                                                     fontSize: 10,
                                                     fontWeight:
@@ -245,7 +265,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                                   fw.CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  'Payment',
+                                                  'payment'.tr(),
                                                   style: fw.TextStyle(
                                                     fontSize: 10,
                                                     fontWeight:
@@ -289,7 +309,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'PAYMENT SUMMARY',
+                                    'payment_summary'.tr(),
                                     style: fw.TextStyle(
                                       fontSize: 11,
                                       fontWeight: fw.FontWeight.w700,
@@ -299,14 +319,14 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                   ),
                                   const fw.SizedBox(height: 16),
                                   _PaymentRow(
-                                    label: 'Total Amount',
+                                    label: 'total_amount'.tr(),
                                     value:
                                         '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
                                     theme: theme,
                                   ),
                                   const fw.SizedBox(height: 12),
                                   _PaymentRow(
-                                    label: 'Paid Amount',
+                                    label: 'paid_amount'.tr(),
                                     value:
                                         '\$${order.paidAmount?.toStringAsFixed(2) ?? '0.00'}',
                                     theme: theme,
@@ -325,7 +345,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                       ),
                                     ),
                                     child: _PaymentRow(
-                                      label: 'Remaining Amount',
+                                      label: 'remaining_amount'.tr(),
                                       value:
                                           '\$${order.remainingAmount?.toStringAsFixed(2) ?? '0.00'}',
                                       theme: theme,
@@ -342,6 +362,19 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                           ),
                           const fw.SizedBox(height: 16),
 
+                          // Payments history
+                          OrderPaymentsSection(order: order, theme: theme),
+
+                          // Status based actions
+                          OrderActionsSection(
+                            order: order,
+                            theme: theme,
+                            onChanged: _reload,
+                            onDeleted: () {
+                              if (mounted) fw.Navigator.pop(context, true);
+                            },
+                          ),
+
                           // Dates Card
                           Card(
                             child: fw.Container(
@@ -351,7 +384,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'DATES',
+                                    'dates'.tr(),
                                     style: fw.TextStyle(
                                       fontSize: 11,
                                       fontWeight: fw.FontWeight.w700,
@@ -362,14 +395,14 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                   const fw.SizedBox(height: 16),
                                   if (order.creationTime != null)
                                     _DateRow(
-                                      label: 'Created',
+                                      label: 'created'.tr(),
                                       date: order.creationTime!,
                                       theme: theme,
                                     ),
                                   if (order.lastModificationTime != null) ...[
                                     const fw.SizedBox(height: 12),
                                     _DateRow(
-                                      label: 'Last Modified',
+                                      label: 'last_modified'.tr(),
                                       date: order.lastModificationTime!,
                                       theme: theme,
                                     ),
@@ -377,7 +410,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                   if (order.cancellationTime != null) ...[
                                     const fw.SizedBox(height: 12),
                                     _DateRow(
-                                      label: 'Cancelled',
+                                      label: 'cancelled'.tr(),
                                       date: order.cancellationTime!,
                                       theme: theme,
                                       isDestructive: true,
@@ -388,7 +421,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                             .isNotEmpty) ...[
                                       const fw.SizedBox(height: 8),
                                       Text(
-                                        'Reason: ${order.cancellationReason}',
+                                        'reason'.tr(args: ['${order.cancellationReason}']),
                                         style: fw.TextStyle(
                                           fontSize: 13,
                                           color:
@@ -406,10 +439,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                       ),
                     );
                   },
-                ),
-              ),
-            ],
-          ),
+                )),
         ),
       ),
     );

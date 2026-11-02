@@ -1,7 +1,8 @@
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 
 import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Explore Screen - Placeholder for future features
 class ExploreScreen extends fw.StatelessWidget {
@@ -27,8 +28,8 @@ class ExploreScreen extends fw.StatelessWidget {
                 begin: fw.Alignment.topLeft,
                 end: fw.Alignment.bottomRight,
                 colors: [
-                  theme.colorScheme.background,
-                  theme.colorScheme.background.withValues(alpha: 0.95),
+                  theme.colorScheme.surface,
+                  theme.colorScheme.surface.withValues(alpha: 0.95),
                 ],
               ),
               border: fw.Border(
@@ -45,8 +46,8 @@ class ExploreScreen extends fw.StatelessWidget {
                 fw.Column(
                   crossAxisAlignment: fw.CrossAxisAlignment.start,
                   children: [
-                    const fw.Text(
-                      'Explore',
+                    fw.Text(
+                      'explore'.tr(),
                       style: fw.TextStyle(
                         fontSize: 28,
                         fontWeight: AppDesignTokens.extraBold,
@@ -56,7 +57,7 @@ class ExploreScreen extends fw.StatelessWidget {
                     ),
                     const fw.SizedBox(height: 4),
                     fw.Text(
-                      'Discover new features',
+                      'discover_new_features'.tr(),
                       style: fw.TextStyle(
                         fontSize: 14,
                         color: theme.colorScheme.mutedForeground,
@@ -108,8 +109,8 @@ class ExploreScreen extends fw.StatelessWidget {
                     ),
                   ),
                   const fw.SizedBox(height: AppDesignTokens.sectionGap),
-                  const fw.Text(
-                    'Coming Soon',
+                  fw.Text(
+                    'coming_soon'.tr(),
                     style: fw.TextStyle(
                       fontSize: 24,
                       fontWeight: AppDesignTokens.bold,
@@ -117,7 +118,7 @@ class ExploreScreen extends fw.StatelessWidget {
                   ),
                   const fw.SizedBox(height: AppDesignTokens.itemGap),
                   fw.Text(
-                    'Explore features will be available soon.\nStay tuned for updates!',
+                    'explore_features_will_be_available_soo'.tr(),
                     textAlign: fw.TextAlign.center,
                     style: fw.TextStyle(
                       fontSize: 14,

@@ -22,6 +22,10 @@ class OrderModel {
   final OrderStatusModel? status;
   final PaymentStatusModel? paymentStatus;
 
+  // Only present in the details response
+  final List<OrderItemModel> items;
+  final List<OrderPaymentModel> payments;
+
   OrderModel({
     this.id,
     this.orderNumber,
@@ -43,6 +47,8 @@ class OrderModel {
     this.deletionTime,
     this.status,
     this.paymentStatus,
+    this.items = const [],
+    this.payments = const [],
   });
 
   /// From JSON - Parse API response
@@ -86,6 +92,12 @@ class OrderModel {
       paymentStatus: json['paymentStatus'] != null
           ? PaymentStatusModel.fromJson(json['paymentStatus'])
           : null,
+      items: (json['items'] as List? ?? const [])
+          .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      payments: (json['payments'] as List? ?? const [])
+          .map((e) => OrderPaymentModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -131,5 +143,74 @@ class PaymentStatusModel {
 
   Map<String, dynamic> toJson() {
     return {if (id != null) 'id': id, if (name != null) 'name': name};
+  }
+}
+
+/// Order item (line) model - from order details
+class OrderItemModel {
+  final String? id;
+  final String? productVariantId;
+  final String? productName;
+  final String? color;
+  final String? size;
+  final int quantity;
+  final double unitPrice;
+  final double lineTotal;
+
+  OrderItemModel({
+    this.id,
+    this.productVariantId,
+    this.productName,
+    this.color,
+    this.size,
+    this.quantity = 0,
+    this.unitPrice = 0,
+    this.lineTotal = 0,
+  });
+
+  factory OrderItemModel.fromJson(Map<String, dynamic> json) {
+    return OrderItemModel(
+      id: json['id'],
+      productVariantId: json['productVariantId'],
+      productName: json['productName'],
+      color: json['color'],
+      size: json['size'],
+      quantity: (json['quantity'] as num?)?.toInt() ?? 0,
+      unitPrice: (json['unitPrice'] as num?)?.toDouble() ?? 0,
+      lineTotal: (json['lineTotal'] as num?)?.toDouble() ?? 0,
+    );
+  }
+}
+
+/// Order payment model - from order details
+class OrderPaymentModel {
+  final String? id;
+  final double amount;
+  final String? paymentMethodName;
+  final DateTime? paymentDate;
+  final String? referenceNumber;
+  final String? note;
+
+  OrderPaymentModel({
+    this.id,
+    this.amount = 0,
+    this.paymentMethodName,
+    this.paymentDate,
+    this.referenceNumber,
+    this.note,
+  });
+
+  factory OrderPaymentModel.fromJson(Map<String, dynamic> json) {
+    final method = json['paymentMethod'];
+    return OrderPaymentModel(
+      id: json['id'],
+      amount: (json['amount'] as num?)?.toDouble() ?? 0,
+      paymentMethodName: method is Map ? method['name'] as String? : null,
+      paymentDate: json['paymentDate'] != null
+          ? DateTime.tryParse(json['paymentDate'])
+          : null,
+      referenceNumber: json['referenceNumber'],
+      note: json['note'],
+    );
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
+import '../../../core/ui/dialogs/action_helpers.dart';
 import '../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
 import 'update_product_variant_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Product Variant Details Screen - Shows complete product variant information
 class ProductVariantDetailsScreen extends fw.StatelessWidget {
@@ -29,13 +31,12 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                 .read<ProductVariantCubit>()
                 .getProductVariantDetails(productVariantId),
             modelBuilder: (variant) {
-              return fw.Column(
-                children: [
+              return ScrollAwayHeader(header: fw.Column(children: [
                   // App Bar
                   Container(
                     padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.background,
+                      color: theme.colorScheme.surface,
                       border: Border(
                         bottom: BorderSide(
                           color: theme.colorScheme.border.withValues(
@@ -61,15 +62,38 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                           ),
                         ),
                         const fw.SizedBox(width: 12),
-                        const fw.Expanded(
+                        fw.Expanded(
                           child: Text(
-                            'Variant Details',
+                            'variant_details'.tr(),
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w700,
                               letterSpacing: -0.5,
                             ),
                           ),
+                        ),
+                        // Delete Button
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline, size: 20),
+                          onPressed: () => showConfirmDialog(
+                            context,
+                            title: 'delete_variant'.tr(),
+                            message: 'delete_variant_it_can_be_restored_late'.tr(args: ['${variant.color ?? ''}', '${variant.size ?? ''}']),
+                            confirmLabel: 'delete'.tr(),
+                            destructive: true,
+                            onConfirm: () async {
+                              final deleted = await runRemoteAction(
+                                () => context.read<ProductVariantCubit>().deleteProductVariant(
+                                  productVariantId,
+                                ),
+                                successMessage: 'variant_deleted'.tr(),
+                              );
+                              if (deleted && context.mounted) {
+                                fw.Navigator.of(context).pop(true);
+                              }
+                            },
+                          ),
+                          variance: ButtonVariance.ghost,
                         ),
                         // Edit Button
                         IconButton(
@@ -89,7 +113,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                             );
 
                             // Refresh details if variant was updated
-                            if (result != null) {
+                            if (result != null && context.mounted) {
                               // Trigger a rebuild by calling the details API again
                               context
                                   .read<ProductVariantCubit>()
@@ -100,11 +124,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-
-                  // Content
-                  fw.Expanded(
-                    child: fw.SingleChildScrollView(
+                  )]), body: fw.SingleChildScrollView(
                       padding: const fw.EdgeInsets.all(20),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -138,7 +158,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Product',
+                                  'product'.tr(),
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
@@ -192,7 +212,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                             ),
                                             const fw.SizedBox(width: 6),
                                             Text(
-                                              'Color',
+                                              'color'.tr(),
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w600,
@@ -249,7 +269,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                             ),
                                             const fw.SizedBox(width: 6),
                                             Text(
-                                              'Size',
+                                              'size'.tr(),
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w600,
@@ -304,7 +324,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                           ),
                                           const fw.SizedBox(width: 6),
                                           Text(
-                                            'Stock',
+                                            'stock_2'.tr(),
                                             style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
@@ -357,7 +377,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 child: fw.Column(
                                   children: [
                                     Text(
-                                      'Status',
+                                      'status'.tr(),
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
@@ -368,8 +388,8 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                     const fw.SizedBox(height: 8),
                                     Text(
                                       variant.isActive == true
-                                          ? 'Active'
-                                          : 'Inactive',
+                                          ? 'active'.tr()
+                                          : 'inactive'.tr(),
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
@@ -387,7 +407,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
 
                           // Details Section
                           Text(
-                            'Details',
+                            'details'.tr(),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -411,13 +431,13 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                             child: fw.Column(
                               children: [
                                 _DetailRow(
-                                  label: 'Product ID',
+                                  label: 'product_id'.tr(),
                                   value: variant.productId ?? 'N/A',
                                   theme: theme,
                                 ),
                                 const fw.SizedBox(height: 16),
                                 _DetailRow(
-                                  label: 'Availability',
+                                  label: 'availability'.tr(),
                                   value:
                                       variant.availabilityStatus?.name ?? 'N/A',
                                   theme: theme,
@@ -425,7 +445,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 if (variant.creationTime != null) ...[
                                   const fw.SizedBox(height: 16),
                                   _DetailRow(
-                                    label: 'Created',
+                                    label: 'created'.tr(),
                                     value: _formatDate(variant.creationTime!),
                                     theme: theme,
                                   ),
@@ -433,7 +453,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 if (variant.lastModificationTime != null) ...[
                                   const fw.SizedBox(height: 16),
                                   _DetailRow(
-                                    label: 'Last Modified',
+                                    label: 'last_modified'.tr(),
                                     value: _formatDate(
                                       variant.lastModificationTime!,
                                     ),
@@ -445,10 +465,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              );
+                    ));
             },
           ),
         ),

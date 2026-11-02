@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Consistent screen wrapper with SafeArea, background, and padding
@@ -36,13 +36,17 @@ class AppScreen extends fw.StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: backgroundColor ?? theme.colorScheme.background,
-      child: SafeArea(
-        child: withScroll
-            ? fw.SingleChildScrollView(
-                child: content,
-              )
-            : content,
+      backgroundColor: backgroundColor ?? theme.colorScheme.surface,
+      child: fw.Stack(
+        children: [
+          SafeArea(
+            child: withScroll
+                ? fw.SingleChildScrollView(
+                    child: content,
+                  )
+                : content,
+          ),
+        ],
       ),
     );
   }
@@ -64,11 +68,15 @@ class AppSliverScreen extends fw.StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: backgroundColor ?? theme.colorScheme.background,
-      child: SafeArea(
-        child: fw.CustomScrollView(
-          slivers: slivers,
-        ),
+      backgroundColor: backgroundColor ?? theme.colorScheme.surface,
+      child: fw.Stack(
+        children: [
+          SafeArea(
+            child: fw.CustomScrollView(
+              slivers: slivers,
+            ),
+          ),
+        ],
       ),
     );
   }

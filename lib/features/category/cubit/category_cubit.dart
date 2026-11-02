@@ -13,6 +13,9 @@ import '../data/usecase/get_category_list_usecase.dart';
 import '../data/usecase/get_category_stock_summary_usecase.dart';
 import '../data/usecase/update_category_usecase.dart';
 
+import '../data/usecase/delete_category_usecase.dart';
+import '../data/usecase/restore_category_usecase.dart';
+import '../data/usecase/get_deleted_category_list_usecase.dart';
 part 'category_state.dart';
 
 class CategoryCubit extends Cubit<CategoryState> {
@@ -157,5 +160,23 @@ class CategoryCubit extends Cubit<CategoryState> {
     return await GetCategoryStockSummaryUsecase(
       CategoryRepository(),
     ).call(params: GetCategoryStockSummaryParams(request: data));
+  }
+
+  Future<Result<bool>> deleteCategory(String id) async {
+    return await DeleteCategoryUsecase(
+      CategoryRepository(),
+    ).call(params: DeleteCategoryParams(id: id));
+  }
+
+  Future<Result<bool>> restoreCategory(String id) async {
+    return await RestoreCategoryUsecase(
+      CategoryRepository(),
+    ).call(params: RestoreCategoryParams(id: id));
+  }
+
+  Future<Result<List<CategoryModel>>> fetchDeletedCategoryList(data) async {
+    return await GetDeletedCategoryListUsecase(
+      CategoryRepository(),
+    ).call(params: GetCategoryListParams(request: data));
   }
 }

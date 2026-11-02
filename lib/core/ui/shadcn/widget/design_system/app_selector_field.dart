@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Reusable selector field that looks like an input but opens a picker/selector
@@ -89,7 +89,7 @@ class AppSelectorField extends fw.StatelessWidget {
             ),
             decoration: fw.BoxDecoration(
               color: enabled
-                  ? theme.colorScheme.background
+                  ? theme.colorScheme.surface
                   : AppDesignTokens.mutedSurfaceColor,
               borderRadius: fw.BorderRadius.circular(
                 AppDesignTokens.inputRadius,

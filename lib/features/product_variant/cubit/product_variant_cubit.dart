@@ -12,6 +12,9 @@ import '../data/usecase/get_product_variant_details_usecase.dart';
 import '../data/usecase/get_product_variant_list_usecase.dart';
 import '../data/usecase/update_product_variant_usecase.dart';
 
+import '../data/usecase/delete_product_variant_usecase.dart';
+import '../data/usecase/restore_product_variant_usecase.dart';
+import '../data/usecase/get_deleted_product_variant_list_usecase.dart';
 part 'product_variant_state.dart';
 
 class ProductVariantCubit extends Cubit<ProductVariantState> {
@@ -172,5 +175,23 @@ class ProductVariantCubit extends Cubit<ProductVariantState> {
     return await UpdateProductVariantUsecase(
       ProductVariantRepository(),
     ).call(params: updateProductVariantParams);
+  }
+
+  Future<Result<bool>> deleteProductVariant(String id) async {
+    return await DeleteProductVariantUsecase(
+      ProductVariantRepository(),
+    ).call(params: DeleteProductVariantParams(id: id));
+  }
+
+  Future<Result<bool>> restoreProductVariant(String id) async {
+    return await RestoreProductVariantUsecase(
+      ProductVariantRepository(),
+    ).call(params: RestoreProductVariantParams(id: id));
+  }
+
+  Future<Result<List<ProductVariantModel>>> fetchDeletedProductVariantList(data) async {
+    return await GetDeletedProductVariantListUsecase(
+      ProductVariantRepository(),
+    ).call(params: GetProductVariantListParams(request: data));
   }
 }

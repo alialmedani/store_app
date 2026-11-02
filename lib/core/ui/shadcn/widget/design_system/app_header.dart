@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Consistent app header with back button, title, and optional actions
@@ -22,8 +22,6 @@ class AppHeader extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    final theme = Theme.of(context);
-
     return fw.Container(
       padding: const fw.EdgeInsets.fromLTRB(
         AppDesignTokens.screenPaddingHorizontal,
@@ -31,32 +29,13 @@ class AppHeader extends fw.StatelessWidget {
         AppDesignTokens.screenPaddingHorizontal,
         AppDesignTokens.sectionGap,
       ),
-      decoration: withBorder
-          ? fw.BoxDecoration(
-              color: theme.colorScheme.background,
-              border: fw.Border(
-                bottom: fw.BorderSide(
-                  color: theme.colorScheme.border.withValues(alpha: 0.1),
-                  width: 1,
-                ),
-              ),
-            )
-          : null,
       child: fw.Row(
         children: [
           if (showBackButton) ...[
-            fw.Container(
-              decoration: fw.BoxDecoration(
-                color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                borderRadius: fw.BorderRadius.circular(
-                  AppDesignTokens.inputRadius,
-                ),
-              ),
-              child: IconButton(
-                icon: const fw.Icon(Icons.arrow_back, size: 20),
-                onPressed: onBack ?? () => fw.Navigator.pop(context),
-                variance: ButtonVariance.ghost,
-              ),
+            IconButton(
+              icon: const fw.Icon(Icons.arrow_back, size: 20),
+              onPressed: onBack ?? () => fw.Navigator.pop(context),
+              variance: ButtonVariance.ghost,
             ),
             const fw.SizedBox(width: AppDesignTokens.itemGap),
           ],

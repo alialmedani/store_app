@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:flutter/material.dart'
-    show showModalBottomSheet; // Required for bottom sheet API
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Generic reusable bottom sheet selector for mobile
 /// Fully customizable for any entity type T
@@ -16,7 +15,7 @@ import '../../design_system/app_design_tokens.dart';
 /// ```dart
 /// AppBottomSelector.show<CategoryModel>(
 ///   context: context,
-///   title: 'Select Category',
+///   title: 'select_category'.tr(),
 ///   itemBuilder: (item, isSelected, onTap) {
 ///     return CategorySelectorItem(
 ///       category: item,
@@ -50,7 +49,7 @@ class AppBottomSelector {
         return fw.Container(
           height: height ?? fw.MediaQuery.of(context).size.height * 0.75,
           decoration: fw.BoxDecoration(
-            color: theme.colorScheme.background,
+            color: theme.colorScheme.surface,
             borderRadius: const fw.BorderRadius.only(
               topLeft: fw.Radius.circular(20),
               topRight: fw.Radius.circular(20),
@@ -82,7 +81,7 @@ class AppBottomSelector {
                     fw.Expanded(
                       child: fw.Text(
                         title,
-                        style: const fw.TextStyle(
+                        style: fw.TextStyle(
                           fontSize: AppDesignTokens.sectionTitleFontSize,
                           fontWeight: AppDesignTokens.bold,
                           color: AppDesignTokens.titleTextColor,
@@ -167,7 +166,7 @@ class AppBottomSelector {
                     const fw.SizedBox(height: AppDesignTokens.tinyGap),
                     fw.Text(
                       subtitleBuilder(item)!,
-                      style: const fw.TextStyle(
+                      style: fw.TextStyle(
                         fontSize: AppDesignTokens.captionFontSize,
                         color: AppDesignTokens.mutedTextColor,
                       ),

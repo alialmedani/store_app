@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:store/features/category/data/model/category_model.dart';
 import 'package:flutter/widgets.dart' as fw;
 
@@ -8,6 +8,8 @@ import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../category/cubit/category_cubit.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Update Product Screen - Form to update existing product
 /// Uses CreateModel widget for state management
@@ -58,7 +60,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
 
     // Validate name
     if (_nameController.text.trim().isEmpty) {
-      cubit.setNameError('Product name is required');
+      cubit.setNameError('product_name_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearNameError();
@@ -67,15 +69,15 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
     // Validate price
     final priceText = _priceController.text.trim();
     if (priceText.isEmpty) {
-      cubit.setPriceError('Price is required');
+      cubit.setPriceError('price_is_required'.tr());
       isValid = false;
     } else {
       final price = double.tryParse(priceText);
       if (price == null) {
-        cubit.setPriceError('Please enter a valid number');
+        cubit.setPriceError('please_enter_a_valid_number'.tr());
         isValid = false;
       } else if (price <= 0) {
-        cubit.setPriceError('Price must be greater than 0');
+        cubit.setPriceError('price_must_be_greater_than_0'.tr());
         isValid = false;
       } else {
         cubit.clearPriceError();
@@ -84,7 +86,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
 
     // Validate category
     if (_categoryIdController.text.trim().isEmpty) {
-      cubit.setCategoryError('Category is required');
+      cubit.setCategoryError('category_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCategoryError();
@@ -109,8 +111,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
 
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             // App Bar
             Padding(
               padding: const fw.EdgeInsets.all(16),
@@ -122,9 +123,9 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                     variance: ButtonVariance.ghost,
                   ),
                   const fw.SizedBox(width: 8),
-                  const fw.Expanded(
+                  fw.Expanded(
                     child: Text(
-                      'Update Product',
+                      'update_product'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -133,11 +134,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            fw.Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const fw.EdgeInsets.all(16),
                 child: Card(
                   child: Padding(
@@ -151,8 +148,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                             return fw.Column(
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Product Name',
+                                Text(
+                                  'product_name'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -161,7 +158,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _nameController,
-                                  placeholder: const Text('Enter product name'),
+                                  placeholder: Text('enter_product_name'.tr()),
                                   onChanged: (value) {
                                     cubit.updateProductParams.name = value;
                                     cubit.clearNameError();
@@ -172,8 +169,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.nameError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -185,8 +182,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                         const fw.SizedBox(height: 16),
 
                         // Description Field
-                        const Text(
-                          'Description',
+                        Text(
+                          'description'.tr(),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -195,8 +192,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                         const fw.SizedBox(height: 8),
                         TextField(
                           controller: _descriptionController,
-                          placeholder: const Text(
-                            'Enter description (optional)',
+                          placeholder: Text(
+                            'enter_description_optional'.tr(),
                           ),
                           maxLines: 3,
                           onChanged: (value) {
@@ -211,8 +208,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                             return fw.Column(
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Price',
+                                Text(
+                                  'price'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -221,7 +218,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _priceController,
-                                  placeholder: const Text('Enter price'),
+                                  placeholder: Text('enter_price'.tr()),
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
                                         decimal: true,
@@ -239,8 +236,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.priceError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -259,9 +256,9 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                               children: [
                                 fw.Row(
                                   children: [
-                                    const fw.Expanded(
+                                    fw.Expanded(
                                       child: Text(
-                                        'Category',
+                                        'category'.tr(),
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
@@ -273,7 +270,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                         _showCategorySelector(context, cubit);
                                       },
                                       child: Text(
-                                        'Change',
+                                        'change'.tr(),
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
@@ -286,7 +283,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _categoryIdController,
-                                  placeholder: const Text('Select category'),
+                                  placeholder: Text('select_category_2'.tr()),
                                   enabled: false,
                                 ),
                                 if (cubit.categoryError != null)
@@ -294,8 +291,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.categoryError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -312,8 +309,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                             return fw.Column(
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Target Audience',
+                                Text(
+                                  'target_audience'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -325,7 +322,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                   runSpacing: 8,
                                   children: [
                                     _TargetAudienceChip(
-                                      label: 'All',
+                                      label: 'all'.tr(),
                                       value: 0,
                                       selectedValue:
                                           cubit.selectedTargetAudience,
@@ -338,7 +335,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                       },
                                     ),
                                     _TargetAudienceChip(
-                                      label: 'Men',
+                                      label: 'men'.tr(),
                                       value: 1,
                                       selectedValue:
                                           cubit.selectedTargetAudience,
@@ -351,7 +348,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                       },
                                     ),
                                     _TargetAudienceChip(
-                                      label: 'Women',
+                                      label: 'women'.tr(),
                                       value: 2,
                                       selectedValue:
                                           cubit.selectedTargetAudience,
@@ -364,7 +361,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                       },
                                     ),
                                     _TargetAudienceChip(
-                                      label: 'Kids',
+                                      label: 'kids'.tr(),
                                       value: 3,
                                       selectedValue:
                                           cubit.selectedTargetAudience,
@@ -391,8 +388,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                               mainAxisAlignment:
                                   fw.MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Active',
+                                Text(
+                                  'active'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -425,9 +422,9 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Success'),
-                                content: const Text(
-                                  'Product updated successfully!',
+                                title: Text('success'.tr()),
+                                content: Text(
+                                  'product_updated_successfully'.tr(),
                                 ),
                                 actions: [
                                   PrimaryButton(
@@ -438,7 +435,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                         true,
                                       ); // Return true to indicate success
                                     },
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                   ),
                                 ],
                               ),
@@ -448,31 +445,28 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Error'),
+                                title: Text('error_2'.tr()),
                                 content: Text(
-                                  'Failed to update product: $error',
+                                  'failed_to_update_product'.tr(args: ['${error}']),
                                 ),
                                 actions: [
                                   PrimaryButton(
                                     onPressed: () => fw.Navigator.pop(ctx),
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                   ),
                                 ],
                               ),
                             );
                           },
                           child: PrimaryButton(
-                            child: const Text('Update Product'),
+                            child: Text('update_product'.tr()),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
@@ -483,7 +477,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
       builder: (ctx) => BlocProvider(
         create: (context) => CategoryCubit(),
         child: AlertDialog(
-          title: const Text('Select Category'),
+          title: Text('select_category'.tr()),
           content: fw.SizedBox(
             width: double.maxFinite,
             height: 400,
@@ -526,7 +520,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
           actions: [
             SecondaryButton(
               onPressed: () => fw.Navigator.pop(ctx),
-              child: const Text('Cancel'),
+              child: Text('cancel'.tr()),
             ),
           ],
         ),

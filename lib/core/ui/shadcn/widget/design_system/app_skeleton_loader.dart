@@ -20,13 +20,15 @@ class AppSkeletonBox extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return Shimmer.fromColors(
       baseColor: AppDesignTokens.mutedSurfaceColor,
-      highlightColor: const fw.Color(0xFFFFFFFF),
+      highlightColor: AppDesignTokens.isDark
+          ? const fw.Color(0x24FFFFFF)
+          : const fw.Color(0xCCFFFFFF),
       period: const Duration(milliseconds: 1500),
       child: fw.Container(
         width: width,
         height: height,
         decoration: fw.BoxDecoration(
-          color: AppDesignTokens.mutedSurfaceColor,
+          color: const fw.Color(0xFFFFFFFF),
           borderRadius: fw.BorderRadius.circular(
             borderRadius ?? AppDesignTokens.badgeRadius,
           ),
@@ -45,7 +47,7 @@ class ProductCardSkeleton extends fw.StatelessWidget {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
       decoration: fw.BoxDecoration(
-        color: const fw.Color(0xFFFFFFFF),
+        color: AppDesignTokens.cardColor,
         borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
         border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
       ),
@@ -97,7 +99,7 @@ class ProductVariantCardSkeleton extends fw.StatelessWidget {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
       decoration: fw.BoxDecoration(
-        color: const fw.Color(0xFFFFFFFF),
+        color: AppDesignTokens.cardColor,
         borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
         border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
       ),
@@ -174,7 +176,7 @@ class OrderCardSkeleton extends fw.StatelessWidget {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
       decoration: fw.BoxDecoration(
-        color: const fw.Color(0xFFFFFFFF),
+        color: AppDesignTokens.cardColor,
         borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
         border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
       ),
@@ -249,7 +251,7 @@ class InventoryMovementCardSkeleton extends fw.StatelessWidget {
     return fw.Container(
       padding: const fw.EdgeInsets.all(20),
       decoration: fw.BoxDecoration(
-        color: const fw.Color(0xFFFFFFFF),
+        color: AppDesignTokens.cardColor,
         borderRadius: fw.BorderRadius.circular(12),
         border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
       ),

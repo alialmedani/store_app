@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 
 import '../../../core/boilerplate/pagination/widgets/pagination_list.dart';
@@ -13,6 +13,7 @@ import '../../product/cubit/product_cubit.dart';
 import '../../product/data/model/product_model.dart';
 import '../../product/screen/product_details_screen.dart';
 import '../../product/screen/product_list_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Home Screen - Products and Categories
 class HomeScreen extends fw.StatelessWidget {
@@ -38,8 +39,8 @@ class HomeScreen extends fw.StatelessWidget {
                 begin: fw.Alignment.topLeft,
                 end: fw.Alignment.bottomRight,
                 colors: [
-                  theme.colorScheme.background,
-                  theme.colorScheme.background.withValues(alpha: 0.95),
+                  theme.colorScheme.surface,
+                  theme.colorScheme.surface.withValues(alpha: 0.95),
                 ],
               ),
               border: fw.Border(
@@ -56,8 +57,8 @@ class HomeScreen extends fw.StatelessWidget {
                 fw.Column(
                   crossAxisAlignment: fw.CrossAxisAlignment.start,
                   children: [
-                    const fw.Text(
-                      'Discover',
+                    fw.Text(
+                      'discover'.tr(),
                       style: fw.TextStyle(
                         fontSize: 28,
                         fontWeight: AppDesignTokens.extraBold,
@@ -67,7 +68,7 @@ class HomeScreen extends fw.StatelessWidget {
                     ),
                     const fw.SizedBox(height: 4),
                     fw.Text(
-                      'Browse products & categories',
+                      'browse_products_categories'.tr(),
                       style: fw.TextStyle(
                         fontSize: 14,
                         color: theme.colorScheme.mutedForeground,
@@ -119,8 +120,8 @@ class HomeScreen extends fw.StatelessWidget {
                       ),
                     ),
                     const fw.SizedBox(width: AppDesignTokens.itemGap),
-                    const fw.Text(
-                      'Categories',
+                    fw.Text(
+                      'categories'.tr(),
                       style: fw.TextStyle(
                         fontSize: 20,
                         fontWeight: AppDesignTokens.bold,
@@ -205,8 +206,8 @@ class HomeScreen extends fw.StatelessWidget {
                       ),
                     ),
                     const fw.SizedBox(width: AppDesignTokens.itemGap),
-                    const fw.Text(
-                      'Products',
+                    fw.Text(
+                      'products'.tr(),
                       style: fw.TextStyle(
                         fontSize: 20,
                         fontWeight: AppDesignTokens.bold,
@@ -227,7 +228,7 @@ class HomeScreen extends fw.StatelessWidget {
                     );
                   },
                   child: fw.Text(
-                    'See All',
+                    'see_all'.tr(),
                     style: fw.TextStyle(
                       fontSize: 14,
                       fontWeight: fw.FontWeight.w600,
@@ -258,7 +259,7 @@ class HomeScreen extends fw.StatelessWidget {
                       crossAxisCount: 2,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
-                      mainAxisExtent: 260,
+                      mainAxisExtent: 276,
                     ),
                 itemCount: 6,
                 itemBuilder: (context, index) {
@@ -283,7 +284,7 @@ class HomeScreen extends fw.StatelessWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        mainAxisExtent: 260,
+                        mainAxisExtent: 276,
                       ),
                   itemCount: displayProducts.length,
                   itemBuilder: (context, index) {
@@ -482,7 +483,7 @@ class _CategoryCard extends fw.StatelessWidget {
                   mainAxisSize: fw.MainAxisSize.min,
                   children: [
                     fw.Text(
-                      category.name ?? 'Unknown',
+                      category.name ?? 'unknown'.tr(),
                       maxLines: 1,
                       overflow: fw.TextOverflow.ellipsis,
                       style: const fw.TextStyle(
@@ -506,8 +507,8 @@ class _CategoryCard extends fw.StatelessWidget {
                           color: fw.Color(0xFFFFFFFF).withValues(alpha: 0.22),
                         ),
                       ),
-                      child: const fw.Text(
-                        'Explore collection',
+                      child: fw.Text(
+                        'explore_collection'.tr(),
                         maxLines: 1,
                         overflow: fw.TextOverflow.ellipsis,
                         style: fw.TextStyle(
@@ -590,7 +591,7 @@ class _ProductCard extends fw.StatelessWidget {
                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                 children: [
                   fw.Text(
-                    product.name ?? 'Unknown',
+                    product.name ?? 'unknown'.tr(),
                     maxLines: 1,
                     overflow: fw.TextOverflow.ellipsis,
                     style: const fw.TextStyle(
@@ -669,7 +670,7 @@ class _ProductCardSkeleton extends fw.StatelessWidget {
           // Product Image Skeleton
           fw.Container(
             height: 140,
-            decoration: const fw.BoxDecoration(
+            decoration: fw.BoxDecoration(
               color: AppDesignTokens.mutedSurfaceColor,
               borderRadius: fw.BorderRadius.vertical(
                 top: fw.Radius.circular(12),

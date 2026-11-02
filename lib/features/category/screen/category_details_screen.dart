@@ -1,13 +1,15 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
+import '../../../../core/ui/dialogs/action_helpers.dart';
 import '../../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
 import 'edit_category_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Category Details Screen - Shows complete category information
 class CategoryDetailsScreen extends fw.StatelessWidget {
@@ -31,13 +33,12 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                 category.id ?? '',
               );
 
-              return fw.Column(
-                children: [
+              return ScrollAwayHeader(header: fw.Column(children: [
                   // App Bar
                   Container(
                     padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.background,
+                      color: theme.colorScheme.surface,
                       border: Border(
                         bottom: BorderSide(
                           color: theme.colorScheme.border.withValues(
@@ -63,15 +64,38 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                           ),
                         ),
                         const fw.SizedBox(width: 12),
-                        const fw.Expanded(
+                        fw.Expanded(
                           child: Text(
-                            'Category Details',
+                            'category_details'.tr(),
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w700,
                               letterSpacing: -0.5,
                             ),
                           ),
+                        ),
+                        // Delete Button
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline, size: 20),
+                          onPressed: () => showConfirmDialog(
+                            context,
+                            title: 'delete_category'.tr(),
+                            message: 'delete_it_can_be_restored_later_from_d'.tr(args: ['${category.name ?? 'this category'}']),
+                            confirmLabel: 'delete'.tr(),
+                            destructive: true,
+                            onConfirm: () async {
+                              final deleted = await runRemoteAction(
+                                () => context.read<CategoryCubit>().deleteCategory(
+                                  categoryId,
+                                ),
+                                successMessage: 'category_deleted'.tr(),
+                              );
+                              if (deleted && context.mounted) {
+                                fw.Navigator.of(context).pop(true);
+                              }
+                            },
+                          ),
+                          variance: ButtonVariance.ghost,
                         ),
                         // Edit Button
                         Container(
@@ -103,11 +127,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-
-                  // Content
-                  fw.Expanded(
-                    child: fw.SingleChildScrollView(
+                  )]), body: fw.SingleChildScrollView(
                       padding: const fw.EdgeInsets.all(20),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -197,7 +217,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                         fw.CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Status',
+                                        'status'.tr(),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
@@ -208,8 +228,8 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                       const fw.SizedBox(height: 4),
                                       Text(
                                         category.isActive == true
-                                            ? 'Active'
-                                            : 'Inactive',
+                                            ? 'active'.tr()
+                                            : 'inactive'.tr(),
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w700,
@@ -246,7 +266,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                         fw.CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Size Type',
+                                        'size_type'.tr(),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
@@ -275,7 +295,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                           if (category.description != null &&
                               category.description!.isNotEmpty) ...[
                             Text(
-                              'Description',
+                              'description'.tr(),
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -310,7 +330,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
 
                           // Details Section
                           Text(
-                            'Details',
+                            'details'.tr(),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -334,7 +354,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                             child: fw.Column(
                               children: [
                                 _DetailRow(
-                                  label: 'Size Type ID',
+                                  label: 'size_type_id'.tr(),
                                   value:
                                       category.sizeTypeId?.toString() ?? 'N/A',
                                   theme: theme,
@@ -342,7 +362,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 if (category.creationTime != null) ...[
                                   const fw.SizedBox(height: 16),
                                   _DetailRow(
-                                    label: 'Created',
+                                    label: 'created'.tr(),
                                     value: _formatDate(category.creationTime!),
                                     theme: theme,
                                   ),
@@ -350,7 +370,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 if (category.lastModificationTime != null) ...[
                                   const fw.SizedBox(height: 16),
                                   _DetailRow(
-                                    label: 'Last Modified',
+                                    label: 'last_modified'.tr(),
                                     value: _formatDate(
                                       category.lastModificationTime!,
                                     ),
@@ -362,10 +382,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              );
+                    ));
             },
           ),
         ),

@@ -1,13 +1,15 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
+import '../../../../core/ui/dialogs/action_helpers.dart';
 import '../../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
 import 'update_product_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Product Details Screen - Shows complete product information
 class ProductDetailsScreen extends fw.StatelessWidget {
@@ -29,13 +31,12 @@ class ProductDetailsScreen extends fw.StatelessWidget {
             modelBuilder: (product) {
               final imageUrl = ImageHelper.getProductImageUrl(product.id ?? '');
 
-              return fw.Column(
-                children: [
+              return ScrollAwayHeader(header: fw.Column(children: [
                   // App Bar
                   Container(
                     padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.background,
+                      color: theme.colorScheme.surface,
                       border: Border(
                         bottom: BorderSide(
                           color: theme.colorScheme.border.withValues(
@@ -61,15 +62,38 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                           ),
                         ),
                         const fw.SizedBox(width: 12),
-                        const fw.Expanded(
+                        fw.Expanded(
                           child: Text(
-                            'Product Details',
+                            'product_details'.tr(),
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w700,
                               letterSpacing: -0.5,
                             ),
                           ),
+                        ),
+                        // Delete Button
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline, size: 20),
+                          onPressed: () => showConfirmDialog(
+                            context,
+                            title: 'delete_product'.tr(),
+                            message: 'delete_it_can_be_restored_later_from_d'.tr(args: ['${product.name ?? 'this product'}']),
+                            confirmLabel: 'delete'.tr(),
+                            destructive: true,
+                            onConfirm: () async {
+                              final deleted = await runRemoteAction(
+                                () => context.read<ProductCubit>().deleteProduct(
+                                  productId,
+                                ),
+                                successMessage: 'product_deleted'.tr(),
+                              );
+                              if (deleted && context.mounted) {
+                                fw.Navigator.of(context).pop(true);
+                              }
+                            },
+                          ),
+                          variance: ButtonVariance.ghost,
                         ),
                         // Edit Button
                         IconButton(
@@ -87,7 +111,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                             );
 
                             // Refresh details if product was updated
-                            if (result != null) {
+                            if (result != null && context.mounted) {
                               context.read<ProductCubit>().getProductDetails(
                                 productId,
                               );
@@ -97,11 +121,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-
-                  // Content
-                  fw.Expanded(
-                    child: fw.SingleChildScrollView(
+                  )]), body: fw.SingleChildScrollView(
                       padding: const fw.EdgeInsets.all(20),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -183,7 +203,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                         fw.CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Price',
+                                        'price'.tr(),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
@@ -233,7 +253,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                 child: fw.Column(
                                   children: [
                                     Text(
-                                      'Status',
+                                      'status'.tr(),
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
@@ -244,8 +264,8 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                     const fw.SizedBox(height: 4),
                                     Text(
                                       product.isActive == true
-                                          ? 'Active'
-                                          : 'Inactive',
+                                          ? 'active'.tr()
+                                          : 'inactive'.tr(),
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
@@ -265,7 +285,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                           if (product.description != null &&
                               product.description!.isNotEmpty) ...[
                             Text(
-                              'Description',
+                              'description'.tr(),
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -300,7 +320,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
 
                           // Details Section
                           Text(
-                            'Details',
+                            'details'.tr(),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -324,13 +344,13 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                             child: fw.Column(
                               children: [
                                 _DetailRow(
-                                  label: 'Category',
+                                  label: 'category'.tr(),
                                   value: product.category?.name ?? 'N/A',
                                   theme: theme,
                                 ),
                                 const fw.SizedBox(height: 16),
                                 _DetailRow(
-                                  label: 'Stock Quantity',
+                                  label: 'stock_quantity'.tr(),
                                   value:
                                       product.totalStockQuantity?.toString() ??
                                       '0',
@@ -338,21 +358,21 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                                 ),
                                 const fw.SizedBox(height: 16),
                                 _DetailRow(
-                                  label: 'Availability',
+                                  label: 'availability'.tr(),
                                   value:
                                       product.availabilityStatus?.name ?? 'N/A',
                                   theme: theme,
                                 ),
                                 const fw.SizedBox(height: 16),
                                 _DetailRow(
-                                  label: 'Target Audience',
+                                  label: 'target_audience'.tr(),
                                   value: product.targetAudience?.name ?? 'N/A',
                                   theme: theme,
                                 ),
                                 if (product.creationTime != null) ...[
                                   const fw.SizedBox(height: 16),
                                   _DetailRow(
-                                    label: 'Created',
+                                    label: 'created'.tr(),
                                     value: _formatDate(product.creationTime!),
                                     theme: theme,
                                   ),
@@ -362,10 +382,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              );
+                    ));
             },
           ),
         ),

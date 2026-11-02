@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../cubit/order_cubit.dart';
 import '../data/usecase/create_order_usecase.dart';
 import 'widgets/add_product_dialog.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Create Order Screen - Form to create new order
 /// Uses CreateModel widget for state management
@@ -27,7 +29,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     // Validate customer name
     if (_customerNameController.text.trim().isEmpty) {
-      cubit.setCustomerNameError('Customer name is required');
+      cubit.setCustomerNameError('customer_name_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCustomerNameError();
@@ -35,7 +37,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     // Validate phone
     if (_customerPhoneController.text.trim().isEmpty) {
-      cubit.setCustomerPhoneError('Phone number is required');
+      cubit.setCustomerPhoneError('phone_number_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCustomerPhoneError();
@@ -43,7 +45,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     // Validate address
     if (_customerAddressController.text.trim().isEmpty) {
-      cubit.setCustomerAddressError('Address is required');
+      cubit.setCustomerAddressError('address_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCustomerAddressError();
@@ -51,7 +53,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     // Validate items
     if (cubit.orderItems.isEmpty) {
-      cubit.setItemsError('Please add at least one item to the order');
+      cubit.setItemsError('please_add_at_least_one_item_to_the_or'.tr());
       isValid = false;
     } else {
       cubit.clearItemsError();
@@ -75,8 +77,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
     return Scaffold(
       child: SafeArea(
-        child: Column(
-          children: [
+        child: ScrollAwayHeader(header: Column(children: [
             // App Bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -88,9 +89,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                     variance: ButtonVariance.ghost,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Create Order',
+                      'create_order'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -99,11 +100,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -115,8 +112,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Customer Information',
+                            Text(
+                              'customer_information'.tr(),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -130,8 +127,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Customer Name',
+                                    Text(
+                                      'customer_name'.tr(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -140,8 +137,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     const SizedBox(height: 8),
                                     TextField(
                                       controller: _customerNameController,
-                                      placeholder: const Text(
-                                        'Enter customer name',
+                                      placeholder: Text(
+                                        'enter_customer_name'.tr(),
                                       ),
                                       onChanged: (value) {
                                         cubit.createOrderParams.customerName =
@@ -154,8 +151,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                         padding: const EdgeInsets.only(top: 4),
                                         child: Text(
                                           cubit.customerNameError!,
-                                          style: const TextStyle(
-                                            color: Color(0xFFEF4444),
+                                          style: TextStyle(
+                                            color: AppDesignTokens.dangerColor,
                                             fontSize: 12,
                                           ),
                                         ),
@@ -172,8 +169,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Phone Number',
+                                    Text(
+                                      'phone_number'.tr(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -182,8 +179,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     const SizedBox(height: 8),
                                     TextField(
                                       controller: _customerPhoneController,
-                                      placeholder: const Text(
-                                        'Enter phone number',
+                                      placeholder: Text(
+                                        'enter_phone_number'.tr(),
                                       ),
                                       keyboardType: TextInputType.phone,
                                       onChanged: (value) {
@@ -197,8 +194,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                         padding: const EdgeInsets.only(top: 4),
                                         child: Text(
                                           cubit.customerPhoneError!,
-                                          style: const TextStyle(
-                                            color: Color(0xFFEF4444),
+                                          style: TextStyle(
+                                            color: AppDesignTokens.dangerColor,
                                             fontSize: 12,
                                           ),
                                         ),
@@ -215,8 +212,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Address',
+                                    Text(
+                                      'address'.tr(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -225,8 +222,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     const SizedBox(height: 8),
                                     TextField(
                                       controller: _customerAddressController,
-                                      placeholder: const Text(
-                                        'Enter delivery address',
+                                      placeholder: Text(
+                                        'enter_delivery_address'.tr(),
                                       ),
                                       maxLines: 2,
                                       onChanged: (value) {
@@ -242,8 +239,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                         padding: const EdgeInsets.only(top: 4),
                                         child: Text(
                                           cubit.customerAddressError!,
-                                          style: const TextStyle(
-                                            color: Color(0xFFEF4444),
+                                          style: TextStyle(
+                                            color: AppDesignTokens.dangerColor,
                                             fontSize: 12,
                                           ),
                                         ),
@@ -255,8 +252,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                             const SizedBox(height: 16),
 
                             // Note Field
-                            const Text(
-                              'Note (Optional)',
+                            Text(
+                              'note_optional'.tr(),
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -265,7 +262,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                             const SizedBox(height: 8),
                             TextField(
                               controller: _noteController,
-                              placeholder: const Text('Add note'),
+                              placeholder: Text('add_note'.tr()),
                               maxLines: 2,
                               onChanged: (value) {
                                 cubit.createOrderParams.note = value;
@@ -287,8 +284,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Order Items',
+                                Text(
+                                  'order_items'.tr(),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
@@ -298,12 +295,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                   onPressed: () {
                                     _showAddItemDialog(context, cubit);
                                   },
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(Icons.add, size: 16),
                                       SizedBox(width: 4),
-                                      Text('Add Item'),
+                                      Text('add_item'.tr()),
                                     ],
                                   ),
                                 ),
@@ -334,7 +331,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                           ),
                                           const SizedBox(height: 12),
                                           Text(
-                                            'No items added yet',
+                                            'no_items_added_yet'.tr(),
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Theme.of(
@@ -375,8 +372,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Text(
                                       cubit.itemsError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -404,15 +401,15 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                         showDialog(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Success'),
-                            content: const Text('Order created successfully!'),
+                            title: Text('success'.tr()),
+                            content: Text('order_created_successfully'.tr()),
                             actions: [
                               PrimaryButton(
                                 onPressed: () {
                                   Navigator.pop(ctx);
                                   Navigator.pop(context, true);
                                 },
-                                child: const Text('OK'),
+                                child: Text('ok'.tr()),
                               ),
                             ],
                           ),
@@ -422,20 +419,20 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                         showDialog(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Error'),
+                            title: Text('error_2'.tr()),
                             content: Text(error),
                             actions: [
                               PrimaryButton(
                                 onPressed: () => Navigator.pop(ctx),
-                                child: const Text('OK'),
+                                child: Text('ok'.tr()),
                               ),
                             ],
                           ),
                         );
                       },
                       child: PrimaryButton(
-                        child: const Text(
-                          'Create Order',
+                        child: Text(
+                          'create_order'.tr(),
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -446,10 +443,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                     const SizedBox(height: 16),
                   ],
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
@@ -503,7 +497,7 @@ class _OrderItemTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Product Variant',
+                  'product_variant'.tr(),
                   style: TextStyle(
                     fontSize: 12,
                     color: theme.colorScheme.mutedForeground,
@@ -521,7 +515,7 @@ class _OrderItemTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Quantity: ${item.quantity}',
+                  'quantity'.tr(args: ['${item.quantity}']),
                   style: TextStyle(
                     fontSize: 13,
                     color: theme.colorScheme.foreground,

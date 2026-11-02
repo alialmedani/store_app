@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
+import 'app_motion.dart';
 
 /// Consistent button styles across the app
 /// Provides primary, secondary, outlined, and destructive variants
@@ -36,8 +37,9 @@ class AppButton extends fw.StatelessWidget {
     // Get colors based on variant
     final colors = _getColors(theme, isDisabled);
 
-    return fw.GestureDetector(
+    return PressScale(
       onTap: isDisabled ? null : onPressed,
+      pressedScale: 0.97,
       child: fw.Container(
         height: height ?? AppDesignTokens.primaryButtonHeight,
         width: isFullWidth ? double.infinity : null,
@@ -91,7 +93,7 @@ class AppButton extends fw.StatelessWidget {
   _ButtonColors _getColors(ThemeData theme, bool isDisabled) {
     if (isDisabled) {
       return _ButtonColors(
-        backgroundColor: theme.colorScheme.muted.withValues(alpha: 0.3),
+        backgroundColor: AppDesignTokens.mutedSurfaceColor,
         textColor: theme.colorScheme.mutedForeground,
       );
     }
@@ -116,11 +118,13 @@ class AppButton extends fw.StatelessWidget {
       case AppButtonVariant.destructive:
         return _ButtonColors(
           backgroundColor: theme.colorScheme.destructive,
-          textColor: theme.colorScheme.destructiveForeground,
+          textColor: AppDesignTokens.isDark
+              ? const fw.Color(0xFF14070A)
+              : const fw.Color(0xFFFFFFFF),
         );
       case AppButtonVariant.ghost:
         return _ButtonColors(
-          backgroundColor: theme.colorScheme.muted.withValues(alpha: 0.1),
+          backgroundColor: AppDesignTokens.mutedSurfaceColor,
           textColor: theme.colorScheme.foreground,
         );
     }

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -12,6 +12,7 @@ import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Edit Category Screen - Form to edit existing category
 /// Uses CreateModel widget for state management
@@ -50,12 +51,12 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to select image: $e'),
+            title: Text('error_2'.tr()),
+            content: Text('failed_to_select_image'.tr(args: ['${e}'])),
             actions: [
               PrimaryButton(
                 onPressed: () => fw.Navigator.pop(ctx),
-                child: const Text('OK'),
+                child: Text('ok'.tr()),
               ),
             ],
           ),
@@ -68,7 +69,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
     bool isValid = true;
 
     if (_nameController.text.trim().isEmpty) {
-      cubit.setNameError('Category name is required');
+      cubit.setNameError('category_name_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearNameError();
@@ -114,13 +115,12 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
             _initializeFields(category, cubit);
             final imageUrl = ImageHelper.getCategoryImageUrl(category.id ?? '');
 
-            return fw.Column(
-              children: [
+            return ScrollAwayHeader(header: fw.Column(children: [
                 // Modern App Bar
                 fw.Container(
                   padding: const fw.EdgeInsets.fromLTRB(20, 20, 24, 24),
                   decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.background,
+                    color: theme.colorScheme.surface,
                     border: fw.Border(
                       bottom: fw.BorderSide(
                         color: theme.colorScheme.border.withValues(alpha: 0.08),
@@ -153,8 +153,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                         child: fw.Column(
                           crossAxisAlignment: fw.CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Edit Category',
+                            Text(
+                              'edit_category'.tr(),
                               style: fw.TextStyle(
                                 fontSize: 28,
                                 fontWeight: fw.FontWeight.w700,
@@ -164,7 +164,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                             ),
                             const fw.SizedBox(height: 4),
                             Text(
-                              'Update category details',
+                              'update_category_details'.tr(),
                               style: fw.TextStyle(
                                 fontSize: 14,
                                 color: theme.colorScheme.mutedForeground,
@@ -176,11 +176,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                       ),
                     ],
                   ),
-                ),
-
-                // Form Content
-                fw.Expanded(
-                  child: fw.SingleChildScrollView(
+                )]), body: fw.SingleChildScrollView(
                     padding: const fw.EdgeInsets.all(24),
                     child: Card(
                       child: fw.Padding(
@@ -198,7 +194,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          'Category Name',
+                                          'category_name'.tr(),
                                           style: fw.TextStyle(
                                             fontSize: 15,
                                             fontWeight: fw.FontWeight.w600,
@@ -220,8 +216,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                     const fw.SizedBox(height: 10),
                                     TextField(
                                       controller: _nameController,
-                                      placeholder: const Text(
-                                        'Enter a descriptive category name',
+                                      placeholder: Text(
+                                        'enter_a_descriptive_category_name'.tr(),
                                       ),
                                       onChanged: (value) {
                                         cubit.updateCategoryParams.name = value;
@@ -251,7 +247,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
 
                             // Description Field
                             Text(
-                              'Description',
+                              'description'.tr(),
                               style: fw.TextStyle(
                                 fontSize: 15,
                                 fontWeight: fw.FontWeight.w600,
@@ -261,8 +257,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                             const fw.SizedBox(height: 10),
                             TextField(
                               controller: _descriptionController,
-                              placeholder: const Text(
-                                'Add a brief description about this category',
+                              placeholder: Text(
+                                'add_a_brief_description_about_this_cat'.tr(),
                               ),
                               maxLines: 4,
                               onChanged: (value) {
@@ -279,7 +275,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       fw.CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Category Image',
+                                      'category_image'.tr(),
                                       style: fw.TextStyle(
                                         fontSize: 15,
                                         fontWeight: fw.FontWeight.w600,
@@ -288,7 +284,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                     ),
                                     const fw.SizedBox(height: 4),
                                     Text(
-                                      'Optional — Recommended size: 800x600',
+                                      'optional_recommended_size_800x600'.tr(),
                                       style: fw.TextStyle(
                                         fontSize: 13,
                                         color:
@@ -423,7 +419,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                               child: SecondaryButton(
                                                 onPressed: () =>
                                                     _pickImage(cubit),
-                                                child: const fw.Row(
+                                                child: fw.Row(
                                                   mainAxisSize:
                                                       fw.MainAxisSize.min,
                                                   children: [
@@ -432,7 +428,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                                       size: 16,
                                                     ),
                                                     fw.SizedBox(width: 8),
-                                                    Text('Change Image'),
+                                                    Text('change_image'.tr()),
                                                   ],
                                                 ),
                                               ),
@@ -472,7 +468,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                                 ),
                                                 const fw.SizedBox(height: 12),
                                                 Text(
-                                                  'Click to upload image',
+                                                  'click_to_upload_image'.tr(),
                                                   style: fw.TextStyle(
                                                     fontSize: 15,
                                                     fontWeight:
@@ -484,7 +480,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                                 ),
                                                 const fw.SizedBox(height: 4),
                                                 Text(
-                                                  'PNG, JPG up to 10MB',
+                                                  'png_jpg_up_to_10mb'.tr(),
                                                   style: fw.TextStyle(
                                                     fontSize: 13,
                                                     color: theme
@@ -512,7 +508,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       fw.CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Size Type',
+                                      'size_type'.tr(),
                                       style: fw.TextStyle(
                                         fontSize: 15,
                                         fontWeight: fw.FontWeight.w600,
@@ -521,7 +517,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                     ),
                                     const fw.SizedBox(height: 4),
                                     Text(
-                                      'Choose the appropriate sizing system',
+                                      'choose_the_appropriate_sizing_system'.tr(),
                                       style: fw.TextStyle(
                                         fontSize: 13,
                                         color:
@@ -534,7 +530,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                       runSpacing: 10,
                                       children: [
                                         _SizeTypeChip(
-                                          label: 'None',
+                                          label: 'none'.tr(),
                                           value: SizeType.none,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
@@ -546,7 +542,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           },
                                         ),
                                         _SizeTypeChip(
-                                          label: 'Clothing',
+                                          label: 'clothing'.tr(),
                                           value: SizeType.clothing,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
@@ -558,7 +554,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           },
                                         ),
                                         _SizeTypeChip(
-                                          label: 'Shoes',
+                                          label: 'shoes'.tr(),
                                           value: SizeType.shoes,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
@@ -570,7 +566,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           },
                                         ),
                                         _SizeTypeChip(
-                                          label: 'One Size',
+                                          label: 'one_size'.tr(),
                                           value: SizeType.oneSize,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
@@ -582,7 +578,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           },
                                         ),
                                         _SizeTypeChip(
-                                          label: 'Kids Age',
+                                          label: 'kids_age'.tr(),
                                           value: SizeType.kidsAge,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
@@ -594,7 +590,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           },
                                         ),
                                         _SizeTypeChip(
-                                          label: 'Custom',
+                                          label: 'custom'.tr(),
                                           value: SizeType.custom,
                                           selectedValue: cubit.selectedSizeType,
                                           onSelected: (value) {
@@ -638,7 +634,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                             fw.CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Category Status',
+                                            'category_status'.tr(),
                                             style: fw.TextStyle(
                                               fontSize: 15,
                                               fontWeight: fw.FontWeight.w600,
@@ -648,8 +644,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           const fw.SizedBox(height: 4),
                                           Text(
                                             cubit.updateCategoryParams.isActive
-                                                ? 'Visible to customers'
-                                                : 'Hidden from store',
+                                                ? 'visible_to_customers'.tr()
+                                                : 'hidden_from_store'.tr(),
                                             style: fw.TextStyle(
                                               fontSize: 13,
                                               color: theme
@@ -691,9 +687,9 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                 showDialog(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
-                                    title: const Text('Success'),
-                                    content: const Text(
-                                      'Category updated successfully!',
+                                    title: Text('success'.tr()),
+                                    content: Text(
+                                      'category_updated_successfully'.tr(),
                                     ),
                                     actions: [
                                       PrimaryButton(
@@ -701,7 +697,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                           fw.Navigator.pop(ctx);
                                           fw.Navigator.pop(context);
                                         },
-                                        child: const Text('OK'),
+                                        child: Text('ok'.tr()),
                                       ),
                                     ],
                                   ),
@@ -711,14 +707,14 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                                 showDialog(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
-                                    title: const Text('Error'),
+                                    title: Text('error_2'.tr()),
                                     content: Text(
-                                      'Failed to update category: $error',
+                                      'failed_to_update_category'.tr(args: ['${error}']),
                                     ),
                                     actions: [
                                       PrimaryButton(
                                         onPressed: () => fw.Navigator.pop(ctx),
-                                        child: const Text('OK'),
+                                        child: Text('ok'.tr()),
                                       ),
                                     ],
                                   ),
@@ -727,8 +723,8 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                               child: fw.SizedBox(
                                 height: 52,
                                 child: PrimaryButton(
-                                  child: const Text(
-                                    'Update Category',
+                                  child: Text(
+                                    'update_category'.tr(),
                                     style: fw.TextStyle(
                                       fontSize: 16,
                                       fontWeight: fw.FontWeight.w600,
@@ -742,10 +738,7 @@ class _EditCategoryScreenState extends fw.State<EditCategoryScreen> {
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            );
+                  ));
           },
         ),
       ),

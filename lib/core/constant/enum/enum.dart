@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 enum SizeType {
   none,
   clothing,
@@ -82,13 +83,13 @@ enum TargetAudience {
   String displayString() {
     switch (this) {
       case TargetAudience.all:
-        return 'All';
+        return 'all'.tr();
       case TargetAudience.men:
-        return 'Men';
+        return 'men'.tr();
       case TargetAudience.women:
-        return 'Women';
+        return 'women'.tr();
       case TargetAudience.kids:
-        return 'Kids';
+        return 'kids'.tr();
     }
   }
 }

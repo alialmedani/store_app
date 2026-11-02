@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../../core/classes/cashe_helper.dart';
 import '../../home/screen/main_navigation_screen.dart';
 import 'login_screen_shadcn.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Auth Wrapper - Checks if user is already logged in
 /// Shows MainNavigationScreen if token exists, otherwise shows LoginScreen
@@ -94,8 +95,8 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
             const fw.SizedBox(height: 32),
 
             // App Title
-            const Text(
-              'Store Management',
+            Text(
+              'store_management'.tr(),
               style: TextStyle(fontSize: 28, fontWeight: fw.FontWeight.bold),
             ),
             const fw.SizedBox(height: 48),

@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../cubit/order_cubit.dart';
 import '../data/model/order_model.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Update Order Screen - Form to update existing order (customer information)
 /// Uses CreateModel widget for state management
@@ -48,21 +50,21 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
     bool isValid = true;
 
     if (_customerNameController.text.trim().isEmpty) {
-      cubit.setCustomerNameError('Customer name is required');
+      cubit.setCustomerNameError('customer_name_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCustomerNameError();
     }
 
     if (_customerPhoneController.text.trim().isEmpty) {
-      cubit.setCustomerPhoneError('Phone number is required');
+      cubit.setCustomerPhoneError('phone_number_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCustomerPhoneError();
     }
 
     if (_customerAddressController.text.trim().isEmpty) {
-      cubit.setCustomerAddressError('Address is required');
+      cubit.setCustomerAddressError('address_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCustomerAddressError();
@@ -87,8 +89,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
 
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             // App Bar
             Padding(
               padding: const fw.EdgeInsets.all(16),
@@ -100,9 +101,9 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                     variance: ButtonVariance.ghost,
                   ),
                   const fw.SizedBox(width: 8),
-                  const fw.Expanded(
+                  fw.Expanded(
                     child: Text(
-                      'Update Order',
+                      'update_order'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -111,11 +112,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            fw.Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const fw.EdgeInsets.all(16),
                 child: Card(
                   child: Padding(
@@ -127,8 +124,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                         fw.Column(
                           crossAxisAlignment: fw.CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Order Number',
+                            Text(
+                              'order_number'.tr(),
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -166,8 +163,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             return fw.Column(
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Customer Name *',
+                                Text(
+                                  'customer_name_2'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -176,8 +173,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _customerNameController,
-                                  placeholder: const Text(
-                                    'Enter customer name',
+                                  placeholder: Text(
+                                    'enter_customer_name'.tr(),
                                   ),
                                   onChanged: (value) {
                                     cubit.updateOrderParams.customerName =
@@ -190,8 +187,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.customerNameError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -208,8 +205,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             return fw.Column(
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Phone Number *',
+                                Text(
+                                  'phone_number_2'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -218,7 +215,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _customerPhoneController,
-                                  placeholder: const Text('Enter phone number'),
+                                  placeholder: Text('enter_phone_number'.tr()),
                                   keyboardType: TextInputType.phone,
                                   onChanged: (value) {
                                     cubit.updateOrderParams.customerPhone =
@@ -231,8 +228,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.customerPhoneError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -249,8 +246,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             return fw.Column(
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Delivery Address *',
+                                Text(
+                                  'delivery_address'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -259,8 +256,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _customerAddressController,
-                                  placeholder: const Text(
-                                    'Enter delivery address',
+                                  placeholder: Text(
+                                    'enter_delivery_address'.tr(),
                                   ),
                                   maxLines: 3,
                                   onChanged: (value) {
@@ -274,8 +271,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.customerAddressError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -287,8 +284,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                         const fw.SizedBox(height: 20),
 
                         // Note Field
-                        const Text(
-                          'Note (Optional)',
+                        Text(
+                          'note_optional'.tr(),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -297,8 +294,8 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                         const fw.SizedBox(height: 8),
                         TextField(
                           controller: _noteController,
-                          placeholder: const Text(
-                            'Add special instructions or notes',
+                          placeholder: Text(
+                            'add_special_instructions_or_notes'.tr(),
                           ),
                           maxLines: 3,
                           onChanged: (value) {
@@ -321,9 +318,9 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Success'),
-                                content: const Text(
-                                  'Order updated successfully!',
+                                title: Text('success'.tr()),
+                                content: Text(
+                                  'order_updated_successfully'.tr(),
                                 ),
                                 actions: [
                                   PrimaryButton(
@@ -334,7 +331,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                         true,
                                       ); // Return true to indicate success
                                     },
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                   ),
                                 ],
                               ),
@@ -344,29 +341,26 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Error'),
-                                content: Text('Failed to update order: $error'),
+                                title: Text('error_2'.tr()),
+                                content: Text('failed_to_update_order'.tr(args: ['${error}'])),
                                 actions: [
                                   PrimaryButton(
                                     onPressed: () => fw.Navigator.pop(ctx),
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                   ),
                                 ],
                               ),
                             );
                           },
                           child: PrimaryButton(
-                            child: const Text('Update Order'),
+                            child: Text('update_order'.tr()),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }

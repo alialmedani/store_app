@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
@@ -10,6 +10,7 @@ import '../../product/data/model/product_model.dart';
 import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
 import '../data/usecase/bulk_create_product_variant_usecase.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Bulk Create Variant Screen
 /// Create multiple specific variants with different stock quantities
@@ -51,7 +52,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Select Product'),
+        title: Text('select_product'.tr()),
         content: fw.SizedBox(
           width: double.maxFinite,
           height: 400,
@@ -99,7 +100,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
         actions: [
           SecondaryButton(
             onPressed: () => fw.Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr()),
           ),
         ],
       ),
@@ -108,7 +109,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
 
   bool _validateForm() {
     if (selectedProduct == null) {
-      _showErrorDialog('Please select a product');
+      _showErrorDialog('please_select_a_product'.tr());
       return false;
     }
 
@@ -117,19 +118,19 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
       final variantNum = i + 1;
 
       if (variant.colorController.text.trim().isEmpty) {
-        _showErrorDialog('Variant $variantNum: Color is required');
+        _showErrorDialog('variant_color_is_required'.tr(args: ['${variantNum}']));
         return false;
       }
 
       if (variant.sizeController.text.trim().isEmpty) {
-        _showErrorDialog('Variant $variantNum: Size is required');
+        _showErrorDialog('variant_size_is_required'.tr(args: ['${variantNum}']));
         return false;
       }
 
       final stock = int.tryParse(variant.stockController.text.trim());
       if (stock == null || stock < 0) {
         _showErrorDialog(
-          'Variant $variantNum: Please enter a valid stock quantity',
+          'variant_please_enter_a_valid_stock_qua'.tr(args: ['${variantNum}']),
         );
         return false;
       }
@@ -142,11 +143,11 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Validation Error'),
+        title: Text('validation_error'.tr()),
         content: Text(message),
         actions: [
           PrimaryButton(
-            child: const Text('OK'),
+            child: Text('ok'.tr()),
             onPressed: () => fw.Navigator.of(ctx).pop(),
           ),
         ],
@@ -168,8 +169,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
 
     return Scaffold(
       child: SafeArea(
-        child: Column(
-          children: [
+        child: ScrollAwayHeader(header: Column(children: [
             // App Bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -181,9 +181,9 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                     variance: ButtonVariance.ghost,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Bulk Create Variants',
+                      'bulk_create_variants'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -192,11 +192,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -210,9 +206,9 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                           children: [
                             Row(
                               children: [
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    'Product',
+                                    'product'.tr(),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
@@ -223,8 +219,8 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                                   onTap: () => _showProductSelector(context),
                                   child: Text(
                                     selectedProduct == null
-                                        ? 'Select'
-                                        : 'Change',
+                                        ? 'select'.tr()
+                                        : 'change'.tr(),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -247,7 +243,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                                 ),
                               ),
                               child: Text(
-                                selectedProduct?.name ?? 'No product selected',
+                                selectedProduct?.name ?? 'no_product_selected'.tr(),
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: selectedProduct == null
@@ -280,11 +276,11 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                       onPressed: _addVariant,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(Icons.add, size: 18),
                           SizedBox(width: 8),
                           Text(
-                            'Add Another Variant',
+                            'add_another_variant'.tr(),
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
@@ -324,13 +320,13 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                         showDialog(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Success'),
+                            title: Text('success'.tr()),
                             content: Text(
-                              '${variants.length} variants created successfully.',
+                              'variants_created_successfully'.tr(args: ['${variants.length}']),
                             ),
                             actions: [
                               PrimaryButton(
-                                child: const Text('OK'),
+                                child: Text('ok'.tr()),
                                 onPressed: () {
                                   fw.Navigator.of(ctx).pop();
                                   fw.Navigator.of(context).pop();
@@ -344,11 +340,11 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                         showDialog(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Error'),
+                            title: Text('error_2'.tr()),
                             content: Text(error),
                             actions: [
                               PrimaryButton(
-                                child: const Text('OK'),
+                                child: Text('ok'.tr()),
                                 onPressed: () => fw.Navigator.of(ctx).pop(),
                               ),
                             ],
@@ -358,11 +354,11 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                       child: PrimaryButton(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(Icons.check, size: 18),
                             SizedBox(width: 8),
                             Text(
-                              'Create All Variants',
+                              'create_all_variants'.tr(),
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -374,10 +370,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                     ),
                   ],
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
@@ -429,7 +422,7 @@ class _VariantCardState extends State<_VariantCard> {
               children: [
                 Expanded(
                   child: Text(
-                    'Variant ${widget.index + 1}',
+                    'variant'.tr(args: ['${widget.index + 1}']),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -447,38 +440,38 @@ class _VariantCardState extends State<_VariantCard> {
             const SizedBox(height: 16),
 
             // Color Field
-            const Text(
-              'Color',
+            Text(
+              'color'.tr(),
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: widget.variant.colorController,
-              placeholder: const Text('Enter color'),
+              placeholder: Text('enter_color'.tr()),
             ),
             const SizedBox(height: 16),
 
             // Size Field
-            const Text(
-              'Size',
+            Text(
+              'size'.tr(),
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: widget.variant.sizeController,
-              placeholder: const Text('Enter size'),
+              placeholder: Text('enter_size'.tr()),
             ),
             const SizedBox(height: 16),
 
             // Stock Quantity Field
-            const Text(
-              'Stock Quantity',
+            Text(
+              'stock_quantity'.tr(),
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: widget.variant.stockController,
-              placeholder: const Text('Enter stock quantity'),
+              placeholder: Text('enter_stock_quantity'.tr()),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
@@ -486,9 +479,9 @@ class _VariantCardState extends State<_VariantCard> {
             // Is Active Toggle
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Active',
+                    'active'.tr(),
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),

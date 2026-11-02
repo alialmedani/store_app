@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/boilerplate/pagination/cubits/pagination_cubit.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../cubit/order_cubit.dart';
@@ -10,20 +11,32 @@ import '../data/model/order_model.dart';
 import 'create_order_screen.dart';
 import 'order_details_screen.dart';
 import 'update_order_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Order List Screen - Shows all orders with pagination
 /// Uses PaginationList widget from boilerplate
-class OrderListScreen extends StatelessWidget {
+class OrderListScreen extends fw.StatefulWidget {
   const OrderListScreen({super.key});
+
+  @override
+  fw.State<OrderListScreen> createState() => _OrderListScreenState();
+}
+
+class _OrderListScreenState extends fw.State<OrderListScreen> {
+  PaginationCubit? _listCubit;
+
+  /// Reload the first page (after returning from details / edit screens)
+  void _reloadList() {
+    _listCubit?.getList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'Orders',
+              title: 'orders'.tr(),
               onBack: () => fw.Navigator.pop(context),
               action: fw.GestureDetector(
                 onTap: () {
@@ -52,9 +65,8 @@ class OrderListScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            fw.Expanded(
-              child: PaginationList<OrderModel>(
+            )]), body: PaginationList<OrderModel>(
+                onCubitCreated: (cubit) => _listCubit = cubit,
                 withPagination: true,
                 withRefresh: true,
                 loadingWidget: fw.ListView.builder(
@@ -92,15 +104,12 @@ class OrderListScreen extends StatelessWidget {
                         padding: const fw.EdgeInsets.only(
                           bottom: AppDesignTokens.cardGap,
                         ),
-                        child: _OrderCard(order: order),
+                        child: _OrderCard(order: order, onReturn: _reloadList),
                       );
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
@@ -109,17 +118,18 @@ class OrderListScreen extends StatelessWidget {
 /// Order Card Widget
 class _OrderCard extends StatelessWidget {
   final OrderModel order;
+  final fw.VoidCallback onReturn;
 
-  const _OrderCard({required this.order});
+  const _OrderCard({required this.order, required this.onReturn});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return AppCard(
-      onTap: () {
+      onTap: () async {
         if (order.id != null) {
-          fw.Navigator.of(context).push(
+          await fw.Navigator.of(context).push(
             fw.PageRouteBuilder(
               pageBuilder: (_, __, ___) =>
                   OrderDetailsScreen(orderId: order.id!),
@@ -127,6 +137,8 @@ class _OrderCard extends StatelessWidget {
               reverseTransitionDuration: Duration.zero,
             ),
           );
+          // Details may have confirmed / paid / cancelled / deleted the order
+          onReturn();
         }
       },
       child: fw.Column(
@@ -168,6 +180,7 @@ class _OrderCard extends StatelessWidget {
                       reverseTransitionDuration: Duration.zero,
                     ),
                   );
+                  onReturn();
                 },
                 variance: ButtonVariance.ghost,
               ),
@@ -247,7 +260,7 @@ class _OrderCard extends StatelessWidget {
               mainAxisSize: fw.MainAxisSize.min,
               children: [
                 Text(
-                  'Total: ',
+                  'total'.tr(),
                   style: fw.TextStyle(
                     fontSize: 13,
                     color: theme.colorScheme.mutedForeground,

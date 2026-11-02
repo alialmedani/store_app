@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 
 import '../../../core/boilerplate/get_model/widgets/get_model.dart';
@@ -17,6 +17,7 @@ import '../../order/cubit/order_cubit.dart';
 import '../../order/screen/order_list_screen.dart';
 import '../../product/screen/product_list_screen.dart';
 import '../../product_variant/screen/product_variant_list_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Dashboard Screen - Premium Main Dashboard with Stats & Menu
 class DashboardScreen extends fw.StatelessWidget {
@@ -44,8 +45,8 @@ class DashboardScreen extends fw.StatelessWidget {
                 begin: fw.Alignment.topLeft,
                 end: fw.Alignment.bottomRight,
                 colors: [
-                  theme.colorScheme.background,
-                  theme.colorScheme.background.withValues(alpha: 0.95),
+                  theme.colorScheme.surface,
+                  theme.colorScheme.surface.withValues(alpha: 0.95),
                 ],
               ),
               border: fw.Border(
@@ -155,7 +156,7 @@ class DashboardScreen extends fw.StatelessWidget {
                   crossAxisAlignment: fw.CrossAxisAlignment.start,
                   children: [
                     fw.Text(
-                      'Welcome Back',
+                      'welcome_back'.tr(),
                       style: fw.TextStyle(
                         fontSize: AppDesignTokens.bodyFontSize,
                         fontWeight: AppDesignTokens.semiBold,
@@ -165,7 +166,7 @@ class DashboardScreen extends fw.StatelessWidget {
                     ),
                     const fw.SizedBox(height: AppDesignTokens.smallGap),
                     fw.Text(
-                      currentUser?.userName ?? 'User',
+                      currentUser?.userName ?? 'user'.tr(),
                       style: const fw.TextStyle(
                         fontSize: 32,
                         fontWeight: AppDesignTokens.extraBold,
@@ -175,7 +176,7 @@ class DashboardScreen extends fw.StatelessWidget {
                     ),
                     const fw.SizedBox(height: AppDesignTokens.smallGap),
                     fw.Text(
-                      'Manage your store efficiently',
+                      'manage_your_store_efficiently'.tr(),
                       style: fw.TextStyle(
                         fontSize: AppDesignTokens.bodyFontSize,
                         fontWeight: AppDesignTokens.medium,
@@ -211,21 +212,23 @@ class DashboardScreen extends fw.StatelessWidget {
                       children: [
                         fw.Expanded(
                           child: StatCard(
+                            animationIndex: 0,
                             icon: Icons.inventory_2_rounded,
-                            title: 'Total Products',
+                            title: 'total_products'.tr(),
                             value: '${summary.totalProducts ?? 0}',
-                            color: const fw.Color(0xFF10B981),
-                            subtitle: '${summary.activeProducts ?? 0} active',
+                            color: AppDesignTokens.successColor,
+                            subtitle: 'active_2'.tr(args: ['${summary.activeProducts ?? 0}']),
                           ),
                         ),
                         const fw.SizedBox(width: AppDesignTokens.cardGap),
                         fw.Expanded(
                           child: StatCard(
+                            animationIndex: 1,
                             icon: Icons.style_rounded,
-                            title: 'Total Variants',
+                            title: 'total_variants'.tr(),
                             value: '${summary.totalVariants ?? 0}',
-                            color: const fw.Color(0xFF06B6D4),
-                            subtitle: '${summary.activeVariants ?? 0} active',
+                            color: AppDesignTokens.infoColor,
+                            subtitle: 'active_2'.tr(args: ['${summary.activeVariants ?? 0}']),
                           ),
                         ),
                       ],
@@ -236,22 +239,24 @@ class DashboardScreen extends fw.StatelessWidget {
                       children: [
                         fw.Expanded(
                           child: StatCard(
+                            animationIndex: 2,
                             icon: Icons.check_circle_rounded,
-                            title: 'In Stock',
+                            title: 'in_stock'.tr(),
                             value: '${summary.instockProducts ?? 0}',
                             color: AppDesignTokens.successColor,
                             subtitle:
-                                '${summary.instockVariants ?? 0} variants',
+                                'variants_2'.tr(args: ['${summary.instockVariants ?? 0}']),
                           ),
                         ),
                         const fw.SizedBox(width: AppDesignTokens.cardGap),
                         fw.Expanded(
                           child: StatCard(
+                            animationIndex: 3,
                             icon: Icons.warning_rounded,
-                            title: 'Low Stock',
+                            title: 'low_stock'.tr(),
                             value: '${summary.lowStockProducts ?? 0}',
                             color: AppDesignTokens.warningColor,
-                            subtitle: 'Needs attention',
+                            subtitle: 'needs_attention'.tr(),
                           ),
                         ),
                       ],
@@ -291,8 +296,8 @@ class DashboardScreen extends fw.StatelessWidget {
                   ),
                 ),
                 const fw.SizedBox(width: AppDesignTokens.itemGap),
-                const fw.Text(
-                  'Main Menu',
+                fw.Text(
+                  'main_menu'.tr(),
                   style: fw.TextStyle(
                     fontSize: AppDesignTokens.largeTitleFontSize,
                     fontWeight: AppDesignTokens.extraBold,
@@ -323,9 +328,10 @@ class DashboardScreen extends fw.StatelessWidget {
             ),
             delegate: SliverChildListDelegate([
               MenuTile(
+                animationIndex: 0,
                 icon: Icons.category_rounded,
-                title: 'Categories',
-                subtitle: 'Manage categories',
+                title: 'categories'.tr(),
+                subtitle: 'manage_categories'.tr(),
                 color: theme.colorScheme.primary,
                 onTap: () {
                   fw.Navigator.push(
@@ -339,10 +345,11 @@ class DashboardScreen extends fw.StatelessWidget {
                 },
               ),
               MenuTile(
+                animationIndex: 1,
                 icon: Icons.inventory_2_rounded,
-                title: 'Products',
-                subtitle: 'Manage products',
-                color: const fw.Color(0xFF10B981),
+                title: 'products'.tr(),
+                subtitle: 'manage_products'.tr(),
+                color: AppDesignTokens.successColor,
                 onTap: () {
                   fw.Navigator.push(
                     context,
@@ -355,10 +362,11 @@ class DashboardScreen extends fw.StatelessWidget {
                 },
               ),
               MenuTile(
+                animationIndex: 2,
                 icon: Icons.style_rounded,
-                title: 'Product Variants',
-                subtitle: 'Manage variants',
-                color: const fw.Color(0xFF06B6D4),
+                title: 'product_variants'.tr(),
+                subtitle: 'manage_variants'.tr(),
+                color: AppDesignTokens.infoColor,
                 onTap: () {
                   fw.Navigator.push(
                     context,
@@ -372,10 +380,11 @@ class DashboardScreen extends fw.StatelessWidget {
                 },
               ),
               MenuTile(
+                animationIndex: 3,
                 icon: Icons.shopping_cart_rounded,
-                title: 'Orders',
-                subtitle: 'View orders',
-                color: const fw.Color(0xFF8B5CF6),
+                title: 'orders'.tr(),
+                subtitle: 'view_orders'.tr(),
+                color: AppDesignTokens.accentSecondaryColor,
                 onTap: () {
                   fw.Navigator.push(
                     context,
@@ -391,10 +400,11 @@ class DashboardScreen extends fw.StatelessWidget {
                 },
               ),
               MenuTile(
+                animationIndex: 4,
                 icon: Icons.warehouse_rounded,
-                title: 'Inventory',
-                subtitle: 'Stock movements',
-                color: const fw.Color(0xFFEC4899),
+                title: 'inventory'.tr(),
+                subtitle: 'stock_movements'.tr(),
+                color: const fw.Color(0xFFFF7AB6),
                 onTap: () {
                   fw.Navigator.push(
                     context,
@@ -410,10 +420,11 @@ class DashboardScreen extends fw.StatelessWidget {
                 },
               ),
               MenuTile(
+                animationIndex: 5,
                 icon: Icons.assessment_rounded,
-                title: 'Category Stock',
-                subtitle: 'Stock by category',
-                color: const fw.Color(0xFF8B5CF6),
+                title: 'category_stock'.tr(),
+                subtitle: 'stock_by_category'.tr(),
+                color: AppDesignTokens.accentSecondaryColor,
                 onTap: () {
                   fw.Navigator.push(
                     context,
@@ -429,23 +440,24 @@ class DashboardScreen extends fw.StatelessWidget {
                 },
               ),
               MenuTile(
+                animationIndex: 6,
                 icon: Icons.bar_chart_rounded,
-                title: 'Reports',
-                subtitle: 'View analytics',
-                color: const fw.Color(0xFFF59E0B),
+                title: 'reports'.tr(),
+                subtitle: 'view_analytics'.tr(),
+                color: AppDesignTokens.warningColor,
                 onTap: () {
                   // TODO: Navigate to reports
                   showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Coming Soon'),
-                      content: const Text(
-                        'Reports feature will be available soon.',
+                      title: Text('coming_soon'.tr()),
+                      content: Text(
+                        'reports_feature_will_be_available_soon'.tr(),
                       ),
                       actions: [
                         PrimaryButton(
                           onPressed: () => fw.Navigator.pop(ctx),
-                          child: const Text('OK'),
+                          child: Text('ok'.tr()),
                         ),
                       ],
                     ),
@@ -471,16 +483,16 @@ class DashboardScreen extends fw.StatelessWidget {
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text('logout'.tr()),
+        content: Text('are_you_sure_you_want_to_logout'.tr()),
         actions: [
           SecondaryButton(
             onPressed: () => fw.Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr()),
           ),
           DestructiveButton(
             onPressed: () => fw.Navigator.pop(ctx, true),
-            child: const Text('Logout'),
+            child: Text('logout'.tr()),
           ),
         ],
       ),
