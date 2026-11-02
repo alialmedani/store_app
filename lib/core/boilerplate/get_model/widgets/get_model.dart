@@ -6,6 +6,7 @@ import 'package:store/core/ui/widgets/general_error_widget.dart';
 import '../../../constant/app_colors/app_colors.dart';
 import '../../../constant/app_images/app_images.dart';
 import '../cubits/get_model_cubit.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 
 typedef CreatedCallback = void Function(GetModelCubit cubit);
 typedef ModelBuilder<Model> = Widget Function(Model model);
@@ -66,18 +67,16 @@ class _GetModelState<Model> extends State<GetModel<Model>> {
       bloc: cubit,
       builder: (context, state) {
         if (state is Loading) {
-          return Center(
-            child: SizedBox(
-              width: widget.loadingWidth ?? 200.w,
-              height: widget.loadingHeight ?? 100.h,
-              child: widget.loadingWidget ??
-                  Shimmer.fromColors(
-                    baseColor: AppColors.primary,
-                    highlightColor: AppColors.grey3B,
-                    child: Image.asset(logoPngImage),
-                  ),
-            ),
-          );
+          if (widget.loadingWidget != null) {
+            return Center(
+              child: SizedBox(
+                width: widget.loadingWidth ?? 200.w,
+                height: widget.loadingHeight ?? 100.h,
+                child: widget.loadingWidget,
+              ),
+            );
+          }
+          return widget.loading ?? const DetailSkeleton();
         } else {
           if (state is GetModelSuccessfully) {
             return buildModel(state.model);

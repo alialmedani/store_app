@@ -7,6 +7,7 @@ import 'package:store/core/ui/widgets/no_data_screen.dart';
 import '../../../ui/widgets/loading.dart';
 import '../cubits/pagination_cubit.dart';
 import 'footer.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 
 typedef CreatedCallback = void Function(PaginationCubit cubit);
 typedef ListBuilder<Model> = Widget Function(List<Model> list);
@@ -101,13 +102,7 @@ class PaginationListState<Model> extends State<PaginationList<Model>> {
       },
       builder: (context, state) {
         if (state is Loading) {
-          return widget.loadingWidget ??
-              Center(
-                child: LoadingWidget(
-                  width: widget.loadingWidth,
-                  height: widget.loadingHeight,
-                ),
-              );
+          return widget.loadingWidget ?? const ListSkeleton();
         } else if (state is GetListSuccessfully) {
           return smartRefresher(state.list as List<Model>);
         } else if (state is Error) {

@@ -16,7 +16,8 @@ import 'package:easy_localization/easy_localization.dart';
 /// Uses CreateModel widget for state management
 /// Uses shadcn_flutter components
 class CreateProductVariantScreen extends StatefulWidget {
-  const CreateProductVariantScreen({super.key});
+  final ProductModel? initialProduct;
+  const CreateProductVariantScreen({super.key, this.initialProduct});
 
   @override
   State<CreateProductVariantScreen> createState() =>
@@ -141,6 +142,18 @@ class _CreateProductVariantScreenState
   }
 
   @override
+  void initState() {
+    super.initState();
+    final p = widget.initialProduct;
+    if (p != null) {
+      _productIdController.text = p.name ?? '';
+      fw.WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.read<ProductVariantCubit>().selectProduct(p);
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _colorController.dispose();
     _sizeController.dispose();
@@ -193,37 +206,11 @@ class _CreateProductVariantScreenState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'product'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    fw.GestureDetector(
-                                      onTap: () {
-                                        _showProductSelector(context, cubit);
-                                      },
-                                      child: Text(
-                                        'select'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _productIdController,
-                                  placeholder: Text('select_product_2'.tr()),
-                                  enabled: false,
+                                AppSelectorField(
+                                  label: 'product'.tr(),
+                                  value: _productIdController.text.isNotEmpty ? _productIdController.text : null,
+                                  placeholder: 'select_product_2'.tr(),
+                                  onTap: () => _showProductSelector(context, cubit),
                                 ),
                                 if (cubit.productError != null)
                                   Padding(
@@ -299,6 +286,9 @@ class _CreateProductVariantScreenState
 
                         // Size Field
                         BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                          builder: (context, state) => !cubit.isSizeVisible()
+                              ? const SizedBox.shrink()
+                              : BlocBuilder<ProductVariantCubit, ProductVariantState>(
                           builder: (context, state) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,6 +339,7 @@ class _CreateProductVariantScreenState
                               ],
                             );
                           },
+                        ),
                         ),
                         const SizedBox(height: 16),
 

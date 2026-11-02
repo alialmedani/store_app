@@ -427,3 +427,72 @@ class SelectorItemSkeleton extends fw.StatelessWidget {
     );
   }
 }
+
+/// Default skeleton for any list that is loading (cards with image)
+class ListSkeleton extends fw.StatelessWidget {
+  final int count;
+  const ListSkeleton({super.key, this.count = 6});
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return fw.ListView.builder(
+      physics: const fw.NeverScrollableScrollPhysics(),
+      padding: const fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
+      itemCount: count,
+      itemBuilder: (context, index) => const fw.Padding(
+        padding: fw.EdgeInsets.only(bottom: AppDesignTokens.cardGap),
+        child: ProductCardSkeleton(),
+      ),
+    );
+  }
+}
+
+/// Default skeleton for a details / edit page that is loading
+class DetailSkeleton extends fw.StatelessWidget {
+  const DetailSkeleton({super.key});
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    fw.Widget card(double h) => fw.Container(
+      padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
+      decoration: fw.BoxDecoration(
+        color: AppDesignTokens.cardColor,
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
+      ),
+      child: fw.Column(
+        crossAxisAlignment: fw.CrossAxisAlignment.start,
+        children: [
+          const AppSkeletonBox(width: 120, height: 16),
+          const fw.SizedBox(height: AppDesignTokens.itemGap),
+          AppSkeletonBox(width: double.infinity, height: h),
+          const fw.SizedBox(height: AppDesignTokens.smallGap),
+          const AppSkeletonBox(width: 200, height: 14),
+        ],
+      ),
+    );
+
+    return fw.Padding(
+      padding: const fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
+      child: fw.Column(
+        crossAxisAlignment: fw.CrossAxisAlignment.start,
+        children: [
+          fw.Row(
+            children: const [
+              AppSkeletonBox(width: 46, height: 46, borderRadius: 99),
+              fw.SizedBox(width: AppDesignTokens.itemGap),
+              fw.Expanded(
+                child: AppSkeletonBox(width: double.infinity, height: 24),
+              ),
+            ],
+          ),
+          const fw.SizedBox(height: AppDesignTokens.sectionGap),
+          card(160),
+          const fw.SizedBox(height: AppDesignTokens.cardGap),
+          card(60),
+          const fw.SizedBox(height: AppDesignTokens.cardGap),
+          card(60),
+        ],
+      ),
+    );
+  }
+}

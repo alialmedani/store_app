@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart' as fw;
 import 'package:store/core/ui/kit/app_kit.dart';
 import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
 
+import '../../product/data/model/product_model.dart';
 import 'bulk_create_variant_screen.dart';
 import 'create_product_variant_screen.dart';
 import 'generate_variant_screen.dart';
@@ -13,7 +14,8 @@ import 'package:easy_localization/easy_localization.dart';
 /// 2. Bulk Create Variants
 /// 3. Generate Variants (Auto)
 class VariantCreationOptionsScreen extends StatelessWidget {
-  const VariantCreationOptionsScreen({super.key});
+  final ProductModel? initialProduct;
+  const VariantCreationOptionsScreen({super.key, this.initialProduct});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,9 @@ class VariantCreationOptionsScreen extends StatelessWidget {
 
     return Scaffold(
       child: SafeArea(
-        child: ScrollAwayHeader(header: Column(children: [
+        child: Column(
+          children: [
+            Expanded(child: ScrollAwayHeader(header: Column(children: [
             // App Bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -49,6 +53,35 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (initialProduct != null) ...[
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'step_2_of_2'.tr(),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'adding_variants_for'.tr(args: ['${initialProduct!.name ?? ''}']),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                     // Header
                     Card(
                       child: Padding(
@@ -96,7 +129,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                         fw.Navigator.of(context).push(
                           fw.PageRouteBuilder(
                             pageBuilder: (_, __, ___) =>
-                                const CreateProductVariantScreen(),
+                                CreateProductVariantScreen(initialProduct: initialProduct),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),
@@ -123,7 +156,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                         fw.Navigator.of(context).push(
                           fw.PageRouteBuilder(
                             pageBuilder: (_, __, ___) =>
-                                const BulkCreateVariantScreen(),
+                                BulkCreateVariantScreen(initialProduct: initialProduct),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),
@@ -150,16 +183,39 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                         fw.Navigator.of(context).push(
                           fw.PageRouteBuilder(
                             pageBuilder: (_, __, ___) =>
-                                const GenerateVariantScreen(),
+                                GenerateVariantScreen(initialProduct: initialProduct),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),
                         );
                       },
                     ),
+                  
                   ],
                 ),
-              )),
+              ))),
+            if (initialProduct != null)
+              StickyBottomAction(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlineButton(
+                        onPressed: () => fw.Navigator.of(context).pop(),
+                        child: Text('skip_for_now'.tr()),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: PrimaryButton(
+                        onPressed: () => fw.Navigator.of(context).pop(),
+                        child: Text('done'.tr()),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

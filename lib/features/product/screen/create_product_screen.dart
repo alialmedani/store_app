@@ -10,6 +10,7 @@ import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../category/cubit/category_cubit.dart';
+import '../../product_variant/screen/variant_creation_options_screen.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -192,7 +193,23 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           color: AppDesignTokens.titleTextColor,
                         ),
                       ),
-                      const fw.SizedBox(height: AppDesignTokens.smallGap),
+                      fw.Padding(
+              padding: const fw.EdgeInsets.symmetric(
+                horizontal: AppDesignTokens.screenPaddingHorizontal,
+              ),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  'step_1_of_2'.tr(),
+                  style: fw.TextStyle(
+                    fontSize: 12,
+                    fontWeight: AppDesignTokens.bold,
+                    color: AppDesignTokens.primaryColor,
+                  ),
+                ),
+              ),
+            ),
+            const fw.SizedBox(height: AppDesignTokens.smallGap),
                       TextField(
                         controller: _descriptionController,
                         placeholder: Text('enter_description_optional'.tr()),
@@ -266,7 +283,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             onTap: () {
                               _showCategorySelector(context, cubit);
                             },
-                            actionText: 'select'.tr(),
                             errorText: cubit.categoryError,
                             showRequired: true,
                           );
@@ -472,23 +488,18 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   _categoryIdController.clear();
                   cubit.clearImageFile();
 
-                  // Show success dialog
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: Text('success'.tr()),
-                      content: Text('product_created_successfully'.tr()),
-                      actions: [
-                        PrimaryButton(
-                          onPressed: () {
-                            fw.Navigator.pop(ctx);
-                            fw.Navigator.pop(context);
-                          },
-                          child: Text('ok'.tr()),
+                  // Step 2: add variants (optional, can be skipped)
+                  fw.Navigator.of(context)
+                      .push(
+                        MaterialPageRoute(
+                          builder: (_) => VariantCreationOptionsScreen(
+                            initialProduct: productModel,
+                          ),
                         ),
-                      ],
-                    ),
-                  );
+                      )
+                      .then((_) {
+                        if (mounted) fw.Navigator.pop(context);
+                      });
                 },
                 onError: (error) {
                   showDialog(

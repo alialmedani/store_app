@@ -254,37 +254,11 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                             return fw.Column(
                               crossAxisAlignment: fw.CrossAxisAlignment.start,
                               children: [
-                                fw.Row(
-                                  children: [
-                                    fw.Expanded(
-                                      child: Text(
-                                        'category'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    fw.GestureDetector(
-                                      onTap: () {
-                                        _showCategorySelector(context, cubit);
-                                      },
-                                      child: Text(
-                                        'change'.tr(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const fw.SizedBox(height: 8),
-                                TextField(
-                                  controller: _categoryIdController,
-                                  placeholder: Text('select_category_2'.tr()),
-                                  enabled: false,
+                                AppSelectorField(
+                                  label: 'category'.tr(),
+                                  value: _categoryIdController.text.isNotEmpty ? _categoryIdController.text : null,
+                                  placeholder: 'select_category_2'.tr(),
+                                  onTap: () => _showCategorySelector(context, cubit),
                                 ),
                                 if (cubit.categoryError != null)
                                   Padding(

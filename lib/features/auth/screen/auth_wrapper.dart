@@ -4,6 +4,7 @@ import '../../../core/classes/cashe_helper.dart';
 import '../../home/screen/main_navigation_screen.dart';
 import 'login_screen_shadcn.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 
 /// Auth Wrapper - Checks if user is already logged in
 /// Shows MainNavigationScreen if token exists, otherwise shows LoginScreen
@@ -102,7 +103,7 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
             const fw.SizedBox(height: 48),
 
             // Loading Indicator
-            CircularProgressIndicator(color: theme.colorScheme.primary),
+            const AppSkeletonBox(width: 160, height: 10, borderRadius: 99),
           ],
         ),
       ),

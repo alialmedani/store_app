@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../ui/dialogs/dialogs.dart';
 import '../../../utils/Navigation/navigation.dart';
 import '../cubits/create_model_cubit.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 
 typedef CreatedCallback = void Function(CreateModelCubit cubit);
 typedef ModelCreated<Model> = Function(Model model);
@@ -63,12 +64,11 @@ class _GetModelState<Model> extends State<CreateModel<Model>> {
           }
           if (state is Loading) {
             return widget.loadingWidget ??
-                SizedBox(
-                    height: widget.loadingHeight ?? 50.h,
-                    child: const Center(
-                        child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 0),
-                            child: CupertinoActivityIndicator())));
+                const AppSkeletonBox(
+                  width: double.infinity,
+                  height: 54,
+                  borderRadius: 99,
+                );
           } else {
             return InkWell(
                 onTap: () {

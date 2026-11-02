@@ -11,11 +11,14 @@ import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
 import '../data/usecase/bulk_create_product_variant_usecase.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:store/core/constant/enum/enum.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/design_system.dart';
 
 /// Bulk Create Variant Screen
 /// Create multiple specific variants with different stock quantities
 class BulkCreateVariantScreen extends StatefulWidget {
-  const BulkCreateVariantScreen({super.key});
+  final ProductModel? initialProduct;
+  const BulkCreateVariantScreen({super.key, this.initialProduct});
 
   @override
   State<BulkCreateVariantScreen> createState() =>
@@ -24,28 +27,87 @@ class BulkCreateVariantScreen extends StatefulWidget {
 
 class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
   ProductModel? selectedProduct;
-  List<_VariantFormData> variants = [];
+  final List<_ColorBlock> blocks = [_ColorBlock()];
+
+  SizeType? _sizeType;
+  bool _sizeLoading = false;
+
+  /// Size-related inputs stay hidden until a product is chosen and its
+  /// category type is known.
+  bool get _sizeKnown => selectedProduct != null && !_sizeLoading;
+
+  bool get _needsSize =>
+      _sizeKnown &&
+      _sizeType != SizeType.none &&
+      _sizeType != SizeType.oneSize;
+
+  void _loadSizeType(ProductModel p) {
+    _sizeType = p.category?.sizeType;
+    _sizeLoading = _sizeType == null;
+    if (_sizeLoading) {
+      ProductVariantCubit.resolveSizeType(p).then((t) {
+        if (mounted && selectedProduct?.id == p.id) {
+          setState(() {
+            _sizeType = t;
+            _sizeLoading = false;
+          });
+        }
+      });
+    }
+  }
   CreateModelCubit? createModelCubit;
 
   @override
   void initState() {
     super.initState();
-    // Add initial empty variant
-    _addVariant();
+    selectedProduct = widget.initialProduct;
+    if (selectedProduct != null) _loadSizeType(selectedProduct!);
   }
 
-  void _addVariant() {
-    setState(() {
-      variants.add(_VariantFormData());
-    });
-  }
+  int _badBlock = 0;
 
-  void _removeVariant(int index) {
-    if (variants.length > 1) {
-      setState(() {
-        variants.removeAt(index);
+  /// Collects variants from the color blocks. Null if a block is incomplete.
+  /// A size added N times has quantity N.
+  List<VariantItem>? _collect() {
+    final items = <VariantItem>[];
+    for (var i = 0; i < blocks.length; i++) {
+      final b = blocks[i];
+      final color = b.color.text.trim();
+      if (_sizeKnown && !_needsSize) {
+        // No sizes for this category (e.g. accessories): color is optional,
+        // quantity is required.
+        if (color.isEmpty && b.qty == 0) continue;
+        if (b.qty <= 0) {
+          _badBlock = i + 1;
+          return null;
+        }
+        items.add(
+          VariantItem(
+            color: color,
+            size: '',
+            stockQuantity: b.qty,
+            isActive: true,
+          ),
+        );
+        continue;
+      }
+      if (color.isEmpty && b.sizes.isEmpty) continue; // empty block: ignore
+      if (color.isEmpty || b.sizes.isEmpty) {
+        _badBlock = i + 1;
+        return null;
+      }
+      b.sizes.forEach((size, qty) {
+        items.add(
+          VariantItem(
+            color: color,
+            size: size,
+            stockQuantity: qty,
+            isActive: true,
+          ),
+        );
       });
     }
+    return items;
   }
 
   void _showProductSelector(BuildContext context) {
@@ -71,6 +133,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                     onTap: () {
                       setState(() {
                         selectedProduct = product;
+                        _loadSizeType(product);
                       });
                       fw.Navigator.of(dialogContext).pop();
                     },
@@ -112,30 +175,15 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
       _showErrorDialog('please_select_a_product'.tr());
       return false;
     }
-
-    for (int i = 0; i < variants.length; i++) {
-      final variant = variants[i];
-      final variantNum = i + 1;
-
-      if (variant.colorController.text.trim().isEmpty) {
-        _showErrorDialog('variant_color_is_required'.tr(args: ['${variantNum}']));
-        return false;
-      }
-
-      if (variant.sizeController.text.trim().isEmpty) {
-        _showErrorDialog('variant_size_is_required'.tr(args: ['${variantNum}']));
-        return false;
-      }
-
-      final stock = int.tryParse(variant.stockController.text.trim());
-      if (stock == null || stock < 0) {
-        _showErrorDialog(
-          'variant_please_enter_a_valid_stock_qua'.tr(args: ['${variantNum}']),
-        );
-        return false;
-      }
+    final parsed = _collect();
+    if (parsed == null) {
+      _showErrorDialog('color_block_incomplete'.tr(args: ['$_badBlock']));
+      return false;
     }
-
+    if (parsed.isEmpty) {
+      _showErrorDialog('enter_at_least_one_color'.tr());
+      return false;
+    }
     return true;
   }
 
@@ -157,8 +205,8 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
 
   @override
   void dispose() {
-    for (var variant in variants) {
-      variant.dispose();
+    for (final b in blocks) {
+      b.dispose();
     }
     super.dispose();
   }
@@ -204,53 +252,11 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'product'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                                fw.GestureDetector(
-                                  onTap: () => _showProductSelector(context),
-                                  child: Text(
-                                    selectedProduct == null
-                                        ? 'select'.tr()
-                                        : 'change'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            fw.Container(
-                              padding: const fw.EdgeInsets.all(16),
-                              decoration: fw.BoxDecoration(
-                                color: theme.colorScheme.muted.withValues(
-                                  alpha: 0.5,
-                                ),
-                                borderRadius: fw.BorderRadius.circular(8),
-                                border: fw.Border.all(
-                                  color: theme.colorScheme.border,
-                                ),
-                              ),
-                              child: Text(
-                                selectedProduct?.name ?? 'no_product_selected'.tr(),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: selectedProduct == null
-                                      ? theme.colorScheme.mutedForeground
-                                      : null,
-                                ),
-                              ),
+                            AppSelectorField(
+                              label: 'product'.tr(),
+                              value: selectedProduct?.name,
+                              placeholder: 'no_product_selected'.tr(),
+                              onTap: () => _showProductSelector(context),
                             ),
                           ],
                         ),
@@ -258,38 +264,56 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Variants List
-                    ...variants.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final variant = entry.value;
-                      return _VariantCard(
-                        index: index,
-                        variant: variant,
-                        canRemove: variants.length > 1,
-                        onRemove: () => _removeVariant(index),
-                      );
-                    }),
-                    const SizedBox(height: 12),
-
-                    // Add Variant Button
+                    // Color blocks
+                    for (var i = 0; i < blocks.length; i++) ...[
+                      _ColorBlockCard(
+                        index: i,
+                        block: blocks[i],
+                        canRemove: blocks.length > 1,
+                        mode: !_sizeKnown ? 0 : (_needsSize ? 1 : 2),
+                        onChanged: () => setState(() {}),
+                        onRemove: () => setState(() {
+                          blocks[i].dispose();
+                          blocks.removeAt(i);
+                        }),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                     OutlineButton(
-                      onPressed: _addVariant,
+                      onPressed: () => setState(() => blocks.add(_ColorBlock())),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.add, size: 18),
-                          SizedBox(width: 8),
-                          Text(
-                            'add_another_variant'.tr(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          const SizedBox(width: 8),
+                          Text('add_another_color'.tr()),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 12),
+                    Builder(
+                      builder: (context) {
+                        final total = blocks.fold<int>(
+                          0,
+                          (sum, b) => sum +
+                              (_needsSize
+                                  ? (b.color.text.trim().isEmpty
+                                        ? 0
+                                        : b.sizes.length)
+                                  : (b.qty > 0 ? 1 : 0)),
+                        );
+                        return Center(
+                          child: Text(
+                            'variants_total'.tr(args: ['$total']),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: theme.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
 
                     // Submit Button
                     CreateModel<List<ProductVariantModel>>(
@@ -300,16 +324,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                       useCaseCallBack: (data) {
                         final params = BulkCreateProductVariantParams(
                           productId: selectedProduct!.id!,
-                          variants: variants.map((v) {
-                            return VariantItem(
-                              color: v.colorController.text.trim(),
-                              size: v.sizeController.text.trim(),
-                              stockQuantity: int.parse(
-                                v.stockController.text.trim(),
-                              ),
-                              isActive: v.isActive,
-                            );
-                          }).toList(),
+                          variants: _collect() ?? [],
                         );
 
                         return context
@@ -376,127 +391,235 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
   }
 }
 
-/// Variant Form Data Class
-class _VariantFormData {
-  final colorController = TextEditingController();
-  final sizeController = TextEditingController();
-  final stockController = TextEditingController(text: '0');
-  bool isActive = true;
+class _ColorBlock {
+  final color = TextEditingController();
+  final sizeInput = TextEditingController();
+  final Map<String, int> sizes = {};
+  int qty = 0;
+
+  void addSizes(String text) {
+    for (final t in text.split(RegExp(r'[\s,،]+'))) {
+      if (t.isEmpty) continue;
+      sizes[t] = (sizes[t] ?? 0) + 1;
+    }
+  }
 
   void dispose() {
-    colorController.dispose();
-    sizeController.dispose();
-    stockController.dispose();
+    color.dispose();
+    sizeInput.dispose();
   }
 }
 
-/// Variant Card Widget
-class _VariantCard extends StatefulWidget {
+/// One color with its sizes. Adding the same size again increases its quantity.
+class _ColorBlockCard extends StatelessWidget {
   final int index;
-  final _VariantFormData variant;
+  final _ColorBlock block;
   final bool canRemove;
+  /// 0 = product not chosen yet, 1 = sizes, 2 = quantity only
+  final int mode;
+  final VoidCallback onChanged;
   final VoidCallback onRemove;
 
-  const _VariantCard({
+  const _ColorBlockCard({
     required this.index,
-    required this.variant,
+    required this.block,
     required this.canRemove,
+    required this.mode,
+    required this.onChanged,
     required this.onRemove,
   });
 
-  @override
-  State<_VariantCard> createState() => _VariantCardState();
-}
+  void _add() {
+    block.addSizes(block.sizeInput.text);
+    block.sizeInput.clear();
+    onChanged();
+  }
 
-class _VariantCardState extends State<_VariantCard> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    'variant'.tr(args: ['${widget.index + 1}']),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    'color_block_title'.tr(args: ['${index + 1}']),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),
                 ),
-                if (widget.canRemove)
+                if (canRemove)
                   IconButton(
-                    icon: const Icon(Icons.delete_outline, size: 18),
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: onRemove,
                     variance: ButtonVariance.ghost,
-                    onPressed: widget.onRemove,
                   ),
               ],
             ),
-            const SizedBox(height: 16),
-
-            // Color Field
-            Text(
-              'color'.tr(),
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             TextField(
-              controller: widget.variant.colorController,
-              placeholder: Text('enter_color'.tr()),
+              controller: block.color,
+              onChanged: (_) => onChanged(),
+              placeholder: Text('color_name'.tr()),
             ),
-            const SizedBox(height: 16),
-
-            // Size Field
-            Text(
-              'size'.tr(),
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: widget.variant.sizeController,
-              placeholder: Text('enter_size'.tr()),
-            ),
-            const SizedBox(height: 16),
-
-            // Stock Quantity Field
-            Text(
-              'stock_quantity'.tr(),
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: widget.variant.stockController,
-              placeholder: Text('enter_stock_quantity'.tr()),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-
-            // Is Active Toggle
+            if (mode == 0) ...[
+              const SizedBox(height: 10),
+              Text(
+                'select_product_first'.tr(),
+                style: TextStyle(
+                  fontSize: 13,
+                  color: theme.colorScheme.mutedForeground,
+                ),
+              ),
+            ] else if (mode == 2) ...[
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    'active'.tr(),
+                    'quantity'.tr(),
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
-                Switch(
-                  value: widget.variant.isActive,
-                  onChanged: (value) {
-                    setState(() {
-                      widget.variant.isActive = value;
-                    });
+                IconButton(
+                  icon: const Icon(Icons.remove, size: 18),
+                  onPressed: () {
+                    if (block.qty > 0) block.qty--;
+                    onChanged();
                   },
+                  variance: ButtonVariance.ghost,
+                ),
+                SizedBox(
+                  width: 36,
+                  child: Center(
+                    child: Text(
+                      '${block.qty}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add, size: 18),
+                  onPressed: () {
+                    block.qty++;
+                    onChanged();
+                  },
+                  variance: ButtonVariance.ghost,
                 ),
               ],
             ),
+            ] else ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: block.sizeInput,
+                    onSubmitted: (_) => _add(),
+                    placeholder: Text('add_sizes_hint'.tr()),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                PrimaryButton(
+                  onPressed: _add,
+                  child: const Icon(Icons.add, size: 18),
+                ),
+              ],
+            ),
+            if (block.sizes.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final e in block.sizes.entries)
+                    _SizeChip(
+                      size: e.key,
+                      qty: e.value,
+                      onMinus: () {
+                        if (e.value <= 1) {
+                          block.sizes.remove(e.key);
+                        } else {
+                          block.sizes[e.key] = e.value - 1;
+                        }
+                        onChanged();
+                      },
+                      onPlus: () {
+                        block.sizes[e.key] = e.value + 1;
+                        onChanged();
+                      },
+                    ),
+                ],
+              ),
+            ],
+            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _SizeChip extends StatelessWidget {
+  final String size;
+  final int qty;
+  final VoidCallback onMinus;
+  final VoidCallback onPlus;
+
+  const _SizeChip({
+    required this.size,
+    required this.qty,
+    required this.onMinus,
+    required this.onPlus,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return fw.Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      decoration: fw.BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.12),
+        borderRadius: fw.BorderRadius.circular(99),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          fw.GestureDetector(
+            onTap: onMinus,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Icon(
+                qty <= 1 ? Icons.close : Icons.remove,
+                size: 16,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
+          Text(
+            '$size  ×$qty',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          fw.GestureDetector(
+            onTap: onPlus,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Icon(Icons.add, size: 16, color: theme.colorScheme.primary),
+            ),
+          ),
+        ],
       ),
     );
   }

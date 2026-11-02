@@ -12,11 +12,13 @@ import '../data/model/product_variant_model.dart';
 import '../data/usecase/generate_product_variant_usecase.dart';
 import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:store/core/constant/enum/enum.dart';
 
 /// Generate Variant Screen
 /// Automatically generate all color-size combinations (Cartesian Product)
 class GenerateVariantScreen extends StatefulWidget {
-  const GenerateVariantScreen({super.key});
+  final ProductModel? initialProduct;
+  const GenerateVariantScreen({super.key, this.initialProduct});
 
   @override
   State<GenerateVariantScreen> createState() => _GenerateVariantScreenState();
@@ -33,6 +35,46 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
   bool skipExisting = false;
   bool isActive = true;
   CreateModelCubit? createModelCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedProduct = widget.initialProduct;
+    if (selectedProduct != null) _loadSizeType(selectedProduct!);
+  }
+
+  SizeType? _sizeType;
+  bool _sizeLoading = false;
+
+  /// Size-related inputs stay hidden until a product is chosen and its
+  /// category type is known.
+  bool get _sizeKnown => selectedProduct != null && !_sizeLoading;
+
+  bool get _needsSize =>
+      _sizeKnown &&
+      _sizeType != SizeType.none &&
+      _sizeType != SizeType.oneSize;
+
+  void _loadSizeType(ProductModel p) {
+    _sizeType = p.category?.sizeType;
+    _sizeLoading = _sizeType == null;
+    if (_sizeLoading) {
+      ProductVariantCubit.resolveSizeType(p).then((t) {
+        if (mounted && selectedProduct?.id == p.id) {
+          setState(() {
+            _sizeType = t;
+            _sizeLoading = false;
+          });
+        }
+      });
+    }
+  }
+
+  int get _sizeCount => _needsSize ? sizes.length : 1;
+
+  String _countLabel() => _needsSize
+      ? 'colors_sizes'.tr(args: ['${colors.length}', '${sizes.length}'])
+      : 'colors_only'.tr(args: ['${colors.length}']);
 
   void _addColor() {
     final color = _colorController.text.trim();
@@ -89,6 +131,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     onTap: () {
                       setState(() {
                         selectedProduct = product;
+                        _loadSizeType(product);
                       });
                       fw.Navigator.of(dialogContext).pop();
                     },
@@ -136,7 +179,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
       return false;
     }
 
-    if (sizes.isEmpty) {
+    if (_needsSize && sizes.isEmpty) {
       _showErrorDialog('please_add_at_least_one_size'.tr());
       return false;
     }
@@ -167,7 +210,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
   }
 
   void _showGeneratePreview() {
-    final totalVariants = colors.length * sizes.length;
+    final totalVariants = colors.length * _sizeCount;
 
     showDialog(
       context: context,
@@ -183,7 +226,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'colors_sizes'.tr(args: ['${colors.length}', '${sizes.length}']),
+              _countLabel(),
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).colorScheme.mutedForeground,
@@ -222,7 +265,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        '• $color - ${sizes.first}${sizes.length > 1 ? ", $color - ${sizes[1]}" : ""}',
+                        _needsSize
+                            ? '• $color - ${sizes.first}${sizes.length > 1 ? ", $color - ${sizes[1]}" : ""}'
+                            : '• $color',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.mutedForeground,
@@ -267,7 +312,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final totalVariants = colors.length * sizes.length;
+    final totalVariants = colors.length * _sizeCount;
 
     return Scaffold(
       child: SafeArea(
@@ -342,53 +387,11 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'product'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                                fw.GestureDetector(
-                                  onTap: () => _showProductSelector(context),
-                                  child: Text(
-                                    selectedProduct == null
-                                        ? 'select'.tr()
-                                        : 'change'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            fw.Container(
-                              padding: const fw.EdgeInsets.all(16),
-                              decoration: fw.BoxDecoration(
-                                color: theme.colorScheme.muted.withValues(
-                                  alpha: 0.5,
-                                ),
-                                borderRadius: fw.BorderRadius.circular(8),
-                                border: fw.Border.all(
-                                  color: theme.colorScheme.border,
-                                ),
-                              ),
-                              child: Text(
-                                selectedProduct?.name ?? 'no_product_selected'.tr(),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: selectedProduct == null
-                                      ? theme.colorScheme.mutedForeground
-                                      : null,
-                                ),
-                              ),
+                            AppSelectorField(
+                              label: 'product'.tr(),
+                              value: selectedProduct?.name,
+                              placeholder: 'no_product_selected'.tr(),
+                              onTap: () => _showProductSelector(context),
                             ),
                           ],
                         ),
@@ -482,7 +485,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Sizes Card
+                    if (_needsSize) ...[
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(20),
@@ -569,6 +572,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
+                    ],
 
                     // Settings Card
                     Card(
@@ -671,7 +675,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      'colors_sizes'.tr(args: ['${colors.length}', '${sizes.length}']),
+                                      _countLabel(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
@@ -702,7 +706,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         final params = GenerateProductVariantParams(
                           productId: selectedProduct!.id!,
                           colors: colors,
-                          sizes: sizes,
+                          sizes: _needsSize ? sizes : [''],
                           defaultStockQuantity: int.parse(
                             _defaultStockController.text.trim(),
                           ),

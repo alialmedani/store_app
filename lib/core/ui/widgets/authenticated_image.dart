@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart' as fw;
 import 'package:store/core/ui/kit/app_kit.dart';
 import '../../classes/cashe_helper.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 
 /// Widget to display images from authenticated endpoints
 /// Uses Dio to fetch image with Bearer token
@@ -76,20 +77,10 @@ class _AuthenticatedImageState extends fw.State<AuthenticatedImage> {
 
     if (_isLoading) {
       return widget.placeholder ??
-          fw.Container(
-            width: widget.width,
-            height: widget.height,
-            decoration: fw.BoxDecoration(
-              color: theme.colorScheme.muted,
-              borderRadius: fw.BorderRadius.circular(8),
-            ),
-            child: fw.Center(
-              child: fw.SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
+          AppSkeletonBox(
+            width: widget.width ?? double.infinity,
+            height: widget.height ?? 80,
+            borderRadius: 12,
           );
     }
 
