@@ -1,13 +1,15 @@
 //emulator
-
 const String baseUrl = 'http://10.0.2.2:5000';
-
-//      dotnet run --project src/StoreManagement.Web --launch-profile StoreManagement.Web
-
+/*     
+dotnet run --project src/StoreManagement.Web --launch-profile StoreManagement.Web
+*/
 
 // mobile  
-//      dotnet run --project src/StoreManagement.Web --urls "http://0.0.0.0:5000"
+/*  
+dotnet run --project src/StoreManagement.Web --urls "http://0.0.0.0:5000"
+*/
 //mobile
+
 // const String baseUrl = 'http://10.200.0.91:5000';
 
 const loginUrl = '$baseUrl/connect/token';
