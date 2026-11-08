@@ -3,7 +3,7 @@
 //      dotnet run --project src/StoreManagement.Web --launch-profile StoreManagement.Web
 
 
-// mobile 
+// mobile  
 //      dotnet run --project src/StoreManagement.Web --urls "http://0.0.0.0:5000"
 //mobile
 const String baseUrl = 'http://10.200.0.91:5000';
