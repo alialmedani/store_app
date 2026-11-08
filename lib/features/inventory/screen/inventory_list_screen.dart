@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 import 'package:intl/intl.dart';
 
@@ -7,6 +7,7 @@ import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../cubit/inventory_cubit.dart';
 import '../data/model/inventory_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Inventory List Screen - Premium inventory movements tracking
 /// Shows all stock movements with beautiful, modern design
@@ -17,14 +18,11 @@ class InventoryListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'Inventory',
+              title: 'inventory'.tr(),
               onBack: () => fw.Navigator.pop(context),
-            ),
-            fw.Expanded(
-              child: PaginationList<InventoryModel>(
+            )]), body: PaginationList<InventoryModel>(
                 withPagination: true,
                 withRefresh: true,
                 loadingWidget: fw.ListView.builder(
@@ -65,10 +63,7 @@ class InventoryListScreen extends StatelessWidget {
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
@@ -90,21 +85,6 @@ class _InventoryCard extends StatelessWidget {
 
     return Card(
       child: fw.Container(
-        decoration: fw.BoxDecoration(
-          borderRadius: fw.BorderRadius.circular(12),
-          gradient: fw.LinearGradient(
-            begin: fw.Alignment.topLeft,
-            end: fw.Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.card,
-              theme.colorScheme.card.withValues(alpha: 0.98),
-            ],
-          ),
-          border: fw.Border.all(
-            color: movementStyle.color.withValues(alpha: 0.12),
-            width: 1,
-          ),
-        ),
         child: fw.Padding(
           padding: const fw.EdgeInsets.all(20),
           child: fw.Column(
@@ -116,20 +96,12 @@ class _InventoryCard extends StatelessWidget {
                 children: [
                   // Icon Container
                   fw.Container(
-                    padding: const fw.EdgeInsets.all(12),
+                    width: 48,
+                    height: 48,
                     decoration: fw.BoxDecoration(
-                      gradient: fw.LinearGradient(
-                        begin: fw.Alignment.topLeft,
-                        end: fw.Alignment.bottomRight,
-                        colors: [
-                          movementStyle.color.withValues(alpha: 0.15),
-                          movementStyle.color.withValues(alpha: 0.08),
-                        ],
-                      ),
-                      borderRadius: fw.BorderRadius.circular(12),
-                      border: fw.Border.all(
-                        color: movementStyle.color.withValues(alpha: 0.2),
-                        width: 1,
+                      color: movementStyle.color.withValues(alpha: 0.16),
+                      borderRadius: fw.BorderRadius.circular(
+                        AppDesignTokens.iconBoxRadius,
                       ),
                     ),
                     child: fw.Icon(
@@ -145,7 +117,7 @@ class _InventoryCard extends StatelessWidget {
                       crossAxisAlignment: fw.CrossAxisAlignment.start,
                       children: [
                         fw.Text(
-                          inventory.productName ?? 'Unknown Product',
+                          inventory.productName ?? 'unknown_product'.tr(),
                           style: const fw.TextStyle(
                             fontSize: 17,
                             fontWeight: fw.FontWeight.w700,
@@ -168,7 +140,7 @@ class _InventoryCard extends StatelessWidget {
                                     color: theme.colorScheme.muted.withValues(
                                       alpha: 0.4,
                                     ),
-                                    borderRadius: fw.BorderRadius.circular(6),
+                                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                                   ),
                                   child: fw.Text(
                                     inventory.color!,
@@ -192,7 +164,7 @@ class _InventoryCard extends StatelessWidget {
                                     color: theme.colorScheme.muted.withValues(
                                       alpha: 0.4,
                                     ),
-                                    borderRadius: fw.BorderRadius.circular(6),
+                                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                                   ),
                                   child: fw.Text(
                                     inventory.size!,
@@ -226,7 +198,7 @@ class _InventoryCard extends StatelessWidget {
                             movementStyle.color.withValues(alpha: 0.08),
                           ],
                         ),
-                        borderRadius: fw.BorderRadius.circular(8),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                         border: fw.Border.all(
                           color: movementStyle.color.withValues(alpha: 0.25),
                           width: 1,
@@ -268,7 +240,7 @@ class _InventoryCard extends StatelessWidget {
                         color: theme.colorScheme.secondary.withValues(
                           alpha: 0.12,
                         ),
-                        borderRadius: fw.BorderRadius.circular(6),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                         border: fw.Border.all(
                           color: theme.colorScheme.secondary.withValues(
                             alpha: 0.2,
@@ -323,7 +295,7 @@ class _InventoryCard extends StatelessWidget {
                             movementStyle.color.withValues(alpha: 0.04),
                           ],
                         ),
-                        borderRadius: fw.BorderRadius.circular(10),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                         border: fw.Border.all(
                           color: movementStyle.color.withValues(alpha: 0.15),
                           width: 1,
@@ -341,7 +313,7 @@ class _InventoryCard extends StatelessWidget {
                               ),
                               const fw.SizedBox(width: 6),
                               fw.Text(
-                                'Change',
+                                'change'.tr(),
                                 style: fw.TextStyle(
                                   fontSize: 12,
                                   fontWeight: fw.FontWeight.w600,
@@ -372,7 +344,7 @@ class _InventoryCard extends StatelessWidget {
                       padding: const fw.EdgeInsets.all(14),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                        borderRadius: fw.BorderRadius.circular(10),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                         border: fw.Border.all(
                           color: theme.colorScheme.border.withValues(
                             alpha: 0.15,
@@ -392,7 +364,7 @@ class _InventoryCard extends StatelessWidget {
                               ),
                               const fw.SizedBox(width: 6),
                               fw.Text(
-                                'Stock',
+                                'stock'.tr(),
                                 style: fw.TextStyle(
                                   fontSize: 12,
                                   fontWeight: fw.FontWeight.w600,
@@ -450,7 +422,7 @@ class _InventoryCard extends StatelessWidget {
                   padding: const fw.EdgeInsets.all(12),
                   decoration: fw.BoxDecoration(
                     color: theme.colorScheme.muted.withValues(alpha: 0.25),
-                    borderRadius: fw.BorderRadius.circular(10),
+                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                     border: fw.Border.all(
                       color: theme.colorScheme.border.withValues(alpha: 0.12),
                       width: 1,
@@ -516,21 +488,21 @@ class _InventoryCard extends StatelessWidget {
     switch (typeId) {
       case 1: // In
         return _MovementStyle(
-          color: const Color(0xFF10B981),
+          color: AppDesignTokens.successColor,
           icon: Icons.arrow_circle_down_rounded,
           quantityIcon: Icons.add_circle_outline,
           prefix: '+',
         );
       case 2: // Out
         return _MovementStyle(
-          color: const Color(0xFFEF4444),
+          color: AppDesignTokens.dangerColor,
           icon: Icons.arrow_circle_up_rounded,
           quantityIcon: Icons.remove_circle_outline,
           prefix: '-',
         );
       default: // Adjustment
         return _MovementStyle(
-          color: const Color(0xFFF59E0B),
+          color: AppDesignTokens.warningColor,
           icon: Icons.tune_rounded,
           quantityIcon: Icons.sync_alt,
           prefix: '',

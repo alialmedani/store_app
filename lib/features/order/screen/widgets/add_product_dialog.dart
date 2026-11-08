@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
+import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../category/cubit/category_cubit.dart';
 import '../../../category/data/model/category_model.dart';
@@ -9,6 +10,7 @@ import '../../../product/cubit/product_cubit.dart';
 import '../../../product/data/model/product_model.dart';
 import '../../../product_variant/cubit/product_variant_cubit.dart';
 import '../../../product_variant/data/model/product_variant_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Smart Add Product Dialog - Multiple ways to add products to order
 /// - Browse by Category
@@ -41,7 +43,7 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
     final theme = Theme.of(context);
 
     return AlertDialog(
-      title: const Text('Add Product to Order'),
+      title: Text('add_product_to_order'.tr()),
       content: fw.SizedBox(
         width: 450,
         height: 500,
@@ -58,7 +60,7 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
               child: fw.Row(
                 children: [
                   _TabButton(
-                    label: 'By Category',
+                    label: 'by_category'.tr(),
                     isSelected: _selectedTabIndex == 0,
                     onTap: () {
                       setState(() {
@@ -70,7 +72,7 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
                   ),
                   const fw.SizedBox(width: 4),
                   _TabButton(
-                    label: 'By Product',
+                    label: 'by_product'.tr(),
                     isSelected: _selectedTabIndex == 1,
                     onTap: () {
                       setState(() {
@@ -82,7 +84,7 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
                   ),
                   const fw.SizedBox(width: 4),
                   _TabButton(
-                    label: 'All Variants',
+                    label: 'all_variants'.tr(),
                     isSelected: _selectedTabIndex == 2,
                     onTap: () {
                       setState(() {
@@ -151,14 +153,14 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
             const fw.SizedBox(height: 16),
 
             // Quantity Field
-            const Text(
-              'Quantity',
+            Text(
+              'quantity_2'.tr(),
               style: fw.TextStyle(fontSize: 14, fontWeight: fw.FontWeight.w600),
             ),
             const fw.SizedBox(height: 8),
             TextField(
               controller: _quantityController,
-              placeholder: const Text('Enter quantity'),
+              placeholder: Text('enter_quantity'.tr()),
               keyboardType: const fw.TextInputType.numberWithOptions(
                 decimal: false,
               ),
@@ -169,25 +171,25 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
       actions: [
         OutlineButton(
           onPressed: () => fw.Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text('cancel'.tr()),
         ),
         PrimaryButton(
           onPressed: () {
             if (selectedVariantId == null) {
-              _showError(context, 'Please select a product variant');
+              _showError(context, 'please_select_a_product_variant'.tr());
               return;
             }
 
             final quantity = int.tryParse(_quantityController.text) ?? 1;
             if (quantity <= 0) {
-              _showError(context, 'Quantity must be greater than 0');
+              _showError(context, 'quantity_must_be_greater_than_0'.tr());
               return;
             }
 
             widget.onItemAdded(selectedVariantId!, quantity);
             fw.Navigator.pop(context);
           },
-          child: const Text('Add to Order'),
+          child: Text('add_to_order'.tr()),
         ),
       ],
     );
@@ -197,12 +199,12 @@ class _AddProductDialogState extends fw.State<AddProductDialog> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Error'),
+        title: Text('error_2'.tr()),
         content: Text(message),
         actions: [
           PrimaryButton(
             onPressed: () => fw.Navigator.pop(ctx),
-            child: const Text('OK'),
+            child: Text('ok'.tr()),
           ),
         ],
       ),
@@ -279,8 +281,8 @@ class _ByCategoryView extends fw.StatelessWidget {
       crossAxisAlignment: fw.CrossAxisAlignment.stretch,
       children: [
         // Step 1: Select Category
-        const Text(
-          '1. Select Category',
+        Text(
+          '1_select_category'.tr(),
           style: fw.TextStyle(
             fontSize: 13,
             fontWeight: fw.FontWeight.w700,
@@ -295,7 +297,8 @@ class _ByCategoryView extends fw.StatelessWidget {
             child: PaginationList<CategoryModel>(
               withPagination: false,
               withRefresh: false,
-              repositoryCallBack: (data) {
+              loadingWidget: const ChipsRowSkeleton(width: 140),
+repositoryCallBack: (data) {
                 return context.read<CategoryCubit>().fetchCategoryList(data);
               },
               listBuilder: (list) {
@@ -314,7 +317,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                       },
                       child: fw.Container(
                         width: 140,
-                        margin: const fw.EdgeInsets.only(right: 8),
+                        margin: const fw.EdgeInsetsDirectional.only(end: 8),
                         padding: const fw.EdgeInsets.all(12),
                         decoration: fw.BoxDecoration(
                           color: isSelected
@@ -371,8 +374,8 @@ class _ByCategoryView extends fw.StatelessWidget {
 
         // Step 2: Select Product from Category
         if (selectedCategoryId != null) ...[
-          const Text(
-            '2. Select Product',
+          Text(
+            '2_select_product'.tr(),
             style: fw.TextStyle(
               fontSize: 13,
               fontWeight: fw.FontWeight.w700,
@@ -387,7 +390,8 @@ class _ByCategoryView extends fw.StatelessWidget {
               child: PaginationList<ProductModel>(
                 withPagination: false,
                 withRefresh: false,
-                repositoryCallBack: (data) {
+                loadingWidget: const ChipsRowSkeleton(width: 120),
+repositoryCallBack: (data) {
                   return context.read<ProductCubit>().fetchProductList(
                     data,
                     categoryId: selectedCategoryId,
@@ -397,7 +401,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                   if (list.isEmpty) {
                     return fw.Center(
                       child: Text(
-                        'No products in this category',
+                        'no_products_in_this_category'.tr(),
                         style: fw.TextStyle(
                           fontSize: 13,
                           color: theme.colorScheme.mutedForeground,
@@ -421,7 +425,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                         },
                         child: fw.Container(
                           width: 120,
-                          margin: const fw.EdgeInsets.only(right: 8),
+                          margin: const fw.EdgeInsetsDirectional.only(end: 8),
                           padding: const fw.EdgeInsets.all(10),
                           decoration: fw.BoxDecoration(
                             color: isSelected
@@ -463,8 +467,8 @@ class _ByCategoryView extends fw.StatelessWidget {
 
         // Step 3: Select Variant
         if (selectedProductId != null) ...[
-          const Text(
-            '3. Select Variant',
+          Text(
+            '3_select_variant'.tr(),
             style: fw.TextStyle(
               fontSize: 13,
               fontWeight: fw.FontWeight.w700,
@@ -478,7 +482,8 @@ class _ByCategoryView extends fw.StatelessWidget {
               child: PaginationList<ProductVariantModel>(
                 withPagination: false,
                 withRefresh: false,
-                repositoryCallBack: (data) {
+                loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                   return context
                       .read<ProductVariantCubit>()
                       .fetchProductVariantList(data, productId: selectedProductId);
@@ -487,7 +492,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                   if (list.isEmpty) {
                     return fw.Center(
                       child: Text(
-                        'No variants for this product',
+                        'no_variants_for_this_product'.tr(),
                         style: fw.TextStyle(
                           fontSize: 13,
                           color: theme.colorScheme.mutedForeground,
@@ -531,7 +536,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                                       fw.CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Color: ${variant.color ?? 'N/A'} | Size: ${variant.size ?? 'N/A'}',
+                                      'color_size'.tr(args: ['${variant.color ?? 'N/A'}', '${variant.size ?? 'N/A'}']),
                                       style: fw.TextStyle(
                                         fontSize: 13,
                                         fontWeight: fw.FontWeight.w600,
@@ -542,7 +547,7 @@ class _ByCategoryView extends fw.StatelessWidget {
                                     ),
                                     const fw.SizedBox(height: 4),
                                     Text(
-                                      'Stock: ${variant.stockQuantity ?? 0}',
+                                      'stock'.tr(args: ['${variant.stockQuantity ?? 0}']),
                                       style: fw.TextStyle(
                                         fontSize: 12,
                                         color:
@@ -596,8 +601,8 @@ class _ByProductView extends fw.StatelessWidget {
       crossAxisAlignment: fw.CrossAxisAlignment.stretch,
       children: [
         // Step 1: Select Product
-        const Text(
-          '1. Select Product',
+        Text(
+          '1_select_product'.tr(),
           style: fw.TextStyle(
             fontSize: 13,
             fontWeight: fw.FontWeight.w700,
@@ -612,7 +617,8 @@ class _ByProductView extends fw.StatelessWidget {
             child: PaginationList<ProductModel>(
               withPagination: true,
               withRefresh: false,
-              repositoryCallBack: (data) {
+              loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                 return context.read<ProductCubit>().fetchProductList(data);
               },
               listBuilder: (list) {
@@ -677,8 +683,8 @@ class _ByProductView extends fw.StatelessWidget {
 
         // Step 2: Select Variant
         if (selectedProductId != null) ...[
-          const Text(
-            '2. Select Variant',
+          Text(
+            '2_select_variant'.tr(),
             style: fw.TextStyle(
               fontSize: 13,
               fontWeight: fw.FontWeight.w700,
@@ -692,7 +698,8 @@ class _ByProductView extends fw.StatelessWidget {
               child: PaginationList<ProductVariantModel>(
                 withPagination: false,
                 withRefresh: false,
-                repositoryCallBack: (data) {
+                loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                   return context
                       .read<ProductVariantCubit>()
                       .fetchProductVariantList(data, productId: selectedProductId);
@@ -701,7 +708,7 @@ class _ByProductView extends fw.StatelessWidget {
                   if (list.isEmpty) {
                     return fw.Center(
                       child: Text(
-                        'No variants for this product',
+                        'no_variants_for_this_product'.tr(),
                         style: fw.TextStyle(
                           fontSize: 13,
                           color: theme.colorScheme.mutedForeground,
@@ -745,7 +752,7 @@ class _ByProductView extends fw.StatelessWidget {
                                       fw.CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Color: ${variant.color ?? 'N/A'} | Size: ${variant.size ?? 'N/A'}',
+                                      'color_size'.tr(args: ['${variant.color ?? 'N/A'}', '${variant.size ?? 'N/A'}']),
                                       style: fw.TextStyle(
                                         fontSize: 13,
                                         fontWeight: fw.FontWeight.w600,
@@ -756,7 +763,7 @@ class _ByProductView extends fw.StatelessWidget {
                                     ),
                                     const fw.SizedBox(height: 4),
                                     Text(
-                                      'Stock: ${variant.stockQuantity ?? 0}',
+                                      'stock'.tr(args: ['${variant.stockQuantity ?? 0}']),
                                       style: fw.TextStyle(
                                         fontSize: 12,
                                         color:
@@ -805,8 +812,8 @@ class _AllVariantsView extends fw.StatelessWidget {
     return fw.Column(
       crossAxisAlignment: fw.CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          'Select Variant',
+        Text(
+          'select_variant'.tr(),
           style: fw.TextStyle(
             fontSize: 13,
             fontWeight: fw.FontWeight.w700,
@@ -820,7 +827,8 @@ class _AllVariantsView extends fw.StatelessWidget {
             child: PaginationList<ProductVariantModel>(
               withPagination: true,
               withRefresh: false,
-              repositoryCallBack: (data) {
+              loadingWidget: const SelectorListSkeleton(withSubtitle: false),
+repositoryCallBack: (data) {
                 return context
                     .read<ProductVariantCubit>()
                     .fetchProductVariantList(data);
@@ -871,7 +879,7 @@ class _AllVariantsView extends fw.StatelessWidget {
                                   ),
                                   const fw.SizedBox(height: 4),
                                   Text(
-                                    'Color: ${variant.color ?? 'N/A'} | Size: ${variant.size ?? 'N/A'}',
+                                    'color_size'.tr(args: ['${variant.color ?? 'N/A'}', '${variant.size ?? 'N/A'}']),
                                     style: fw.TextStyle(
                                       fontSize: 13,
                                       fontWeight: fw.FontWeight.w600,
@@ -880,7 +888,7 @@ class _AllVariantsView extends fw.StatelessWidget {
                                   ),
                                   const fw.SizedBox(height: 4),
                                   Text(
-                                    'Stock: ${variant.stockQuantity ?? 0}',
+                                    'stock'.tr(args: ['${variant.stockQuantity ?? 0}']),
                                     style: fw.TextStyle(
                                       fontSize: 12,
                                       color: theme.colorScheme.mutedForeground,

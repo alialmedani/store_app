@@ -1,9 +1,12 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
 
+import '../../product/data/model/product_model.dart';
 import 'bulk_create_variant_screen.dart';
 import 'create_product_variant_screen.dart';
 import 'generate_variant_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Variant Creation Options Screen
 /// Allows admin to choose between 3 methods:
@@ -11,7 +14,8 @@ import 'generate_variant_screen.dart';
 /// 2. Bulk Create Variants
 /// 3. Generate Variants (Auto)
 class VariantCreationOptionsScreen extends StatelessWidget {
-  const VariantCreationOptionsScreen({super.key});
+  final ProductModel? initialProduct;
+  const VariantCreationOptionsScreen({super.key, this.initialProduct});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +25,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
+            Expanded(child: ScrollAwayHeader(header: Column(children: [
             // App Bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -32,9 +37,9 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                     variance: ButtonVariance.ghost,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Add Product Variants',
+                      'add_product_variants'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -43,15 +48,40 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-
-            // Content
-            Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (initialProduct != null) ...[
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'step_2_of_2'.tr(),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'adding_variants_for'.tr(args: ['${initialProduct!.name ?? ''}']),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                     // Header
                     Card(
                       child: Padding(
@@ -60,7 +90,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Choose Creation Method',
+                              'choose_creation_method'.tr(),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -69,7 +99,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Select the most suitable method for adding product variants',
+                              'select_the_most_suitable_method_for_ad'.tr(),
                               style: TextStyle(
                                 fontSize: 14,
                                 color: theme.colorScheme.mutedForeground,
@@ -84,22 +114,22 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                     // Option 1: Create Single Variant
                     _OptionCard(
                       icon: Icons.add_circle_outline,
-                      title: 'Create Single Variant',
+                      title: 'create_single_variant'.tr(),
                       description:
-                          'Add one variant at a time with precise control over each detail',
-                      useCaseTitle: 'Best for:',
+                          'add_one_variant_at_a_time_with_precise'.tr(),
+                      useCaseTitle: 'best_for'.tr(),
                       useCases: [
-                        'Adding a specific variant (e.g., Red T-shirt - Size L)',
-                        'When you need full control over each field',
-                        'Testing or adding individual items',
+                        'adding_a_specific_variant_e_g_red_t_sh'.tr(),
+                        'when_you_need_full_control_over_each_f'.tr(),
+                        'testing_or_adding_individual_items'.tr(),
                       ],
-                      buttonText: 'Create Single',
+                      buttonText: 'create_single'.tr(),
                       buttonColor: theme.colorScheme.primary,
                       onTap: () {
                         fw.Navigator.of(context).push(
                           fw.PageRouteBuilder(
                             pageBuilder: (_, __, ___) =>
-                                const CreateProductVariantScreen(),
+                                CreateProductVariantScreen(initialProduct: initialProduct),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),
@@ -111,22 +141,22 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                     // Option 2: Bulk Create Variants
                     _OptionCard(
                       icon: Icons.list_alt,
-                      title: 'Bulk Create Variants',
+                      title: 'bulk_create_variants'.tr(),
                       description:
-                          'Create multiple specific variants with different stock quantities',
-                      useCaseTitle: 'Best for:',
+                          'create_multiple_specific_variants_with'.tr(),
+                      useCaseTitle: 'best_for'.tr(),
                       useCases: [
-                        'Adding several variants with different stock levels',
-                        'Example: Red L (50 qty), Blue M (20 qty), Green XL (10 qty)',
-                        'When you know exact quantity for each variant',
+                        'adding_several_variants_with_different'.tr(),
+                        'example_red_l_50_qty_blue_m_20_qty_gre'.tr(),
+                        'when_you_know_exact_quantity_for_each'.tr(),
                       ],
-                      buttonText: 'Bulk Create',
-                      buttonColor: const Color(0xFF10B981),
+                      buttonText: 'bulk_create'.tr(),
+                      buttonColor: AppDesignTokens.successColor,
                       onTap: () {
                         fw.Navigator.of(context).push(
                           fw.PageRouteBuilder(
                             pageBuilder: (_, __, ___) =>
-                                const BulkCreateVariantScreen(),
+                                BulkCreateVariantScreen(initialProduct: initialProduct),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),
@@ -138,32 +168,52 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                     // Option 3: Generate Variants
                     _OptionCard(
                       icon: Icons.auto_awesome,
-                      title: 'Generate Variants (Auto)',
+                      title: 'generate_variants_auto'.tr(),
                       description:
-                          'Automatically generate all color-size combinations',
-                      useCaseTitle: 'Best for:',
+                          'automatically_generate_all_color_size'.tr(),
+                      useCaseTitle: 'best_for'.tr(),
                       useCases: [
-                        'Creating all combinations quickly',
-                        'Example: 3 colors × 4 sizes = 12 variants',
-                        'Same stock quantity for all variants',
+                        'creating_all_combinations_quickly'.tr(),
+                        'example_3_colors_4_sizes_12_variants'.tr(),
+                        'same_stock_quantity_for_all_variants'.tr(),
                       ],
-                      buttonText: 'Auto Generate',
-                      buttonColor: const Color(0xFF8B5CF6),
+                      buttonText: 'auto_generate'.tr(),
+                      buttonColor: AppDesignTokens.accentSecondaryColor,
                       onTap: () {
                         fw.Navigator.of(context).push(
                           fw.PageRouteBuilder(
                             pageBuilder: (_, __, ___) =>
-                                const GenerateVariantScreen(),
+                                GenerateVariantScreen(initialProduct: initialProduct),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),
                         );
                       },
                     ),
+                  
+                  ],
+                ),
+              ))),
+            if (initialProduct != null)
+              StickyBottomAction(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlineButton(
+                        onPressed: () => fw.Navigator.of(context).pop(),
+                        child: Text('skip_for_now'.tr()),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: PrimaryButton(
+                        onPressed: () => fw.Navigator.of(context).pop(),
+                        child: Text('done'.tr()),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -211,8 +261,8 @@ class _OptionCard extends StatelessWidget {
                   fw.Container(
                     padding: const fw.EdgeInsets.all(12),
                     decoration: fw.BoxDecoration(
-                      color: buttonColor.withValues(alpha: 0.1),
-                      borderRadius: fw.BorderRadius.circular(12),
+                      color: buttonColor.withValues(alpha: 0.16),
+                      borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                     ),
                     child: Icon(icon, size: 28, color: buttonColor),
                   ),
@@ -303,19 +353,19 @@ class _OptionCard extends StatelessWidget {
                     ),
                     decoration: fw.BoxDecoration(
                       color: buttonColor,
-                      borderRadius: fw.BorderRadius.circular(8),
+                      borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(icon, size: 18, color: Colors.white),
+                        Icon(icon, size: 18, color: AppDesignTokens.onAccentColor),
                         const SizedBox(width: 8),
                         Text(
                           buttonText,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: AppDesignTokens.onAccentColor,
                           ),
                         ),
                       ],

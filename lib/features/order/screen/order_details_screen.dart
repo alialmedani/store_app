@@ -1,71 +1,47 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
+import '../../../core/boilerplate/get_model/cubits/get_model_cubit.dart';
 import '../../../core/boilerplate/get_model/widgets/get_model.dart';
 import '../cubit/order_cubit.dart';
 import '../data/model/order_model.dart';
+import 'widgets/order_sections.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/design_system.dart';
 
 /// Order Details Screen - Shows full details of a single order
 /// Uses GetModel widget from boilerplate to handle loading/success/error states
-class OrderDetailsScreen extends fw.StatelessWidget {
+class OrderDetailsScreen extends fw.StatefulWidget {
   final String orderId;
 
   const OrderDetailsScreen({super.key, required this.orderId});
 
   @override
+  fw.State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
+}
+
+class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
+  GetModelCubit? _detailsCubit;
+
+  /// Re-fetch the order after an action (confirm, pay, cancel, items...)
+  void _reload() {
+    _detailsCubit?.getModel();
+  }
+
+  @override
   fw.Widget build(fw.BuildContext context) {
+    final orderId = widget.orderId;
     final theme = Theme.of(context);
 
     return BlocProvider(
       create: (context) => OrderCubit(),
       child: Scaffold(
         child: SafeArea(
-          child: fw.Column(
-            children: [
-              // App Bar
-              fw.Container(
-                padding: const fw.EdgeInsets.fromLTRB(16, 16, 20, 20),
-                decoration: fw.BoxDecoration(
-                  color: theme.colorScheme.background,
-                  border: fw.Border(
-                    bottom: fw.BorderSide(
-                      color: theme.colorScheme.border.withValues(alpha: 0.1),
-                      width: 1,
-                    ),
-                  ),
-                ),
-                child: fw.Row(
-                  children: [
-                    fw.Container(
-                      decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                        borderRadius: fw.BorderRadius.circular(12),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back, size: 20),
-                        onPressed: () => fw.Navigator.pop(context),
-                        variance: ButtonVariance.ghost,
-                      ),
-                    ),
-                    const fw.SizedBox(width: 12),
-                    const fw.Expanded(
-                      child: Text(
-                        'Order Details',
-                        style: fw.TextStyle(
-                          fontSize: 24,
-                          fontWeight: fw.FontWeight.w700,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Content
-              fw.Expanded(
-                child: GetModel<OrderModel>(
+          child: ScrollAwayHeader(header: fw.Column(children: [
+              AppHeader(title: 'order_details'.tr(),
+              )]), body: GetModel<OrderModel>(
+                  onCubitCreated: (cubit) => _detailsCubit = cubit,
                   useCaseCallBack: () =>
                       context.read<OrderCubit>().getOrderDetails(orderId),
                   modelBuilder: (order) {
@@ -74,34 +50,40 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
-                          // Order Number Card
-                          Card(
-                            child: fw.Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(20),
-                              child: fw.Column(
-                                crossAxisAlignment: fw.CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Order Number',
-                                    style: fw.TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: fw.FontWeight.w600,
-                                      color: theme.colorScheme.mutedForeground,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                  const fw.SizedBox(height: 8),
-                                  Text(
-                                    order.orderNumber ?? 'N/A',
-                                    style: fw.TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: fw.FontWeight.w700,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
-                                ],
+                          // Order number hero
+                          fw.Container(
+                            width: double.infinity,
+                            padding: const fw.EdgeInsets.all(20),
+                            decoration: fw.BoxDecoration(
+                              gradient: AppDesignTokens.primaryGradient,
+                              borderRadius: fw.BorderRadius.circular(
+                                AppDesignTokens.cardRadius + 4,
                               ),
+                              boxShadow: AppDesignTokens.glowShadow,
+                            ),
+                            child: fw.Column(
+                              crossAxisAlignment: fw.CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'order_number'.tr(),
+                                  style: fw.TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: fw.FontWeight.w600,
+                                    color: const fw.Color(0xFFFFFFFF)
+                                        .withValues(alpha: 0.78),
+                                  ),
+                                ),
+                                const fw.SizedBox(height: 6),
+                                Text(
+                                  order.orderNumber ?? 'N/A',
+                                  style: const fw.TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: fw.FontWeight.w800,
+                                    letterSpacing: -0.3,
+                                    color: fw.Color(0xFFFFFFFF),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const fw.SizedBox(height: 16),
@@ -114,33 +96,25 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                               child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'CUSTOMER INFORMATION',
-                                    style: fw.TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: fw.FontWeight.w700,
-                                      color: theme.colorScheme.mutedForeground,
-                                      letterSpacing: 0.8,
-                                    ),
-                                  ),
+                                  AppSectionTitle('customer_information_2'.tr()),
                                   const fw.SizedBox(height: 16),
                                   _InfoRow(
                                     icon: Icons.person_outline,
-                                    label: 'Name',
+                                    label: 'name'.tr(),
                                     value: order.customerName ?? 'N/A',
                                     theme: theme,
                                   ),
                                   const fw.SizedBox(height: 12),
                                   _InfoRow(
                                     icon: Icons.phone_outlined,
-                                    label: 'Phone',
+                                    label: 'phone'.tr(),
                                     value: order.customerPhone ?? 'N/A',
                                     theme: theme,
                                   ),
                                   const fw.SizedBox(height: 12),
                                   _InfoRow(
                                     icon: Icons.location_on_outlined,
-                                    label: 'Address',
+                                    label: 'address'.tr(),
                                     value: order.customerAddress ?? 'N/A',
                                     theme: theme,
                                   ),
@@ -149,7 +123,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                     const fw.SizedBox(height: 12),
                                     _InfoRow(
                                       icon: Icons.note_outlined,
-                                      label: 'Note',
+                                      label: 'note'.tr(),
                                       value: order.note!,
                                       theme: theme,
                                     ),
@@ -157,6 +131,14 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                 ],
                               ),
                             ),
+                          ),
+                          const fw.SizedBox(height: 16),
+
+                          // Items (editable while the order is a draft)
+                          OrderItemsSection(
+                            order: order,
+                            theme: theme,
+                            onChanged: _reload,
                           ),
                           const fw.SizedBox(height: 16),
 
@@ -168,111 +150,37 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                               child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'STATUS',
-                                    style: fw.TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: fw.FontWeight.w700,
-                                      color: theme.colorScheme.mutedForeground,
-                                      letterSpacing: 0.8,
-                                    ),
-                                  ),
+                                  AppSectionTitle('status_2'.tr()),
                                   const fw.SizedBox(height: 16),
-                                  fw.Row(
-                                    children: [
-                                      if (order.status != null)
-                                        fw.Expanded(
-                                          child: fw.Container(
-                                            padding:
-                                                const fw.EdgeInsets.symmetric(
-                                                  horizontal: 16,
-                                                  vertical: 12,
-                                                ),
-                                            decoration: fw.BoxDecoration(
-                                              color: theme.colorScheme.primary
-                                                  .withValues(alpha: 0.12),
-                                              borderRadius:
-                                                  fw.BorderRadius.circular(12),
-                                            ),
-                                            child: fw.Column(
-                                              crossAxisAlignment:
-                                                  fw.CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Order Status',
-                                                  style: fw.TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        fw.FontWeight.w600,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .mutedForeground,
-                                                  ),
-                                                ),
-                                                const fw.SizedBox(height: 4),
-                                                Text(
-                                                  order.status!.name ?? 'N/A',
-                                                  style: fw.TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        fw.FontWeight.w700,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
-                                                ),
-                                              ],
+                                  fw.IntrinsicHeight(
+                                    child: fw.Row(
+                                      crossAxisAlignment:
+                                          fw.CrossAxisAlignment.stretch,
+                                      children: [
+                                        if (order.status != null)
+                                          fw.Expanded(
+                                            child: AppStatTile(
+                                              label: 'order_status'.tr(),
+                                              value: order.status!.name ?? 'N/A',
+                                              icon: Icons.local_shipping_rounded,
+                                              highlight: true,
                                             ),
                                           ),
-                                        ),
-                                      const fw.SizedBox(width: 12),
-                                      if (order.paymentStatus != null)
-                                        fw.Expanded(
-                                          child: fw.Container(
-                                            padding:
-                                                const fw.EdgeInsets.symmetric(
-                                                  horizontal: 16,
-                                                  vertical: 12,
-                                                ),
-                                            decoration: fw.BoxDecoration(
-                                              color: theme.colorScheme.secondary
-                                                  .withValues(alpha: 0.12),
-                                              borderRadius:
-                                                  fw.BorderRadius.circular(12),
-                                            ),
-                                            child: fw.Column(
-                                              crossAxisAlignment:
-                                                  fw.CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Payment',
-                                                  style: fw.TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        fw.FontWeight.w600,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .mutedForeground,
-                                                  ),
-                                                ),
-                                                const fw.SizedBox(height: 4),
-                                                Text(
+                                        if (order.status != null &&
+                                            order.paymentStatus != null)
+                                          const fw.SizedBox(width: 12),
+                                        if (order.paymentStatus != null)
+                                          fw.Expanded(
+                                            child: AppStatTile(
+                                              label: 'payment'.tr(),
+                                              value:
                                                   order.paymentStatus!.name ??
-                                                      'N/A',
-                                                  style: fw.TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        fw.FontWeight.w700,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .secondary,
-                                                  ),
-                                                ),
-                                              ],
+                                                  'N/A',
+                                              icon: Icons.payments_rounded,
                                             ),
                                           ),
-                                        ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -288,25 +196,17 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                               child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'PAYMENT SUMMARY',
-                                    style: fw.TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: fw.FontWeight.w700,
-                                      color: theme.colorScheme.mutedForeground,
-                                      letterSpacing: 0.8,
-                                    ),
-                                  ),
+                                  AppSectionTitle('payment_summary'.tr()),
                                   const fw.SizedBox(height: 16),
                                   _PaymentRow(
-                                    label: 'Total Amount',
+                                    label: 'total_amount'.tr(),
                                     value:
                                         '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
                                     theme: theme,
                                   ),
                                   const fw.SizedBox(height: 12),
                                   _PaymentRow(
-                                    label: 'Paid Amount',
+                                    label: 'paid_amount'.tr(),
                                     value:
                                         '\$${order.paidAmount?.toStringAsFixed(2) ?? '0.00'}',
                                     theme: theme,
@@ -325,7 +225,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                       ),
                                     ),
                                     child: _PaymentRow(
-                                      label: 'Remaining Amount',
+                                      label: 'remaining_amount'.tr(),
                                       value:
                                           '\$${order.remainingAmount?.toStringAsFixed(2) ?? '0.00'}',
                                       theme: theme,
@@ -342,6 +242,19 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                           ),
                           const fw.SizedBox(height: 16),
 
+                          // Payments history
+                          OrderPaymentsSection(order: order, theme: theme),
+
+                          // Status based actions
+                          OrderActionsSection(
+                            order: order,
+                            theme: theme,
+                            onChanged: _reload,
+                            onDeleted: () {
+                              if (mounted) fw.Navigator.pop(context, true);
+                            },
+                          ),
+
                           // Dates Card
                           Card(
                             child: fw.Container(
@@ -350,26 +263,18 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                               child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'DATES',
-                                    style: fw.TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: fw.FontWeight.w700,
-                                      color: theme.colorScheme.mutedForeground,
-                                      letterSpacing: 0.8,
-                                    ),
-                                  ),
+                                  AppSectionTitle('dates'.tr()),
                                   const fw.SizedBox(height: 16),
                                   if (order.creationTime != null)
                                     _DateRow(
-                                      label: 'Created',
+                                      label: 'created'.tr(),
                                       date: order.creationTime!,
                                       theme: theme,
                                     ),
                                   if (order.lastModificationTime != null) ...[
                                     const fw.SizedBox(height: 12),
                                     _DateRow(
-                                      label: 'Last Modified',
+                                      label: 'last_modified'.tr(),
                                       date: order.lastModificationTime!,
                                       theme: theme,
                                     ),
@@ -377,7 +282,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                   if (order.cancellationTime != null) ...[
                                     const fw.SizedBox(height: 12),
                                     _DateRow(
-                                      label: 'Cancelled',
+                                      label: 'cancelled'.tr(),
                                       date: order.cancellationTime!,
                                       theme: theme,
                                       isDestructive: true,
@@ -388,7 +293,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                                             .isNotEmpty) ...[
                                       const fw.SizedBox(height: 8),
                                       Text(
-                                        'Reason: ${order.cancellationReason}',
+                                        'reason'.tr(args: ['${order.cancellationReason}']),
                                         style: fw.TextStyle(
                                           fontSize: 13,
                                           color:
@@ -406,10 +311,7 @@ class OrderDetailsScreen extends fw.StatelessWidget {
                       ),
                     );
                   },
-                ),
-              ),
-            ],
-          ),
+                )),
         ),
       ),
     );
@@ -435,7 +337,15 @@ class _InfoRow extends fw.StatelessWidget {
     return fw.Row(
       crossAxisAlignment: fw.CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 18, color: theme.colorScheme.mutedForeground),
+        fw.Container(
+          width: 34,
+          height: 34,
+          decoration: fw.BoxDecoration(
+            color: AppDesignTokens.primaryColor.withValues(alpha: 0.14),
+            borderRadius: fw.BorderRadius.circular(11),
+          ),
+          child: Icon(icon, size: 18, color: AppDesignTokens.primaryColor),
+        ),
         const fw.SizedBox(width: 12),
         fw.Expanded(
           child: fw.Column(

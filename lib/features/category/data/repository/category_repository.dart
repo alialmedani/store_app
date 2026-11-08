@@ -11,6 +11,9 @@ import '../usecase/get_category_list_usecase.dart';
 import '../usecase/get_category_stock_summary_usecase.dart';
 import '../usecase/update_category_usecase.dart';
 
+import '../usecase/delete_category_usecase.dart';
+import '../usecase/restore_category_usecase.dart';
+
 class CategoryRepository extends CoreRepository {
   Future<Result<CategoryModel>> createCategoryRequest({
     required CreateCategoryParams params,
@@ -95,5 +98,45 @@ class CategoryRepository extends CoreRepository {
     );
 
     return call(result: result);
+  }
+
+  Future<Result<bool>> deleteCategoryRequest({
+    required DeleteCategoryParams params,
+  }) async {
+    final result = await RemoteDataSource.request<bool>(
+      withAuthentication: true,
+      url: deleteCategoryUrl(params.id),
+      method: HttpMethod.DELETE,
+      converter: (json) => true,
+    );
+    return call(result: result);
+  }
+
+  Future<Result<bool>> restoreCategoryRequest({
+    required RestoreCategoryParams params,
+  }) async {
+    final result = await RemoteDataSource.request<bool>(
+      withAuthentication: true,
+      url: restoreCategoryUrl(params.id),
+      method: HttpMethod.POST,
+      converter: (json) => true,
+    );
+    return call(result: result);
+  }
+
+  Future<Result<List<CategoryModel>>> getDeletedCategoryListRequest({
+    required GetCategoryListParams params,
+  }) async {
+    final result = await RemoteDataSource.request<List<CategoryModel>>(
+      withAuthentication: true,
+      queryParameters: params.toJson(),
+      url: getDeletedCategoryListUrl,
+      method: HttpMethod.GET,
+      converter: (json) {
+        final items = json['items'] as List;
+        return items.map((item) => CategoryModel.fromJson(item)).toList();
+      },
+    );
+    return paginatedCall(result: result);
   }
 }

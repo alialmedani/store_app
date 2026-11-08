@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
+import 'app_motion.dart';
 
 /// Empty state widget for when there's no data to display
 /// Shows icon, title, subtitle, and optional action button
@@ -24,7 +25,8 @@ class EmptyState extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    return fw.Center(
+    return FadeSlideIn(
+      child: fw.Center(
       child: fw.Padding(
         padding: const fw.EdgeInsets.all(AppDesignTokens.cardPaddingLarge * 2),
         child: fw.Column(
@@ -36,19 +38,15 @@ class EmptyState extends fw.StatelessWidget {
                 AppDesignTokens.iconBoxPadding * 2,
               ),
               decoration: fw.BoxDecoration(
-                color: theme.colorScheme.muted.withValues(alpha: 0.3),
+                color: AppDesignTokens.primarySoftColor,
                 borderRadius: fw.BorderRadius.circular(
                   AppDesignTokens.cardRadius,
-                ),
-                border: fw.Border.all(
-                  color: theme.colorScheme.border.withValues(alpha: 0.3),
-                  width: 1,
                 ),
               ),
               child: fw.Icon(
                 icon,
-                size: 64,
-                color: theme.colorScheme.mutedForeground.withValues(alpha: 0.5),
+                size: 44,
+                color: AppDesignTokens.primaryColor,
               ),
             ),
             const fw.SizedBox(height: AppDesignTokens.sectionGap + 4),
@@ -86,6 +84,7 @@ class EmptyState extends fw.StatelessWidget {
             ],
           ],
         ),
+      ),
       ),
     );
   }

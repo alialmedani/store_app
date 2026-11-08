@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../results/result.dart';
+import 'package:easy_localization/easy_localization.dart';
 part 'create_model_state.dart';
 
 typedef UsecaseCallBack = Future<Result>? Function(dynamic data);
@@ -17,7 +18,7 @@ class CreateModelCubit<Model> extends Cubit<CreateModelState> {
         } else if (response.hasErrorOnly) {
           emit(Error(message:response.error??'', error: response.error));
         } else {
-          emit(Error(message: 'some thing went wrong'));
+          emit(Error(message: 'some_thing_went_wrong'.tr()));
         }
       } else {
         emit(CreateModelInitial());

@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../classes/cashe_helper.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 
 /// Widget to display images from authenticated endpoints
 /// Uses Dio to fetch image with Bearer token
@@ -24,6 +25,10 @@ class AuthenticatedImage extends fw.StatefulWidget {
     this.errorWidget,
   });
 
+  /// Bumped after an upload so every mounted image reloads its bytes
+  static final fw.ValueNotifier<int> _revision = fw.ValueNotifier<int>(0);
+  static void refreshAll() => _revision.value++;
+
   @override
   fw.State<AuthenticatedImage> createState() => _AuthenticatedImageState();
 }
@@ -37,6 +42,28 @@ class _AuthenticatedImageState extends fw.State<AuthenticatedImage> {
   void initState() {
     super.initState();
     _loadImage();
+    AuthenticatedImage._revision.addListener(_onRevision);
+  }
+
+  @override
+  void dispose() {
+    AuthenticatedImage._revision.removeListener(_onRevision);
+    super.dispose();
+  }
+
+  // Keep showing the old bytes while the new ones load
+  void _onRevision() => _loadImage();
+
+  @override
+  void didUpdateWidget(AuthenticatedImage old) {
+    super.didUpdateWidget(old);
+    if (old.imageUrl != widget.imageUrl) {
+      setState(() {
+        _isLoading = true;
+        _hasError = false;
+      });
+      _loadImage();
+    }
   }
 
   Future<void> _loadImage() async {
@@ -76,20 +103,10 @@ class _AuthenticatedImageState extends fw.State<AuthenticatedImage> {
 
     if (_isLoading) {
       return widget.placeholder ??
-          fw.Container(
-            width: widget.width,
-            height: widget.height,
-            decoration: fw.BoxDecoration(
-              color: theme.colorScheme.muted,
-              borderRadius: fw.BorderRadius.circular(8),
-            ),
-            child: fw.Center(
-              child: fw.SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
+          AppSkeletonBox(
+            width: widget.width ?? double.infinity,
+            height: widget.height ?? 80,
+            borderRadius: 12,
           );
     }
 

@@ -1,7 +1,8 @@
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 
 import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Cart Screen - Shopping Cart
 class CartScreen extends fw.StatelessWidget {
@@ -15,73 +16,10 @@ class CartScreen extends fw.StatelessWidget {
       slivers: [
         // Header
         SliverToBoxAdapter(
-          child: fw.Container(
-            padding: const fw.EdgeInsets.fromLTRB(
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.screenPaddingHorizontal + 8,
-              AppDesignTokens.screenPaddingHorizontal,
-              AppDesignTokens.sectionGap,
-            ),
-            decoration: fw.BoxDecoration(
-              gradient: fw.LinearGradient(
-                begin: fw.Alignment.topLeft,
-                end: fw.Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.background,
-                  theme.colorScheme.background.withValues(alpha: 0.95),
-                ],
-              ),
-              border: fw.Border(
-                bottom: fw.BorderSide(
-                  color: theme.colorScheme.border.withValues(alpha: 0.08),
-                  width: 1,
-                ),
-              ),
-            ),
-            child: fw.Row(
-              mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: fw.CrossAxisAlignment.center,
-              children: [
-                fw.Column(
-                  crossAxisAlignment: fw.CrossAxisAlignment.start,
-                  children: [
-                    const fw.Text(
-                      'Cart',
-                      style: fw.TextStyle(
-                        fontSize: 28,
-                        fontWeight: AppDesignTokens.extraBold,
-                        letterSpacing: -0.5,
-                        height: 1.1,
-                      ),
-                    ),
-                    const fw.SizedBox(height: 4),
-                    fw.Text(
-                      'Your shopping cart',
-                      style: fw.TextStyle(
-                        fontSize: 14,
-                        color: theme.colorScheme.mutedForeground,
-                      ),
-                    ),
-                  ],
-                ),
-                fw.Container(
-                  padding: const fw.EdgeInsets.all(10),
-                  decoration: fw.BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: fw.BorderRadius.circular(12),
-                    border: fw.Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: fw.Icon(
-                    Icons.shopping_cart_rounded,
-                    size: 24,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
+          child: AppTabHeader(
+            title: 'cart'.tr(),
+            subtitle: 'your_shopping_cart'.tr(),
+            icon: Icons.shopping_cart_rounded,
           ),
         ),
 
@@ -95,21 +33,10 @@ class CartScreen extends fw.StatelessWidget {
               child: fw.Column(
                 mainAxisAlignment: fw.MainAxisAlignment.center,
                 children: [
-                  fw.Container(
-                    padding: const fw.EdgeInsets.all(24),
-                    decoration: fw.BoxDecoration(
-                      color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                      borderRadius: fw.BorderRadius.circular(100),
-                    ),
-                    child: fw.Icon(
-                      Icons.shopping_cart_outlined,
-                      size: 64,
-                      color: theme.colorScheme.mutedForeground,
-                    ),
-                  ),
+                  const AppHeroIcon(Icons.shopping_cart_rounded),
                   const fw.SizedBox(height: AppDesignTokens.sectionGap),
-                  const fw.Text(
-                    'Your Cart is Empty',
+                  fw.Text(
+                    'your_cart_is_empty'.tr(),
                     style: fw.TextStyle(
                       fontSize: 24,
                       fontWeight: AppDesignTokens.bold,
@@ -117,7 +44,7 @@ class CartScreen extends fw.StatelessWidget {
                   ),
                   const fw.SizedBox(height: AppDesignTokens.itemGap),
                   fw.Text(
-                    'Add items to your cart to see them here.\nStart shopping now!',
+                    'add_items_to_your_cart_to_see_them_her'.tr(),
                     textAlign: fw.TextAlign.center,
                     style: fw.TextStyle(
                       fontSize: 14,
@@ -132,20 +59,20 @@ class CartScreen extends fw.StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (ctx) => AlertDialog(
-                          title: const Text('Coming Soon'),
-                          content: const Text(
-                            'Shopping cart feature will be available soon.',
+                          title: Text('coming_soon'.tr()),
+                          content: Text(
+                            'shopping_cart_feature_will_be_availabl'.tr(),
                           ),
                           actions: [
                             PrimaryButton(
                               onPressed: () => fw.Navigator.pop(ctx),
-                              child: const Text('OK'),
+                              child: Text('ok'.tr()),
                             ),
                           ],
                         ),
                       );
                     },
-                    child: const Text('Start Shopping'),
+                    child: Text('start_shopping'.tr()),
                   ),
                 ],
               ),

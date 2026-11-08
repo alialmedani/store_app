@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -8,6 +8,8 @@ import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../../core/constant/enum/enum.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_model.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Create Category Screen - Form to create new category
 /// Uses CreateModel widget for state management
@@ -43,12 +45,12 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('خطأ'),
-            content: Text('فشل اختيار الصورة: $e'),
+            title: Text('error_2'.tr()),
+            content: Text('failed_to_select_image'.tr(args: ['${e}'])),
             actions: [
               PrimaryButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('حسناً'),
+                child: Text('ok'.tr()),
               ),
             ],
           ),
@@ -62,7 +64,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
 
     // Validate name
     if (_nameController.text.trim().isEmpty) {
-      cubit.setNameError('Category name is required');
+      cubit.setNameError('category_name_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearNameError();
@@ -84,8 +86,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
 
     return Scaffold(
       child: SafeArea(
-        child: Column(
-          children: [
+        child: ScrollAwayHeader(header: Column(children: [
             // App Bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -97,9 +98,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                     variance: ButtonVariance.ghost,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Create Category',
+                      'create_category'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -108,11 +109,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Card(
                   child: Padding(
@@ -126,8 +123,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Category Name',
+                                Text(
+                                  'category_name'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -136,8 +133,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _nameController,
-                                  placeholder: const Text(
-                                    'Enter category name',
+                                  placeholder: Text(
+                                    'enter_category_name'.tr(),
                                   ),
                                   onChanged: (value) {
                                     cubit.createCategoryParams.name = value;
@@ -149,8 +146,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.nameError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -162,8 +159,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                         const SizedBox(height: 16),
 
                         // Description Field
-                        const Text(
-                          'Description',
+                        Text(
+                          'description'.tr(),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -172,8 +169,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _descriptionController,
-                          placeholder: const Text(
-                            'Enter description (optional)',
+                          placeholder: Text(
+                            'enter_description_optional'.tr(),
                           ),
                           maxLines: 3,
                           onChanged: (value) {
@@ -188,8 +185,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'صورة التصنيف (اختياري)',
+                                Text(
+                                  'category_image_optional'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -200,7 +197,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                   Stack(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(AppDesignTokens.badgeRadius),
                                         child: Image.file(
                                           cubit.selectedImageFile!,
                                           height: 200,
@@ -238,7 +235,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                           ).colorScheme.primary,
                                         ),
                                         const SizedBox(width: 8),
-                                        const Text('اختر صورة'),
+                                        Text('select_image'.tr()),
                                       ],
                                     ),
                                   ),
@@ -254,8 +251,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Size Type',
+                                Text(
+                                  'size_type'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -267,37 +264,37 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                   runSpacing: 8,
                                   children: [
                                     _SizeTypeChip(
-                                      label: 'None',
+                                      label: 'none'.tr(),
                                       value: SizeType.none,
                                       selectedValue: cubit.selectedSizeType,
                                       onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
-                                      label: 'Clothing',
+                                      label: 'clothing'.tr(),
                                       value: SizeType.clothing,
                                       selectedValue: cubit.selectedSizeType,
                                       onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
-                                      label: 'Shoes',
+                                      label: 'shoes'.tr(),
                                       value: SizeType.shoes,
                                       selectedValue: cubit.selectedSizeType,
                                       onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
-                                      label: 'One Size',
+                                      label: 'one_size'.tr(),
                                       value: SizeType.oneSize,
                                       selectedValue: cubit.selectedSizeType,
                                       onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
-                                      label: 'Kids Age',
+                                      label: 'kids_age'.tr(),
                                       value: SizeType.kidsAge,
                                       selectedValue: cubit.selectedSizeType,
                                       onSelected: cubit.selectSizeType,
                                     ),
                                     _SizeTypeChip(
-                                      label: 'Custom',
+                                      label: 'custom'.tr(),
                                       value: SizeType.custom,
                                       selectedValue: cubit.selectedSizeType,
                                       onSelected: cubit.selectSizeType,
@@ -309,8 +306,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.sizeTypeError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -327,8 +324,8 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Active',
+                                Text(
+                                  'active'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -372,9 +369,9 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Success'),
-                                content: const Text(
-                                  'Category created successfully!',
+                                title: Text('success'.tr()),
+                                content: Text(
+                                  'category_created_successfully'.tr(),
                                 ),
                                 actions: [
                                   TextButton(
@@ -382,7 +379,7 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                                       Navigator.pop(ctx);
                                       Navigator.pop(context); // Go back to list
                                     },
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                   ),
                                 ],
                               ),
@@ -392,31 +389,28 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Error'),
+                                title: Text('error_2'.tr()),
                                 content: Text(
-                                  'Failed to create category: $error',
+                                  'failed_to_create_category'.tr(args: ['${error}']),
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx),
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                   ),
                                 ],
                               ),
                             );
                           },
                           child: PrimaryButton(
-                            child: const Text('Create Category'),
+                            child: Text('create_category'.tr()),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
@@ -455,7 +449,7 @@ class _SizeTypeChip extends StatelessWidget {
                 : theme.colorScheme.border,
             width: isSelected ? 2 : 1,
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppDesignTokens.badgeRadius),
         ),
         child: Text(
           label,

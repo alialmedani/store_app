@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../cubit/auth_cubit.dart';
 import '../data/model/register_model.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Register Screen using shadcn_flutter components with clean architecture
 /// Follows the CreateModel pattern from API_INTEGRATION_GUID.md
@@ -40,10 +42,10 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
     setState(() {
       // Validate username
       if (_usernameController.text.isEmpty) {
-        _usernameError = 'Please enter a username';
+        _usernameError = 'please_enter_a_username'.tr();
         isValid = false;
       } else if (_usernameController.text.length < 3) {
-        _usernameError = 'Username must be at least 3 characters';
+        _usernameError = 'username_must_be_at_least_3_characters'.tr();
         isValid = false;
       } else {
         _usernameError = null;
@@ -52,10 +54,10 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
       // Validate email
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (_emailController.text.isEmpty) {
-        _emailError = 'Please enter your email';
+        _emailError = 'please_enter_your_email'.tr();
         isValid = false;
       } else if (!emailRegex.hasMatch(_emailController.text)) {
-        _emailError = 'Please enter a valid email address';
+        _emailError = 'please_enter_a_valid_email_address'.tr();
         isValid = false;
       } else {
         _emailError = null;
@@ -63,16 +65,16 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
 
       // Validate password
       if (_passwordController.text.isEmpty) {
-        _passwordError = 'Please enter a password';
+        _passwordError = 'please_enter_a_password'.tr();
         isValid = false;
       } else if (_passwordController.text.length < 6) {
-        _passwordError = 'Password must be at least 6 characters';
+        _passwordError = 'password_must_be_at_least_6_characters'.tr();
         isValid = false;
       } else if (!RegExp(
         r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]',
       ).hasMatch(_passwordController.text)) {
         _passwordError =
-            'Password must contain uppercase, lowercase, number and special character';
+            'password_must_contain_uppercase_lowerc'.tr();
         isValid = false;
       } else {
         _passwordError = null;
@@ -80,10 +82,10 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
 
       // Validate confirm password
       if (_confirmPasswordController.text.isEmpty) {
-        _confirmPasswordError = 'Please confirm your password';
+        _confirmPasswordError = 'please_confirm_your_password'.tr();
         isValid = false;
       } else if (_confirmPasswordController.text != _passwordController.text) {
-        _confirmPasswordError = 'Passwords do not match';
+        _confirmPasswordError = 'passwords_do_not_match'.tr();
         isValid = false;
       } else {
         _confirmPasswordError = null;
@@ -99,8 +101,7 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
 
     return Scaffold(
       child: SafeArea(
-        child: Column(
-          children: [
+        child: ScrollAwayHeader(header: Column(children: [
             // Custom AppBar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -113,22 +114,20 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                     variance: ButtonVariance.ghost,
                   ),
                   const SizedBox(width: 8),
-                  const Text(
-                    'Create Account',
+                  Text(
+                    'create_account'.tr(),
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Header
-                    const Text(
-                      'Join Store Management',
+                    Text(
+                      'join_store_management'.tr(),
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -136,10 +135,10 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Create your account to get started',
-                      style: const TextStyle(
+                      'create_your_account_to_get_started'.tr(),
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF9E9E9E),
+                        color: AppDesignTokens.mutedTextColor,
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -156,7 +155,7 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                               // Username Field
                               TextField(
                                 controller: _usernameController,
-                                placeholder: const Text('Choose a username'),
+                                placeholder: Text('choose_a_username'.tr()),
                                 onChanged: (value) {
                                   context
                                           .read<AuthCubit>()
@@ -175,8 +174,8 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
                                     _usernameError!,
-                                    style: const TextStyle(
-                                      color: Color(0xFFEF4444),
+                                    style: TextStyle(
+                                      color: AppDesignTokens.dangerColor,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -186,7 +185,7 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                               // Email Field
                               TextField(
                                 controller: _emailController,
-                                placeholder: const Text('Enter your email'),
+                                placeholder: Text('enter_your_email'.tr()),
                                 onChanged: (value) {
                                   context
                                           .read<AuthCubit>()
@@ -205,8 +204,8 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
                                     _emailError!,
-                                    style: const TextStyle(
-                                      color: Color(0xFFEF4444),
+                                    style: TextStyle(
+                                      color: AppDesignTokens.dangerColor,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -217,8 +216,8 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                               TextField(
                                 controller: _passwordController,
                                 obscureText: _obscurePassword,
-                                placeholder: const Text(
-                                  'Create a strong password',
+                                placeholder: Text(
+                                  'create_a_strong_password'.tr(),
                                 ),
                                 onChanged: (value) {
                                   context
@@ -238,8 +237,8 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
                                     _passwordError!,
-                                    style: const TextStyle(
-                                      color: Color(0xFFEF4444),
+                                    style: TextStyle(
+                                      color: AppDesignTokens.dangerColor,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -259,7 +258,7 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                           Icon(Icons.info_outline, size: 16),
                                           SizedBox(width: 8),
                                           Text(
-                                            'Password Requirements',
+                                            'password_requirements'.tr(),
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -268,17 +267,17 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                       ),
                                       const SizedBox(height: 8),
                                       _buildPasswordRequirement(
-                                        'At least 6 characters',
+                                        'at_least_6_characters'.tr(),
                                       ),
                                       _buildPasswordRequirement(
-                                        'One uppercase letter',
+                                        'one_uppercase_letter'.tr(),
                                       ),
                                       _buildPasswordRequirement(
-                                        'One lowercase letter',
+                                        'one_lowercase_letter'.tr(),
                                       ),
-                                      _buildPasswordRequirement('One number'),
+                                      _buildPasswordRequirement('one_number'.tr()),
                                       _buildPasswordRequirement(
-                                        'One special character',
+                                        'one_special_character'.tr(),
                                       ),
                                     ],
                                   ),
@@ -290,8 +289,8 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                               TextField(
                                 controller: _confirmPasswordController,
                                 obscureText: _obscurePassword,
-                                placeholder: const Text(
-                                  'Re-enter your password',
+                                placeholder: Text(
+                                  're_enter_your_password'.tr(),
                                 ),
                                 onChanged: (value) {
                                   if (_confirmPasswordError != null) {
@@ -306,8 +305,8 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
                                     _confirmPasswordError!,
-                                    style: const TextStyle(
-                                      color: Color(0xFFEF4444),
+                                    style: TextStyle(
+                                      color: AppDesignTokens.dangerColor,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -328,9 +327,9 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                   showDialog(
                                     context: context,
                                     builder: (ctx) => AlertDialog(
-                                      title: const Text('Success'),
-                                      content: const Text(
-                                        'Registration successful! Please sign in.',
+                                      title: Text('success'.tr()),
+                                      content: Text(
+                                        'registration_successful_please_sign_in'.tr(),
                                       ),
                                       actions: [
                                         TextButton(
@@ -338,7 +337,7 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                             Navigator.pop(ctx);
                                             Navigator.pop(context);
                                           },
-                                          child: const Text('OK'),
+                                          child: Text('ok'.tr()),
                                         ),
                                       ],
                                     ),
@@ -349,19 +348,19 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                                   showDialog(
                                     context: context,
                                     builder: (ctx) => AlertDialog(
-                                      title: const Text('Registration Failed'),
-                                      content: Text('Error: $error'),
+                                      title: Text('registration_failed'.tr()),
+                                      content: Text('error'.tr(args: ['${error}'])),
                                       actions: [
                                         TextButton(
                                           onPressed: () => Navigator.pop(ctx),
-                                          child: const Text('OK'),
+                                          child: Text('ok'.tr()),
                                         ),
                                       ],
                                     ),
                                   );
                                 },
                                 child: PrimaryButton(
-                                  child: const Text('Create Account'),
+                                  child: Text('create_account'.tr()),
                                 ),
                               ),
                             ],
@@ -376,10 +375,10 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Already have an account? ',
-                          style: const TextStyle(
+                          'already_have_an_account'.tr(),
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF9E9E9E),
+                            color: AppDesignTokens.mutedTextColor,
                           ),
                         ),
                         GestureDetector(
@@ -387,7 +386,7 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                             Navigator.pop(context);
                           },
                           child: Text(
-                            'Sign In',
+                            'sign_in'.tr(),
                             style: TextStyle(
                               fontSize: 14,
                               color: theme.colorScheme.primary,
@@ -399,10 +398,7 @@ class _RegisterScreenShadcnState extends State<RegisterScreenShadcn> {
                     ),
                   ],
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }

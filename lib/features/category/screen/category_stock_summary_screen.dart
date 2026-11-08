@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../cubit/category_cubit.dart';
 import '../data/model/category_stock_summary_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Category Stock Summary Screen - Shows category stock overview with pagination
 /// Displays product/variant counts and stock status per category
@@ -16,16 +17,24 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'Category Stock Summary',
+              title: 'category_stock_summary'.tr(),
               onBack: () => fw.Navigator.pop(context),
-            ),
-            fw.Expanded(
-              child: PaginationList<CategoryStockSummaryModel>(
+            )]), body: PaginationList<CategoryStockSummaryModel>(
                 withPagination: true,
                 withRefresh: true,
+                loadingWidget: fw.ListView.builder(
+                  physics: const fw.NeverScrollableScrollPhysics(),
+                  padding: const fw.EdgeInsets.all(
+                    AppDesignTokens.screenPaddingHorizontal,
+                  ),
+                  itemCount: 3,
+                  itemBuilder: (context, i) => const fw.Padding(
+                    padding: fw.EdgeInsets.only(bottom: 16),
+                    child: _StockSummarySkeleton(),
+                  ),
+                ),
                 repositoryCallBack: (data) {
                   return context
                       .read<CategoryCubit>()
@@ -49,10 +58,7 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
@@ -95,18 +101,18 @@ class _StockSummaryCard extends fw.StatelessWidget {
                 ),
                 decoration: fw.BoxDecoration(
                   color: (summary.isActive ?? false)
-                      ? const fw.Color(0xFF10B981).withValues(alpha: 0.12)
-                      : const fw.Color(0xFFEF4444).withValues(alpha: 0.12),
-                  borderRadius: fw.BorderRadius.circular(8),
+                      ? AppDesignTokens.successColor.withValues(alpha: 0.12)
+                      : AppDesignTokens.dangerColor.withValues(alpha: 0.12),
+                  borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                 ),
                 child: Text(
-                  (summary.isActive ?? false) ? 'Active' : 'Inactive',
+                  (summary.isActive ?? false) ? 'active'.tr() : 'inactive'.tr(),
                   style: fw.TextStyle(
                     fontSize: 12,
                     fontWeight: fw.FontWeight.w600,
                     color: (summary.isActive ?? false)
-                        ? const fw.Color(0xFF10B981)
-                        : const fw.Color(0xFFEF4444),
+                        ? AppDesignTokens.successColor
+                        : AppDesignTokens.dangerColor,
                   ),
                 ),
               ),
@@ -124,7 +130,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
               ),
               decoration: fw.BoxDecoration(
                 color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                borderRadius: fw.BorderRadius.circular(10),
+                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                 border: fw.Border.all(
                   color: theme.colorScheme.primary.withValues(alpha: 0.3),
                   width: 1,
@@ -158,7 +164,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
             padding: const fw.EdgeInsets.all(16),
             decoration: fw.BoxDecoration(
               color: theme.colorScheme.muted.withValues(alpha: 0.2),
-              borderRadius: fw.BorderRadius.circular(12),
+              borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
               border: fw.Border.all(
                 color: theme.colorScheme.border.withValues(alpha: 0.3),
                 width: 1,
@@ -172,16 +178,16 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.inventory_2_rounded,
-                        label: 'Products',
+                        label: 'products'.tr(),
                         value: '${summary.productCount ?? 0}',
-                        color: const fw.Color(0xFF10B981),
+                        color: AppDesignTokens.successColor,
                       ),
                     ),
                     const fw.SizedBox(width: 12),
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.check_circle_rounded,
-                        label: 'Active',
+                        label: 'active'.tr(),
                         value: '${summary.activeProducts ?? 0}',
                         color: theme.colorScheme.primary,
                       ),
@@ -190,9 +196,9 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.cancel_rounded,
-                        label: 'Inactive',
+                        label: 'inactive'.tr(),
                         value: '${summary.inactiveProducts ?? 0}',
-                        color: const fw.Color(0xFF6B7280),
+                        color: AppDesignTokens.mutedTextColor,
                       ),
                     ),
                   ],
@@ -204,16 +210,16 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.style_rounded,
-                        label: 'Variants',
+                        label: 'variants'.tr(),
                         value: '${summary.variantCount ?? 0}',
-                        color: const fw.Color(0xFF06B6D4),
+                        color: AppDesignTokens.infoColor,
                       ),
                     ),
                     const fw.SizedBox(width: 12),
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.check_circle_rounded,
-                        label: 'Active',
+                        label: 'active'.tr(),
                         value: '${summary.activeVariants ?? 0}',
                         color: theme.colorScheme.primary,
                       ),
@@ -222,9 +228,9 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.cancel_rounded,
-                        label: 'Inactive',
+                        label: 'inactive'.tr(),
                         value: '${summary.inactiveVariants ?? 0}',
-                        color: const fw.Color(0xFF6B7280),
+                        color: AppDesignTokens.mutedTextColor,
                       ),
                     ),
                   ],
@@ -247,7 +253,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                   theme.colorScheme.primary.withValues(alpha: 0.02),
                 ],
               ),
-              borderRadius: fw.BorderRadius.circular(12),
+              borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
               border: fw.Border.all(
                 color: theme.colorScheme.primary.withValues(alpha: 0.15),
                 width: 1,
@@ -265,7 +271,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     ),
                     const fw.SizedBox(width: 6),
                     Text(
-                      'Stock Overview',
+                      'stock_overview'.tr(),
                       style: fw.TextStyle(
                         fontSize: 13,
                         fontWeight: fw.FontWeight.w700,
@@ -281,30 +287,30 @@ class _StockSummaryCard extends fw.StatelessWidget {
                   children: [
                     fw.Expanded(
                       child: _StockStatusItem(
-                        label: 'In Stock',
+                        label: 'in_stock'.tr(),
                         products: summary.inStockProducts ?? 0,
                         variants: summary.inStockVariants ?? 0,
-                        color: const fw.Color(0xFF10B981),
+                        color: AppDesignTokens.successColor,
                         icon: Icons.check_circle,
                       ),
                     ),
                     const fw.SizedBox(width: 12),
                     fw.Expanded(
                       child: _StockStatusItem(
-                        label: 'Low Stock',
+                        label: 'low_stock'.tr(),
                         products: summary.lowStockProducts ?? 0,
                         variants: summary.lowStockVariants ?? 0,
-                        color: const fw.Color(0xFFF59E0B),
+                        color: AppDesignTokens.warningColor,
                         icon: Icons.warning,
                       ),
                     ),
                     const fw.SizedBox(width: 12),
                     fw.Expanded(
                       child: _StockStatusItem(
-                        label: 'Out of Stock',
+                        label: 'out_of_stock'.tr(),
                         products: summary.outOfStockProducts ?? 0,
                         variants: summary.outOfStockVariants ?? 0,
-                        color: const fw.Color(0xFFEF4444),
+                        color: AppDesignTokens.dangerColor,
                         icon: Icons.error,
                       ),
                     ),
@@ -326,13 +332,13 @@ class _StockSummaryCard extends fw.StatelessWidget {
                       padding: const fw.EdgeInsets.all(12),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.2),
-                        borderRadius: fw.BorderRadius.circular(10),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                       ),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Total Stock',
+                            'total_stock'.tr(),
                             style: fw.TextStyle(
                               fontSize: 11,
                               fontWeight: fw.FontWeight.w600,
@@ -361,13 +367,13 @@ class _StockSummaryCard extends fw.StatelessWidget {
                       padding: const fw.EdgeInsets.all(12),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.2),
-                        borderRadius: fw.BorderRadius.circular(10),
+                        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                       ),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Low Threshold',
+                            'low_threshold'.tr(),
                             style: fw.TextStyle(
                               fontSize: 11,
                               fontWeight: fw.FontWeight.w600,
@@ -465,7 +471,7 @@ class _StockStatusItem extends fw.StatelessWidget {
       padding: const fw.EdgeInsets.all(10),
       decoration: fw.BoxDecoration(
         color: color.withValues(alpha: 0.08),
-        borderRadius: fw.BorderRadius.circular(10),
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
         border: fw.Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: fw.Column(
@@ -483,7 +489,7 @@ class _StockStatusItem extends fw.StatelessWidget {
           ),
           const fw.SizedBox(height: 4),
           Text(
-            'P: $products',
+            'p'.tr(args: ['${products}']),
             style: fw.TextStyle(
               fontSize: 11,
               fontWeight: fw.FontWeight.w700,
@@ -491,13 +497,53 @@ class _StockStatusItem extends fw.StatelessWidget {
             ),
           ),
           Text(
-            'V: $variants',
+            'v'.tr(args: ['${variants}']),
             style: fw.TextStyle(
               fontSize: 11,
               fontWeight: fw.FontWeight.w700,
               color: color,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Skeleton with the same structure as [_StockSummaryCard]
+class _StockSummarySkeleton extends fw.StatelessWidget {
+  const _StockSummarySkeleton();
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    fw.Widget statRow() => fw.Row(
+      children: const [
+        fw.Expanded(child: AppSkeletonBox(width: double.infinity, height: 44, borderRadius: 12)),
+        fw.SizedBox(width: 12),
+        fw.Expanded(child: AppSkeletonBox(width: double.infinity, height: 44, borderRadius: 12)),
+        fw.SizedBox(width: 12),
+        fw.Expanded(child: AppSkeletonBox(width: double.infinity, height: 44, borderRadius: 12)),
+      ],
+    );
+    return AppCard(
+      child: fw.Column(
+        crossAxisAlignment: fw.CrossAxisAlignment.start,
+        children: [
+          fw.Row(
+            mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+            children: const [
+              AppSkeletonBox(width: 150, height: 20, borderRadius: 8),
+              AppSkeletonBox(width: 60, height: 24, borderRadius: 8),
+            ],
+          ),
+          const fw.SizedBox(height: 16),
+          const AppSkeletonBox(width: 110, height: 28, borderRadius: 10),
+          const fw.SizedBox(height: 16),
+          statRow(),
+          const fw.SizedBox(height: 12),
+          statRow(),
+          const fw.SizedBox(height: 16),
+          const AppSkeletonBox(width: double.infinity, height: 70, borderRadius: 12),
         ],
       ),
     );

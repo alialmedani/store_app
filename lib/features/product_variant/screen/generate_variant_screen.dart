@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
@@ -10,11 +10,15 @@ import '../../product/data/model/product_model.dart';
 import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
 import '../data/usecase/generate_product_variant_usecase.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:store/core/constant/enum/enum.dart';
 
 /// Generate Variant Screen
 /// Automatically generate all color-size combinations (Cartesian Product)
 class GenerateVariantScreen extends StatefulWidget {
-  const GenerateVariantScreen({super.key});
+  final ProductModel? initialProduct;
+  const GenerateVariantScreen({super.key, this.initialProduct});
 
   @override
   State<GenerateVariantScreen> createState() => _GenerateVariantScreenState();
@@ -31,6 +35,46 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
   bool skipExisting = false;
   bool isActive = true;
   CreateModelCubit? createModelCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedProduct = widget.initialProduct;
+    if (selectedProduct != null) _loadSizeType(selectedProduct!);
+  }
+
+  SizeType? _sizeType;
+  bool _sizeLoading = false;
+
+  /// Size-related inputs stay hidden until a product is chosen and its
+  /// category type is known.
+  bool get _sizeKnown => selectedProduct != null && !_sizeLoading;
+
+  bool get _needsSize =>
+      _sizeKnown &&
+      _sizeType != SizeType.none &&
+      _sizeType != SizeType.oneSize;
+
+  void _loadSizeType(ProductModel p) {
+    _sizeType = p.category?.sizeType;
+    _sizeLoading = _sizeType == null;
+    if (_sizeLoading) {
+      ProductVariantCubit.resolveSizeType(p).then((t) {
+        if (mounted && selectedProduct?.id == p.id) {
+          setState(() {
+            _sizeType = t;
+            _sizeLoading = false;
+          });
+        }
+      });
+    }
+  }
+
+  int get _sizeCount => _needsSize ? sizes.length : 1;
+
+  String _countLabel() => _needsSize
+      ? 'colors_sizes'.tr(args: ['${colors.length}', '${sizes.length}'])
+      : 'colors_only'.tr(args: ['${colors.length}']);
 
   void _addColor() {
     final color = _colorController.text.trim();
@@ -68,13 +112,14 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Select Product'),
+        title: Text('select_product'.tr()),
         content: fw.SizedBox(
           width: double.maxFinite,
           height: 400,
           child: PaginationList<ProductModel>(
             withPagination: true,
             withRefresh: true,
+            loadingWidget: SelectorListSkeleton(withSubtitle: false),
             repositoryCallBack: (data) {
               return context.read<ProductCubit>().fetchProductList(data);
             },
@@ -83,30 +128,15 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                 itemCount: list.length,
                 itemBuilder: (context, index) {
                   final product = list[index];
-                  return fw.GestureDetector(
+                  return SelectorTile(
+                    title: product.name ?? 'N/A',
                     onTap: () {
                       setState(() {
                         selectedProduct = product;
+                        _loadSizeType(product);
                       });
                       fw.Navigator.of(dialogContext).pop();
                     },
-                    child: fw.Container(
-                      margin: const fw.EdgeInsets.only(bottom: 8),
-                      padding: const fw.EdgeInsets.all(12),
-                      decoration: fw.BoxDecoration(
-                        color: Theme.of(context).colorScheme.muted,
-                        borderRadius: fw.BorderRadius.circular(8),
-                        border: fw.Border.all(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.border.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Text(
-                        product.name ?? 'N/A',
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ),
                   );
                 },
               );
@@ -116,7 +146,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
         actions: [
           SecondaryButton(
             onPressed: () => fw.Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr()),
           ),
         ],
       ),
@@ -125,23 +155,23 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
 
   bool _validateForm() {
     if (selectedProduct == null) {
-      _showErrorDialog('Please select a product');
+      _showErrorDialog('please_select_a_product'.tr());
       return false;
     }
 
     if (colors.isEmpty) {
-      _showErrorDialog('Please add at least one color');
+      _showErrorDialog('please_add_at_least_one_color'.tr());
       return false;
     }
 
-    if (sizes.isEmpty) {
-      _showErrorDialog('Please add at least one size');
+    if (_needsSize && sizes.isEmpty) {
+      _showErrorDialog('please_add_at_least_one_size'.tr());
       return false;
     }
 
     final stock = int.tryParse(_defaultStockController.text.trim());
     if (stock == null || stock < 0) {
-      _showErrorDialog('Please enter a valid default stock quantity');
+      _showErrorDialog('please_enter_a_valid_default_stock_qua'.tr());
       return false;
     }
 
@@ -152,11 +182,11 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Validation Error'),
+        title: Text('validation_error'.tr()),
         content: Text(message),
         actions: [
           PrimaryButton(
-            child: const Text('OK'),
+            child: Text('ok'.tr()),
             onPressed: () => fw.Navigator.of(ctx).pop(),
           ),
         ],
@@ -165,23 +195,23 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
   }
 
   void _showGeneratePreview() {
-    final totalVariants = colors.length * sizes.length;
+    final totalVariants = colors.length * _sizeCount;
 
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Generate Preview'),
+        title: Text('generate_preview'.tr()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'This will generate $totalVariants variants:',
+              'this_will_generate_variants'.tr(args: ['${totalVariants}']),
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             Text(
-              '${colors.length} colors × ${sizes.length} sizes',
+              _countLabel(),
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).colorScheme.mutedForeground,
@@ -189,7 +219,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Each variant: ${_defaultStockController.text.trim()} stock',
+              'each_variant_stock'.tr(args: ['${_defaultStockController.text.trim()}']),
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).colorScheme.mutedForeground,
@@ -202,13 +232,13 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                 color: Theme.of(
                   context,
                 ).colorScheme.muted.withValues(alpha: 0.5),
-                borderRadius: fw.BorderRadius.circular(8),
+                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Example combinations:',
+                    'example_combinations'.tr(),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -220,7 +250,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        '• $color - ${sizes.first}${sizes.length > 1 ? ", $color - ${sizes[1]}" : ""}',
+                        _needsSize
+                            ? '• $color - ${sizes.first}${sizes.length > 1 ? ", $color - ${sizes[1]}" : ""}'
+                            : '• $color',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.mutedForeground,
@@ -232,7 +264,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        '• And ${totalVariants - 2} more...',
+                        'and_more'.tr(args: ['${totalVariants - 2}']),
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.mutedForeground,
@@ -247,7 +279,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
         actions: [
           OutlineButton(
             onPressed: () => fw.Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr()),
           ),
         ],
       ),
@@ -265,12 +297,11 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final totalVariants = colors.length * sizes.length;
+    final totalVariants = colors.length * _sizeCount;
 
     return Scaffold(
       child: SafeArea(
-        child: Column(
-          children: [
+        child: ScrollAwayHeader(header: Column(children: [
             // App Bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -282,9 +313,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     variance: ButtonVariance.ghost,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Generate Variants',
+                      'generate_variants'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -293,11 +324,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -312,20 +339,20 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                               padding: const fw.EdgeInsets.all(10),
                               decoration: fw.BoxDecoration(
                                 color: const Color(
-                                  0xFF8B5CF6,
+                                  0xFF8E7CFF,
                                 ).withValues(alpha: 0.1),
-                                borderRadius: fw.BorderRadius.circular(8),
+                                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.auto_awesome,
-                                color: Color(0xFF8B5CF6),
+                                color: AppDesignTokens.accentSecondaryColor,
                                 size: 20,
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'Auto-generate all combinations with same stock quantity',
+                                'auto_generate_all_combinations_with_sa'.tr(),
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: theme.colorScheme.mutedForeground,
@@ -345,53 +372,11 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                const Expanded(
-                                  child: Text(
-                                    'Product',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                                fw.GestureDetector(
-                                  onTap: () => _showProductSelector(context),
-                                  child: Text(
-                                    selectedProduct == null
-                                        ? 'Select'
-                                        : 'Change',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            fw.Container(
-                              padding: const fw.EdgeInsets.all(16),
-                              decoration: fw.BoxDecoration(
-                                color: theme.colorScheme.muted.withValues(
-                                  alpha: 0.5,
-                                ),
-                                borderRadius: fw.BorderRadius.circular(8),
-                                border: fw.Border.all(
-                                  color: theme.colorScheme.border,
-                                ),
-                              ),
-                              child: Text(
-                                selectedProduct?.name ?? 'No product selected',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: selectedProduct == null
-                                      ? theme.colorScheme.mutedForeground
-                                      : null,
-                                ),
-                              ),
+                            AppSelectorField(
+                              label: 'product'.tr(),
+                              value: selectedProduct?.name,
+                              placeholder: 'no_product_selected'.tr(),
+                              onTap: () => _showProductSelector(context),
                             ),
                           ],
                         ),
@@ -406,8 +391,8 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Colors',
+                            Text(
+                              'colors'.tr(),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -419,7 +404,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                 Expanded(
                                   child: TextField(
                                     controller: _colorController,
-                                    placeholder: const Text('Enter color'),
+                                    placeholder: Text('enter_color'.tr()),
                                     onSubmitted: (_) => _addColor(),
                                   ),
                                 ),
@@ -485,15 +470,15 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Sizes Card
+                    if (_needsSize) ...[
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Sizes',
+                            Text(
+                              'sizes'.tr(),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -505,7 +490,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                 Expanded(
                                   child: TextField(
                                     controller: _sizeController,
-                                    placeholder: const Text('Enter size'),
+                                    placeholder: Text('enter_size'.tr()),
                                     onSubmitted: (_) => _addSize(),
                                   ),
                                 ),
@@ -532,14 +517,14 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                       ),
                                       decoration: fw.BoxDecoration(
                                         color: const Color(
-                                          0xFF10B981,
+                                          0xFF4ADE9A,
                                         ).withValues(alpha: 0.1),
                                         borderRadius: fw.BorderRadius.circular(
                                           8,
                                         ),
                                         border: fw.Border.all(
                                           color: const Color(
-                                            0xFF10B981,
+                                            0xFF4ADE9A,
                                           ).withValues(alpha: 0.3),
                                         ),
                                       ),
@@ -548,17 +533,17 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                         children: [
                                           Text(
                                             size,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              color: Color(0xFF10B981),
+                                              color: AppDesignTokens.successColor,
                                             ),
                                           ),
                                           const SizedBox(width: 6),
-                                          const Icon(
+                                          Icon(
                                             Icons.close,
                                             size: 14,
-                                            color: Color(0xFF10B981),
+                                            color: AppDesignTokens.successColor,
                                           ),
                                         ],
                                       ),
@@ -572,6 +557,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
+                    ],
 
                     // Settings Card
                     Card(
@@ -580,8 +566,8 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Default Stock Quantity',
+                            Text(
+                              'default_stock_quantity'.tr(),
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -590,17 +576,17 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                             const SizedBox(height: 8),
                             TextField(
                               controller: _defaultStockController,
-                              placeholder: const Text(
-                                'Enter default stock quantity',
+                              placeholder: Text(
+                                'enter_default_stock_quantity'.tr(),
                               ),
                               keyboardType: TextInputType.number,
                             ),
                             const SizedBox(height: 16),
                             Row(
                               children: [
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    'Skip Existing Variants',
+                                    'skip_existing_variants'.tr(),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -620,9 +606,9 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                             const SizedBox(height: 12),
                             Row(
                               children: [
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    'Set as Active',
+                                    'set_as_active'.tr(),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -656,8 +642,8 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Total Variants',
+                                    Text(
+                                      'total_variants'.tr(),
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
@@ -665,16 +651,16 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '$totalVariants variants',
+                                      'variants_2'.tr(args: ['${totalVariants}']),
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF8B5CF6),
+                                        color: AppDesignTokens.accentSecondaryColor,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '${colors.length} colors × ${sizes.length} sizes',
+                                      _countLabel(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
@@ -705,7 +691,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         final params = GenerateProductVariantParams(
                           productId: selectedProduct!.id!,
                           colors: colors,
-                          sizes: sizes,
+                          sizes: _needsSize ? sizes : [''],
                           defaultStockQuantity: int.parse(
                             _defaultStockController.text.trim(),
                           ),
@@ -721,13 +707,13 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         showDialog(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Success'),
+                            title: Text('success'.tr()),
                             content: Text(
-                              '${variants.length} variants generated successfully.',
+                              'variants_generated_successfully'.tr(args: ['${variants.length}']),
                             ),
                             actions: [
                               PrimaryButton(
-                                child: const Text('OK'),
+                                child: Text('ok'.tr()),
                                 onPressed: () {
                                   fw.Navigator.of(ctx).pop();
                                   fw.Navigator.of(context).pop();
@@ -741,11 +727,11 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                         showDialog(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Error'),
+                            title: Text('error_2'.tr()),
                             content: Text(error),
                             actions: [
                               PrimaryButton(
-                                child: const Text('OK'),
+                                child: Text('ok'.tr()),
                                 onPressed: () => fw.Navigator.of(ctx).pop(),
                               ),
                             ],
@@ -755,11 +741,11 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                       child: PrimaryButton(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(Icons.auto_awesome, size: 18),
                             SizedBox(width: 8),
                             Text(
-                              'Generate All Variants',
+                              'generate_all_variants'.tr(),
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -771,10 +757,7 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                     ),
                   ],
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }

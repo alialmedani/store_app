@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
+import '../../../../core/boilerplate/pagination/cubits/pagination_cubit.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
@@ -10,24 +11,36 @@ import '../data/model/category_model.dart';
 import 'category_details_screen.dart';
 import 'create_category_screen.dart';
 import 'edit_category_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Category List Screen - Shows all categories with pagination
 /// Uses PaginationList widget from boilerplate
-class CategoryListScreen extends StatelessWidget {
+class CategoryListScreen extends fw.StatefulWidget {
   const CategoryListScreen({super.key});
+
+  @override
+  fw.State<CategoryListScreen> createState() => _CategoryListScreenState();
+}
+
+class _CategoryListScreenState extends fw.State<CategoryListScreen> {
+  PaginationCubit? _listCubit;
+
+  /// Reload the first page (after returning from details / edit / create)
+  void _reloadList() {
+    _listCubit?.getList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'Categories',
+              title: 'categories'.tr(),
               onBack: () => fw.Navigator.pop(context),
               action: fw.GestureDetector(
-                onTap: () {
-                  fw.Navigator.push(
+                onTap: () async {
+                  await fw.Navigator.push(
                     context,
                     fw.PageRouteBuilder(
                       pageBuilder: (_, __, ___) => const CreateCategoryScreen(),
@@ -35,13 +48,14 @@ class CategoryListScreen extends StatelessWidget {
                       reverseTransitionDuration: Duration.zero,
                     ),
                   );
+                  _reloadList();
                 },
                 child: fw.Container(
                   width: AppDesignTokens.headerActionButtonSize,
                   height: AppDesignTokens.headerActionButtonSize,
                   decoration: fw.BoxDecoration(
                     color: AppDesignTokens.mutedSurfaceColor,
-                    borderRadius: fw.BorderRadius.circular(12),
+                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                   ),
                   child: fw.Center(
                     child: fw.Icon(
@@ -52,9 +66,8 @@ class CategoryListScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            fw.Expanded(
-              child: PaginationList<CategoryModel>(
+            )]), body: PaginationList<CategoryModel>(
+                onCubitCreated: (cubit) => _listCubit = cubit,
                 withPagination: true,
                 withRefresh: true,
                 loadingWidget: fw.ListView.builder(
@@ -110,8 +123,8 @@ class CategoryListScreen extends StatelessWidget {
                           ),
                           statusBadge: StatusBadge(
                             text: (category.isActive ?? false)
-                                ? 'Active'
-                                : 'Inactive',
+                                ? 'active'.tr()
+                                : 'inactive'.tr(),
                             type: (category.isActive ?? false)
                                 ? StatusBadgeType.active
                                 : StatusBadgeType.inactive,
@@ -120,13 +133,13 @@ class CategoryListScreen extends StatelessWidget {
                               ? [
                                   EntityMetaItem(
                                     icon: Icons.straighten,
-                                    text: 'Size Type: ${category.sizeTypeName}',
+                                    text: 'size_type_2'.tr(args: ['${category.sizeTypeName}']),
                                   ),
                                 ]
                               : null,
-                          onTap: () {
+                          onTap: () async {
                             if (category.id != null) {
-                              fw.Navigator.push(
+                              await fw.Navigator.push(
                                 context,
                                 fw.PageRouteBuilder(
                                   pageBuilder: (_, __, ___) =>
@@ -138,10 +151,11 @@ class CategoryListScreen extends StatelessWidget {
                                 ),
                               );
                             }
+                            _reloadList();
                           },
-                          onEdit: () {
+                          onEdit: () async {
                             if (category.id != null) {
-                              fw.Navigator.push(
+                              await fw.Navigator.push(
                                 context,
                                 fw.PageRouteBuilder(
                                   pageBuilder: (_, __, ___) => BlocProvider(
@@ -155,16 +169,14 @@ class CategoryListScreen extends StatelessWidget {
                                 ),
                               );
                             }
+                            _reloadList();
                           },
                         ),
                       );
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }

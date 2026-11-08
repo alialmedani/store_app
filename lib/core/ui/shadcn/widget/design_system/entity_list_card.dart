@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 import 'app_cards.dart';
+import 'app_motion.dart';
 import 'status_badge.dart';
 
 /// Reusable entity list card for categories/products/orders/variants
@@ -17,6 +18,9 @@ class EntityListCard extends fw.StatelessWidget {
   final fw.VoidCallback? onEdit;
   final fw.Widget? trailing;
 
+  /// Position in the list; drives the staggered entrance animation.
+  final int animationIndex;
+
   const EntityListCard({
     super.key,
     required this.title,
@@ -28,13 +32,16 @@ class EntityListCard extends fw.StatelessWidget {
     this.onTap,
     this.onEdit,
     this.trailing,
+    this.animationIndex = 0,
   });
 
   @override
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    return AppCard(
+    return FadeSlideIn(
+      index: animationIndex,
+      child: AppCard(
       onTap: onTap,
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
@@ -129,7 +136,7 @@ class EntityListCard extends fw.StatelessWidget {
                           ),
                         ),
                         child: fw.Icon(
-                          Icons.edit,
+                          Icons.edit_outlined,
                           size: 18,
                           color: theme.colorScheme.foreground,
                         ),
@@ -182,6 +189,7 @@ class EntityListCard extends fw.StatelessWidget {
             ),
           ],
         ],
+      ),
       ),
     );
   }

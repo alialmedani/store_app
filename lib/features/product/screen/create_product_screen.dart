@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:store/features/category/data/model/category_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -10,8 +10,10 @@ import '../../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../category/cubit/category_cubit.dart';
+import '../../product_variant/screen/variant_creation_options_screen.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Create Product Screen - Form to create new product
 /// Uses CreateModel widget for state management
@@ -50,12 +52,12 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('خطأ'),
-            content: Text('فشل اختيار الصورة: $e'),
+            title: Text('error_2'.tr()),
+            content: Text('failed_to_select_image'.tr(args: ['${e}'])),
             actions: [
               PrimaryButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('حسناً'),
+                child: Text('ok'.tr()),
               ),
             ],
           ),
@@ -70,7 +72,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
     // Validate name
     if (_nameController.text.trim().isEmpty) {
-      cubit.setNameError('Product name is required');
+      cubit.setNameError('product_name_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearNameError();
@@ -79,15 +81,15 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     // Validate price
     final priceText = _priceController.text.trim();
     if (priceText.isEmpty) {
-      cubit.setPriceError('Price is required');
+      cubit.setPriceError('price_is_required'.tr());
       isValid = false;
     } else {
       final price = double.tryParse(priceText);
       if (price == null) {
-        cubit.setPriceError('Please enter a valid number');
+        cubit.setPriceError('please_enter_a_valid_number'.tr());
         isValid = false;
       } else if (price <= 0) {
-        cubit.setPriceError('Price must be greater than 0');
+        cubit.setPriceError('price_must_be_greater_than_0'.tr());
         isValid = false;
       } else {
         cubit.clearPriceError();
@@ -96,7 +98,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
     // Validate category
     if (_categoryIdController.text.trim().isEmpty) {
-      cubit.setCategoryError('Category is required');
+      cubit.setCategoryError('category_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearCategoryError();
@@ -122,15 +124,12 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     return Scaffold(
       child: SafeArea(
         bottom: false, // Let StickyBottomAction handle bottom safe area
-        child: fw.Column(
-          children: [
+        child: fw.Column(children: [fw.Expanded(child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'Create Product',
+              title: 'create_product'.tr(),
               onBack: () => fw.Navigator.pop(context),
             ),
-            const fw.SizedBox(height: AppDesignTokens.smallGap),
-            fw.Expanded(
-              child: fw.SingleChildScrollView(
+            const fw.SizedBox(height: AppDesignTokens.smallGap)]), body: fw.SingleChildScrollView(
                 padding: const fw.EdgeInsets.fromLTRB(
                   AppDesignTokens.screenPaddingHorizontal,
                   0,
@@ -148,7 +147,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             crossAxisAlignment: fw.CrossAxisAlignment.start,
                             children: [
                               fw.Text(
-                                'Product Name',
+                                'product_name'.tr(),
                                 style: fw.TextStyle(
                                   fontSize: AppDesignTokens.bodyFontSize,
                                   fontWeight: AppDesignTokens.semiBold,
@@ -160,7 +159,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                               ),
                               TextField(
                                 controller: _nameController,
-                                placeholder: const Text('Enter product name'),
+                                placeholder: Text('enter_product_name'.tr()),
                                 onChanged: (value) {
                                   cubit.createProductParams.name = value;
                                   cubit.clearNameError();
@@ -187,17 +186,33 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
                       // Description Field
                       fw.Text(
-                        'Description',
+                        'description'.tr(),
                         style: fw.TextStyle(
                           fontSize: AppDesignTokens.bodyFontSize,
                           fontWeight: AppDesignTokens.semiBold,
                           color: AppDesignTokens.titleTextColor,
                         ),
                       ),
-                      const fw.SizedBox(height: AppDesignTokens.smallGap),
+                      fw.Padding(
+              padding: const fw.EdgeInsets.symmetric(
+                horizontal: AppDesignTokens.screenPaddingHorizontal,
+              ),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  'step_1_of_2'.tr(),
+                  style: fw.TextStyle(
+                    fontSize: 12,
+                    fontWeight: AppDesignTokens.bold,
+                    color: AppDesignTokens.primaryColor,
+                  ),
+                ),
+              ),
+            ),
+            const fw.SizedBox(height: AppDesignTokens.smallGap),
                       TextField(
                         controller: _descriptionController,
-                        placeholder: const Text('Enter description (optional)'),
+                        placeholder: Text('enter_description_optional'.tr()),
                         maxLines: 3,
                         onChanged: (value) {
                           cubit.createProductParams.description = value;
@@ -212,7 +227,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             crossAxisAlignment: fw.CrossAxisAlignment.start,
                             children: [
                               fw.Text(
-                                'Price',
+                                'price'.tr(),
                                 style: fw.TextStyle(
                                   fontSize: AppDesignTokens.bodyFontSize,
                                   fontWeight: AppDesignTokens.semiBold,
@@ -224,7 +239,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                               ),
                               TextField(
                                 controller: _priceController,
-                                placeholder: const Text('Enter price'),
+                                placeholder: Text('enter_price'.tr()),
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                       decimal: true,
@@ -260,15 +275,14 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       BlocBuilder<ProductCubit, ProductState>(
                         builder: (context, state) {
                           return AppSelectorField(
-                            label: 'Category',
+                            label: 'category'.tr(),
                             value: _categoryIdController.text.isNotEmpty
                                 ? _categoryIdController.text
                                 : null,
-                            placeholder: 'Select category',
+                            placeholder: 'select_category_2'.tr(),
                             onTap: () {
                               _showCategorySelector(context, cubit);
                             },
-                            actionText: 'Select',
                             errorText: cubit.categoryError,
                             showRequired: true,
                           );
@@ -283,7 +297,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             crossAxisAlignment: fw.CrossAxisAlignment.start,
                             children: [
                               fw.Text(
-                                'Product Image (Optional)',
+                                'product_image_optional'.tr(),
                                 style: fw.TextStyle(
                                   fontSize: AppDesignTokens.bodyFontSize,
                                   fontWeight: AppDesignTokens.semiBold,
@@ -346,7 +360,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                       const fw.SizedBox(
                                         width: AppDesignTokens.smallGap,
                                       ),
-                                      const Text('Choose Image'),
+                                      Text('choose_image'.tr()),
                                     ],
                                   ),
                                 ),
@@ -363,7 +377,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             crossAxisAlignment: fw.CrossAxisAlignment.start,
                             children: [
                               fw.Text(
-                                'Target Audience',
+                                'target_audience'.tr(),
                                 style: fw.TextStyle(
                                   fontSize: AppDesignTokens.bodyFontSize,
                                   fontWeight: AppDesignTokens.semiBold,
@@ -378,28 +392,28 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                 runSpacing: AppDesignTokens.smallGap,
                                 children: [
                                   _TargetAudienceChip(
-                                    label: 'All',
+                                    label: 'all'.tr(),
                                     value: 0,
                                     selectedValue: cubit.selectedTargetAudience,
                                     onSelected: (value) =>
                                         cubit.selectTargetAudience(value),
                                   ),
                                   _TargetAudienceChip(
-                                    label: 'Men',
+                                    label: 'men'.tr(),
                                     value: 1,
                                     selectedValue: cubit.selectedTargetAudience,
                                     onSelected: (value) =>
                                         cubit.selectTargetAudience(value),
                                   ),
                                   _TargetAudienceChip(
-                                    label: 'Women',
+                                    label: 'women'.tr(),
                                     value: 2,
                                     selectedValue: cubit.selectedTargetAudience,
                                     onSelected: (value) =>
                                         cubit.selectTargetAudience(value),
                                   ),
                                   _TargetAudienceChip(
-                                    label: 'Kids',
+                                    label: 'kids'.tr(),
                                     value: 3,
                                     selectedValue: cubit.selectedTargetAudience,
                                     onSelected: (value) =>
@@ -421,7 +435,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                 fw.MainAxisAlignment.spaceBetween,
                             children: [
                               fw.Text(
-                                'Active',
+                                'active'.tr(),
                                 style: fw.TextStyle(
                                   fontSize: AppDesignTokens.bodyFontSize,
                                   fontWeight: AppDesignTokens.semiBold,
@@ -441,8 +455,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                     ],
                   ),
                 ),
-              ),
-            ),
+              ))),
             StickyBottomAction(
               child: CreateModel<ProductModel>(
                 withValidation: true,
@@ -475,34 +488,29 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   _categoryIdController.clear();
                   cubit.clearImageFile();
 
-                  // Show success dialog
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Success'),
-                      content: const Text('Product created successfully!'),
-                      actions: [
-                        PrimaryButton(
-                          onPressed: () {
-                            fw.Navigator.pop(ctx);
-                            fw.Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
+                  // Step 2: add variants (optional, can be skipped)
+                  fw.Navigator.of(context)
+                      .push(
+                        MaterialPageRoute(
+                          builder: (_) => VariantCreationOptionsScreen(
+                            initialProduct: productModel,
+                          ),
                         ),
-                      ],
-                    ),
-                  );
+                      )
+                      .then((_) {
+                        if (mounted) fw.Navigator.pop(context);
+                      });
                 },
                 onError: (error) {
                   showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Error'),
-                      content: Text('Failed to create product: $error'),
+                      title: Text('error_2'.tr()),
+                      content: Text('failed_to_create_product'.tr(args: ['${error}'])),
                       actions: [
                         PrimaryButton(
                           onPressed: () => fw.Navigator.pop(ctx),
-                          child: const Text('OK'),
+                          child: Text('ok'.tr()),
                         ),
                       ],
                     ),
@@ -511,8 +519,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 child: fw.SizedBox(
                   width: double.infinity,
                   child: PrimaryButton(
-                    child: const Text(
-                      'Create Product',
+                    child: Text(
+                      'create_product'.tr(),
                       style: fw.TextStyle(
                         fontSize: 15,
                         fontWeight: AppDesignTokens.semiBold,
@@ -521,9 +529,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            )]),
       ),
     );
   }
@@ -531,40 +537,31 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   void _showCategorySelector(BuildContext context, ProductCubit cubit) {
     AppBottomSelector.show<CategoryModel>(
       context: context,
-      title: 'Select Category',
+      title: 'select_category'.tr(),
       content: BlocProvider(
         create: (context) => CategoryCubit(),
         child: PaginationList<CategoryModel>(
           withPagination: true,
           withRefresh: false,
-          loadingWidget: fw.ListView.builder(
-            padding: const fw.EdgeInsets.symmetric(
-              vertical: AppDesignTokens.smallGap,
-            ),
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              return const SelectorItemSkeleton(
-                withLeading: false,
-                withSubtitle: true,
-              );
-            },
+          loadingWidget: const SelectorListSkeleton(
+            withSubtitle: true,
+            padding: fw.EdgeInsets.all(AppDesignTokens.screenPaddingHorizontal),
           ),
           repositoryCallBack: (data) {
             return context.read<CategoryCubit>().fetchCategoryList(data);
           },
           listBuilder: (list) {
             return fw.ListView.builder(
+              padding: const fw.EdgeInsets.all(
+                AppDesignTokens.screenPaddingHorizontal,
+              ),
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final category = list[index];
-                final isSelected = category.id == cubit.selectedCategoryId;
-
-                return AppBottomSelector.buildStandardItem<CategoryModel>(
-                  context: context,
-                  item: category,
-                  titleBuilder: (cat) => cat.name ?? 'N/A',
-                  subtitleBuilder: (cat) => cat.description,
-                  isSelected: isSelected,
+                return SelectorTile(
+                  title: category.name ?? 'N/A',
+                  subtitle: category.description,
+                  isSelected: category.id == cubit.selectedCategoryId,
                   onTap: () {
                     if (category.id != null && category.name != null) {
                       cubit.selectCategory(category.id!);

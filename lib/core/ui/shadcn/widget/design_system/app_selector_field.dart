@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Reusable selector field that looks like an input but opens a picker/selector
@@ -9,7 +9,6 @@ class AppSelectorField extends fw.StatelessWidget {
   final String? value;
   final String placeholder;
   final fw.VoidCallback onTap;
-  final String? actionText;
   final String? errorText;
   final bool enabled;
   final bool showRequired;
@@ -20,7 +19,6 @@ class AppSelectorField extends fw.StatelessWidget {
     this.value,
     required this.placeholder,
     required this.onTap,
-    this.actionText,
     this.errorText,
     this.enabled = true,
     this.showRequired = false,
@@ -61,20 +59,6 @@ class AppSelectorField extends fw.StatelessWidget {
                 ],
               ),
             ),
-            if (actionText != null)
-              fw.GestureDetector(
-                onTap: enabled ? onTap : null,
-                child: fw.Text(
-                  actionText!,
-                  style: fw.TextStyle(
-                    fontSize: AppDesignTokens.bodyFontSize,
-                    fontWeight: AppDesignTokens.semiBold,
-                    color: enabled
-                        ? theme.colorScheme.primary
-                        : AppDesignTokens.mutedTextColor,
-                  ),
-                ),
-              ),
           ],
         ),
         const fw.SizedBox(height: AppDesignTokens.smallGap),
@@ -89,7 +73,7 @@ class AppSelectorField extends fw.StatelessWidget {
             ),
             decoration: fw.BoxDecoration(
               color: enabled
-                  ? theme.colorScheme.background
+                  ? AppDesignTokens.cardColor
                   : AppDesignTokens.mutedSurfaceColor,
               borderRadius: fw.BorderRadius.circular(
                 AppDesignTokens.inputRadius,
@@ -97,7 +81,7 @@ class AppSelectorField extends fw.StatelessWidget {
               border: fw.Border.all(
                 color: errorText != null
                     ? AppDesignTokens.dangerColor
-                    : theme.colorScheme.border,
+                    : AppDesignTokens.hairlineStrong,
                 width: 1,
               ),
             ),

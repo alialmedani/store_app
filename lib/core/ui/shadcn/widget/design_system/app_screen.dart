@@ -1,6 +1,19 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
+
+/// Height of the floating bottom dock, provided by the main navigation so
+/// tab screens can scroll their content underneath it and still end above it.
+class DockInset extends fw.InheritedWidget {
+  final double bottom;
+  const DockInset({super.key, required this.bottom, required super.child});
+
+  static double of(fw.BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<DockInset>()?.bottom ?? 0;
+
+  @override
+  bool updateShouldNotify(DockInset old) => old.bottom != bottom;
+}
 
 /// Consistent screen wrapper with SafeArea, background, and padding
 /// Handles scroll behavior and provides consistent spacing
@@ -36,13 +49,17 @@ class AppScreen extends fw.StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: backgroundColor ?? theme.colorScheme.background,
-      child: SafeArea(
-        child: withScroll
-            ? fw.SingleChildScrollView(
-                child: content,
-              )
-            : content,
+      backgroundColor: backgroundColor ?? theme.colorScheme.surface,
+      child: fw.Stack(
+        children: [
+          SafeArea(
+            child: withScroll
+                ? fw.SingleChildScrollView(
+                    child: content,
+                  )
+                : content,
+          ),
+        ],
       ),
     );
   }
@@ -62,13 +79,23 @@ class AppSliverScreen extends fw.StatelessWidget {
   @override
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
+    final dock = DockInset.of(context);
 
     return Scaffold(
-      backgroundColor: backgroundColor ?? theme.colorScheme.background,
-      child: SafeArea(
-        child: fw.CustomScrollView(
-          slivers: slivers,
-        ),
+      backgroundColor: backgroundColor ?? theme.colorScheme.surface,
+      child: fw.Stack(
+        children: [
+          SafeArea(
+            bottom: dock == 0,
+            child: fw.CustomScrollView(
+              slivers: [
+                ...slivers,
+                if (dock > 0)
+                  fw.SliverToBoxAdapter(child: fw.SizedBox(height: dock)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

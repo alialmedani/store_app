@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Update Product Variant Screen - Form to update existing product variant
 /// Uses CreateModel widget for state management
@@ -54,8 +56,7 @@ class _UpdateProductVariantScreenState
 
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             // App Bar
             Padding(
               padding: const fw.EdgeInsets.all(16),
@@ -67,9 +68,9 @@ class _UpdateProductVariantScreenState
                     variance: ButtonVariance.ghost,
                   ),
                   const fw.SizedBox(width: 8),
-                  const fw.Expanded(
+                  fw.Expanded(
                     child: Text(
-                      'Update Product Variant',
+                      'update_product_variant'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -78,11 +79,7 @@ class _UpdateProductVariantScreenState
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            fw.Expanded(
-              child: fw.SingleChildScrollView(
+            )]), body: fw.SingleChildScrollView(
                 padding: const fw.EdgeInsets.all(16),
                 child: Card(
                   child: Padding(
@@ -94,8 +91,8 @@ class _UpdateProductVariantScreenState
                         fw.Column(
                           crossAxisAlignment: fw.CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Product',
+                            Text(
+                              'product'.tr(),
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -109,7 +106,7 @@ class _UpdateProductVariantScreenState
                                 color: theme.colorScheme.muted.withValues(
                                   alpha: 0.3,
                                 ),
-                                borderRadius: fw.BorderRadius.circular(8),
+                                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
                                 border: Border.all(
                                   color: theme.colorScheme.border,
                                   width: 1,
@@ -135,8 +132,8 @@ class _UpdateProductVariantScreenState
                               children: [
                                 fw.Row(
                                   children: [
-                                    const Text(
-                                      'Color',
+                                    Text(
+                                      'color'.tr(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -144,7 +141,7 @@ class _UpdateProductVariantScreenState
                                     ),
                                     const fw.SizedBox(width: 8),
                                     Text(
-                                      '(Optional)',
+                                      'optional'.tr(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
@@ -156,8 +153,8 @@ class _UpdateProductVariantScreenState
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _colorController,
-                                  placeholder: const Text(
-                                    'Enter color (optional)',
+                                  placeholder: Text(
+                                    'enter_color_optional'.tr(),
                                   ),
                                   onChanged: (value) {
                                     cubit.updateProductVariantParams.color =
@@ -170,8 +167,8 @@ class _UpdateProductVariantScreenState
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.colorError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -190,8 +187,8 @@ class _UpdateProductVariantScreenState
                               children: [
                                 fw.Row(
                                   children: [
-                                    const Text(
-                                      'Size',
+                                    Text(
+                                      'size'.tr(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -199,7 +196,7 @@ class _UpdateProductVariantScreenState
                                     ),
                                     const fw.SizedBox(width: 8),
                                     Text(
-                                      '(Optional)',
+                                      'optional'.tr(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
@@ -211,8 +208,8 @@ class _UpdateProductVariantScreenState
                                 const fw.SizedBox(height: 8),
                                 TextField(
                                   controller: _sizeController,
-                                  placeholder: const Text(
-                                    'Enter size (optional)',
+                                  placeholder: Text(
+                                    'enter_size_optional'.tr(),
                                   ),
                                   onChanged: (value) {
                                     cubit.updateProductVariantParams.size =
@@ -225,8 +222,8 @@ class _UpdateProductVariantScreenState
                                     padding: const fw.EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.sizeError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -242,9 +239,9 @@ class _UpdateProductVariantScreenState
                           builder: (context, state) {
                             return fw.Row(
                               children: [
-                                const fw.Expanded(
+                                fw.Expanded(
                                   child: Text(
-                                    'Active',
+                                    'active'.tr(),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -279,13 +276,13 @@ class _UpdateProductVariantScreenState
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Success'),
-                                content: const Text(
-                                  'Product variant updated successfully.',
+                                title: Text('success'.tr()),
+                                content: Text(
+                                  'product_variant_updated_successfully'.tr(),
                                 ),
                                 actions: [
                                   PrimaryButton(
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                     onPressed: () {
                                       fw.Navigator.of(ctx).pop();
                                       fw.Navigator.of(context).pop(variant);
@@ -299,11 +296,11 @@ class _UpdateProductVariantScreenState
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Error'),
+                                title: Text('error_2'.tr()),
                                 content: Text(error),
                                 actions: [
                                   PrimaryButton(
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                     onPressed: () => fw.Navigator.of(ctx).pop(),
                                   ),
                                 ],
@@ -311,17 +308,14 @@ class _UpdateProductVariantScreenState
                             );
                           },
                           child: PrimaryButton(
-                            child: const Text('Update Product Variant'),
+                            child: Text('update_product_variant'.tr()),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }

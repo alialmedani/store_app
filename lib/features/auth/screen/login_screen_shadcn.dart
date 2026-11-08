@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../core/classes/cashe_helper.dart';
@@ -8,6 +8,7 @@ import '../../home/screen/main_navigation_screen.dart';
 import '../cubit/auth_cubit.dart';
 import '../data/model/login_model.dart';
 import 'register_screen_shadcn.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Luxury Login Screen using shadcn_flutter components with clean architecture
 /// Follows the CreateModel pattern from API_INTEGRATION_GUID.md
@@ -31,7 +32,7 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
     setState(() {
       // Validate username
       if (_usernameController.text.isEmpty) {
-        _usernameError = 'Please enter your username or email';
+        _usernameError = 'please_enter_your_username_or_email'.tr();
         isValid = false;
       } else {
         _usernameError = null;
@@ -39,10 +40,10 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
 
       // Validate password
       if (_passwordController.text.isEmpty) {
-        _passwordError = 'Please enter your password';
+        _passwordError = 'please_enter_your_password'.tr();
         isValid = false;
       } else if (_passwordController.text.length < 6) {
-        _passwordError = 'Password must be at least 6 characters';
+        _passwordError = 'password_must_be_at_least_6_characters'.tr();
         isValid = false;
       } else {
         _passwordError = null;
@@ -168,8 +169,8 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                     const fw.SizedBox(height: 40),
 
                     // Premium Header
-                    const Text(
-                      'Store Management',
+                    Text(
+                      'store_management'.tr(),
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: fw.FontWeight.w700,
@@ -178,7 +179,7 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                     ),
                     const fw.SizedBox(height: 12),
                     fw.Text(
-                      'Welcome back! Sign in to continue',
+                      'welcome_back_sign_in_to_continue'.tr(),
                       style: fw.TextStyle(
                         fontSize: 16,
                         color: theme.colorScheme.mutedForeground,
@@ -221,7 +222,7 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                     fw.CrossAxisAlignment.start,
                                 children: [
                                   fw.Text(
-                                    'Username or Email',
+                                    'username_or_email'.tr(),
                                     style: fw.TextStyle(
                                       fontSize: 14,
                                       fontWeight: fw.FontWeight.w600,
@@ -232,8 +233,8 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                   const fw.SizedBox(height: 10),
                                   TextField(
                                     controller: _usernameController,
-                                    placeholder: const Text(
-                                      'Enter your username or email',
+                                    placeholder: Text(
+                                      'enter_your_username_or_email'.tr(),
                                     ),
                                     onChanged: (value) {
                                       context
@@ -284,7 +285,7 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                         fw.MainAxisAlignment.spaceBetween,
                                     children: [
                                       fw.Text(
-                                        'Password',
+                                        'password'.tr(),
                                         style: fw.TextStyle(
                                           fontSize: 14,
                                           fontWeight: fw.FontWeight.w600,
@@ -297,7 +298,7 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                           // TODO: Implement forgot password
                                         },
                                         child: Text(
-                                          'Forgot Password?',
+                                          'forgot_password'.tr(),
                                           style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: fw.FontWeight.w600,
@@ -314,8 +315,8 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                       TextField(
                                         controller: _passwordController,
                                         obscureText: _obscurePassword,
-                                        placeholder: const Text(
-                                          'Enter your password',
+                                        placeholder: Text(
+                                          'enter_your_password'.tr(),
                                         ),
                                         onChanged: (value) {
                                           context
@@ -430,15 +431,15 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                       showDialog(
                                         context: context,
                                         builder: (ctx) => AlertDialog(
-                                          title: const Text('Error'),
-                                          content: const Text(
-                                            'Failed to load user data. Please try again.',
+                                          title: Text('error_2'.tr()),
+                                          content: Text(
+                                            'failed_to_load_user_data_please_try_ag'.tr(),
                                           ),
                                           actions: [
                                             PrimaryButton(
                                               onPressed: () =>
                                                   fw.Navigator.pop(ctx),
-                                              child: const Text('OK'),
+                                              child: Text('ok'.tr()),
                                             ),
                                           ],
                                         ),
@@ -461,15 +462,15 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                                   theme.colorScheme.destructive,
                                             ),
                                             const fw.SizedBox(width: 12),
-                                            const Text('Login Failed'),
+                                            Text('login_failed'.tr()),
                                           ],
                                         ),
-                                        content: Text('Error: $error'),
+                                        content: Text('error'.tr(args: ['${error}'])),
                                         actions: [
                                           PrimaryButton(
                                             onPressed: () =>
                                                 fw.Navigator.pop(ctx),
-                                            child: const Text('OK'),
+                                            child: Text('ok'.tr()),
                                           ),
                                         ],
                                       ),
@@ -497,8 +498,8 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                         mainAxisAlignment:
                                             fw.MainAxisAlignment.center,
                                         children: [
-                                          const Text(
-                                            'Sign In',
+                                          Text(
+                                            'sign_in'.tr(),
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: fw.FontWeight.w600,
@@ -545,7 +546,7 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                         mainAxisSize: fw.MainAxisSize.min,
                         children: [
                           fw.Text(
-                            "Don't have an account? ",
+                            'don_t_have_an_account'.tr(),
                             style: fw.TextStyle(
                               fontSize: 15,
                               color: theme.colorScheme.mutedForeground,
@@ -565,7 +566,7 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                               );
                             },
                             child: Text(
-                              'Sign Up',
+                              'sign_up'.tr(),
                               style: TextStyle(
                                 fontSize: 15,
                                 color: theme.colorScheme.primary,

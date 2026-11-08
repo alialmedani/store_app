@@ -1,34 +1,72 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 import 'package:flutter/widgets.dart' as fw;
 
+import '../../../../core/boilerplate/pagination/cubits/pagination_cubit.dart';
 import '../../../../core/boilerplate/pagination/widgets/pagination_list.dart';
 import '../../../../core/ui/shadcn/widget/design_system/design_system.dart';
 import '../../../../core/ui/widgets/authenticated_image.dart';
 import '../../../../core/utils/image_helper.dart';
+import '../../category/screen/category_details_screen.dart';
 import '../cubit/product_cubit.dart';
 import '../data/model/product_model.dart';
 import 'create_product_screen.dart';
 import 'product_details_screen.dart';
 import 'update_product_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Product List Screen - Shows all products with pagination
 /// Uses PaginationList widget from boilerplate
-class ProductListScreen extends StatelessWidget {
-  const ProductListScreen({super.key});
+class ProductListScreen extends fw.StatefulWidget {
+  /// When set, only the products of this category are listed
+  final String? categoryId;
+  final String? categoryName;
+
+  const ProductListScreen({super.key, this.categoryId, this.categoryName});
+
+  @override
+  fw.State<ProductListScreen> createState() => _ProductListScreenState();
+}
+
+class _ProductListScreenState extends fw.State<ProductListScreen> {
+  PaginationCubit? _listCubit;
+
+  /// Reload the first page (after returning from details / edit / create)
+  void _reloadList() {
+    _listCubit?.getList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       child: SafeArea(
-        child: fw.Column(
-          children: [
+        child: ScrollAwayHeader(header: fw.Column(children: [
             AppHeader(
-              title: 'Products',
+              title: widget.categoryName ?? 'products'.tr(),
               onBack: () => fw.Navigator.pop(context),
-              action: fw.GestureDetector(
-                onTap: () {
-                  fw.Navigator.push(
+              action: fw.Row(
+                mainAxisSize: fw.MainAxisSize.min,
+                children: [
+                  if (widget.categoryId != null) ...[
+                    IconButton(
+                      icon: const fw.Icon(Icons.info_outline_rounded, size: 20),
+                      onPressed: () => fw.Navigator.push(
+                        context,
+                        fw.PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => CategoryDetailsScreen(
+                            categoryId: widget.categoryId!,
+                          ),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      ),
+                      variance: ButtonVariance.ghost,
+                    ),
+                    const fw.SizedBox(width: 8),
+                  ],
+                  fw.GestureDetector(
+                onTap: () async {
+                  await fw.Navigator.push(
                     context,
                     fw.PageRouteBuilder(
                       pageBuilder: (_, __, ___) => const CreateProductScreen(),
@@ -36,13 +74,14 @@ class ProductListScreen extends StatelessWidget {
                       reverseTransitionDuration: Duration.zero,
                     ),
                   );
+                  _reloadList();
                 },
                 child: fw.Container(
                   width: AppDesignTokens.headerActionButtonSize,
                   height: AppDesignTokens.headerActionButtonSize,
                   decoration: fw.BoxDecoration(
                     color: AppDesignTokens.mutedSurfaceColor,
-                    borderRadius: fw.BorderRadius.circular(12),
+                    borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
                   ),
                   child: fw.Center(
                     child: fw.Icon(
@@ -53,9 +92,10 @@ class ProductListScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            fw.Expanded(
-              child: PaginationList<ProductModel>(
+                ],
+              ),
+            )]), body: PaginationList<ProductModel>(
+                onCubitCreated: (cubit) => _listCubit = cubit,
                 withPagination: true,
                 withRefresh: true,
                 loadingWidget: fw.ListView.builder(
@@ -76,7 +116,10 @@ class ProductListScreen extends StatelessWidget {
                   },
                 ),
                 repositoryCallBack: (data) {
-                  return context.read<ProductCubit>().fetchProductList(data);
+                  return context.read<ProductCubit>().fetchProductList(
+                    data,
+                    categoryId: widget.categoryId,
+                  );
                 },
                 listBuilder: (list) {
                   return fw.ListView.builder(
@@ -114,7 +157,7 @@ class ProductListScreen extends StatelessWidget {
                         metaItems.add(
                           EntityMetaItem(
                             icon: Icons.inventory_2_outlined,
-                            text: 'Stock: ${product.totalStockQuantity}',
+                            text: 'stock'.tr(args: ['${product.totalStockQuantity}']),
                           ),
                         );
                       }
@@ -143,16 +186,16 @@ class ProductListScreen extends StatelessWidget {
                           ),
                           statusBadge: StatusBadge(
                             text: (product.isActive ?? false)
-                                ? 'Active'
-                                : 'Inactive',
+                                ? 'active'.tr()
+                                : 'inactive'.tr(),
                             type: (product.isActive ?? false)
                                 ? StatusBadgeType.active
                                 : StatusBadgeType.inactive,
                           ),
                           metaItems: metaItems.isNotEmpty ? metaItems : null,
-                          onTap: () {
+                          onTap: () async {
                             if (product.id != null) {
-                              fw.Navigator.push(
+                              await fw.Navigator.push(
                                 context,
                                 fw.PageRouteBuilder(
                                   pageBuilder: (_, __, ___) =>
@@ -164,9 +207,10 @@ class ProductListScreen extends StatelessWidget {
                                 ),
                               );
                             }
+                            _reloadList();
                           },
-                          onEdit: () {
-                            fw.Navigator.push(
+                          onEdit: () async {
+                            await fw.Navigator.push(
                               context,
                               fw.PageRouteBuilder(
                                 pageBuilder: (_, __, ___) => BlocProvider(
@@ -177,16 +221,14 @@ class ProductListScreen extends StatelessWidget {
                                 reverseTransitionDuration: Duration.zero,
                               ),
                             );
+                            _reloadList();
                           },
                         ),
                       );
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }

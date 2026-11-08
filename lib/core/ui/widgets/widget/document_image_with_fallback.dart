@@ -13,6 +13,7 @@ import '../../../services/documents/cubit/document_cubit.dart';
 import '../../../services/documents/data/service/dio_client_service.dart';
 import 'file_upload_card.dart';
 import 'upload_button.dart';
+import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 
 class DocumentImageWithFallback extends StatefulWidget {
   final String imageUrl;
@@ -164,29 +165,10 @@ class _DocumentImageWithFallbackState extends State<DocumentImageWithFallback> {
   }
 
   Widget _buildLoadingWidget() {
-    return Container(
-      height: 220,
+    return const AppSkeletonBox(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: 12),
-            Text(
-              "Loading...",
-              style: AppTextStyle.getRegularStyle(
-                color: Colors.grey.shade600,
-                fontSize: AppFontSize.size_14,
-              ),
-            ),
-          ],
-        ),
-      ),
+      height: 220,
+      borderRadius: 12,
     );
   }
 

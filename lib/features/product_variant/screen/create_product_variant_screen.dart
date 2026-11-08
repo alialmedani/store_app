@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:store/core/ui/kit/app_kit.dart';
 
 import '../../../core/boilerplate/create_model/cubits/create_model_cubit.dart';
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
@@ -9,12 +9,15 @@ import '../../product/cubit/product_cubit.dart';
 import '../../product/data/model/product_model.dart';
 import '../cubit/product_variant_cubit.dart';
 import '../data/model/product_variant_model.dart';
+import '../../../core/ui/shadcn/widget/design_system/design_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Create Product Variant Screen - Form to create new product variant
 /// Uses CreateModel widget for state management
 /// Uses shadcn_flutter components
 class CreateProductVariantScreen extends StatefulWidget {
-  const CreateProductVariantScreen({super.key});
+  final ProductModel? initialProduct;
+  const CreateProductVariantScreen({super.key, this.initialProduct});
 
   @override
   State<CreateProductVariantScreen> createState() =>
@@ -34,7 +37,7 @@ class _CreateProductVariantScreenState
 
     // Validate product
     if (_productIdController.text.trim().isEmpty) {
-      cubit.setProductError('Product is required');
+      cubit.setProductError('product_is_required'.tr());
       isValid = false;
     } else {
       cubit.clearProductError();
@@ -47,15 +50,15 @@ class _CreateProductVariantScreenState
     // Validate stock quantity
     final stockText = _stockQuantityController.text.trim();
     if (stockText.isEmpty) {
-      cubit.setStockQuantityError('Stock quantity is required');
+      cubit.setStockQuantityError('stock_quantity_is_required'.tr());
       isValid = false;
     } else {
       final stock = int.tryParse(stockText);
       if (stock == null) {
-        cubit.setStockQuantityError('Please enter a valid number');
+        cubit.setStockQuantityError('please_enter_a_valid_number'.tr());
         isValid = false;
       } else if (stock < 0) {
-        cubit.setStockQuantityError('Stock quantity must be 0 or greater');
+        cubit.setStockQuantityError('stock_quantity_must_be_0_or_greater'.tr());
         isValid = false;
       } else {
         cubit.clearStockQuantityError();
@@ -69,13 +72,14 @@ class _CreateProductVariantScreenState
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Select Product'),
+        title: Text('select_product'.tr()),
         content: fw.SizedBox(
           width: double.maxFinite,
           height: 400,
           child: PaginationList<ProductModel>(
             withPagination: true,
             withRefresh: true,
+            loadingWidget: SelectorListSkeleton(withSubtitle: true),
             repositoryCallBack: (data) {
               return context.read<ProductCubit>().fetchProductList(data);
             },
@@ -84,44 +88,14 @@ class _CreateProductVariantScreenState
                 itemCount: list.length,
                 itemBuilder: (context, index) {
                   final product = list[index];
-                  return fw.GestureDetector(
+                  return SelectorTile(
+                    title: product.name ?? 'N/A',
+                    subtitle: product.description,
                     onTap: () {
                       cubit.selectProduct(product);
                       _productIdController.text = product.name ?? '';
                       fw.Navigator.of(dialogContext).pop();
                     },
-                    child: Card(
-                      child: fw.Padding(
-                        padding: const fw.EdgeInsets.all(12),
-                        child: fw.Column(
-                          crossAxisAlignment: fw.CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product.name ?? 'N/A',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            if (product.description != null &&
-                                product.description!.isNotEmpty) ...[
-                              const fw.SizedBox(height: 4),
-                              Text(
-                                product.description!,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.mutedForeground,
-                                ),
-                                maxLines: 2,
-                                overflow: fw.TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
                   );
                 },
               );
@@ -131,11 +105,23 @@ class _CreateProductVariantScreenState
         actions: [
           SecondaryButton(
             onPressed: () => fw.Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr()),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final p = widget.initialProduct;
+    if (p != null) {
+      _productIdController.text = p.name ?? '';
+      fw.WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.read<ProductVariantCubit>().selectProduct(p);
+      });
+    }
   }
 
   @override
@@ -154,8 +140,7 @@ class _CreateProductVariantScreenState
 
     return Scaffold(
       child: SafeArea(
-        child: Column(
-          children: [
+        child: ScrollAwayHeader(header: Column(children: [
             // App Bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -167,9 +152,9 @@ class _CreateProductVariantScreenState
                     variance: ButtonVariance.ghost,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Create Product Variant',
+                      'create_product_variant'.tr(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -178,11 +163,7 @@ class _CreateProductVariantScreenState
                   ),
                 ],
               ),
-            ),
-
-            // Form Content
-            Expanded(
-              child: SingleChildScrollView(
+            )]), body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Card(
                   child: Padding(
@@ -196,45 +177,19 @@ class _CreateProductVariantScreenState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    const Expanded(
-                                      child: Text(
-                                        'Product',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    fw.GestureDetector(
-                                      onTap: () {
-                                        _showProductSelector(context, cubit);
-                                      },
-                                      child: Text(
-                                        'Select',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _productIdController,
-                                  placeholder: const Text('Select product'),
-                                  enabled: false,
+                                AppSelectorField(
+                                  label: 'product'.tr(),
+                                  value: _productIdController.text.isNotEmpty ? _productIdController.text : null,
+                                  placeholder: 'select_product_2'.tr(),
+                                  onTap: () => _showProductSelector(context, cubit),
                                 ),
                                 if (cubit.productError != null)
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.productError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -253,8 +208,8 @@ class _CreateProductVariantScreenState
                               children: [
                                 Row(
                                   children: [
-                                    const Text(
-                                      'Color',
+                                    Text(
+                                      'color'.tr(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -262,7 +217,7 @@ class _CreateProductVariantScreenState
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      '(Optional)',
+                                      'optional'.tr(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
@@ -274,8 +229,8 @@ class _CreateProductVariantScreenState
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _colorController,
-                                  placeholder: const Text(
-                                    'Enter color (optional)',
+                                  placeholder: Text(
+                                    'enter_color_optional'.tr(),
                                   ),
                                   onChanged: (value) {
                                     cubit.createProductVariantParams.color =
@@ -288,8 +243,8 @@ class _CreateProductVariantScreenState
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.colorError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -302,14 +257,17 @@ class _CreateProductVariantScreenState
 
                         // Size Field
                         BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                          builder: (context, state) => !cubit.isSizeVisible()
+                              ? const SizedBox.shrink()
+                              : BlocBuilder<ProductVariantCubit, ProductVariantState>(
                           builder: (context, state) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   children: [
-                                    const Text(
-                                      'Size',
+                                    Text(
+                                      'size'.tr(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -317,7 +275,7 @@ class _CreateProductVariantScreenState
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      '(Optional)',
+                                      'optional'.tr(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
@@ -329,8 +287,8 @@ class _CreateProductVariantScreenState
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _sizeController,
-                                  placeholder: const Text(
-                                    'Enter size (optional)',
+                                  placeholder: Text(
+                                    'enter_size_optional'.tr(),
                                   ),
                                   onChanged: (value) {
                                     cubit.createProductVariantParams.size =
@@ -343,8 +301,8 @@ class _CreateProductVariantScreenState
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.sizeError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -352,6 +310,7 @@ class _CreateProductVariantScreenState
                               ],
                             );
                           },
+                        ),
                         ),
                         const SizedBox(height: 16),
 
@@ -361,8 +320,8 @@ class _CreateProductVariantScreenState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Stock Quantity',
+                                Text(
+                                  'stock_quantity'.tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -371,8 +330,8 @@ class _CreateProductVariantScreenState
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: _stockQuantityController,
-                                  placeholder: const Text(
-                                    'Enter stock quantity',
+                                  placeholder: Text(
+                                    'enter_stock_quantity'.tr(),
                                   ),
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
@@ -391,8 +350,8 @@ class _CreateProductVariantScreenState
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                       cubit.stockQuantityError!,
-                                      style: const TextStyle(
-                                        color: Color(0xFFEF4444),
+                                      style: TextStyle(
+                                        color: AppDesignTokens.dangerColor,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -408,9 +367,9 @@ class _CreateProductVariantScreenState
                           builder: (context, state) {
                             return Row(
                               children: [
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    'Active',
+                                    'active'.tr(),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -443,13 +402,13 @@ class _CreateProductVariantScreenState
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Success'),
-                                content: const Text(
-                                  'Product variant created successfully.',
+                                title: Text('success'.tr()),
+                                content: Text(
+                                  'product_variant_created_successfully'.tr(),
                                 ),
                                 actions: [
                                   PrimaryButton(
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                     onPressed: () {
                                       fw.Navigator.of(ctx).pop();
                                       fw.Navigator.of(context).pop();
@@ -463,11 +422,11 @@ class _CreateProductVariantScreenState
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Error'),
+                                title: Text('error_2'.tr()),
                                 content: Text(error),
                                 actions: [
                                   PrimaryButton(
-                                    child: const Text('OK'),
+                                    child: Text('ok'.tr()),
                                     onPressed: () => fw.Navigator.of(ctx).pop(),
                                   ),
                                 ],
@@ -475,17 +434,14 @@ class _CreateProductVariantScreenState
                             );
                           },
                           child: PrimaryButton(
-                            child: const Text('Create Product Variant'),
+                            child: Text('create_product_variant'.tr()),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
+              )),
       ),
     );
   }
