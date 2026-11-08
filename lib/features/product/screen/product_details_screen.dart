@@ -25,7 +25,7 @@ class ProductDetailsScreen extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    final theme = Theme.of(context);
+    Theme.of(context);
 
     return BlocProvider(
       create: (context) => ProductCubit(),

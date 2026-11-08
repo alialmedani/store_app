@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
  import 'package:shimmer/shimmer.dart';
 import 'package:store/core/ui/widgets/general_error_widget.dart';
 import '../../../constant/app_colors/app_colors.dart';
-import '../../../constant/app_images/app_images.dart';
 import '../cubits/get_model_cubit.dart';
 import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
 

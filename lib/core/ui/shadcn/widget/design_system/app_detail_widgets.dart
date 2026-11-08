@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart' as fw;
-import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 
 /// Section heading used on every details screen: gradient bar + title

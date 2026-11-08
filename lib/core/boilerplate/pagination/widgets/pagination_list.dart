@@ -4,7 +4,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:store/core/constant/app_colors/app_colors.dart';
 import 'package:store/core/ui/widgets/general_error_widget.dart';
 import 'package:store/core/ui/widgets/no_data_screen.dart';
-import '../../../ui/widgets/loading.dart';
 import '../cubits/pagination_cubit.dart';
 import 'footer.dart';
 import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';

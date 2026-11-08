@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart' as fw;
 import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 import 'app_skeleton_loader.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 /// Generic reusable bottom sheet selector for mobile
 /// Fully customizable for any entity type T
