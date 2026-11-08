@@ -1,5 +1,7 @@
 //emulator
+
 const String baseUrl = 'http://10.0.2.2:5000';
+
 //      dotnet run --project src/StoreManagement.Web --launch-profile StoreManagement.Web
 
 
