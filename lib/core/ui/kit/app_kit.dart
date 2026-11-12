@@ -1,5 +1,5 @@
 // App UI kit: Flutter Material + our own thin widgets that follow
-// AppDesignTokens (Aurora, light + dark).
+// AppDesignTokens (Ink & Ember, light + dark).
 //
 // Screens import ONLY this file for UI primitives (never material.dart
 // directly). Names that Material also defines are hidden here and replaced by

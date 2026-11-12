@@ -13,7 +13,22 @@ class ApiProvider {
     baseUrl: baseUrl,
     connectTimeout: const Duration(seconds: 10),
   );
-  static final Dio dio = Dio(options);
+  static final Dio dio = Dio(options)..interceptors.addAll(
+    kDebugMode
+        ? [
+            PrettyDioLogger(
+              request: true,
+              requestHeader: true,
+              requestBody: true,
+              responseBody: true,
+              responseHeader: true,
+              error: true,
+              compact: true,
+              maxWidth: 90,
+            ),
+          ]
+        : [],
+  );
 
   static Future<Either<String, T>> sendObjectRequest<T>({
     required HttpMethod method,
@@ -101,20 +116,6 @@ class ApiProvider {
       debugPrint('queryParameters : [$queryParameters]');
 
       dio.options.headers = headers;
-      if (kDebugMode) {
-        dio.interceptors.add(
-          PrettyDioLogger(
-            request: true,
-            requestHeader: true,
-            requestBody: true,
-            responseBody: true,
-            responseHeader: true,
-            error: true,
-            compact: true,
-            maxWidth: 90,
-          ),
-        );
-      }
       switch (method) {
         case HttpMethod.GET:
           response = await dio.get(url, queryParameters: queryParameters);

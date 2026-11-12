@@ -13,6 +13,7 @@ Read `CLAUDE.md`. Work only from a confirmed contract. Mirror `lib/features/cate
 - UseCase: `class XUseCase implements UseCase<Result<T>, Params>`; thin; no logic.
 - Repository: abstract + impl in `data/repository`, calls `RemoteDataSource`/`ApiProvider` with `converter`/`converter2`; return `Either<Failure, T>`/`Result<T>` exactly like the reference slice. Endpoints that return no body use `converter: (json) => true`.
 - Pagination: send `skipCount`/`maxResultCount`/`filter`/`sorting` as the contract states.
+- Read-only aggregate reports are plain GET with query-param params and a single aggregate response model consumed via `GetModel` (not a list). A single repository can serve several report endpoints. Reference: `features/reports` (`ReportsRepository`, `get_*_usecase.dart`, report models). Honor inverted defaults from the contract (e.g. `IncludeDeleted` defaults TRUE) by setting them explicitly in params.
 - Delete/restore/deleted-list follow `features/category/...delete_/restore_/get_deleted_*`.
 - Never put UI, `BuildContext`, or cubit logic here. No secrets.
 

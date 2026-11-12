@@ -87,6 +87,11 @@ class _CategoryListScreenState extends fw.State<CategoryListScreen> {
                     );
                   },
                 ),
+                noDataWidget: EmptyState(
+                  icon: Icons.category_outlined,
+                  title: 'categories_empty_title'.tr(),
+                  subtitle: 'categories_empty_subtitle'.tr(),
+                ),
                 repositoryCallBack: (data) {
                   return context.read<CategoryCubit>().fetchCategoryList(data);
                 },
@@ -110,6 +115,7 @@ class _CategoryListScreenState extends fw.State<CategoryListScreen> {
                           bottom: AppDesignTokens.cardGap,
                         ),
                         child: EntityListCard(
+                          animationIndex: index,
                           title: category.name ?? 'N/A',
                           description: category.description,
                           image: AuthenticatedImage(

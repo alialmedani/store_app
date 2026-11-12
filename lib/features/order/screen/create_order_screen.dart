@@ -78,48 +78,31 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
     return Scaffold(
       child: SafeArea(
         child: ScrollAwayHeader(header: Column(children: [
-            // App Bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'create_order'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )]), body: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+            AppHeader(title: 'create_order'.tr()),
+          ]), body: SingleChildScrollView(
+                padding: const EdgeInsets.all(
+                  AppDesignTokens.screenPaddingHorizontal,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Customer Information Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
+                    AppCard(
+                      elevated: true,
+                      padding: const EdgeInsets.all(
+                        AppDesignTokens.cardPaddingLarge,
+                      ),
+                      child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'customer_information'.tr(),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
+                              style: const TextStyle(
+                                fontSize: AppDesignTokens.cardTitleFontSize,
+                                fontWeight: AppDesignTokens.bold,
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppDesignTokens.cardGap),
 
                             // Customer Name Field
                             BlocBuilder<OrderCubit, OrderState>(
@@ -129,12 +112,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                   children: [
                                     Text(
                                       'customer_name'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
+                                      style: const TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: AppDesignTokens.smallGap),
                                     TextField(
                                       controller: _customerNameController,
                                       placeholder: Text(
@@ -148,12 +131,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     ),
                                     if (cubit.customerNameError != null)
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 4),
+                                        padding: const EdgeInsets.only(top: AppDesignTokens.tinyGap),
                                         child: Text(
                                           cubit.customerNameError!,
                                           style: TextStyle(
                                             color: AppDesignTokens.dangerColor,
-                                            fontSize: 12,
+                                            fontSize: AppDesignTokens.captionFontSize,
                                           ),
                                         ),
                                       ),
@@ -161,7 +144,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 );
                               },
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppDesignTokens.cardGap),
 
                             // Customer Phone Field
                             BlocBuilder<OrderCubit, OrderState>(
@@ -171,12 +154,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                   children: [
                                     Text(
                                       'phone_number'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
+                                      style: const TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: AppDesignTokens.smallGap),
                                     TextField(
                                       controller: _customerPhoneController,
                                       placeholder: Text(
@@ -191,12 +174,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     ),
                                     if (cubit.customerPhoneError != null)
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 4),
+                                        padding: const EdgeInsets.only(top: AppDesignTokens.tinyGap),
                                         child: Text(
                                           cubit.customerPhoneError!,
                                           style: TextStyle(
                                             color: AppDesignTokens.dangerColor,
-                                            fontSize: 12,
+                                            fontSize: AppDesignTokens.captionFontSize,
                                           ),
                                         ),
                                       ),
@@ -204,7 +187,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 );
                               },
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppDesignTokens.cardGap),
 
                             // Customer Address Field
                             BlocBuilder<OrderCubit, OrderState>(
@@ -214,12 +197,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                   children: [
                                     Text(
                                       'address'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
+                                      style: const TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: AppDesignTokens.smallGap),
                                     TextField(
                                       controller: _customerAddressController,
                                       placeholder: Text(
@@ -236,12 +219,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     ),
                                     if (cubit.customerAddressError != null)
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 4),
+                                        padding: const EdgeInsets.only(top: AppDesignTokens.tinyGap),
                                         child: Text(
                                           cubit.customerAddressError!,
                                           style: TextStyle(
                                             color: AppDesignTokens.dangerColor,
-                                            fontSize: 12,
+                                            fontSize: AppDesignTokens.captionFontSize,
                                           ),
                                         ),
                                       ),
@@ -249,17 +232,17 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                 );
                               },
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppDesignTokens.cardGap),
 
                             // Note Field
                             Text(
                               'note_optional'.tr(),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                              style: const TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize,
+                                fontWeight: AppDesignTokens.semiBold,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: AppDesignTokens.smallGap),
                             TextField(
                               controller: _noteController,
                               placeholder: Text('add_note'.tr()),
@@ -270,15 +253,16 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                             ),
                           ],
                         ),
-                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
 
                     // Order Items Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
+                    AppCard(
+                      elevated: true,
+                      padding: const EdgeInsets.all(
+                        AppDesignTokens.cardPaddingLarge,
+                      ),
+                      child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
@@ -286,9 +270,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                               children: [
                                 Text(
                                   'order_items'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
+                                  style: const TextStyle(
+                                    fontSize: AppDesignTokens.cardTitleFontSize,
+                                    fontWeight: AppDesignTokens.bold,
                                   ),
                                 ),
                                 OutlineButton(
@@ -299,21 +283,23 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(Icons.add, size: 16),
-                                      SizedBox(width: 4),
+                                      SizedBox(width: AppDesignTokens.tinyGap),
                                       Text('add_item'.tr()),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppDesignTokens.cardGap),
 
                             // Order Items List
                             BlocBuilder<OrderCubit, OrderState>(
                               builder: (context, state) {
                                 if (cubit.orderItems.isEmpty) {
                                   return Container(
-                                    padding: const EdgeInsets.all(24),
+                                    padding: const EdgeInsets.all(
+                                      AppDesignTokens.cardPaddingLarge,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).colorScheme.muted
                                           .withValues(alpha: 0.3),
@@ -329,11 +315,11 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                                               context,
                                             ).colorScheme.mutedForeground,
                                           ),
-                                          const SizedBox(height: 12),
+                                          const SizedBox(height: AppDesignTokens.itemGap),
                                           Text(
                                             'no_items_added_yet'.tr(),
                                             style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: AppDesignTokens.bodyFontSize,
                                               color: Theme.of(
                                                 context,
                                               ).colorScheme.mutedForeground,
@@ -369,12 +355,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                               builder: (context, state) {
                                 if (cubit.itemsError != null) {
                                   return Padding(
-                                    padding: const EdgeInsets.only(top: 8),
+                                    padding: const EdgeInsets.only(top: AppDesignTokens.smallGap),
                                     child: Text(
                                       cubit.itemsError!,
                                       style: TextStyle(
                                         color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
+                                        fontSize: AppDesignTokens.captionFontSize,
                                       ),
                                     ),
                                   );
@@ -384,9 +370,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                             ),
                           ],
                         ),
-                      ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppDesignTokens.sectionGap),
 
                     // Submit Button
                     CreateModel(
@@ -431,16 +416,10 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                         );
                       },
                       child: PrimaryButton(
-                        child: Text(
-                          'create_order'.tr(),
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: Text('create_order'.tr()),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
                   ],
                 ),
               )),
@@ -449,16 +428,14 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   }
 
   void _showAddItemDialog(BuildContext context, OrderCubit cubit) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AddProductDialog(
-        onItemAdded: (productVariantId, quantity) {
-          cubit.addOrderItem(
-            productVariantId: productVariantId,
-            quantity: quantity,
-          );
-        },
-      ),
+    AddProductDialog.show(
+      context,
+      onItemAdded: (productVariantId, quantity) async {
+        cubit.addOrderItem(
+          productVariantId: productVariantId,
+          quantity: quantity,
+        );
+      },
     );
   }
 }
@@ -480,8 +457,8 @@ class _OrderItemTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: AppDesignTokens.smallGap),
+      padding: const EdgeInsets.all(AppDesignTokens.itemGap),
       decoration: BoxDecoration(
         color: AppDesignTokens.mutedSurfaceColor.withValues(alpha: 0.55),
         borderRadius: BorderRadius.circular(AppDesignTokens.inputRadius),
@@ -499,32 +476,32 @@ class _OrderItemTile extends StatelessWidget {
                 Text(
                   'product_variant'.tr(),
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: AppDesignTokens.captionFontSize,
                     color: theme.colorScheme.mutedForeground,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppDesignTokens.tinyGap),
                 Text(
                   item.productVariantId,
                   style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontSize: AppDesignTokens.bodyFontSize,
+                    fontWeight: AppDesignTokens.semiBold,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppDesignTokens.smallGap),
                 Text(
                   'quantity'.tr(args: ['${item.quantity}']),
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppDesignTokens.bodyFontSize,
                     color: theme.colorScheme.foreground,
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppDesignTokens.itemGap),
           IconButton(
             icon: const Icon(Icons.delete_outline, size: 20),
             onPressed: onRemove,

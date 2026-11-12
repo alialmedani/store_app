@@ -21,8 +21,6 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    Theme.of(context);
-
     return BlocProvider(
       create: (context) => CategoryCubit(),
       child: Scaffold(
@@ -92,7 +90,9 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                       ],
                     ),
                   )]), body: fw.SingleChildScrollView(
-                      padding: const fw.EdgeInsets.all(20),
+                      padding: const fw.EdgeInsets.all(
+                        AppDesignTokens.cardPaddingLarge,
+                      ),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
@@ -168,7 +168,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                               ),
                             ),
                           )),
-                          const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                           fw.IntrinsicHeight(
                             child: fw.Row(
@@ -186,7 +186,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                     highlight: true,
                                   ),
                                 ),
-                                const fw.SizedBox(width: 12),
+                                const fw.SizedBox(width: AppDesignTokens.itemGap),
                                 fw.Expanded(
                                   child: AppStatTile(
                                     label: 'size_type'.tr(),
@@ -197,31 +197,29 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                               ],
                             ),
                           ),
-                          const fw.SizedBox(height: 24),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
 
                           if (category.description != null &&
                               category.description!.isNotEmpty) ...[
                             AppSectionTitle('description'.tr()),
-                            const fw.SizedBox(height: 12),
-                            fw.Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(16),
-                              decoration: AppDesignTokens.glassDecoration(),
+                            const fw.SizedBox(height: AppDesignTokens.itemGap),
+                            AppCard(
+                              elevated: true,
                               child: Text(
                                 category.description!,
                                 style: fw.TextStyle(
-                                  fontSize: 14.5,
+                                  fontSize: AppDesignTokens.bodyFontSize + 0.5,
                                   height: 1.65,
                                   color: AppDesignTokens.titleTextColor
                                       .withValues(alpha: 0.88),
                                 ),
                               ),
                             ),
-                            const fw.SizedBox(height: 24),
+                            const fw.SizedBox(height: AppDesignTokens.sectionGap),
                           ],
 
                           AppSectionTitle('details'.tr()),
-                          const fw.SizedBox(height: 12),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
                           AppInfoSection(
                             children: [
                               AppInfoRow(
@@ -243,7 +241,7 @@ class CategoryDetailsScreen extends fw.StatelessWidget {
                                 ),
                             ],
                           ),
-                          const fw.SizedBox(height: 24),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
                         ],
                       ),
                     ));

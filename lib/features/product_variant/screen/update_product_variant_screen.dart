@@ -57,212 +57,218 @@ class _UpdateProductVariantScreenState
     return Scaffold(
       child: SafeArea(
         child: ScrollAwayHeader(header: fw.Column(children: [
-            // App Bar
-            Padding(
-              padding: const fw.EdgeInsets.all(16),
-              child: fw.Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => fw.Navigator.of(context).pop(),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const fw.SizedBox(width: 8),
-                  fw.Expanded(
-                    child: Text(
-                      'update_product_variant'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+            AppHeader(
+              title: 'update_product_variant'.tr(),
+              onBack: () => fw.Navigator.of(context).pop(),
+            ),
+          ]), body: fw.SingleChildScrollView(
+                padding: const fw.EdgeInsets.all(
+                  AppDesignTokens.screenPaddingHorizontal,
+                ),
+                child: fw.Column(
+                  crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                  children: [
+                    // Product section (read-only)
+                    AppCard(
+                      elevated: true,
+                      child: fw.Column(
+                        crossAxisAlignment: fw.CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'product'.tr(),
+                            style: const TextStyle(
+                              fontSize: AppDesignTokens.bodyFontSize,
+                              fontWeight: AppDesignTokens.semiBold,
+                            ),
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.smallGap),
+                          Container(
+                            width: double.infinity,
+                            padding: const fw.EdgeInsets.all(AppDesignTokens.itemGap),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.muted.withValues(
+                                alpha: 0.3,
+                              ),
+                              borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
+                              border: Border.all(
+                                color: theme.colorScheme.border,
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              widget.variant.productName ?? 'N/A',
+                              style: TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize,
+                                color: theme.colorScheme.mutedForeground,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )]), body: fw.SingleChildScrollView(
-                padding: const fw.EdgeInsets.all(16),
-                child: Card(
-                  child: Padding(
-                    padding: const fw.EdgeInsets.all(24),
-                    child: fw.Column(
-                      crossAxisAlignment: fw.CrossAxisAlignment.stretch,
-                      children: [
-                        // Product Name (Read-only)
-                        fw.Column(
-                          crossAxisAlignment: fw.CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'product'.tr(),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
+                    const fw.SizedBox(height: AppDesignTokens.cardGap),
+
+                    // Variant details section
+                    AppCard(
+                      elevated: true,
+                      child: fw.Column(
+                        crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'variant_details'.tr(),
+                            style: const TextStyle(
+                              fontSize: AppDesignTokens.cardTitleFontSize,
+                              fontWeight: AppDesignTokens.bold,
                             ),
-                            const fw.SizedBox(height: 8),
-                            Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.muted.withValues(
-                                  alpha: 0.3,
-                                ),
-                                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
-                                border: Border.all(
-                                  color: theme.colorScheme.border,
-                                  width: 1,
-                                ),
-                              ),
-                              child: Text(
-                                widget.variant.productName ?? 'N/A',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: theme.colorScheme.mutedForeground,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const fw.SizedBox(height: 16),
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
 
-                        // Color Field
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return fw.Column(
-                              crossAxisAlignment: fw.CrossAxisAlignment.start,
-                              children: [
-                                fw.Row(
-                                  children: [
-                                    Text(
-                                      'color'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
+                          // Color Field
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return fw.Column(
+                                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                children: [
+                                  fw.Row(
+                                    children: [
+                                      Text(
+                                        'color'.tr(),
+                                        style: const TextStyle(
+                                          fontSize: AppDesignTokens.bodyFontSize,
+                                          fontWeight: AppDesignTokens.semiBold,
+                                        ),
                                       ),
-                                    ),
-                                    const fw.SizedBox(width: 8),
-                                    Text(
-                                      'optional'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color:
-                                            theme.colorScheme.mutedForeground,
+                                      const fw.SizedBox(width: AppDesignTokens.smallGap),
+                                      Text(
+                                        'optional'.tr(),
+                                        style: TextStyle(
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const fw.SizedBox(height: 8),
-                                TextField(
-                                  controller: _colorController,
-                                  placeholder: Text(
-                                    'enter_color_optional'.tr(),
+                                    ],
                                   ),
-                                  onChanged: (value) {
-                                    cubit.updateProductVariantParams.color =
-                                        value.isEmpty ? null : value;
-                                    cubit.clearColorError();
-                                  },
-                                ),
-                                if (cubit.colorError != null)
-                                  Padding(
-                                    padding: const fw.EdgeInsets.only(top: 4),
+                                  const fw.SizedBox(height: AppDesignTokens.smallGap),
+                                  TextField(
+                                    controller: _colorController,
+                                    placeholder: Text(
+                                      'enter_color_optional'.tr(),
+                                    ),
+                                    onChanged: (value) {
+                                      cubit.updateProductVariantParams.color =
+                                          value.isEmpty ? null : value;
+                                      cubit.clearColorError();
+                                    },
+                                  ),
+                                  if (cubit.colorError != null)
+                                    Padding(
+                                      padding: const fw.EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
+                                      ),
+                                      child: Text(
+                                        cubit.colorError!,
+                                        style: TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Size Field
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return fw.Column(
+                                crossAxisAlignment: fw.CrossAxisAlignment.start,
+                                children: [
+                                  fw.Row(
+                                    children: [
+                                      Text(
+                                        'size'.tr(),
+                                        style: const TextStyle(
+                                          fontSize: AppDesignTokens.bodyFontSize,
+                                          fontWeight: AppDesignTokens.semiBold,
+                                        ),
+                                      ),
+                                      const fw.SizedBox(width: AppDesignTokens.smallGap),
+                                      Text(
+                                        'optional'.tr(),
+                                        style: TextStyle(
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const fw.SizedBox(height: AppDesignTokens.smallGap),
+                                  TextField(
+                                    controller: _sizeController,
+                                    placeholder: Text(
+                                      'enter_size_optional'.tr(),
+                                    ),
+                                    onChanged: (value) {
+                                      cubit.updateProductVariantParams.size =
+                                          value.isEmpty ? null : value;
+                                      cubit.clearSizeError();
+                                    },
+                                  ),
+                                  if (cubit.sizeError != null)
+                                    Padding(
+                                      padding: const fw.EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
+                                      ),
+                                      child: Text(
+                                        cubit.sizeError!,
+                                        style: TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Is Active Toggle
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return fw.Row(
+                                children: [
+                                  fw.Expanded(
                                     child: Text(
-                                      cubit.colorError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
+                                      'active'.tr(),
+                                      style: const TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
                                       ),
                                     ),
                                   ),
-                              ],
-                            );
-                          },
-                        ),
-                        const fw.SizedBox(height: 16),
+                                  Switch(
+                                    value:
+                                        cubit.updateProductVariantParams.isActive,
+                                    onChanged: (value) {
+                                      cubit.toggleUpdateIsActive(value);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const fw.SizedBox(height: AppDesignTokens.sectionGap),
 
-                        // Size Field
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return fw.Column(
-                              crossAxisAlignment: fw.CrossAxisAlignment.start,
-                              children: [
-                                fw.Row(
-                                  children: [
-                                    Text(
-                                      'size'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const fw.SizedBox(width: 8),
-                                    Text(
-                                      'optional'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color:
-                                            theme.colorScheme.mutedForeground,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const fw.SizedBox(height: 8),
-                                TextField(
-                                  controller: _sizeController,
-                                  placeholder: Text(
-                                    'enter_size_optional'.tr(),
-                                  ),
-                                  onChanged: (value) {
-                                    cubit.updateProductVariantParams.size =
-                                        value.isEmpty ? null : value;
-                                    cubit.clearSizeError();
-                                  },
-                                ),
-                                if (cubit.sizeError != null)
-                                  Padding(
-                                    padding: const fw.EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.sizeError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        const fw.SizedBox(height: 16),
-
-                        // Is Active Toggle
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return fw.Row(
-                              children: [
-                                fw.Expanded(
-                                  child: Text(
-                                    'active'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Switch(
-                                  value:
-                                      cubit.updateProductVariantParams.isActive,
-                                  onChanged: (value) {
-                                    cubit.toggleUpdateIsActive(value);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        const fw.SizedBox(height: 24),
-
-                        // Submit Button
-                        CreateModel<ProductVariantModel>(
+                    // Submit Button
+                    CreateModel<ProductVariantModel>(
                           withValidation: true,
                           onTap: () {
                             // No validation needed - all fields are optional
@@ -311,9 +317,7 @@ class _UpdateProductVariantScreenState
                             child: Text('update_product_variant'.tr()),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               )),
       ),

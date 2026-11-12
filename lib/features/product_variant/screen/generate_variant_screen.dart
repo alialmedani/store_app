@@ -206,28 +206,31 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'this_will_generate_variants'.tr(args: ['${totalVariants}']),
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              'this_will_generate_variants'.tr(args: ['$totalVariants']),
+              style: const TextStyle(
+                fontSize: AppDesignTokens.bodyFontSize + 1,
+                fontWeight: AppDesignTokens.semiBold,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDesignTokens.itemGap),
             Text(
               _countLabel(),
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppDesignTokens.bodyFontSize,
                 color: Theme.of(context).colorScheme.mutedForeground,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDesignTokens.smallGap),
             Text(
-              'each_variant_stock'.tr(args: ['${_defaultStockController.text.trim()}']),
+              'each_variant_stock'.tr(args: [_defaultStockController.text.trim()]),
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppDesignTokens.bodyFontSize,
                 color: Theme.of(context).colorScheme.mutedForeground,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDesignTokens.itemGap),
             fw.Container(
-              padding: const fw.EdgeInsets.all(12),
+              padding: const fw.EdgeInsets.all(AppDesignTokens.itemGap),
               decoration: fw.BoxDecoration(
                 color: Theme.of(
                   context,
@@ -240,21 +243,21 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                   Text(
                     'example_combinations'.tr(),
                     style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                      fontSize: AppDesignTokens.bodyFontSize - 1,
+                      fontWeight: AppDesignTokens.semiBold,
                       color: Theme.of(context).colorScheme.mutedForeground,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppDesignTokens.smallGap - 2),
                   ...colors.take(2).map((color) {
                     return Padding(
-                      padding: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.only(top: AppDesignTokens.tinyGap),
                       child: Text(
                         _needsSize
                             ? '• $color - ${sizes.first}${sizes.length > 1 ? ", $color - ${sizes[1]}" : ""}'
                             : '• $color',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: AppDesignTokens.captionFontSize,
                           color: Theme.of(context).colorScheme.mutedForeground,
                         ),
                       ),
@@ -262,11 +265,11 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                   }),
                   if (colors.length > 2 || sizes.length > 2)
                     Padding(
-                      padding: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.only(top: AppDesignTokens.tinyGap),
                       child: Text(
                         'and_more'.tr(args: ['${totalVariants - 2}']),
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: AppDesignTokens.captionFontSize,
                           color: Theme.of(context).colorScheme.mutedForeground,
                         ),
                       ),
@@ -302,384 +305,343 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
     return Scaffold(
       child: SafeArea(
         child: ScrollAwayHeader(header: Column(children: [
-            // App Bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => fw.Navigator.of(context).pop(),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'generate_variants'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )]), body: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+            AppHeader(
+              title: 'generate_variants'.tr(),
+              onBack: () => fw.Navigator.of(context).pop(),
+            ),
+          ]), body: SingleChildScrollView(
+                padding: const EdgeInsets.all(
+                  AppDesignTokens.screenPaddingHorizontal,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Info Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            fw.Container(
-                              padding: const fw.EdgeInsets.all(10),
-                              decoration: fw.BoxDecoration(
-                                color: const Color(
-                                  0xFF8E7CFF,
-                                ).withValues(alpha: 0.1),
-                                borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
-                              ),
-                              child: Icon(
-                                Icons.auto_awesome,
-                                color: AppDesignTokens.accentSecondaryColor,
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                'auto_generate_all_combinations_with_sa'.tr(),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: theme.colorScheme.mutedForeground,
-                                ),
+                    AppCard(
+                      elevated: true,
+                      child: Row(
+                        children: [
+                          AppIconChip(
+                            icon: Icons.auto_awesome,
+                            color: AppDesignTokens.accentSecondaryColor,
+                            size: 20,
+                          ),
+                          const SizedBox(width: AppDesignTokens.itemGap),
+                          Expanded(
+                            child: Text(
+                              'auto_generate_all_combinations_with_sa'.tr(),
+                              style: TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize - 1,
+                                color: theme.colorScheme.mutedForeground,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
 
                     // Product Selection Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppSelectorField(
-                              label: 'product'.tr(),
-                              value: selectedProduct?.name,
-                              placeholder: 'no_product_selected'.tr(),
-                              onTap: () => _showProductSelector(context),
-                            ),
-                          ],
-                        ),
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppSelectorField(
+                            label: 'product'.tr(),
+                            value: selectedProduct?.name,
+                            placeholder: 'no_product_selected'.tr(),
+                            onTap: () => _showProductSelector(context),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
 
                     // Colors Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'colors'.tr(),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'colors'.tr(),
+                            style: const TextStyle(
+                              fontSize: AppDesignTokens.cardTitleFontSize - 1,
+                              fontWeight: AppDesignTokens.bold,
                             ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: _colorController,
-                                    placeholder: Text('enter_color'.tr()),
-                                    onSubmitted: (_) => _addColor(),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                IconButton(
-                                  icon: const Icon(Icons.add, size: 20),
-                                  variance: ButtonVariance.primary,
-                                  onPressed: _addColor,
-                                ),
-                              ],
-                            ),
-                            if (colors.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: colors.map((color) {
-                                  return fw.GestureDetector(
-                                    onTap: () => _removeColor(color),
-                                    child: fw.Container(
-                                      padding: const fw.EdgeInsets.symmetric(
-                                        horizontal: 14,
-                                        vertical: 8,
-                                      ),
-                                      decoration: fw.BoxDecoration(
-                                        color: theme.colorScheme.primary
-                                            .withValues(alpha: 0.1),
-                                        borderRadius: fw.BorderRadius.circular(
-                                          8,
-                                        ),
-                                        border: fw.Border.all(
-                                          color: theme.colorScheme.primary
-                                              .withValues(alpha: 0.3),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            color,
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                              color: theme.colorScheme.primary,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Icon(
-                                            Icons.close,
-                                            size: 14,
-                                            color: theme.colorScheme.primary,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    if (_needsSize) ...[
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'sizes'.tr(),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: _sizeController,
-                                    placeholder: Text('enter_size'.tr()),
-                                    onSubmitted: (_) => _addSize(),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                IconButton(
-                                  icon: const Icon(Icons.add, size: 20),
-                                  variance: ButtonVariance.primary,
-                                  onPressed: _addSize,
-                                ),
-                              ],
-                            ),
-                            if (sizes.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: sizes.map((size) {
-                                  return fw.GestureDetector(
-                                    onTap: () => _removeSize(size),
-                                    child: fw.Container(
-                                      padding: const fw.EdgeInsets.symmetric(
-                                        horizontal: 14,
-                                        vertical: 8,
-                                      ),
-                                      decoration: fw.BoxDecoration(
-                                        color: const Color(
-                                          0xFF4ADE9A,
-                                        ).withValues(alpha: 0.1),
-                                        borderRadius: fw.BorderRadius.circular(
-                                          8,
-                                        ),
-                                        border: fw.Border.all(
-                                          color: const Color(
-                                            0xFF4ADE9A,
-                                          ).withValues(alpha: 0.3),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            size,
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppDesignTokens.successColor,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Icon(
-                                            Icons.close,
-                                            size: 14,
-                                            color: AppDesignTokens.successColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ],
-
-                    // Settings Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'default_stock_quantity'.tr(),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: _defaultStockController,
-                              placeholder: Text(
-                                'enter_default_stock_quantity'.tr(),
-                              ),
-                              keyboardType: TextInputType.number,
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'skip_existing_variants'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Switch(
-                                  value: skipExisting,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      skipExisting = value;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'set_as_active'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Switch(
-                                  value: isActive,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isActive = value;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Preview Card
-                    if (totalVariants > 0)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+                          Row(
                             children: [
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'total_variants'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'variants_2'.tr(args: ['${totalVariants}']),
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppDesignTokens.accentSecondaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      _countLabel(),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color:
-                                            theme.colorScheme.mutedForeground,
-                                      ),
-                                    ),
-                                  ],
+                                child: TextField(
+                                  controller: _colorController,
+                                  placeholder: Text('enter_color'.tr()),
+                                  onSubmitted: (_) => _addColor(),
                                 ),
                               ),
+                              const SizedBox(width: AppDesignTokens.smallGap),
                               IconButton(
-                                icon: const Icon(Icons.visibility, size: 20),
-                                variance: ButtonVariance.ghost,
-                                onPressed: _showGeneratePreview,
+                                icon: const Icon(Icons.add, size: 20),
+                                variance: ButtonVariance.primary,
+                                onPressed: _addColor,
                               ),
                             ],
                           ),
+                          if (colors.isNotEmpty) ...[
+                            const SizedBox(height: AppDesignTokens.itemGap),
+                            Wrap(
+                              spacing: AppDesignTokens.smallGap,
+                              runSpacing: AppDesignTokens.smallGap,
+                              children: colors.map((color) {
+                                return fw.GestureDetector(
+                                  onTap: () => _removeColor(color),
+                                  child: fw.Container(
+                                    padding: const fw.EdgeInsets.symmetric(
+                                      horizontal: AppDesignTokens.itemGap + 2,
+                                      vertical: AppDesignTokens.smallGap,
+                                    ),
+                                    decoration: fw.BoxDecoration(
+                                      color: AppDesignTokens.primarySoftColor,
+                                      borderRadius: fw.BorderRadius.circular(
+                                        AppDesignTokens.badgeRadius,
+                                      ),
+                                      border: fw.Border.all(
+                                        color: theme.colorScheme.primary
+                                            .withValues(alpha: 0.3),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          color,
+                                          style: TextStyle(
+                                            fontSize: AppDesignTokens.bodyFontSize - 1,
+                                            fontWeight: AppDesignTokens.semiBold,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                        ),
+                                        const SizedBox(width: AppDesignTokens.tinyGap + 2),
+                                        Icon(
+                                          Icons.close,
+                                          size: 14,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppDesignTokens.cardGap),
+
+                    if (_needsSize) ...[
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'sizes'.tr(),
+                            style: const TextStyle(
+                              fontSize: AppDesignTokens.cardTitleFontSize - 1,
+                              fontWeight: AppDesignTokens.bold,
+                            ),
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _sizeController,
+                                  placeholder: Text('enter_size'.tr()),
+                                  onSubmitted: (_) => _addSize(),
+                                ),
+                              ),
+                              const SizedBox(width: AppDesignTokens.smallGap),
+                              IconButton(
+                                icon: const Icon(Icons.add, size: 20),
+                                variance: ButtonVariance.primary,
+                                onPressed: _addSize,
+                              ),
+                            ],
+                          ),
+                          if (sizes.isNotEmpty) ...[
+                            const SizedBox(height: AppDesignTokens.itemGap),
+                            Wrap(
+                              spacing: AppDesignTokens.smallGap,
+                              runSpacing: AppDesignTokens.smallGap,
+                              children: sizes.map((size) {
+                                return fw.GestureDetector(
+                                  onTap: () => _removeSize(size),
+                                  child: fw.Container(
+                                    padding: const fw.EdgeInsets.symmetric(
+                                      horizontal: AppDesignTokens.itemGap + 2,
+                                      vertical: AppDesignTokens.smallGap,
+                                    ),
+                                    decoration: fw.BoxDecoration(
+                                      color: AppDesignTokens.successSoftColor,
+                                      borderRadius: fw.BorderRadius.circular(
+                                        AppDesignTokens.badgeRadius,
+                                      ),
+                                      border: fw.Border.all(
+                                        color: AppDesignTokens.successColor
+                                            .withValues(alpha: 0.3),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          size,
+                                          style: TextStyle(
+                                            fontSize: AppDesignTokens.bodyFontSize - 1,
+                                            fontWeight: AppDesignTokens.semiBold,
+                                            color: AppDesignTokens.successColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: AppDesignTokens.tinyGap + 2),
+                                        Icon(
+                                          Icons.close,
+                                          size: 14,
+                                          color: AppDesignTokens.successColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppDesignTokens.cardGap),
+                    ],
+
+                    // Settings Card
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'default_stock_quantity'.tr(),
+                            style: const TextStyle(
+                              fontSize: AppDesignTokens.bodyFontSize,
+                              fontWeight: AppDesignTokens.semiBold,
+                            ),
+                          ),
+                          const SizedBox(height: AppDesignTokens.smallGap),
+                          TextField(
+                            controller: _defaultStockController,
+                            placeholder: Text(
+                              'enter_default_stock_quantity'.tr(),
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'skip_existing_variants'.tr(),
+                                  style: const TextStyle(
+                                    fontSize: AppDesignTokens.bodyFontSize,
+                                    fontWeight: AppDesignTokens.semiBold,
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: skipExisting,
+                                onChanged: (value) {
+                                  setState(() {
+                                    skipExisting = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'set_as_active'.tr(),
+                                  style: const TextStyle(
+                                    fontSize: AppDesignTokens.bodyFontSize,
+                                    fontWeight: AppDesignTokens.semiBold,
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: isActive,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isActive = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppDesignTokens.cardGap),
+
+                    // Preview Card
+                    if (totalVariants > 0)
+                      AppCard(
+                        elevated: true,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'total_variants'.tr(),
+                                    style: const TextStyle(
+                                      fontSize: AppDesignTokens.bodyFontSize - 1,
+                                      fontWeight: AppDesignTokens.semiBold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: AppDesignTokens.tinyGap),
+                                  Text(
+                                    'variants_2'.tr(args: ['$totalVariants']),
+                                    style: TextStyle(
+                                      fontSize: AppDesignTokens.sectionTitleFontSize + 2,
+                                      fontWeight: AppDesignTokens.bold,
+                                      color: AppDesignTokens.accentSecondaryColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: AppDesignTokens.tinyGap),
+                                  Text(
+                                    _countLabel(),
+                                    style: TextStyle(
+                                      fontSize: AppDesignTokens.captionFontSize,
+                                      color:
+                                          theme.colorScheme.mutedForeground,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.visibility, size: 20),
+                              variance: ButtonVariance.ghost,
+                              onPressed: _showGeneratePreview,
+                            ),
+                          ],
                         ),
                       ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppDesignTokens.sectionGap),
 
                     // Submit Button
                     CreateModel<List<ProductVariantModel>>(
@@ -743,12 +705,12 @@ class _GenerateVariantScreenState extends State<GenerateVariantScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.auto_awesome, size: 18),
-                            SizedBox(width: 8),
+                            const SizedBox(width: AppDesignTokens.smallGap),
                             Text(
                               'generate_all_variants'.tr(),
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
+                              style: const TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize + 1,
+                                fontWeight: AppDesignTokens.semiBold,
                               ),
                             ),
                           ],

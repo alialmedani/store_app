@@ -90,34 +90,17 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
     return Scaffold(
       child: SafeArea(
         child: ScrollAwayHeader(header: fw.Column(children: [
-            // App Bar
-            Padding(
-              padding: const fw.EdgeInsets.all(16),
-              child: fw.Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => fw.Navigator.of(context).pop(),
-                    variance: ButtonVariance.ghost,
+            AppHeader(title: 'update_order'.tr()),
+          ]), body: SingleChildScrollView(
+                padding: const fw.EdgeInsets.all(
+                  AppDesignTokens.screenPaddingHorizontal,
+                ),
+                child: AppCard(
+                  elevated: true,
+                  padding: const fw.EdgeInsets.all(
+                    AppDesignTokens.cardPaddingLarge,
                   ),
-                  const fw.SizedBox(width: 8),
-                  fw.Expanded(
-                    child: Text(
-                      'update_order'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )]), body: SingleChildScrollView(
-                padding: const fw.EdgeInsets.all(16),
-                child: Card(
-                  child: Padding(
-                    padding: const fw.EdgeInsets.all(24),
-                    child: fw.Column(
+                  child: fw.Column(
                       crossAxisAlignment: fw.CrossAxisAlignment.stretch,
                       children: [
                         // Order Number (Read-only)
@@ -126,15 +109,15 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                           children: [
                             Text(
                               'order_number'.tr(),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                              style: const TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize,
+                                fontWeight: AppDesignTokens.semiBold,
                               ),
                             ),
-                            const fw.SizedBox(height: 8),
+                            const fw.SizedBox(height: AppDesignTokens.smallGap),
                             Container(
                               width: double.infinity,
-                              padding: const fw.EdgeInsets.all(12),
+                              padding: const fw.EdgeInsets.all(AppDesignTokens.itemGap),
                               decoration: fw.BoxDecoration(
                                 color: theme.colorScheme.muted.withValues(
                                   alpha: 0.3,
@@ -148,14 +131,14 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                               child: Text(
                                 widget.order.orderNumber ?? 'N/A',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: AppDesignTokens.bodyFontSize,
                                   color: theme.colorScheme.mutedForeground,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const fw.SizedBox(height: 16),
+                        const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                         // Customer Name Field
                         BlocBuilder<OrderCubit, OrderState>(
@@ -165,12 +148,12 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                               children: [
                                 Text(
                                   'customer_name_2'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                  style: const TextStyle(
+                                    fontSize: AppDesignTokens.bodyFontSize,
+                                    fontWeight: AppDesignTokens.semiBold,
                                   ),
                                 ),
-                                const fw.SizedBox(height: 8),
+                                const fw.SizedBox(height: AppDesignTokens.smallGap),
                                 TextField(
                                   controller: _customerNameController,
                                   placeholder: Text(
@@ -184,12 +167,12 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 ),
                                 if (cubit.customerNameError != null)
                                   Padding(
-                                    padding: const fw.EdgeInsets.only(top: 4),
+                                    padding: const fw.EdgeInsets.only(top: AppDesignTokens.tinyGap),
                                     child: Text(
                                       cubit.customerNameError!,
                                       style: TextStyle(
                                         color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
+                                        fontSize: AppDesignTokens.captionFontSize,
                                       ),
                                     ),
                                   ),
@@ -197,7 +180,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             );
                           },
                         ),
-                        const fw.SizedBox(height: 20),
+                        const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                         // Customer Phone Field
                         BlocBuilder<OrderCubit, OrderState>(
@@ -207,12 +190,12 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                               children: [
                                 Text(
                                   'phone_number_2'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                  style: const TextStyle(
+                                    fontSize: AppDesignTokens.bodyFontSize,
+                                    fontWeight: AppDesignTokens.semiBold,
                                   ),
                                 ),
-                                const fw.SizedBox(height: 8),
+                                const fw.SizedBox(height: AppDesignTokens.smallGap),
                                 TextField(
                                   controller: _customerPhoneController,
                                   placeholder: Text('enter_phone_number'.tr()),
@@ -225,12 +208,12 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 ),
                                 if (cubit.customerPhoneError != null)
                                   Padding(
-                                    padding: const fw.EdgeInsets.only(top: 4),
+                                    padding: const fw.EdgeInsets.only(top: AppDesignTokens.tinyGap),
                                     child: Text(
                                       cubit.customerPhoneError!,
                                       style: TextStyle(
                                         color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
+                                        fontSize: AppDesignTokens.captionFontSize,
                                       ),
                                     ),
                                   ),
@@ -238,7 +221,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             );
                           },
                         ),
-                        const fw.SizedBox(height: 20),
+                        const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                         // Customer Address Field
                         BlocBuilder<OrderCubit, OrderState>(
@@ -248,12 +231,12 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                               children: [
                                 Text(
                                   'delivery_address'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                  style: const TextStyle(
+                                    fontSize: AppDesignTokens.bodyFontSize,
+                                    fontWeight: AppDesignTokens.semiBold,
                                   ),
                                 ),
-                                const fw.SizedBox(height: 8),
+                                const fw.SizedBox(height: AppDesignTokens.smallGap),
                                 TextField(
                                   controller: _customerAddressController,
                                   placeholder: Text(
@@ -268,12 +251,12 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                                 ),
                                 if (cubit.customerAddressError != null)
                                   Padding(
-                                    padding: const fw.EdgeInsets.only(top: 4),
+                                    padding: const fw.EdgeInsets.only(top: AppDesignTokens.tinyGap),
                                     child: Text(
                                       cubit.customerAddressError!,
                                       style: TextStyle(
                                         color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
+                                        fontSize: AppDesignTokens.captionFontSize,
                                       ),
                                     ),
                                   ),
@@ -281,17 +264,17 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             );
                           },
                         ),
-                        const fw.SizedBox(height: 20),
+                        const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                         // Note Field
                         Text(
                           'note_optional'.tr(),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                          style: const TextStyle(
+                            fontSize: AppDesignTokens.bodyFontSize,
+                            fontWeight: AppDesignTokens.semiBold,
                           ),
                         ),
-                        const fw.SizedBox(height: 8),
+                        const fw.SizedBox(height: AppDesignTokens.smallGap),
                         TextField(
                           controller: _noteController,
                           placeholder: Text(
@@ -302,7 +285,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                             cubit.updateOrderParams.note = value;
                           },
                         ),
-                        const fw.SizedBox(height: 32),
+                        const fw.SizedBox(height: AppDesignTokens.sectionGap),
 
                         // Submit Button
                         CreateModel<OrderModel>(
@@ -342,7 +325,7 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: Text('error_2'.tr()),
-                                content: Text('failed_to_update_order'.tr(args: ['${error}'])),
+                                content: Text('failed_to_update_order'.tr(args: ['$error'])),
                                 actions: [
                                   PrimaryButton(
                                     onPressed: () => fw.Navigator.pop(ctx),
@@ -358,7 +341,6 @@ class _UpdateOrderScreenState extends fw.State<UpdateOrderScreen> {
                         ),
                       ],
                     ),
-                  ),
                 ),
               )),
       ),

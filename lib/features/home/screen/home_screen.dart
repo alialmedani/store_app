@@ -34,6 +34,33 @@ class HomeScreen extends fw.StatelessWidget {
           ),
         ),
 
+        // Editorial promo banner (serif-italic display headline, ember CTA)
+        SliverToBoxAdapter(
+          child: fw.Padding(
+            padding: const fw.EdgeInsets.fromLTRB(
+              AppDesignTokens.screenPaddingHorizontal,
+              AppDesignTokens.smallGap,
+              AppDesignTokens.screenPaddingHorizontal,
+              0,
+            ),
+            child: AppPromoBanner(
+              eyebrow: 'promo_eyebrow'.tr(),
+              headline: 'promo_headline'.tr(),
+              ctaLabel: 'discover_now'.tr(),
+              onTap: () {
+                fw.Navigator.push(
+                  context,
+                  fw.PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const ProductListScreen(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+
         // Categories Section Header
         SliverToBoxAdapter(
           child: fw.Padding(
@@ -279,7 +306,7 @@ class _CategoryCardSkeleton extends fw.StatelessWidget {
   }
 }
 
-/// Category Card Widget - Aurora circle with the category initial, name below
+/// Category Card Widget - ember circle with the category initial, name below
 class _CategoryCard extends fw.StatelessWidget {
   final CategoryModel category;
 
@@ -380,7 +407,7 @@ class _CategoryCard extends fw.StatelessWidget {
   }
 }
 
-/// Product Card Widget - Aurora glass card
+/// Product Card Widget - flat paper/ink card
 class _ProductCard extends fw.StatelessWidget {
   final ProductModel product;
 

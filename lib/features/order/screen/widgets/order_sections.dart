@@ -37,11 +37,10 @@ class OrderItemsSection extends fw.StatelessWidget {
     final cubit = context.read<OrderCubit>();
     final orderId = order.id ?? '';
 
-    return Card(
-      child: fw.Container(
-        width: double.infinity,
-        padding: const fw.EdgeInsets.all(20),
-        child: fw.Column(
+    return AppCard(
+      elevated: true,
+      padding: const fw.EdgeInsets.all(AppDesignTokens.cardPaddingLarge),
+      child: fw.Column(
           crossAxisAlignment: fw.CrossAxisAlignment.start,
           children: [
             fw.Row(
@@ -50,40 +49,38 @@ class OrderItemsSection extends fw.StatelessWidget {
                 if (_isDraft)
                   OutlineButton(
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (ctx) => AddProductDialog(
-                          onItemAdded: (variantId, quantity) async {
-                            final ok = await runRemoteAction(
-                              () => cubit.addOrderItemToOrder(
-                                orderId,
-                                variantId,
-                                quantity,
-                              ),
-                              successMessage: 'item_added'.tr(),
-                            );
-                            if (ok) onChanged();
-                          },
-                        ),
+                      AddProductDialog.show(
+                        context,
+                        onItemAdded: (variantId, quantity) async {
+                          final ok = await runRemoteAction(
+                            () => cubit.addOrderItemToOrder(
+                              orderId,
+                              variantId,
+                              quantity,
+                            ),
+                            successMessage: 'item_added'.tr(),
+                          );
+                          if (ok) onChanged();
+                        },
                       );
                     },
                     child: Text('add_item_2'.tr()),
                   ),
               ],
             ),
-            const fw.SizedBox(height: 16),
+            const fw.SizedBox(height: AppDesignTokens.cardGap),
             if (order.items.isEmpty)
               Text(
                 'no_items_in_this_order'.tr(),
                 style: fw.TextStyle(
-                  fontSize: 13,
+                  fontSize: AppDesignTokens.captionFontSize + 1,
                   color: theme.colorScheme.mutedForeground,
                 ),
               )
             else
               ...order.items.map(
                 (item) => fw.Padding(
-                  padding: const fw.EdgeInsets.only(bottom: 12),
+                  padding: const fw.EdgeInsets.only(bottom: AppDesignTokens.itemGap),
                   child: _ItemRow(
                     item: item,
                     theme: theme,
@@ -116,7 +113,6 @@ class OrderItemsSection extends fw.StatelessWidget {
               ),
           ],
         ),
-      ),
     );
   }
 
@@ -138,7 +134,7 @@ class OrderItemsSection extends fw.StatelessWidget {
             Text(
               '${item.productName ?? ''} (${item.color ?? ''} / ${item.size ?? ''})',
             ),
-            const fw.SizedBox(height: 12),
+            const fw.SizedBox(height: AppDesignTokens.itemGap),
             TextField(
               controller: controller,
               placeholder: Text('quantity_2'.tr()),
@@ -209,24 +205,24 @@ class _ItemRow extends fw.StatelessWidget {
               Text(
                 item.productName ?? 'N/A',
                 style: const fw.TextStyle(
-                  fontSize: 14,
+                  fontSize: AppDesignTokens.bodyFontSize,
                   fontWeight: fw.FontWeight.w600,
                 ),
               ),
-              const fw.SizedBox(height: 2),
+              const fw.SizedBox(height: AppDesignTokens.tinyGap),
               Text(
                 '${item.color ?? ''} / ${item.size ?? ''}',
                 style: fw.TextStyle(
-                  fontSize: 12,
+                  fontSize: AppDesignTokens.captionFontSize,
                   color: theme.colorScheme.mutedForeground,
                 ),
               ),
-              const fw.SizedBox(height: 2),
+              const fw.SizedBox(height: AppDesignTokens.tinyGap),
               Text(
                 '${item.quantity} x ${_money(item.unitPrice)} = '
                 '${_money(item.lineTotal)}',
                 style: const fw.TextStyle(
-                  fontSize: 13,
+                  fontSize: AppDesignTokens.captionFontSize + 1,
                   fontWeight: fw.FontWeight.w500,
                 ),
               ),
@@ -266,19 +262,18 @@ class OrderPaymentsSection extends fw.StatelessWidget {
     if (order.payments.isEmpty) return const fw.SizedBox.shrink();
 
     return fw.Padding(
-      padding: const fw.EdgeInsets.only(bottom: 16),
-      child: Card(
-        child: fw.Container(
-          width: double.infinity,
-          padding: const fw.EdgeInsets.all(20),
-          child: fw.Column(
+      padding: const fw.EdgeInsets.only(bottom: AppDesignTokens.cardGap),
+      child: AppCard(
+        elevated: true,
+        padding: const fw.EdgeInsets.all(AppDesignTokens.cardPaddingLarge),
+        child: fw.Column(
             crossAxisAlignment: fw.CrossAxisAlignment.start,
             children: [
               _sectionTitle('payments'.tr(), theme),
-              const fw.SizedBox(height: 16),
+              const fw.SizedBox(height: AppDesignTokens.cardGap),
               ...order.payments.map(
                 (payment) => fw.Padding(
-                  padding: const fw.EdgeInsets.only(bottom: 12),
+                  padding: const fw.EdgeInsets.only(bottom: AppDesignTokens.itemGap),
                   child: fw.Row(
                     crossAxisAlignment: fw.CrossAxisAlignment.start,
                     children: [
@@ -289,7 +284,7 @@ class OrderPaymentsSection extends fw.StatelessWidget {
                             Text(
                               payment.paymentMethodName ?? 'payment'.tr(),
                               style: const fw.TextStyle(
-                                fontSize: 14,
+                                fontSize: AppDesignTokens.bodyFontSize,
                                 fontWeight: fw.FontWeight.w600,
                               ),
                             ),
@@ -297,7 +292,7 @@ class OrderPaymentsSection extends fw.StatelessWidget {
                               Text(
                                 _formatDate(payment.paymentDate!),
                                 style: fw.TextStyle(
-                                  fontSize: 12,
+                                  fontSize: AppDesignTokens.captionFontSize,
                                   color: theme.colorScheme.mutedForeground,
                                 ),
                               ),
@@ -306,7 +301,7 @@ class OrderPaymentsSection extends fw.StatelessWidget {
                               Text(
                                 'ref'.tr(args: ['${payment.referenceNumber}']),
                                 style: fw.TextStyle(
-                                  fontSize: 12,
+                                  fontSize: AppDesignTokens.captionFontSize,
                                   color: theme.colorScheme.mutedForeground,
                                 ),
                               ),
@@ -315,7 +310,7 @@ class OrderPaymentsSection extends fw.StatelessWidget {
                               Text(
                                 payment.note!,
                                 style: fw.TextStyle(
-                                  fontSize: 12,
+                                  fontSize: AppDesignTokens.captionFontSize,
                                   fontStyle: fw.FontStyle.italic,
                                   color: theme.colorScheme.mutedForeground,
                                 ),
@@ -326,7 +321,7 @@ class OrderPaymentsSection extends fw.StatelessWidget {
                       Text(
                         _money(payment.amount),
                         style: const fw.TextStyle(
-                          fontSize: 15,
+                          fontSize: AppDesignTokens.bodyFontSize + 1,
                           fontWeight: fw.FontWeight.w700,
                         ),
                       ),
@@ -336,7 +331,6 @@ class OrderPaymentsSection extends fw.StatelessWidget {
               ),
             ],
           ),
-        ),
       ),
     );
   }
@@ -443,23 +437,21 @@ class OrderActionsSection extends fw.StatelessWidget {
     if (buttons.isEmpty) return const fw.SizedBox.shrink();
 
     return fw.Padding(
-      padding: const fw.EdgeInsets.only(bottom: 16),
-      child: Card(
-        child: fw.Container(
-          width: double.infinity,
-          padding: const fw.EdgeInsets.all(20),
-          child: fw.Column(
+      padding: const fw.EdgeInsets.only(bottom: AppDesignTokens.cardGap),
+      child: AppCard(
+        elevated: true,
+        padding: const fw.EdgeInsets.all(AppDesignTokens.cardPaddingLarge),
+        child: fw.Column(
             crossAxisAlignment: fw.CrossAxisAlignment.stretch,
             children: [
               _sectionTitle('actions'.tr(), theme),
-              const fw.SizedBox(height: 16),
+              const fw.SizedBox(height: AppDesignTokens.cardGap),
               for (var i = 0; i < buttons.length; i++) ...[
-                if (i > 0) const fw.SizedBox(height: 12),
+                if (i > 0) const fw.SizedBox(height: AppDesignTokens.itemGap),
                 buttons[i],
               ],
             ],
           ),
-        ),
       ),
     );
   }
@@ -541,7 +533,7 @@ class _CancelOrderDialogState extends fw.State<_CancelOrderDialog> {
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
           Text('stock_will_be_returned_please_enter_a'.tr()),
-          const fw.SizedBox(height: 12),
+          const fw.SizedBox(height: AppDesignTokens.itemGap),
           TextField(
             controller: _reasonController,
             placeholder: Text('cancellation_reason'.tr()),
@@ -552,12 +544,12 @@ class _CancelOrderDialogState extends fw.State<_CancelOrderDialog> {
           ),
           if (_error != null)
             fw.Padding(
-              padding: const fw.EdgeInsets.only(top: 4),
+              padding: const fw.EdgeInsets.only(top: AppDesignTokens.tinyGap),
               child: Text(
                 _error!,
-                style: fw.TextStyle(
+                style: TextStyle(
                   color: AppDesignTokens.dangerColor,
-                  fontSize: 12,
+                  fontSize: AppDesignTokens.captionFontSize,
                 ),
               ),
             ),
@@ -674,12 +666,12 @@ class _RecordPaymentDialogState extends fw.State<_RecordPaymentDialog> {
           crossAxisAlignment: fw.CrossAxisAlignment.start,
           children: [
             Text('remaining'.tr(args: ['${_money(widget.remaining)}'])),
-            const fw.SizedBox(height: 12),
+            const fw.SizedBox(height: AppDesignTokens.itemGap),
             Text(
               'amount'.tr(),
               style: fw.TextStyle(fontWeight: fw.FontWeight.w600),
             ),
-            const fw.SizedBox(height: 6),
+            const fw.SizedBox(height: AppDesignTokens.smallGap),
             TextField(
               controller: _amountController,
               placeholder: Text('amount'.tr()),
@@ -692,24 +684,24 @@ class _RecordPaymentDialogState extends fw.State<_RecordPaymentDialog> {
             ),
             if (_error != null)
               fw.Padding(
-                padding: const fw.EdgeInsets.only(top: 4),
+                padding: const fw.EdgeInsets.only(top: AppDesignTokens.tinyGap),
                 child: Text(
                   _error!,
-                  style: fw.TextStyle(
+                  style: TextStyle(
                     color: AppDesignTokens.dangerColor,
-                    fontSize: 12,
+                    fontSize: AppDesignTokens.captionFontSize,
                   ),
                 ),
               ),
-            const fw.SizedBox(height: 12),
+            const fw.SizedBox(height: AppDesignTokens.itemGap),
             Text(
               'payment_method'.tr(),
               style: fw.TextStyle(fontWeight: fw.FontWeight.w600),
             ),
-            const fw.SizedBox(height: 6),
+            const fw.SizedBox(height: AppDesignTokens.smallGap),
             fw.Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: AppDesignTokens.smallGap,
+              runSpacing: AppDesignTokens.smallGap,
               children: _methods.entries.map((entry) {
                 final selected = _method == entry.key;
                 void select() => setState(() => _method = entry.key);
@@ -724,22 +716,22 @@ class _RecordPaymentDialogState extends fw.State<_RecordPaymentDialog> {
                       );
               }).toList(),
             ),
-            const fw.SizedBox(height: 12),
+            const fw.SizedBox(height: AppDesignTokens.itemGap),
             Text(
               'reference_number_optional'.tr(),
               style: fw.TextStyle(fontWeight: fw.FontWeight.w600),
             ),
-            const fw.SizedBox(height: 6),
+            const fw.SizedBox(height: AppDesignTokens.smallGap),
             TextField(
               controller: _referenceController,
               placeholder: Text('reference_number'.tr()),
             ),
-            const fw.SizedBox(height: 12),
+            const fw.SizedBox(height: AppDesignTokens.itemGap),
             Text(
               'note_optional_2'.tr(),
               style: fw.TextStyle(fontWeight: fw.FontWeight.w600),
             ),
-            const fw.SizedBox(height: 6),
+            const fw.SizedBox(height: AppDesignTokens.smallGap),
             TextField(
               controller: _noteController,
               placeholder: Text('note'.tr()),

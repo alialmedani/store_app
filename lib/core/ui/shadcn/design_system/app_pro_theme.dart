@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'app_design_tokens.dart';
 
 /// App themes (plain Flutter Material, styled by tokens).
-/// Aurora: big rounded cards, pill buttons, pastel tiles.
-/// - [dark]: deep graphite canvas, indigo-lilac accent
-/// - [light]: warm off-white canvas, white cards, indigo accent
+/// "Ink & Ember": flat paper/ink cards with Line hairlines, one Ember accent.
+/// - [light]: warm paper canvas (#EEECE7), white cards, Ember accent, Ink text
+/// - [dark]: near-black ground (#121212), lifted #1C1C1C cards, same Ember
 ///
 /// Colors come from [AppDesignTokens], so [AppDesignTokens.isDark] must match
 /// the theme being built (the app root keeps them in sync).
@@ -14,7 +14,6 @@ class AppProTheme {
   static const String fontFamily = 'IBMPlexSansArabic';
 
   static ColorScheme _scheme(Brightness b) {
-    final dark = b == Brightness.dark;
     return ColorScheme(
       brightness: b,
       primary: AppDesignTokens.primaryColor,
@@ -22,7 +21,11 @@ class AppProTheme {
       secondary: AppDesignTokens.mutedSurfaceColor,
       onSecondary: AppDesignTokens.titleTextColor,
       error: AppDesignTokens.dangerColor,
-      onError: dark ? const Color(0xFF14070A) : const Color(0xFFFFFFFF),
+      // Dark theme's danger is a light coral, so its foreground is ink;
+      // light theme's danger is a deep red, so its foreground is white.
+      onError: AppDesignTokens.isDark
+          ? const Color(0xFF121212)
+          : const Color(0xFFFFFFFF),
       surface: AppDesignTokens.backgroundColor,
       onSurface: AppDesignTokens.titleTextColor,
       outline: AppDesignTokens.borderColor,

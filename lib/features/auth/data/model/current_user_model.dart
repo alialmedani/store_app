@@ -12,6 +12,11 @@ class CurrentUserModel {
   final List<String>? roles;
   final String? sessionId;
 
+  /// ABP granted-permission policies, parsed from the application-configuration
+  /// response at `auth.grantedPolicies` (map of policy name -> granted bool).
+  /// Null means "unknown / not loaded" (the backend still enforces via 403).
+  final Map<String, bool>? grantedPolicies;
+
   CurrentUserModel({
     this.isAuthenticated,
     this.id,
@@ -25,6 +30,7 @@ class CurrentUserModel {
     this.phoneNumberVerified,
     this.roles,
     this.sessionId,
+    this.grantedPolicies,
   });
 
   factory CurrentUserModel.fromJson(Map<String, dynamic> json) {
@@ -44,6 +50,47 @@ class CurrentUserModel {
           : null,
       sessionId: json['sessionId'] as String?,
     );
+  }
+
+  /// Builds the current user from the FULL `application-configuration` payload,
+  /// capturing both `currentUser` and `auth.grantedPolicies`.
+  factory CurrentUserModel.fromAppConfig(Map<String, dynamic> json) {
+    final user = CurrentUserModel.fromJson(
+      (json['currentUser'] as Map?)?.cast<String, dynamic>() ?? const {},
+    );
+    Map<String, bool>? policies;
+    final auth = json['auth'];
+    if (auth is Map && auth['grantedPolicies'] is Map) {
+      policies = (auth['grantedPolicies'] as Map).map(
+        (key, value) => MapEntry(key.toString(), value == true),
+      );
+    }
+    return user.copyWith(grantedPolicies: policies);
+  }
+
+  CurrentUserModel copyWith({Map<String, bool>? grantedPolicies}) {
+    return CurrentUserModel(
+      isAuthenticated: isAuthenticated,
+      id: id,
+      tenantId: tenantId,
+      userName: userName,
+      name: name,
+      surName: surName,
+      email: email,
+      emailVerified: emailVerified,
+      phoneNumber: phoneNumber,
+      phoneNumberVerified: phoneNumberVerified,
+      roles: roles,
+      sessionId: sessionId,
+      grantedPolicies: grantedPolicies ?? this.grantedPolicies,
+    );
+  }
+
+  /// Whether the given ABP policy is granted. When permissions are unknown
+  /// (not loaded), returns true and lets the backend enforce via 403.
+  bool can(String policy) {
+    if (grantedPolicies == null) return true;
+    return grantedPolicies![policy] ?? false;
   }
 
   Map<String, dynamic> toJson() {

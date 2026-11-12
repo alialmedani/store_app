@@ -21,8 +21,6 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    Theme.of(context);
-
     return BlocProvider(
       create: (context) => ProductVariantCubit(),
       child: Scaffold(
@@ -44,7 +42,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                           onPressed: () => showConfirmDialog(
                             context,
                             title: 'delete_variant'.tr(),
-                            message: 'delete_variant_it_can_be_restored_late'.tr(args: ['${variant.color ?? ''}', '${variant.size ?? ''}']),
+                            message: 'delete_variant_it_can_be_restored_late'.tr(args: [variant.color ?? '', variant.size ?? '']),
                             confirmLabel: 'delete'.tr(),
                             destructive: true,
                             onConfirm: () async {
@@ -91,14 +89,18 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                       ],
                     ),
                   )]), body: fw.SingleChildScrollView(
-                      padding: const fw.EdgeInsets.all(20),
+                      padding: const fw.EdgeInsets.all(
+                        AppDesignTokens.cardPaddingLarge,
+                      ),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
-                          // Hero: product name on the Aurora gradient
+                          // Hero: product name on the ember accent
                           fw.Container(
                             width: double.infinity,
-                            padding: const fw.EdgeInsets.all(20),
+                            padding: const fw.EdgeInsets.all(
+                              AppDesignTokens.cardPaddingLarge,
+                            ),
                             decoration: fw.BoxDecoration(
                               gradient: AppDesignTokens.primaryGradient,
                               borderRadius: fw.BorderRadius.circular(
@@ -112,26 +114,26 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 fw.Text(
                                   'product'.tr(),
                                   style: fw.TextStyle(
-                                    fontSize: 12.5,
+                                    fontSize: AppDesignTokens.captionFontSize,
                                     fontWeight: fw.FontWeight.w600,
-                                    color: const fw.Color(0xFFFFFFFF)
+                                    color: AppDesignTokens.onAccentColor
                                         .withValues(alpha: 0.78),
                                   ),
                                 ),
-                                const fw.SizedBox(height: 6),
+                                const fw.SizedBox(height: AppDesignTokens.smallGap),
                                 fw.Text(
                                   variant.productName ?? 'N/A',
-                                  style: const fw.TextStyle(
-                                    fontSize: 24,
+                                  style: fw.TextStyle(
+                                    fontSize: AppDesignTokens.titleFontSize,
                                     fontWeight: fw.FontWeight.w800,
                                     letterSpacing: -0.4,
-                                    color: fw.Color(0xFFFFFFFF),
+                                    color: AppDesignTokens.onAccentColor,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                           // Color / size
                           if ((variant.color ?? '').isNotEmpty ||
@@ -150,7 +152,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                     ),
                                   if ((variant.color ?? '').isNotEmpty &&
                                       (variant.size ?? '').isNotEmpty)
-                                    const fw.SizedBox(width: 12),
+                                    const fw.SizedBox(width: AppDesignTokens.itemGap),
                                   if ((variant.size ?? '').isNotEmpty)
                                     fw.Expanded(
                                       child: AppStatTile(
@@ -162,7 +164,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 ],
                               ),
                             ),
-                            const fw.SizedBox(height: 12),
+                            const fw.SizedBox(height: AppDesignTokens.itemGap),
                           ],
 
                           // Stock & status
@@ -179,7 +181,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                     highlight: true,
                                   ),
                                 ),
-                                const fw.SizedBox(width: 12),
+                                const fw.SizedBox(width: AppDesignTokens.itemGap),
                                 fw.Expanded(
                                   child: AppStatTile(
                                     label: 'status'.tr(),
@@ -194,10 +196,10 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                               ],
                             ),
                           ),
-                          const fw.SizedBox(height: 24),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
 
                           AppSectionTitle('details'.tr()),
-                          const fw.SizedBox(height: 12),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
                           AppInfoSection(
                             children: [
                               AppInfoRow(
@@ -224,7 +226,7 @@ class ProductVariantDetailsScreen extends fw.StatelessWidget {
                                 ),
                             ],
                           ),
-                          const fw.SizedBox(height: 24),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
                         ],
                       ),
                     ));

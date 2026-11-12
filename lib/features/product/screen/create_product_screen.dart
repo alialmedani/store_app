@@ -53,7 +53,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('error_2'.tr()),
-            content: Text('failed_to_select_image'.tr(args: ['${e}'])),
+            content: Text('failed_to_select_image'.tr(args: ['$e'])),
             actions: [
               PrimaryButton(
                 onPressed: () => Navigator.pop(ctx),
@@ -136,324 +136,382 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   AppDesignTokens.screenPaddingHorizontal,
                   120, // Extra bottom padding for sticky button + safe area
                 ),
-                child: AppCard(
-                  child: fw.Column(
-                    crossAxisAlignment: fw.CrossAxisAlignment.stretch,
-                    children: [
-                      // Name Field
-                      BlocBuilder<ProductCubit, ProductState>(
-                        builder: (context, state) {
-                          return fw.Column(
-                            crossAxisAlignment: fw.CrossAxisAlignment.start,
-                            children: [
-                              fw.Text(
-                                'product_name'.tr(),
-                                style: fw.TextStyle(
-                                  fontSize: AppDesignTokens.bodyFontSize,
-                                  fontWeight: AppDesignTokens.semiBold,
-                                  color: AppDesignTokens.titleTextColor,
-                                ),
+                child: fw.Column(
+                  crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                  children: [
+                    // Basics section: name, description, price
+                    AppCard(
+                      elevated: true,
+                      child: fw.Column(
+                        crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                        children: [
+                          _FormSectionHeader(
+                            title: 'basics'.tr(),
+                            trailing: Text(
+                              'step_1_of_2'.tr(),
+                              style: fw.TextStyle(
+                                fontSize: AppDesignTokens.captionFontSize,
+                                fontWeight: AppDesignTokens.bold,
+                                color: AppDesignTokens.primaryColor,
                               ),
-                              const fw.SizedBox(
-                                height: AppDesignTokens.smallGap,
-                              ),
-                              TextField(
-                                controller: _nameController,
-                                placeholder: Text('enter_product_name'.tr()),
-                                onChanged: (value) {
-                                  cubit.createProductParams.name = value;
-                                  cubit.clearNameError();
-                                },
-                              ),
-                              if (cubit.nameError != null)
-                                fw.Padding(
-                                  padding: const fw.EdgeInsets.only(
-                                    top: AppDesignTokens.tinyGap,
-                                  ),
-                                  child: fw.Text(
-                                    cubit.nameError!,
+                            ),
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
+
+                          // Name Field
+                          BlocBuilder<ProductCubit, ProductState>(
+                            builder: (context, state) {
+                              return fw.Column(
+                                crossAxisAlignment:
+                                    fw.CrossAxisAlignment.start,
+                                children: [
+                                  fw.Text(
+                                    'product_name'.tr(),
                                     style: fw.TextStyle(
-                                      color: AppDesignTokens.dangerColor,
-                                      fontSize: AppDesignTokens.captionFontSize,
+                                      fontSize: AppDesignTokens.bodyFontSize,
+                                      fontWeight: AppDesignTokens.semiBold,
+                                      color: AppDesignTokens.titleTextColor,
                                     ),
                                   ),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                      const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-                      // Description Field
-                      fw.Text(
-                        'description'.tr(),
-                        style: fw.TextStyle(
-                          fontSize: AppDesignTokens.bodyFontSize,
-                          fontWeight: AppDesignTokens.semiBold,
-                          color: AppDesignTokens.titleTextColor,
-                        ),
-                      ),
-                      fw.Padding(
-              padding: const fw.EdgeInsets.symmetric(
-                horizontal: AppDesignTokens.screenPaddingHorizontal,
-              ),
-              child: Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(
-                  'step_1_of_2'.tr(),
-                  style: fw.TextStyle(
-                    fontSize: 12,
-                    fontWeight: AppDesignTokens.bold,
-                    color: AppDesignTokens.primaryColor,
-                  ),
-                ),
-              ),
-            ),
-            const fw.SizedBox(height: AppDesignTokens.smallGap),
-                      TextField(
-                        controller: _descriptionController,
-                        placeholder: Text('enter_description_optional'.tr()),
-                        maxLines: 3,
-                        onChanged: (value) {
-                          cubit.createProductParams.description = value;
-                        },
-                      ),
-                      const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-                      // Price Field
-                      BlocBuilder<ProductCubit, ProductState>(
-                        builder: (context, state) {
-                          return fw.Column(
-                            crossAxisAlignment: fw.CrossAxisAlignment.start,
-                            children: [
-                              fw.Text(
-                                'price'.tr(),
-                                style: fw.TextStyle(
-                                  fontSize: AppDesignTokens.bodyFontSize,
-                                  fontWeight: AppDesignTokens.semiBold,
-                                  color: AppDesignTokens.titleTextColor,
-                                ),
-                              ),
-                              const fw.SizedBox(
-                                height: AppDesignTokens.smallGap,
-                              ),
-                              TextField(
-                                controller: _priceController,
-                                placeholder: Text('enter_price'.tr()),
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
-                                onChanged: (value) {
-                                  final price = double.tryParse(value);
-                                  if (price != null) {
-                                    cubit.createProductParams.price = price;
-                                  }
-                                  cubit.clearPriceError();
-                                },
-                              ),
-                              if (cubit.priceError != null)
-                                fw.Padding(
-                                  padding: const fw.EdgeInsets.only(
-                                    top: AppDesignTokens.tinyGap,
+                                  const fw.SizedBox(
+                                    height: AppDesignTokens.smallGap,
                                   ),
-                                  child: fw.Text(
-                                    cubit.priceError!,
-                                    style: fw.TextStyle(
-                                      color: AppDesignTokens.dangerColor,
-                                      fontSize: AppDesignTokens.captionFontSize,
+                                  TextField(
+                                    controller: _nameController,
+                                    placeholder: Text(
+                                      'enter_product_name'.tr(),
                                     ),
+                                    onChanged: (value) {
+                                      cubit.createProductParams.name = value;
+                                      cubit.clearNameError();
+                                    },
                                   ),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                      const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-                      // Category Selection
-                      BlocBuilder<ProductCubit, ProductState>(
-                        builder: (context, state) {
-                          return AppSelectorField(
-                            label: 'category'.tr(),
-                            value: _categoryIdController.text.isNotEmpty
-                                ? _categoryIdController.text
-                                : null,
-                            placeholder: 'select_category_2'.tr(),
-                            onTap: () {
-                              _showCategorySelector(context, cubit);
-                            },
-                            errorText: cubit.categoryError,
-                            showRequired: true,
-                          );
-                        },
-                      ),
-                      const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-                      // Product Image Upload
-                      BlocBuilder<ProductCubit, ProductState>(
-                        builder: (context, state) {
-                          return fw.Column(
-                            crossAxisAlignment: fw.CrossAxisAlignment.start,
-                            children: [
-                              fw.Text(
-                                'product_image_optional'.tr(),
-                                style: fw.TextStyle(
-                                  fontSize: AppDesignTokens.bodyFontSize,
-                                  fontWeight: AppDesignTokens.semiBold,
-                                  color: AppDesignTokens.titleTextColor,
-                                ),
-                              ),
-                              const fw.SizedBox(
-                                height: AppDesignTokens.smallGap,
-                              ),
-                              if (cubit.selectedImageFile != null)
-                                fw.Stack(
-                                  children: [
-                                    fw.ClipRRect(
-                                      borderRadius: fw.BorderRadius.circular(
-                                        AppDesignTokens.inputRadius,
+                                  if (cubit.nameError != null)
+                                    fw.Padding(
+                                      padding: const fw.EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
                                       ),
-                                      child: fw.Image.file(
-                                        cubit.selectedImageFile!,
-                                        height: 200,
-                                        width: double.infinity,
-                                        fit: fw.BoxFit.cover,
-                                      ),
-                                    ),
-                                    fw.Positioned(
-                                      top: 8,
-                                      right: 8,
-                                      child: IconButton(
-                                        icon: const fw.Icon(Icons.close),
-                                        onPressed: () {
-                                          cubit.clearImageFile();
-                                        },
-                                        variance: ButtonVariance.destructive,
-                                      ),
-                                    ),
-                                    if (cubit.isUploadingImage)
-                                      fw.Positioned.fill(
-                                        child: fw.Container(
-                                          color: fw.Color(0x80000000),
-                                          child: const fw.Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
+                                      child: fw.Text(
+                                        cubit.nameError!,
+                                        style: fw.TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize:
+                                              AppDesignTokens.captionFontSize,
                                         ),
                                       ),
-                                  ],
-                                )
-                              else
-                                OutlineButton(
-                                  onPressed: cubit.isUploadingImage
-                                      ? null
-                                      : () => _pickImage(cubit),
-                                  child: fw.Row(
-                                    mainAxisAlignment:
-                                        fw.MainAxisAlignment.center,
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Description Field
+                          fw.Text(
+                            'description'.tr(),
+                            style: fw.TextStyle(
+                              fontSize: AppDesignTokens.bodyFontSize,
+                              fontWeight: AppDesignTokens.semiBold,
+                              color: AppDesignTokens.titleTextColor,
+                            ),
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.smallGap),
+                          TextField(
+                            controller: _descriptionController,
+                            placeholder: Text(
+                              'enter_description_optional'.tr(),
+                            ),
+                            maxLines: 3,
+                            onChanged: (value) {
+                              cubit.createProductParams.description = value;
+                            },
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Price Field
+                          BlocBuilder<ProductCubit, ProductState>(
+                            builder: (context, state) {
+                              return fw.Column(
+                                crossAxisAlignment:
+                                    fw.CrossAxisAlignment.start,
+                                children: [
+                                  fw.Text(
+                                    'price'.tr(),
+                                    style: fw.TextStyle(
+                                      fontSize: AppDesignTokens.bodyFontSize,
+                                      fontWeight: AppDesignTokens.semiBold,
+                                      color: AppDesignTokens.titleTextColor,
+                                    ),
+                                  ),
+                                  const fw.SizedBox(
+                                    height: AppDesignTokens.smallGap,
+                                  ),
+                                  TextField(
+                                    controller: _priceController,
+                                    placeholder: Text('enter_price'.tr()),
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                    onChanged: (value) {
+                                      final price = double.tryParse(value);
+                                      if (price != null) {
+                                        cubit.createProductParams.price =
+                                            price;
+                                      }
+                                      cubit.clearPriceError();
+                                    },
+                                  ),
+                                  if (cubit.priceError != null)
+                                    fw.Padding(
+                                      padding: const fw.EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
+                                      ),
+                                      child: fw.Text(
+                                        cubit.priceError!,
+                                        style: fw.TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize:
+                                              AppDesignTokens.captionFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const fw.SizedBox(height: AppDesignTokens.cardGap),
+
+                    // Classification section: category, target audience
+                    AppCard(
+                      elevated: true,
+                      child: fw.Column(
+                        crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                        children: [
+                          _FormSectionHeader(title: 'classification'.tr()),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
+
+                          // Category Selection
+                          BlocBuilder<ProductCubit, ProductState>(
+                            builder: (context, state) {
+                              return AppSelectorField(
+                                label: 'category'.tr(),
+                                value: _categoryIdController.text.isNotEmpty
+                                    ? _categoryIdController.text
+                                    : null,
+                                placeholder: 'select_category_2'.tr(),
+                                onTap: () {
+                                  _showCategorySelector(context, cubit);
+                                },
+                                errorText: cubit.categoryError,
+                                showRequired: true,
+                              );
+                            },
+                          ),
+                          const fw.SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Target Audience Selection
+                          BlocBuilder<ProductCubit, ProductState>(
+                            builder: (context, state) {
+                              return fw.Column(
+                                crossAxisAlignment:
+                                    fw.CrossAxisAlignment.start,
+                                children: [
+                                  fw.Text(
+                                    'target_audience'.tr(),
+                                    style: fw.TextStyle(
+                                      fontSize: AppDesignTokens.bodyFontSize,
+                                      fontWeight: AppDesignTokens.semiBold,
+                                      color: AppDesignTokens.titleTextColor,
+                                    ),
+                                  ),
+                                  const fw.SizedBox(
+                                    height: AppDesignTokens.smallGap,
+                                  ),
+                                  fw.Wrap(
+                                    spacing: AppDesignTokens.smallGap,
+                                    runSpacing: AppDesignTokens.smallGap,
                                     children: [
-                                      fw.Icon(
-                                        Icons.image,
-                                        size: 20,
-                                        color: theme.colorScheme.primary,
+                                      _TargetAudienceChip(
+                                        label: 'all'.tr(),
+                                        value: 0,
+                                        selectedValue:
+                                            cubit.selectedTargetAudience,
+                                        onSelected: (value) =>
+                                            cubit.selectTargetAudience(value),
                                       ),
-                                      const fw.SizedBox(
-                                        width: AppDesignTokens.smallGap,
+                                      _TargetAudienceChip(
+                                        label: 'men'.tr(),
+                                        value: 1,
+                                        selectedValue:
+                                            cubit.selectedTargetAudience,
+                                        onSelected: (value) =>
+                                            cubit.selectTargetAudience(value),
                                       ),
-                                      Text('choose_image'.tr()),
+                                      _TargetAudienceChip(
+                                        label: 'women'.tr(),
+                                        value: 2,
+                                        selectedValue:
+                                            cubit.selectedTargetAudience,
+                                        onSelected: (value) =>
+                                            cubit.selectTargetAudience(value),
+                                      ),
+                                      _TargetAudienceChip(
+                                        label: 'kids'.tr(),
+                                        value: 3,
+                                        selectedValue:
+                                            cubit.selectedTargetAudience,
+                                        onSelected: (value) =>
+                                            cubit.selectTargetAudience(value),
+                                      ),
                                     ],
                                   ),
-                                ),
-                            ],
-                          );
-                        },
+                                ],
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+                    ),
+                    const fw.SizedBox(height: AppDesignTokens.cardGap),
 
-                      // Target Audience Selection
-                      BlocBuilder<ProductCubit, ProductState>(
-                        builder: (context, state) {
-                          return fw.Column(
-                            crossAxisAlignment: fw.CrossAxisAlignment.start,
-                            children: [
-                              fw.Text(
-                                'target_audience'.tr(),
-                                style: fw.TextStyle(
-                                  fontSize: AppDesignTokens.bodyFontSize,
-                                  fontWeight: AppDesignTokens.semiBold,
-                                  color: AppDesignTokens.titleTextColor,
-                                ),
-                              ),
-                              const fw.SizedBox(
-                                height: AppDesignTokens.smallGap,
-                              ),
-                              fw.Wrap(
-                                spacing: AppDesignTokens.smallGap,
-                                runSpacing: AppDesignTokens.smallGap,
+                    // Media section: product image
+                    AppCard(
+                      elevated: true,
+                      child: fw.Column(
+                        crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                        children: [
+                          _FormSectionHeader(title: 'media'.tr()),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
+
+                          // Product Image Upload
+                          BlocBuilder<ProductCubit, ProductState>(
+                            builder: (context, state) {
+                              return fw.Column(
+                                crossAxisAlignment:
+                                    fw.CrossAxisAlignment.start,
                                 children: [
-                                  _TargetAudienceChip(
-                                    label: 'all'.tr(),
-                                    value: 0,
-                                    selectedValue: cubit.selectedTargetAudience,
-                                    onSelected: (value) =>
-                                        cubit.selectTargetAudience(value),
+                                  fw.Text(
+                                    'product_image_optional'.tr(),
+                                    style: fw.TextStyle(
+                                      fontSize: AppDesignTokens.bodyFontSize,
+                                      fontWeight: AppDesignTokens.semiBold,
+                                      color: AppDesignTokens.titleTextColor,
+                                    ),
                                   ),
-                                  _TargetAudienceChip(
-                                    label: 'men'.tr(),
-                                    value: 1,
-                                    selectedValue: cubit.selectedTargetAudience,
-                                    onSelected: (value) =>
-                                        cubit.selectTargetAudience(value),
+                                  const fw.SizedBox(
+                                    height: AppDesignTokens.smallGap,
                                   ),
-                                  _TargetAudienceChip(
-                                    label: 'women'.tr(),
-                                    value: 2,
-                                    selectedValue: cubit.selectedTargetAudience,
-                                    onSelected: (value) =>
-                                        cubit.selectTargetAudience(value),
+                                  if (cubit.selectedImageFile != null)
+                                    fw.Stack(
+                                      children: [
+                                        fw.ClipRRect(
+                                          borderRadius:
+                                              fw.BorderRadius.circular(
+                                                AppDesignTokens.inputRadius,
+                                              ),
+                                          child: fw.Image.file(
+                                            cubit.selectedImageFile!,
+                                            height: 200,
+                                            width: double.infinity,
+                                            fit: fw.BoxFit.cover,
+                                          ),
+                                        ),
+                                        fw.Positioned(
+                                          top: 8,
+                                          right: 8,
+                                          child: IconButton(
+                                            icon: const fw.Icon(Icons.close),
+                                            onPressed: () {
+                                              cubit.clearImageFile();
+                                            },
+                                            variance:
+                                                ButtonVariance.destructive,
+                                          ),
+                                        ),
+                                        if (cubit.isUploadingImage)
+                                          fw.Positioned.fill(
+                                            child: fw.Container(
+                                              color: fw.Color(0x80000000),
+                                              child: const fw.Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    )
+                                  else
+                                    OutlineButton(
+                                      onPressed: cubit.isUploadingImage
+                                          ? null
+                                          : () => _pickImage(cubit),
+                                      child: fw.Row(
+                                        mainAxisAlignment:
+                                            fw.MainAxisAlignment.center,
+                                        children: [
+                                          fw.Icon(
+                                            Icons.image,
+                                            size: 20,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                          const fw.SizedBox(
+                                            width: AppDesignTokens.smallGap,
+                                          ),
+                                          Text('choose_image'.tr()),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const fw.SizedBox(height: AppDesignTokens.cardGap),
+
+                    // Status section: active switch
+                    AppCard(
+                      elevated: true,
+                      child: fw.Column(
+                        crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                        children: [
+                          _FormSectionHeader(title: 'status'.tr()),
+                          const fw.SizedBox(height: AppDesignTokens.sectionGap),
+
+                          // Active Switch
+                          BlocBuilder<ProductCubit, ProductState>(
+                            builder: (context, state) {
+                              return fw.Row(
+                                mainAxisAlignment:
+                                    fw.MainAxisAlignment.spaceBetween,
+                                children: [
+                                  fw.Text(
+                                    'active'.tr(),
+                                    style: fw.TextStyle(
+                                      fontSize: AppDesignTokens.bodyFontSize,
+                                      fontWeight: AppDesignTokens.semiBold,
+                                      color: AppDesignTokens.titleTextColor,
+                                    ),
                                   ),
-                                  _TargetAudienceChip(
-                                    label: 'kids'.tr(),
-                                    value: 3,
-                                    selectedValue: cubit.selectedTargetAudience,
-                                    onSelected: (value) =>
-                                        cubit.selectTargetAudience(value),
+                                  Switch(
+                                    value: cubit.createProductParams.isActive,
+                                    onChanged: (value) {
+                                      cubit.toggleIsActive(value);
+                                    },
                                   ),
                                 ],
-                              ),
-                            ],
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-                      // Active Switch
-                      BlocBuilder<ProductCubit, ProductState>(
-                        builder: (context, state) {
-                          return fw.Row(
-                            mainAxisAlignment:
-                                fw.MainAxisAlignment.spaceBetween,
-                            children: [
-                              fw.Text(
-                                'active'.tr(),
-                                style: fw.TextStyle(
-                                  fontSize: AppDesignTokens.bodyFontSize,
-                                  fontWeight: AppDesignTokens.semiBold,
-                                  color: AppDesignTokens.titleTextColor,
-                                ),
-                              ),
-                              Switch(
-                                value: cubit.createProductParams.isActive,
-                                onChanged: (value) {
-                                  cubit.toggleIsActive(value);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ))),
             StickyBottomAction(
@@ -506,7 +564,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                     context: context,
                     builder: (ctx) => AlertDialog(
                       title: Text('error_2'.tr()),
-                      content: Text('failed_to_create_product'.tr(args: ['${error}'])),
+                      content: Text('failed_to_create_product'.tr(args: ['$error'])),
                       actions: [
                         PrimaryButton(
                           onPressed: () => fw.Navigator.pop(ctx),
@@ -522,7 +580,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                     child: Text(
                       'create_product'.tr(),
                       style: fw.TextStyle(
-                        fontSize: 15,
+                        fontSize: AppDesignTokens.bodyFontSize,
                         fontWeight: AppDesignTokens.semiBold,
                       ),
                     ),
@@ -575,6 +633,33 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
           },
         ),
       ),
+    );
+  }
+}
+
+/// Small bold section header used to group related fields inside a form
+/// card (e.g. Basics / Classification / Media / Status).
+class _FormSectionHeader extends StatelessWidget {
+  final String title;
+  final Widget? trailing;
+
+  const _FormSectionHeader({required this.title, this.trailing});
+
+  @override
+  Widget build(BuildContext context) {
+    return fw.Row(
+      mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: fw.TextStyle(
+            fontSize: AppDesignTokens.cardTitleFontSize,
+            fontWeight: AppDesignTokens.bold,
+            color: AppDesignTokens.titleTextColor,
+          ),
+        ),
+        if (trailing != null) trailing!,
+      ],
     );
   }
 }

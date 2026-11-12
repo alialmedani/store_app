@@ -118,7 +118,7 @@ class AuthRepository extends CoreRepository {
       queryParameters: {'IncludeLocalizationResources': 'false'},
       method: HttpMethod.GET,
       converter: (json) {
-        return CurrentUserModel.fromJson(json['currentUser']);
+        return CurrentUserModel.fromAppConfig(json);
       },
     );
 

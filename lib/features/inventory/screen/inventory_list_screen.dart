@@ -35,10 +35,17 @@ class InventoryListScreen extends StatelessWidget {
                   itemCount: 5,
                   itemBuilder: (context, index) {
                     return const fw.Padding(
-                      padding: fw.EdgeInsets.only(bottom: 16),
+                      padding: fw.EdgeInsets.only(
+                        bottom: AppDesignTokens.itemGap,
+                      ),
                       child: InventoryMovementCardSkeleton(),
                     );
                   },
+                ),
+                noDataWidget: EmptyState(
+                  icon: Icons.inventory_2_outlined,
+                  title: 'inventory_empty_title'.tr(),
+                  subtitle: 'inventory_empty_subtitle'.tr(),
                 ),
                 repositoryCallBack: (data) {
                   return context.read<InventoryCubit>().fetchInventoryList(
@@ -57,8 +64,13 @@ class InventoryListScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final inventory = list[index];
                       return fw.Padding(
-                        padding: const fw.EdgeInsets.only(bottom: 16),
-                        child: _InventoryCard(inventory: inventory),
+                        padding: const fw.EdgeInsets.only(
+                          bottom: AppDesignTokens.itemGap,
+                        ),
+                        child: FadeSlideIn(
+                          index: index,
+                          child: _InventoryCard(inventory: inventory),
+                        ),
                       );
                     },
                   );
@@ -67,8 +79,7 @@ class InventoryListScreen extends StatelessWidget {
       ),
     );
   }
-
- }
+}
 
 /// Premium Inventory Card Widget
 class _InventoryCard extends StatelessWidget {
@@ -83,11 +94,10 @@ class _InventoryCard extends StatelessWidget {
     // Determine movement type styling
     final movementStyle = _getMovementStyle(inventory.movementType?.id);
 
-    return Card(
-      child: fw.Container(
-        child: fw.Padding(
-          padding: const fw.EdgeInsets.all(20),
-          child: fw.Column(
+    return AppCard(
+      elevated: true,
+      padding: const fw.EdgeInsets.all(AppDesignTokens.cardPaddingLarge),
+      child: fw.Column(
             crossAxisAlignment: fw.CrossAxisAlignment.start,
             children: [
               // Header: Product Info & Movement Badge
@@ -110,7 +120,7 @@ class _InventoryCard extends StatelessWidget {
                       color: movementStyle.color,
                     ),
                   ),
-                  const fw.SizedBox(width: 14),
+                  const fw.SizedBox(width: AppDesignTokens.itemGap),
                   // Product Details
                   fw.Expanded(
                     child: fw.Column(
@@ -127,7 +137,7 @@ class _InventoryCard extends StatelessWidget {
                         ),
                         if (inventory.color != null ||
                             inventory.size != null) ...[
-                          const fw.SizedBox(height: 6),
+                          const fw.SizedBox(height: AppDesignTokens.smallGap),
                           fw.Row(
                             children: [
                               if (inventory.color != null) ...[
@@ -152,7 +162,7 @@ class _InventoryCard extends StatelessWidget {
                                   ),
                                 ),
                                 if (inventory.size != null)
-                                  const fw.SizedBox(width: 6),
+                                  const fw.SizedBox(width: AppDesignTokens.smallGap),
                               ],
                               if (inventory.size != null)
                                 fw.Container(
@@ -181,7 +191,7 @@ class _InventoryCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const fw.SizedBox(width: 12),
+                  const fw.SizedBox(width: AppDesignTokens.itemGap),
                   // Movement Type Badge
                   if (inventory.movementType?.name != null)
                     fw.Container(
@@ -217,7 +227,7 @@ class _InventoryCard extends StatelessWidget {
                 ],
               ),
 
-              const fw.SizedBox(height: 18),
+              const fw.SizedBox(height: AppDesignTokens.cardGap),
 
               // Category Badge
               if (inventory.categoryName != null) ...[
@@ -230,7 +240,7 @@ class _InventoryCard extends StatelessWidget {
                         alpha: 0.7,
                       ),
                     ),
-                    const fw.SizedBox(width: 6),
+                    const fw.SizedBox(width: AppDesignTokens.smallGap),
                     fw.Container(
                       padding: const fw.EdgeInsets.symmetric(
                         horizontal: 10,
@@ -260,7 +270,7 @@ class _InventoryCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const fw.SizedBox(height: 18),
+                const fw.SizedBox(height: AppDesignTokens.cardGap),
               ],
 
               // Divider
@@ -277,7 +287,7 @@ class _InventoryCard extends StatelessWidget {
                 ),
               ),
 
-              const fw.SizedBox(height: 18),
+              const fw.SizedBox(height: AppDesignTokens.cardGap),
 
               // Quantity Stats Row
               fw.Row(
@@ -285,7 +295,9 @@ class _InventoryCard extends StatelessWidget {
                   // Quantity Change
                   fw.Expanded(
                     child: fw.Container(
-                      padding: const fw.EdgeInsets.all(14),
+                      padding: const fw.EdgeInsets.all(
+                        AppDesignTokens.itemGap,
+                      ),
                       decoration: fw.BoxDecoration(
                         gradient: fw.LinearGradient(
                           begin: fw.Alignment.topLeft,
@@ -311,7 +323,7 @@ class _InventoryCard extends StatelessWidget {
                                 size: 16,
                                 color: movementStyle.color,
                               ),
-                              const fw.SizedBox(width: 6),
+                              const fw.SizedBox(width: AppDesignTokens.smallGap),
                               fw.Text(
                                 'change'.tr(),
                                 style: fw.TextStyle(
@@ -323,7 +335,7 @@ class _InventoryCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const fw.SizedBox(height: 6),
+                          const fw.SizedBox(height: AppDesignTokens.smallGap),
                           fw.Text(
                             '${movementStyle.prefix}${inventory.quantityChange ?? 0}',
                             style: fw.TextStyle(
@@ -337,11 +349,13 @@ class _InventoryCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const fw.SizedBox(width: 12),
+                  const fw.SizedBox(width: AppDesignTokens.itemGap),
                   // Current Stock
                   fw.Expanded(
                     child: fw.Container(
-                      padding: const fw.EdgeInsets.all(14),
+                      padding: const fw.EdgeInsets.all(
+                        AppDesignTokens.itemGap,
+                      ),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.3),
                         borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
@@ -362,7 +376,7 @@ class _InventoryCard extends StatelessWidget {
                                 size: 16,
                                 color: theme.colorScheme.mutedForeground,
                               ),
-                              const fw.SizedBox(width: 6),
+                              const fw.SizedBox(width: AppDesignTokens.smallGap),
                               fw.Text(
                                 'stock'.tr(),
                                 style: fw.TextStyle(
@@ -374,7 +388,7 @@ class _InventoryCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const fw.SizedBox(height: 6),
+                          const fw.SizedBox(height: AppDesignTokens.smallGap),
                           fw.Text(
                             '${inventory.currentStockQuantity ?? 0}',
                             style: const fw.TextStyle(
@@ -390,12 +404,12 @@ class _InventoryCard extends StatelessWidget {
                 ],
               ),
 
-              const fw.SizedBox(height: 16),
+              const fw.SizedBox(height: AppDesignTokens.cardGap),
 
               // Metadata Row
               fw.Wrap(
-                spacing: 16,
-                runSpacing: 10,
+                spacing: AppDesignTokens.cardGap,
+                runSpacing: AppDesignTokens.smallGap,
                 children: [
                   if (inventory.sourceType?.name != null)
                     _buildMetaItem(
@@ -417,9 +431,9 @@ class _InventoryCard extends StatelessWidget {
 
               // Note Section
               if (inventory.note != null && inventory.note!.isNotEmpty) ...[
-                const fw.SizedBox(height: 16),
+                const fw.SizedBox(height: AppDesignTokens.cardGap),
                 fw.Container(
-                  padding: const fw.EdgeInsets.all(12),
+                  padding: const fw.EdgeInsets.all(AppDesignTokens.itemGap),
                   decoration: fw.BoxDecoration(
                     color: theme.colorScheme.muted.withValues(alpha: 0.25),
                     borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
@@ -438,7 +452,7 @@ class _InventoryCard extends StatelessWidget {
                           alpha: 0.7,
                         ),
                       ),
-                      const fw.SizedBox(width: 10),
+                      const fw.SizedBox(width: AppDesignTokens.smallGap),
                       fw.Expanded(
                         child: fw.Text(
                           inventory.note!,
@@ -456,8 +470,6 @@ class _InventoryCard extends StatelessWidget {
               ],
             ],
           ),
-        ),
-      ),
     );
   }
 
@@ -470,7 +482,7 @@ class _InventoryCard extends StatelessWidget {
           size: 15,
           color: theme.colorScheme.mutedForeground.withValues(alpha: 0.7),
         ),
-        const fw.SizedBox(width: 6),
+        const fw.SizedBox(width: AppDesignTokens.smallGap),
         fw.Text(
           text,
           style: fw.TextStyle(

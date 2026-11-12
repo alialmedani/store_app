@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart' as fw;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/core/ui/kit/app_kit.dart';
 import '../../../core/classes/cashe_helper.dart';
 import '../../home/screen/main_navigation_screen.dart';
+import '../cubit/auth_cubit.dart';
 import 'login_screen_shadcn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:store/core/ui/shadcn/widget/design_system/app_skeleton_loader.dart';
@@ -43,6 +45,24 @@ class _AuthWrapperState extends fw.State<AuthWrapper> {
         isTokenValid = true;
       }
     }
+
+    // For returning users (valid cached token) the current user & granted
+    // permissions are not in memory yet (only fetched at login). Best-effort
+    // refresh so permission-gated UI (e.g. Reports) knows what to show. Never
+    // block or fail navigation on this.
+    if (isTokenValid && mounted) {
+      try {
+        final authCubit = context.read<AuthCubit>();
+        final result = await authCubit.getAppConfig();
+        if (result.hasDataOnly) {
+          authCubit.currentUser = result.data;
+        }
+      } catch (_) {
+        // ignore — gating falls back to backend 403 enforcement
+      }
+    }
+
+    if (!mounted) return;
 
     // Navigate based on token validity
     if (mounted) {

@@ -9,7 +9,11 @@ class GetProductListParams extends BaseParams {
   final GetListRequest? request;
   final String? categoryId;
 
-  GetProductListParams({this.request, this.categoryId});
+  /// Free-text search (backend `Filter`: matches product name / description /
+  /// category name). Omitted from the query when null or empty.
+  final String? filter;
+
+  GetProductListParams({this.request, this.categoryId, this.filter});
 
   Map<String, dynamic> toJson() {
     return {
@@ -18,6 +22,7 @@ class GetProductListParams extends BaseParams {
         'MaxResultCount': request!.take,
       },
       if (categoryId != null) 'CategoryId': categoryId,
+      if (filter != null && filter!.isNotEmpty) 'Filter': filter,
     };
   }
 }

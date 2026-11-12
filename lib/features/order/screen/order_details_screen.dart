@@ -46,14 +46,18 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                       context.read<OrderCubit>().getOrderDetails(orderId),
                   modelBuilder: (order) {
                     return fw.SingleChildScrollView(
-                      padding: const fw.EdgeInsets.all(20),
+                      padding: const fw.EdgeInsets.all(
+                        AppDesignTokens.screenPaddingHorizontal,
+                      ),
                       child: fw.Column(
                         crossAxisAlignment: fw.CrossAxisAlignment.start,
                         children: [
                           // Order number hero
                           fw.Container(
                             width: double.infinity,
-                            padding: const fw.EdgeInsets.all(20),
+                            padding: const fw.EdgeInsets.all(
+                              AppDesignTokens.cardPaddingLarge,
+                            ),
                             decoration: fw.BoxDecoration(
                               gradient: AppDesignTokens.primaryGradient,
                               borderRadius: fw.BorderRadius.circular(
@@ -67,51 +71,52 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                 Text(
                                   'order_number'.tr(),
                                   style: fw.TextStyle(
-                                    fontSize: 12.5,
+                                    fontSize: AppDesignTokens.captionFontSize + 1,
                                     fontWeight: fw.FontWeight.w600,
-                                    color: const fw.Color(0xFFFFFFFF)
+                                    color: AppDesignTokens.onAccentColor
                                         .withValues(alpha: 0.78),
                                   ),
                                 ),
-                                const fw.SizedBox(height: 6),
+                                const fw.SizedBox(height: AppDesignTokens.tinyGap + 2),
                                 Text(
                                   order.orderNumber ?? 'N/A',
-                                  style: const fw.TextStyle(
-                                    fontSize: 24,
+                                  style: fw.TextStyle(
+                                    fontSize: AppDesignTokens.titleFontSize - 2,
                                     fontWeight: fw.FontWeight.w800,
                                     letterSpacing: -0.3,
-                                    color: fw.Color(0xFFFFFFFF),
+                                    color: AppDesignTokens.onAccentColor,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                           // Customer Information Card
-                          Card(
-                            child: fw.Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(20),
-                              child: fw.Column(
+                          AppCard(
+                            elevated: true,
+                            padding: const fw.EdgeInsets.all(
+                              AppDesignTokens.cardPaddingLarge,
+                            ),
+                            child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   AppSectionTitle('customer_information_2'.tr()),
-                                  const fw.SizedBox(height: 16),
+                                  const fw.SizedBox(height: AppDesignTokens.cardGap),
                                   _InfoRow(
                                     icon: Icons.person_outline,
                                     label: 'name'.tr(),
                                     value: order.customerName ?? 'N/A',
                                     theme: theme,
                                   ),
-                                  const fw.SizedBox(height: 12),
+                                  const fw.SizedBox(height: AppDesignTokens.itemGap),
                                   _InfoRow(
                                     icon: Icons.phone_outlined,
                                     label: 'phone'.tr(),
                                     value: order.customerPhone ?? 'N/A',
                                     theme: theme,
                                   ),
-                                  const fw.SizedBox(height: 12),
+                                  const fw.SizedBox(height: AppDesignTokens.itemGap),
                                   _InfoRow(
                                     icon: Icons.location_on_outlined,
                                     label: 'address'.tr(),
@@ -120,7 +125,7 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                   ),
                                   if (order.note != null &&
                                       order.note!.isNotEmpty) ...[
-                                    const fw.SizedBox(height: 12),
+                                    const fw.SizedBox(height: AppDesignTokens.itemGap),
                                     _InfoRow(
                                       icon: Icons.note_outlined,
                                       label: 'note'.tr(),
@@ -130,9 +135,8 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                   ],
                                 ],
                               ),
-                            ),
                           ),
-                          const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                           // Items (editable while the order is a draft)
                           OrderItemsSection(
@@ -140,18 +144,19 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                             theme: theme,
                             onChanged: _reload,
                           ),
-                          const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                           // Status Information Card
-                          Card(
-                            child: fw.Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(20),
-                              child: fw.Column(
+                          AppCard(
+                            elevated: true,
+                            padding: const fw.EdgeInsets.all(
+                              AppDesignTokens.cardPaddingLarge,
+                            ),
+                            child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   AppSectionTitle('status_2'.tr()),
-                                  const fw.SizedBox(height: 16),
+                                  const fw.SizedBox(height: AppDesignTokens.cardGap),
                                   fw.IntrinsicHeight(
                                     child: fw.Row(
                                       crossAxisAlignment:
@@ -168,7 +173,7 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                           ),
                                         if (order.status != null &&
                                             order.paymentStatus != null)
-                                          const fw.SizedBox(width: 12),
+                                          const fw.SizedBox(width: AppDesignTokens.itemGap),
                                         if (order.paymentStatus != null)
                                           fw.Expanded(
                                             child: AppStatTile(
@@ -184,27 +189,27 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                   ),
                                 ],
                               ),
-                            ),
                           ),
-                          const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                           // Payment Summary Card
-                          Card(
-                            child: fw.Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(20),
-                              child: fw.Column(
+                          AppCard(
+                            elevated: true,
+                            padding: const fw.EdgeInsets.all(
+                              AppDesignTokens.cardPaddingLarge,
+                            ),
+                            child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   AppSectionTitle('payment_summary'.tr()),
-                                  const fw.SizedBox(height: 16),
+                                  const fw.SizedBox(height: AppDesignTokens.cardGap),
                                   _PaymentRow(
                                     label: 'total_amount'.tr(),
                                     value:
                                         '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
                                     theme: theme,
                                   ),
-                                  const fw.SizedBox(height: 12),
+                                  const fw.SizedBox(height: AppDesignTokens.itemGap),
                                   _PaymentRow(
                                     label: 'paid_amount'.tr(),
                                     value:
@@ -212,9 +217,11 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                     theme: theme,
                                     valueColor: theme.colorScheme.primary,
                                   ),
-                                  const fw.SizedBox(height: 12),
+                                  const fw.SizedBox(height: AppDesignTokens.itemGap),
                                   fw.Container(
-                                    padding: const fw.EdgeInsets.only(top: 12),
+                                    padding: const fw.EdgeInsets.only(
+                                      top: AppDesignTokens.itemGap,
+                                    ),
                                     decoration: fw.BoxDecoration(
                                       border: fw.Border(
                                         top: fw.BorderSide(
@@ -238,9 +245,8 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                   ),
                                 ],
                               ),
-                            ),
                           ),
-                          const fw.SizedBox(height: 16),
+                          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
                           // Payments history
                           OrderPaymentsSection(order: order, theme: theme),
@@ -256,15 +262,16 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                           ),
 
                           // Dates Card
-                          Card(
-                            child: fw.Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(20),
-                              child: fw.Column(
+                          AppCard(
+                            elevated: true,
+                            padding: const fw.EdgeInsets.all(
+                              AppDesignTokens.cardPaddingLarge,
+                            ),
+                            child: fw.Column(
                                 crossAxisAlignment: fw.CrossAxisAlignment.start,
                                 children: [
                                   AppSectionTitle('dates'.tr()),
-                                  const fw.SizedBox(height: 16),
+                                  const fw.SizedBox(height: AppDesignTokens.cardGap),
                                   if (order.creationTime != null)
                                     _DateRow(
                                       label: 'created'.tr(),
@@ -272,7 +279,7 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                       theme: theme,
                                     ),
                                   if (order.lastModificationTime != null) ...[
-                                    const fw.SizedBox(height: 12),
+                                    const fw.SizedBox(height: AppDesignTokens.itemGap),
                                     _DateRow(
                                       label: 'last_modified'.tr(),
                                       date: order.lastModificationTime!,
@@ -280,7 +287,7 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                     ),
                                   ],
                                   if (order.cancellationTime != null) ...[
-                                    const fw.SizedBox(height: 12),
+                                    const fw.SizedBox(height: AppDesignTokens.itemGap),
                                     _DateRow(
                                       label: 'cancelled'.tr(),
                                       date: order.cancellationTime!,
@@ -291,11 +298,11 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                         order
                                             .cancellationReason!
                                             .isNotEmpty) ...[
-                                      const fw.SizedBox(height: 8),
+                                      const fw.SizedBox(height: AppDesignTokens.smallGap),
                                       Text(
                                         'reason'.tr(args: ['${order.cancellationReason}']),
                                         style: fw.TextStyle(
-                                          fontSize: 13,
+                                          fontSize: AppDesignTokens.bodyFontSize - 1,
                                           color:
                                               theme.colorScheme.mutedForeground,
                                           fontStyle: fw.FontStyle.italic,
@@ -305,7 +312,6 @@ class _OrderDetailsScreenState extends fw.State<OrderDetailsScreen> {
                                   ],
                                 ],
                               ),
-                            ),
                           ),
                         ],
                       ),

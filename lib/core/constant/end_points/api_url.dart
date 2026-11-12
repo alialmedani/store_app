@@ -1,5 +1,5 @@
 //emulator
-const String baseUrl = 'http://10.0.2.2:5000';
+// const String baseUrl = 'http://10.0.2.2:5000';
 /*     
 dotnet run --project src/StoreManagement.Web --launch-profile StoreManagement.Web
 */
@@ -9,7 +9,7 @@ dotnet run --project src/StoreManagement.Web --launch-profile StoreManagement.We
 /*  
 dotnet run --project src/StoreManagement.Web --urls "http://0.0.0.0:5000"
 */
-// const String baseUrl = 'http://10.200.0.91:5000';
+const String baseUrl = 'http://10.200.0.91:5000';
 
 
 const loginUrl = '$baseUrl/connect/token';
@@ -99,6 +99,17 @@ String addOrderItemUrl(String id) => '$baseUrl/api/app/order/$id/item';
 String removeOrderItemUrl(String id, String itemId) =>
     '$baseUrl/api/app/order/$id/item/$itemId';
 String deleteOrderUrl(String id) => '$baseUrl/api/app/order/$id';
+
+// ========== Reports URLs ==========
+// Route prefix is singular `/api/app/report` (ABP conventional routing of
+// `ReportAppService`). Confirm against Swagger if a route 404s.
+const getSalesSummaryUrl = '$baseUrl/api/app/report/sales-summary';
+const getInventoryStatusReportUrl = '$baseUrl/api/app/report/inventory-status';
+const getTopSellersUrl = '$baseUrl/api/app/report/top-sellers';
+const getStockMovementsReportUrl = '$baseUrl/api/app/report/stock-movements';
+const getCategoryPerformanceUrl =
+    '$baseUrl/api/app/report/category-performance';
+const getProfitMarginUrl = '$baseUrl/api/app/report/profit-margin';
 
 // ========== Deleted (Trash) / Restore URLs ==========
 const getDeletedCategoryListUrl = '$baseUrl/api/app/category/deleted-list';

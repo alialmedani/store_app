@@ -3,8 +3,8 @@ import 'package:store/core/ui/kit/app_kit.dart';
 import '../../design_system/app_design_tokens.dart';
 import 'app_motion.dart';
 
-/// Unified card (Aurora): glass gradient surface, glass hairline, soft shadow.
-/// Tappable cards press-scale.
+/// Unified card (Ink & Ember): flat paper/ink surface, Line hairline, soft
+/// shadow. Tappable cards press-scale.
 class AppCard extends fw.StatelessWidget {
   final fw.Widget child;
   final fw.VoidCallback? onTap;
@@ -13,6 +13,11 @@ class AppCard extends fw.StatelessWidget {
   final fw.Color? backgroundColor;
   final List<fw.BoxShadow>? boxShadow;
   final double? borderRadius;
+
+  /// When true, the card uses the shared lifted shadow
+  /// ([AppDesignTokens.elevatedShadow]) so it reads as floating over the page.
+  /// Ignored if an explicit [boxShadow] is passed.
+  final bool elevated;
 
   const AppCard({
     super.key,
@@ -23,6 +28,7 @@ class AppCard extends fw.StatelessWidget {
     this.backgroundColor,
     this.boxShadow,
     this.borderRadius,
+    this.elevated = false,
   });
 
   @override
@@ -45,7 +51,9 @@ class AppCard extends fw.StatelessWidget {
         ),
         boxShadow:
             boxShadow ??
-            AppDesignTokens.cardShadow(theme.colorScheme.foreground),
+            (elevated
+                ? AppDesignTokens.elevatedShadow()
+                : AppDesignTokens.cardShadow(theme.colorScheme.foreground)),
       ),
       child: child,
     );
@@ -55,6 +63,105 @@ class AppCard extends fw.StatelessWidget {
     }
 
     return card;
+  }
+}
+
+/// Editorial promo / hero banner (Ink & Ember): dark ink surface, small
+/// uppercase stone eyebrow, serif-italic display headline, optional ember CTA
+/// pill with a trailing arrow. Serif is used ONLY here (and other promo copy),
+/// never for UI chrome.
+class AppPromoBanner extends fw.StatelessWidget {
+  final String eyebrow;
+  final String headline;
+  final String? ctaLabel;
+  final fw.VoidCallback? onTap;
+
+  const AppPromoBanner({
+    super.key,
+    required this.eyebrow,
+    required this.headline,
+    this.ctaLabel,
+    this.onTap,
+  });
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    // Banner surface is always ink (dark) in both themes, so its foreground is
+    // the on-accent (white) token, not the theme-following text color.
+    final onInk = AppDesignTokens.onAccentColor;
+    final banner = fw.Container(
+      width: double.infinity,
+      padding: const fw.EdgeInsets.all(AppDesignTokens.cardPaddingLarge),
+      decoration: fw.BoxDecoration(
+        color: AppDesignTokens.navBackgroundColor,
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.cardRadius),
+        boxShadow: AppDesignTokens.cardShadow(AppDesignTokens.titleTextColor),
+      ),
+      child: fw.Column(
+        crossAxisAlignment: fw.CrossAxisAlignment.start,
+        mainAxisSize: fw.MainAxisSize.min,
+        children: [
+          fw.Text(
+            eyebrow.toUpperCase(),
+            style: fw.TextStyle(
+              fontSize: AppDesignTokens.smallCaptionFontSize,
+              fontWeight: AppDesignTokens.semiBold,
+              letterSpacing: 1.4,
+              color: AppDesignTokens.navMutedColor,
+            ),
+          ),
+          const fw.SizedBox(height: AppDesignTokens.smallGap),
+          fw.Text(
+            headline,
+            style: fw.TextStyle(
+              fontFamily: AppDesignTokens.displayFontFamily,
+              fontFamilyFallback: AppDesignTokens.displayFontFamilyFallback,
+              fontStyle: fw.FontStyle.italic,
+              fontSize: 26,
+              height: 1.15,
+              letterSpacing: AppDesignTokens.displayLetterSpacing,
+              color: onInk,
+            ),
+          ),
+          if (ctaLabel != null) ...[
+            const fw.SizedBox(height: AppDesignTokens.cardGap),
+            fw.Container(
+              padding: const fw.EdgeInsets.symmetric(
+                horizontal: 18,
+                vertical: 10,
+              ),
+              decoration: fw.BoxDecoration(
+                color: AppDesignTokens.primaryColor,
+                borderRadius: fw.BorderRadius.circular(AppDesignTokens.pillRadius),
+                boxShadow: AppDesignTokens.glowShadow,
+              ),
+              child: fw.Row(
+                mainAxisSize: fw.MainAxisSize.min,
+                children: [
+                  fw.Text(
+                    ctaLabel!,
+                    style: fw.TextStyle(
+                      fontSize: AppDesignTokens.bodyFontSize,
+                      fontWeight: AppDesignTokens.semiBold,
+                      color: AppDesignTokens.onAccentColor,
+                    ),
+                  ),
+                  const fw.SizedBox(width: 6),
+                  fw.Icon(
+                    Icons.arrow_forward,
+                    size: 16,
+                    color: AppDesignTokens.onAccentColor,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+
+    if (onTap != null) return PressScale(onTap: onTap, child: banner);
+    return banner;
   }
 }
 

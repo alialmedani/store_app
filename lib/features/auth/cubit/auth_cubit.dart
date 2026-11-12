@@ -137,6 +137,12 @@ class AuthCubit extends Cubit<AuthState> {
     return (ar != null && ar.isNotEmpty) ? ar : null;
   }
 
+  /// Whether the logged-in user is granted the given ABP permission policy.
+  /// Falls back to `true` when permissions are unknown (not yet loaded); the
+  /// backend still enforces access and returns 403, which screens handle
+  /// gracefully. Used to hide report tabs/screens the user cannot access.
+  bool can(String policy) => currentUser?.can(policy) ?? true;
+
   Future<Result> login() async {
     return await LoginUsecase(AuthRepository()).call(params: loginParams);
   }

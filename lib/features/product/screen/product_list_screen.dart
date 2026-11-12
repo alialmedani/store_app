@@ -115,6 +115,11 @@ class _ProductListScreenState extends fw.State<ProductListScreen> {
                     );
                   },
                 ),
+                noDataWidget: EmptyState(
+                  icon: Icons.inventory_2_outlined,
+                  title: 'products_empty_title'.tr(),
+                  subtitle: 'products_empty_subtitle'.tr(),
+                ),
                 repositoryCallBack: (data) {
                   return context.read<ProductCubit>().fetchProductList(
                     data,

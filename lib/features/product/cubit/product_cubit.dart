@@ -186,9 +186,14 @@ class ProductCubit extends Cubit<ProductState> {
   Future<Result<List<ProductModel>>> fetchProductList(
     data, {
     String? categoryId,
+    String? filter,
   }) async {
     return await GetProductListUsecase(ProductRepository()).call(
-      params: GetProductListParams(request: data, categoryId: categoryId),
+      params: GetProductListParams(
+        request: data,
+        categoryId: categoryId,
+        filter: filter,
+      ),
     );
   }
 

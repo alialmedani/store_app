@@ -203,51 +203,33 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
     return Scaffold(
       child: SafeArea(
         child: ScrollAwayHeader(header: Column(children: [
-            // App Bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => fw.Navigator.of(context).pop(),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'bulk_create_variants'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )]), body: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+            AppHeader(
+              title: 'bulk_create_variants'.tr(),
+              onBack: () => fw.Navigator.of(context).pop(),
+            ),
+          ]), body: SingleChildScrollView(
+                padding: const EdgeInsets.all(
+                  AppDesignTokens.screenPaddingHorizontal,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Product Selection Card
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppSelectorField(
-                              label: 'product'.tr(),
-                              value: selectedProduct?.name,
-                              placeholder: 'no_product_selected'.tr(),
-                              onTap: () => _showProductSelector(context),
-                            ),
-                          ],
-                        ),
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppSelectorField(
+                            label: 'product'.tr(),
+                            value: selectedProduct?.name,
+                            placeholder: 'no_product_selected'.tr(),
+                            onTap: () => _showProductSelector(context),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
 
                     // Color blocks
                     for (var i = 0; i < blocks.length; i++) ...[
@@ -262,7 +244,7 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                           blocks.removeAt(i);
                         }),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppDesignTokens.cardGap),
                     ],
                     OutlineButton(
                       onPressed: () => setState(() => blocks.add(_ColorBlock())),
@@ -270,12 +252,12 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.add, size: 18),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppDesignTokens.smallGap),
                           Text('add_another_color'.tr()),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppDesignTokens.itemGap),
                     Builder(
                       builder: (context) {
                         final total = blocks.fold<int>(
@@ -291,14 +273,14 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                           child: Text(
                             'variants_total'.tr(args: ['$total']),
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: AppDesignTokens.bodyFontSize - 1,
                               color: theme.colorScheme.mutedForeground,
                             ),
                           ),
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
 
                     // Submit Button
                     CreateModel<List<ProductVariantModel>>(
@@ -356,12 +338,12 @@ class _BulkCreateVariantScreenState extends State<BulkCreateVariantScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.check, size: 18),
-                            SizedBox(width: 8),
+                            const SizedBox(width: AppDesignTokens.smallGap),
                             Text(
                               'create_all_variants'.tr(),
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
+                              style: const TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize + 1,
+                                fontWeight: AppDesignTokens.semiBold,
                               ),
                             ),
                           ],
@@ -423,131 +405,135 @@ class _ColorBlockCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'color_block_title'.tr(args: ['${index + 1}']),
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+    return AppCard(
+      elevated: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'color_block_title'.tr(args: ['${index + 1}']),
+                  style: const TextStyle(
+                    fontSize: AppDesignTokens.cardTitleFontSize - 2,
+                    fontWeight: AppDesignTokens.bold,
                   ),
-                ),
-                if (canRemove)
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 18),
-                    onPressed: onRemove,
-                    variance: ButtonVariance.ghost,
-                  ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: block.color,
-              onChanged: (_) => onChanged(),
-              placeholder: Text('color_name'.tr()),
-            ),
-            if (mode == 0) ...[
-              const SizedBox(height: 10),
-              Text(
-                'select_product_first'.tr(),
-                style: TextStyle(
-                  fontSize: 13,
-                  color: theme.colorScheme.mutedForeground,
                 ),
               ),
-            ] else if (mode == 2) ...[
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'quantity'.tr(),
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                ),
+              if (canRemove)
                 IconButton(
-                  icon: const Icon(Icons.remove, size: 18),
-                  onPressed: () {
-                    if (block.qty > 0) block.qty--;
-                    onChanged();
-                  },
+                  icon: const Icon(Icons.close, size: 18),
+                  onPressed: onRemove,
                   variance: ButtonVariance.ghost,
                 ),
-                SizedBox(
-                  width: 36,
-                  child: Center(
-                    child: Text(
-                      '${block.qty}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.primary,
-                      ),
+            ],
+          ),
+          const SizedBox(height: AppDesignTokens.itemGap),
+          TextField(
+            controller: block.color,
+            onChanged: (_) => onChanged(),
+            placeholder: Text('color_name'.tr()),
+          ),
+          if (mode == 0) ...[
+            const SizedBox(height: AppDesignTokens.itemGap),
+            Text(
+              'select_product_first'.tr(),
+              style: TextStyle(
+                fontSize: AppDesignTokens.bodyFontSize - 1,
+                color: theme.colorScheme.mutedForeground,
+              ),
+            ),
+          ] else if (mode == 2) ...[
+          const SizedBox(height: AppDesignTokens.itemGap),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'quantity'.tr(),
+                  style: const TextStyle(
+                    fontSize: AppDesignTokens.bodyFontSize,
+                    fontWeight: AppDesignTokens.semiBold,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.remove, size: 18),
+                onPressed: () {
+                  if (block.qty > 0) block.qty--;
+                  onChanged();
+                },
+                variance: ButtonVariance.ghost,
+              ),
+              SizedBox(
+                width: 36,
+                child: Center(
+                  child: Text(
+                    '${block.qty}',
+                    style: TextStyle(
+                      fontSize: AppDesignTokens.cardTitleFontSize - 1,
+                      fontWeight: AppDesignTokens.bold,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.add, size: 18),
-                  onPressed: () {
-                    block.qty++;
-                    onChanged();
-                  },
-                  variance: ButtonVariance.ghost,
-                ),
-              ],
-            ),
-            ] else ...[
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: block.sizeInput,
-                    onSubmitted: (_) => _add(),
-                    placeholder: Text('add_sizes_hint'.tr()),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                PrimaryButton(
-                  onPressed: _add,
-                  child: const Icon(Icons.add, size: 18),
-                ),
-              ],
-            ),
-            if (block.sizes.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final e in block.sizes.entries)
-                    _SizeChip(
-                      size: e.key,
-                      qty: e.value,
-                      onMinus: () {
-                        if (e.value <= 1) {
-                          block.sizes.remove(e.key);
-                        } else {
-                          block.sizes[e.key] = e.value - 1;
-                        }
-                        onChanged();
-                      },
-                      onPlus: () {
-                        block.sizes[e.key] = e.value + 1;
-                        onChanged();
-                      },
-                    ),
-                ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.add, size: 18),
+                onPressed: () {
+                  block.qty++;
+                  onChanged();
+                },
+                variance: ButtonVariance.ghost,
               ),
             ],
+          ),
+          ] else ...[
+          const SizedBox(height: AppDesignTokens.itemGap),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: block.sizeInput,
+                  onSubmitted: (_) => _add(),
+                  placeholder: Text('add_sizes_hint'.tr()),
+                ),
+              ),
+              const SizedBox(width: AppDesignTokens.smallGap),
+              PrimaryButton(
+                onPressed: _add,
+                child: const Icon(Icons.add, size: 18),
+              ),
             ],
+          ),
+          if (block.sizes.isNotEmpty) ...[
+            const SizedBox(height: AppDesignTokens.itemGap),
+            Wrap(
+              spacing: AppDesignTokens.smallGap,
+              runSpacing: AppDesignTokens.smallGap,
+              children: [
+                for (final e in block.sizes.entries)
+                  _SizeChip(
+                    size: e.key,
+                    qty: e.value,
+                    onMinus: () {
+                      if (e.value <= 1) {
+                        block.sizes.remove(e.key);
+                      } else {
+                        block.sizes[e.key] = e.value - 1;
+                      }
+                      onChanged();
+                    },
+                    onPlus: () {
+                      block.sizes[e.key] = e.value + 1;
+                      onChanged();
+                    },
+                  ),
+              ],
+            ),
           ],
-        ),
+          ],
+        ],
       ),
     );
   }
@@ -570,10 +556,13 @@ class _SizeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return fw.Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDesignTokens.tinyGap + 2,
+        vertical: AppDesignTokens.tinyGap,
+      ),
       decoration: fw.BoxDecoration(
         color: theme.colorScheme.primary.withValues(alpha: 0.12),
-        borderRadius: fw.BorderRadius.circular(99),
+        borderRadius: fw.BorderRadius.circular(AppDesignTokens.pillRadius),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -581,7 +570,7 @@ class _SizeChip extends StatelessWidget {
           fw.GestureDetector(
             onTap: onMinus,
             child: Padding(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(AppDesignTokens.tinyGap),
               child: Icon(
                 qty <= 1 ? Icons.close : Icons.remove,
                 size: 16,
@@ -592,15 +581,15 @@ class _SizeChip extends StatelessWidget {
           Text(
             '$size  ×$qty',
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontSize: AppDesignTokens.bodyFontSize,
+              fontWeight: AppDesignTokens.bold,
               color: theme.colorScheme.primary,
             ),
           ),
           fw.GestureDetector(
             onTap: onPlus,
             child: Padding(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(AppDesignTokens.tinyGap),
               child: Icon(Icons.add, size: 16, color: theme.colorScheme.primary),
             ),
           ),

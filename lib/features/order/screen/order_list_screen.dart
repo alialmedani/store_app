@@ -104,7 +104,11 @@ class _OrderListScreenState extends fw.State<OrderListScreen> {
                         padding: const fw.EdgeInsets.only(
                           bottom: AppDesignTokens.cardGap,
                         ),
-                        child: _OrderCard(order: order, onReturn: _reloadList),
+                        child: _OrderCard(
+                          order: order,
+                          index: index,
+                          onReturn: _reloadList,
+                        ),
                       );
                     },
                   );
@@ -118,15 +122,23 @@ class _OrderListScreenState extends fw.State<OrderListScreen> {
 /// Order Card Widget
 class _OrderCard extends StatelessWidget {
   final OrderModel order;
+  final int index;
   final fw.VoidCallback onReturn;
 
-  const _OrderCard({required this.order, required this.onReturn});
+  const _OrderCard({
+    required this.order,
+    required this.index,
+    required this.onReturn,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return AppCard(
+    return FadeSlideIn(
+      index: index,
+      child: AppCard(
+      elevated: true,
       onTap: () async {
         if (order.id != null) {
           await fw.Navigator.of(context).push(
@@ -166,7 +178,7 @@ class _OrderCard extends StatelessWidget {
                     color: theme.colorScheme.mutedForeground,
                   ),
                 ),
-              const fw.SizedBox(width: 8),
+              const fw.SizedBox(width: AppDesignTokens.smallGap),
               IconButton(
                 icon: const fw.Icon(Icons.edit, size: 16),
                 onPressed: () async {
@@ -196,7 +208,7 @@ class _OrderCard extends StatelessWidget {
                 size: 16,
                 color: theme.colorScheme.mutedForeground,
               ),
-              const fw.SizedBox(width: 8),
+              const fw.SizedBox(width: AppDesignTokens.smallGap),
               fw.Expanded(
                 child: Text(
                   order.customerName ?? 'N/A',
@@ -207,7 +219,7 @@ class _OrderCard extends StatelessWidget {
               ),
             ],
           ),
-          const fw.SizedBox(height: 8),
+          const fw.SizedBox(height: AppDesignTokens.smallGap),
 
           // Phone
           fw.Row(
@@ -217,7 +229,7 @@ class _OrderCard extends StatelessWidget {
                 size: 16,
                 color: theme.colorScheme.mutedForeground,
               ),
-              const fw.SizedBox(width: 8),
+              const fw.SizedBox(width: AppDesignTokens.smallGap),
               Text(
                 order.customerPhone ?? 'N/A',
                 style: const fw.TextStyle(
@@ -230,8 +242,8 @@ class _OrderCard extends StatelessWidget {
 
           // Status and Payment Status
           fw.Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: AppDesignTokens.smallGap,
+            runSpacing: AppDesignTokens.smallGap,
             children: [
               if (order.status != null)
                 StatusBadge(
@@ -251,7 +263,10 @@ class _OrderCard extends StatelessWidget {
 
           // Total Amount
           fw.Container(
-            padding: const fw.EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const fw.EdgeInsets.symmetric(
+              horizontal: AppDesignTokens.itemGap,
+              vertical: AppDesignTokens.smallGap,
+            ),
             decoration: fw.BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
@@ -262,14 +277,14 @@ class _OrderCard extends StatelessWidget {
                 Text(
                   'total'.tr(),
                   style: fw.TextStyle(
-                    fontSize: 13,
+                    fontSize: AppDesignTokens.captionFontSize + 1,
                     color: theme.colorScheme.mutedForeground,
                   ),
                 ),
                 Text(
                   '\$${order.totalAmount?.toStringAsFixed(2) ?? '0.00'}',
                   style: fw.TextStyle(
-                    fontSize: 16,
+                    fontSize: AppDesignTokens.cardTitleFontSize - 1,
                     fontWeight: AppDesignTokens.bold,
                     color: theme.colorScheme.primary,
                   ),
@@ -278,6 +293,7 @@ class _OrderCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

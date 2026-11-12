@@ -141,256 +141,279 @@ class _CreateProductVariantScreenState
     return Scaffold(
       child: SafeArea(
         child: ScrollAwayHeader(header: Column(children: [
-            // App Bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => fw.Navigator.of(context).pop(),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'create_product_variant'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+            AppHeader(
+              title: 'create_product_variant'.tr(),
+              onBack: () => fw.Navigator.of(context).pop(),
+            ),
+          ]), body: SingleChildScrollView(
+                padding: const EdgeInsets.all(
+                  AppDesignTokens.screenPaddingHorizontal,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Product section
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'product'.tr(),
+                            style: const TextStyle(
+                              fontSize: AppDesignTokens.cardTitleFontSize,
+                              fontWeight: AppDesignTokens.bold,
+                            ),
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppSelectorField(
+                                    label: 'product'.tr(),
+                                    value: _productIdController.text.isNotEmpty ? _productIdController.text : null,
+                                    placeholder: 'select_product_2'.tr(),
+                                    onTap: () => _showProductSelector(context, cubit),
+                                  ),
+                                  if (cubit.productError != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
+                                      ),
+                                      child: Text(
+                                        cubit.productError!,
+                                        style: TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )]), body: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Product Selection
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AppSelectorField(
-                                  label: 'product'.tr(),
-                                  value: _productIdController.text.isNotEmpty ? _productIdController.text : null,
-                                  placeholder: 'select_product_2'.tr(),
-                                  onTap: () => _showProductSelector(context, cubit),
-                                ),
-                                if (cubit.productError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
+                    const SizedBox(height: AppDesignTokens.cardGap),
+
+                    // Variant details section
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'variant_details'.tr(),
+                            style: const TextStyle(
+                              fontSize: AppDesignTokens.cardTitleFontSize,
+                              fontWeight: AppDesignTokens.bold,
+                            ),
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Color Field
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'color'.tr(),
+                                        style: const TextStyle(
+                                          fontSize: AppDesignTokens.bodyFontSize,
+                                          fontWeight: AppDesignTokens.semiBold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: AppDesignTokens.smallGap),
+                                      Text(
+                                        'optional'.tr(),
+                                        style: TextStyle(
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: AppDesignTokens.smallGap),
+                                  TextField(
+                                    controller: _colorController,
+                                    placeholder: Text(
+                                      'enter_color_optional'.tr(),
+                                    ),
+                                    onChanged: (value) {
+                                      cubit.createProductVariantParams.color =
+                                          value.isEmpty ? null : value;
+                                      cubit.clearColorError();
+                                    },
+                                  ),
+                                  if (cubit.colorError != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
+                                      ),
+                                      child: Text(
+                                        cubit.colorError!,
+                                        style: TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Size Field
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) => !cubit.isSizeVisible()
+                                ? const SizedBox.shrink()
+                                : BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'size'.tr(),
+                                        style: const TextStyle(
+                                          fontSize: AppDesignTokens.bodyFontSize,
+                                          fontWeight: AppDesignTokens.semiBold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: AppDesignTokens.smallGap),
+                                      Text(
+                                        'optional'.tr(),
+                                        style: TextStyle(
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: AppDesignTokens.smallGap),
+                                  TextField(
+                                    controller: _sizeController,
+                                    placeholder: Text(
+                                      'enter_size_optional'.tr(),
+                                    ),
+                                    onChanged: (value) {
+                                      cubit.createProductVariantParams.size =
+                                          value.isEmpty ? null : value;
+                                      cubit.clearSizeError();
+                                    },
+                                  ),
+                                  if (cubit.sizeError != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
+                                      ),
+                                      child: Text(
+                                        cubit.sizeError!,
+                                        style: TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Stock Quantity Field
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'stock_quantity'.tr(),
+                                    style: const TextStyle(
+                                      fontSize: AppDesignTokens.bodyFontSize,
+                                      fontWeight: AppDesignTokens.semiBold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: AppDesignTokens.smallGap),
+                                  TextField(
+                                    controller: _stockQuantityController,
+                                    placeholder: Text(
+                                      'enter_stock_quantity'.tr(),
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      final stock = int.tryParse(value);
+                                      if (stock != null) {
+                                        cubit
+                                                .createProductVariantParams
+                                                .stockQuantity =
+                                            stock;
+                                      }
+                                      cubit.clearStockQuantityError();
+                                    },
+                                  ),
+                                  if (cubit.stockQuantityError != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: AppDesignTokens.tinyGap,
+                                      ),
+                                      child: Text(
+                                        cubit.stockQuantityError!,
+                                        style: TextStyle(
+                                          color: AppDesignTokens.dangerColor,
+                                          fontSize: AppDesignTokens.captionFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(height: AppDesignTokens.itemGap),
+
+                          // Is Active Toggle
+                          BlocBuilder<ProductVariantCubit, ProductVariantState>(
+                            builder: (context, state) {
+                              return Row(
+                                children: [
+                                  Expanded(
                                     child: Text(
-                                      cubit.productError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
+                                      'active'.tr(),
+                                      style: const TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
                                       ),
                                     ),
                                   ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
+                                  Switch(
+                                    value:
+                                        cubit.createProductVariantParams.isActive,
+                                    onChanged: (value) {
+                                      cubit.toggleIsActive(value);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppDesignTokens.sectionGap),
 
-                        // Color Field
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'color'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'optional'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color:
-                                            theme.colorScheme.mutedForeground,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _colorController,
-                                  placeholder: Text(
-                                    'enter_color_optional'.tr(),
-                                  ),
-                                  onChanged: (value) {
-                                    cubit.createProductVariantParams.color =
-                                        value.isEmpty ? null : value;
-                                    cubit.clearColorError();
-                                  },
-                                ),
-                                if (cubit.colorError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.colorError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Size Field
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) => !cubit.isSizeVisible()
-                              ? const SizedBox.shrink()
-                              : BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'size'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'optional'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color:
-                                            theme.colorScheme.mutedForeground,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _sizeController,
-                                  placeholder: Text(
-                                    'enter_size_optional'.tr(),
-                                  ),
-                                  onChanged: (value) {
-                                    cubit.createProductVariantParams.size =
-                                        value.isEmpty ? null : value;
-                                    cubit.clearSizeError();
-                                  },
-                                ),
-                                if (cubit.sizeError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.sizeError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Stock Quantity Field
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'stock_quantity'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _stockQuantityController,
-                                  placeholder: Text(
-                                    'enter_stock_quantity'.tr(),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (value) {
-                                    final stock = int.tryParse(value);
-                                    if (stock != null) {
-                                      cubit
-                                              .createProductVariantParams
-                                              .stockQuantity =
-                                          stock;
-                                    }
-                                    cubit.clearStockQuantityError();
-                                  },
-                                ),
-                                if (cubit.stockQuantityError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.stockQuantityError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Is Active Toggle
-                        BlocBuilder<ProductVariantCubit, ProductVariantState>(
-                          builder: (context, state) {
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'active'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Switch(
-                                  value:
-                                      cubit.createProductVariantParams.isActive,
-                                  onChanged: (value) {
-                                    cubit.toggleIsActive(value);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Submit Button
-                        CreateModel<ProductVariantModel>(
+                    // Submit Button
+                    CreateModel<ProductVariantModel>(
                           withValidation: true,
                           onTap: () {
                             return _validateFields(cubit);
@@ -437,9 +460,7 @@ class _CreateProductVariantScreenState
                             child: Text('create_product_variant'.tr()),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               )),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart' as fw;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/core/ui/kit/app_kit.dart';
+import 'package:store/core/ui/shadcn/design_system/app_design_tokens.dart';
 
 import '../../../core/boilerplate/create_model/widgets/create_model.dart';
 import '../../../core/classes/cashe_helper.dart';
@@ -62,410 +63,308 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
   @override
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
+    final size = fw.MediaQuery.of(context).size;
+    final heroHeight = size.height * 0.40;
 
     return Scaffold(
-      child: fw.SafeArea(
-        child: fw.Stack(
-          children: [
-            // Premium Gradient Background
-            fw.Positioned.fill(
-              child: fw.Container(
-                decoration: fw.BoxDecoration(
-                  gradient: fw.LinearGradient(
-                    begin: fw.Alignment.topLeft,
-                    end: fw.Alignment.bottomRight,
-                    colors: [
-                      theme.colorScheme.primary.withValues(alpha: 0.05),
-                      theme.colorScheme.secondary.withValues(alpha: 0.03),
-                      theme.colorScheme.primary.withValues(alpha: 0.08),
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
-                  ),
+      child: fw.Stack(
+        children: [
+          // Ink hero (top ~40%): brand mark, serif app name, tagline.
+          fw.Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: heroHeight,
+            child: fw.Container(
+              decoration: fw.BoxDecoration(
+                color: AppDesignTokens.navBackgroundColor,
+                gradient: fw.RadialGradient(
+                  center: const fw.Alignment(0.0, -0.4),
+                  radius: 1.0,
+                  colors: [
+                    AppDesignTokens.ember.withValues(alpha: 0.22),
+                    AppDesignTokens.navBackgroundColor.withValues(alpha: 0.0),
+                  ],
+                  stops: const [0.0, 0.75],
                 ),
               ),
-            ),
-
-            // Decorative Elements
-            fw.Positioned(
-              top: -100,
-              right: -100,
-              child: fw.Container(
-                width: 300,
-                height: 300,
-                decoration: fw.BoxDecoration(
-                  shape: fw.BoxShape.circle,
-                  gradient: fw.RadialGradient(
-                    colors: [
-                      theme.colorScheme.primary.withValues(alpha: 0.15),
-                      theme.colorScheme.primary.withValues(alpha: 0.0),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            fw.Positioned(
-              bottom: -150,
-              left: -150,
-              child: fw.Container(
-                width: 400,
-                height: 400,
-                decoration: fw.BoxDecoration(
-                  shape: fw.BoxShape.circle,
-                  gradient: fw.RadialGradient(
-                    colors: [
-                      theme.colorScheme.secondary.withValues(alpha: 0.12),
-                      theme.colorScheme.secondary.withValues(alpha: 0.0),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            // Main Content
-            fw.Center(
-              child: fw.SingleChildScrollView(
-                padding: const fw.EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 32,
-                ),
-                child: fw.Column(
-                  mainAxisAlignment: fw.MainAxisAlignment.center,
-                  children: [
-                    // Logo with Premium Design
-                    fw.Container(
-                      padding: const fw.EdgeInsets.all(24),
-                      decoration: fw.BoxDecoration(
-                        gradient: fw.LinearGradient(
-                          begin: fw.Alignment.topLeft,
-                          end: fw.Alignment.bottomRight,
-                          colors: [
-                            theme.colorScheme.primary.withValues(alpha: 0.15),
-                            theme.colorScheme.primary.withValues(alpha: 0.08),
-                          ],
+              child: fw.SafeArea(
+                bottom: false,
+                child: fw.Center(
+                  child: fw.Column(
+                    mainAxisSize: fw.MainAxisSize.min,
+                    children: [
+                      // Ember brand mark (matches the dashboard brand tile).
+                      fw.Container(
+                        width: 72,
+                        height: 72,
+                        alignment: fw.Alignment.center,
+                        decoration: fw.BoxDecoration(
+                          gradient: AppDesignTokens.primaryGradient,
+                          borderRadius: fw.BorderRadius.circular(20),
+                          boxShadow: AppDesignTokens.glowShadow,
                         ),
-                        borderRadius: fw.BorderRadius.circular(28),
-                        border: fw.Border.all(
-                          color: theme.colorScheme.primary.withValues(
-                            alpha: 0.2,
-                          ),
-                          width: 1.5,
+                        child: fw.Icon(
+                          Icons.storefront_rounded,
+                          size: 38,
+                          color: AppDesignTokens.onAccentColor,
                         ),
-                        boxShadow: [
-                          fw.BoxShadow(
-                            color: theme.colorScheme.primary.withValues(
-                              alpha: 0.1,
-                            ),
-                            blurRadius: 24,
-                            offset: const fw.Offset(0, 8),
-                          ),
-                        ],
                       ),
-                      child: Icon(
-                        RadixIcons.backpack,
-                        size: 72,
-                        color: theme.colorScheme.primary,
+                      const fw.SizedBox(height: AppDesignTokens.sectionGap),
+                      fw.Text(
+                        'store_management'.tr(),
+                        textAlign: fw.TextAlign.center,
+                        style: fw.TextStyle(
+                          fontFamily: AppDesignTokens.displayFontFamily,
+                          fontFamilyFallback:
+                              AppDesignTokens.displayFontFamilyFallback,
+                          fontStyle: fw.FontStyle.italic,
+                          fontSize: 32,
+                          height: 1.1,
+                          letterSpacing: AppDesignTokens.displayLetterSpacing,
+                          color: AppDesignTokens.onAccentColor,
+                        ),
                       ),
-                    ),
-                    const fw.SizedBox(height: 40),
+                      const fw.SizedBox(height: AppDesignTokens.smallGap),
+                      fw.Text(
+                        'login_tagline'.tr(),
+                        textAlign: fw.TextAlign.center,
+                        style: fw.TextStyle(
+                          fontSize: AppDesignTokens.bodyFontSize,
+                          fontWeight: AppDesignTokens.medium,
+                          color: AppDesignTokens.navMutedColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
 
-                    // Premium Header
-                    Text(
-                      'store_management'.tr(),
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: fw.FontWeight.w700,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                    const fw.SizedBox(height: 12),
-                    fw.Text(
-                      'welcome_back_sign_in_to_continue'.tr(),
-                      style: fw.TextStyle(
-                        fontSize: 16,
-                        color: theme.colorScheme.mutedForeground,
-                        fontWeight: fw.FontWeight.w500,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                    const fw.SizedBox(height: 56),
-
-                    // Glassmorphic Form Card
-                    fw.Container(
+          // White/dark sheet rising over the ink hero.
+          fw.Positioned(
+            top: heroHeight - 26,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: fw.Container(
+              decoration: fw.BoxDecoration(
+                color: AppDesignTokens.backgroundColor,
+                borderRadius: const fw.BorderRadius.only(
+                  topLeft: fw.Radius.circular(26),
+                  topRight: fw.Radius.circular(26),
+                ),
+              ),
+              child: fw.SafeArea(
+                top: false,
+                child: fw.SingleChildScrollView(
+                  padding: const fw.EdgeInsets.fromLTRB(24, 32, 24, 24),
+                  child: fw.Center(
+                    child: fw.Container(
                       constraints: const fw.BoxConstraints(maxWidth: 440),
-                      decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.card.withValues(alpha: 0.7),
-                        borderRadius: fw.BorderRadius.circular(24),
-                        border: fw.Border.all(
-                          color: theme.colorScheme.border.withValues(
-                            alpha: 0.3,
-                          ),
-                          width: 1,
-                        ),
-                        boxShadow: [
-                          fw.BoxShadow(
-                            color: fw.Color(0x00000000).withValues(alpha: 0.08),
-                            blurRadius: 32,
-                            offset: const fw.Offset(0, 16),
-                          ),
-                        ],
-                      ),
-                      child: fw.Padding(
-                        padding: const fw.EdgeInsets.all(32),
-                        child: fw.Form(
-                          key: _formKey,
-                          child: fw.Column(
-                            crossAxisAlignment: fw.CrossAxisAlignment.stretch,
-                            children: [
-                              // Username Field with Premium Design
-                              fw.Column(
-                                crossAxisAlignment:
-                                    fw.CrossAxisAlignment.start,
-                                children: [
-                                  fw.Text(
-                                    'username_or_email'.tr(),
-                                    style: fw.TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: fw.FontWeight.w600,
-                                      color: theme.colorScheme.foreground,
-                                      letterSpacing: 0.3,
-                                    ),
+                      child: fw.Form(
+                        key: _formKey,
+                        child: fw.Column(
+                          crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+                          children: [
+                            fw.Text(
+                              'welcome_back'.tr(),
+                              style: fw.TextStyle(
+                                fontSize: AppDesignTokens.titleFontSize,
+                                fontWeight: AppDesignTokens.bold,
+                                letterSpacing:
+                                    AppDesignTokens.titleLetterSpacing,
+                                color: theme.colorScheme.foreground,
+                              ),
+                            ),
+                            const fw.SizedBox(height: AppDesignTokens.smallGap),
+                            fw.Text(
+                              'welcome_back_sign_in_to_continue'.tr(),
+                              style: fw.TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize,
+                                color: theme.colorScheme.mutedForeground,
+                                fontWeight: AppDesignTokens.medium,
+                              ),
+                            ),
+                            const fw.SizedBox(
+                              height: AppDesignTokens.sectionGap + 8,
+                            ),
+
+                            // Username field
+                            fw.Column(
+                              crossAxisAlignment: fw.CrossAxisAlignment.start,
+                              children: [
+                                fw.Text(
+                                  'username_or_email'.tr(),
+                                  style: fw.TextStyle(
+                                    fontSize: AppDesignTokens.bodyFontSize,
+                                    fontWeight: AppDesignTokens.semiBold,
+                                    color: theme.colorScheme.foreground,
                                   ),
-                                  const fw.SizedBox(height: 10),
-                                  TextField(
-                                    controller: _usernameController,
-                                    placeholder: Text(
-                                      'enter_your_username_or_email'.tr(),
-                                    ),
-                                    onChanged: (value) {
-                                      context
-                                          .read<AuthCubit>()
-                                          .loginParams
-                                          .username = value;
-                                      if (_usernameError != null) {
-                                        setState(() {
-                                          _usernameError = null;
-                                        });
-                                      }
-                                    },
+                                ),
+                                const fw.SizedBox(height: 10),
+                                TextField(
+                                  controller: _usernameController,
+                                  placeholder: Text(
+                                    'enter_your_username_or_email'.tr(),
                                   ),
-                                  if (_usernameError != null)
-                                    fw.Padding(
-                                      padding: const fw.EdgeInsets.only(top: 8),
-                                      child: fw.Row(
-                                        children: [
-                                          Icon(
-                                            RadixIcons.crossCircled,
-                                            size: 14,
-                                            color: theme.colorScheme.destructive,
-                                          ),
-                                          const fw.SizedBox(width: 6),
-                                          Text(
-                                            _usernameError!,
-                                            style: TextStyle(
-                                              color:
-                                                  theme.colorScheme.destructive,
-                                              fontSize: 13,
-                                              fontWeight: fw.FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
+                                  onChanged: (value) {
+                                    context
+                                        .read<AuthCubit>()
+                                        .loginParams
+                                        .username = value;
+                                    if (_usernameError != null) {
+                                      setState(() {
+                                        _usernameError = null;
+                                      });
+                                    }
+                                  },
+                                ),
+                                if (_usernameError != null)
+                                  _fieldError(theme, _usernameError!),
+                              ],
+                            ),
+                            const fw.SizedBox(height: AppDesignTokens.cardGap),
+
+                            // Password field
+                            fw.Column(
+                              crossAxisAlignment: fw.CrossAxisAlignment.start,
+                              children: [
+                                fw.Row(
+                                  mainAxisAlignment:
+                                      fw.MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    fw.Text(
+                                      'password'.tr(),
+                                      style: fw.TextStyle(
+                                        fontSize: AppDesignTokens.bodyFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
+                                        color: theme.colorScheme.foreground,
                                       ),
                                     ),
-                                ],
-                              ),
-                              const fw.SizedBox(height: 24),
-
-                              // Password Field with Premium Design
-                              fw.Column(
-                                crossAxisAlignment:
-                                    fw.CrossAxisAlignment.start,
-                                children: [
-                                  fw.Row(
-                                    mainAxisAlignment:
-                                        fw.MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      fw.Text(
-                                        'password'.tr(),
+                                    fw.GestureDetector(
+                                      onTap: () {
+                                        // TODO: Implement forgot password
+                                      },
+                                      child: Text(
+                                        'forgot_password'.tr(),
                                         style: fw.TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: fw.FontWeight.w600,
-                                          color: theme.colorScheme.foreground,
-                                          letterSpacing: 0.3,
+                                          fontSize:
+                                              AppDesignTokens.captionFontSize +
+                                                  1,
+                                          fontWeight: AppDesignTokens.semiBold,
+                                          color: theme.colorScheme.primary,
                                         ),
-                                      ),
-                                      fw.GestureDetector(
-                                        onTap: () {
-                                          // TODO: Implement forgot password
-                                        },
-                                        child: Text(
-                                          'forgot_password'.tr(),
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: fw.FontWeight.w600,
-                                            color: theme.colorScheme.primary,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const fw.SizedBox(height: 10),
-                                  fw.Stack(
-                                    alignment: fw.Alignment.centerRight,
-                                    children: [
-                                      TextField(
-                                        controller: _passwordController,
-                                        obscureText: _obscurePassword,
-                                        placeholder: Text(
-                                          'enter_your_password'.tr(),
-                                        ),
-                                        onChanged: (value) {
-                                          context
-                                              .read<AuthCubit>()
-                                              .loginParams
-                                              .password = value;
-                                          if (_passwordError != null) {
-                                            setState(() {
-                                              _passwordError = null;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                      fw.Padding(
-                                        padding: const fw.EdgeInsets.only(
-                                          right: 12,
-                                        ),
-                                        child: fw.GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _obscurePassword =
-                                                  !_obscurePassword;
-                                            });
-                                          },
-                                          child: Icon(
-                                            _obscurePassword
-                                                ? RadixIcons.eyeOpen
-                                                : RadixIcons.eyeClosed,
-                                            size: 18,
-                                            color: theme
-                                                .colorScheme.mutedForeground,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (_passwordError != null)
-                                    fw.Padding(
-                                      padding: const fw.EdgeInsets.only(top: 8),
-                                      child: fw.Row(
-                                        children: [
-                                          Icon(
-                                            RadixIcons.crossCircled,
-                                            size: 14,
-                                            color: theme.colorScheme.destructive,
-                                          ),
-                                          const fw.SizedBox(width: 6),
-                                          Text(
-                                            _passwordError!,
-                                            style: TextStyle(
-                                              color:
-                                                  theme.colorScheme.destructive,
-                                              fontSize: 13,
-                                              fontWeight: fw.FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                     ),
-                                ],
-                              ),
-                              const fw.SizedBox(height: 32),
-
-                              // Premium Login Button - Using CreateModel for state management
-                              CreateModel<LoginModel>(
-                                withValidation: true,
-                                onTap: () {
-                                  return _validateFields();
-                                },
-                                useCaseCallBack: (data) {
-                                  return context.read<AuthCubit>().login();
-                                },
-                                onSuccess: (loginModel) async {
-                                  // Save token and expiry info
-                                  await CacheHelper.setToken(
-                                    loginModel.accessToken,
-                                  );
-                                  await CacheHelper.setRefreshToken(
-                                    loginModel.refreshToken,
-                                  );
-                                  await CacheHelper.setExpiresIn(
-                                    loginModel.expiresIn ?? 3600,
-                                  );
-                                  await CacheHelper.setDateWithExpiry(
-                                    loginModel.expiresIn ?? 3600,
-                                  );
-
-                                  // Fetch current user
-                                  final authCubit = context.read<AuthCubit>();
-                                  final userResult =
-                                      await authCubit.getAppConfig();
-
-                                  if (userResult.hasDataOnly) {
-                                    authCubit.currentUser = userResult.data;
-
-                                    // Navigate to main navigation
-                                    if (context.mounted) {
-                                      fw.Navigator.pushReplacement(
-                                        context,
-                                        fw.PageRouteBuilder(
-                                          pageBuilder: (_, __, ___) =>
-                                              const MainNavigationScreen(),
-                                          transitionDuration: Duration.zero,
-                                          reverseTransitionDuration:
-                                              Duration.zero,
+                                  ],
+                                ),
+                                const fw.SizedBox(height: 10),
+                                fw.Stack(
+                                  alignment: fw.Alignment.centerRight,
+                                  children: [
+                                    TextField(
+                                      controller: _passwordController,
+                                      obscureText: _obscurePassword,
+                                      placeholder: Text(
+                                        'enter_your_password'.tr(),
+                                      ),
+                                      onChanged: (value) {
+                                        context
+                                            .read<AuthCubit>()
+                                            .loginParams
+                                            .password = value;
+                                        if (_passwordError != null) {
+                                          setState(() {
+                                            _passwordError = null;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    fw.Padding(
+                                      padding:
+                                          const fw.EdgeInsets.only(right: 12),
+                                      child: fw.GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _obscurePassword =
+                                                !_obscurePassword;
+                                          });
+                                        },
+                                        child: Icon(
+                                          _obscurePassword
+                                              ? RadixIcons.eyeOpen
+                                              : RadixIcons.eyeClosed,
+                                          size: 18,
+                                          color:
+                                              theme.colorScheme.mutedForeground,
                                         ),
-                                      );
-                                    }
-                                  } else {
-                                    // Show error
-                                    if (context.mounted) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (ctx) => AlertDialog(
-                                          title: Text('error_2'.tr()),
-                                          content: Text(
-                                            'failed_to_load_user_data_please_try_ag'.tr(),
-                                          ),
-                                          actions: [
-                                            PrimaryButton(
-                                              onPressed: () =>
-                                                  fw.Navigator.pop(ctx),
-                                              child: Text('ok'.tr()),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (_passwordError != null)
+                                  _fieldError(theme, _passwordError!),
+                              ],
+                            ),
+                            const fw.SizedBox(
+                              height: AppDesignTokens.sectionGap + 4,
+                            ),
+
+                            // Login button (CreateModel-driven, Ember pill).
+                            CreateModel<LoginModel>(
+                              withValidation: true,
+                              onTap: () {
+                                return _validateFields();
+                              },
+                              useCaseCallBack: (data) {
+                                return context.read<AuthCubit>().login();
+                              },
+                              onSuccess: (loginModel) async {
+                                // Captured before async gaps.
+                                final authCubit = context.read<AuthCubit>();
+                                await CacheHelper.setToken(
+                                  loginModel.accessToken,
+                                );
+                                await CacheHelper.setRefreshToken(
+                                  loginModel.refreshToken,
+                                );
+                                await CacheHelper.setExpiresIn(
+                                  loginModel.expiresIn ?? 3600,
+                                );
+                                await CacheHelper.setDateWithExpiry(
+                                  loginModel.expiresIn ?? 3600,
+                                );
+
+                                final userResult =
+                                    await authCubit.getAppConfig();
+
+                                if (userResult.hasDataOnly) {
+                                  authCubit.currentUser = userResult.data;
+
+                                  if (context.mounted) {
+                                    fw.Navigator.pushReplacement(
+                                      context,
+                                      fw.PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) =>
+                                            const MainNavigationScreen(),
+                                        transitionDuration: Duration.zero,
+                                        reverseTransitionDuration:
+                                            Duration.zero,
+                                      ),
+                                    );
                                   }
-                                },
-                                onError: (error) {
-                                  // Show error message
+                                } else {
                                   if (context.mounted) {
                                     showDialog(
                                       context: context,
                                       builder: (ctx) => AlertDialog(
-                                        title: fw.Row(
-                                          children: [
-                                            Icon(
-                                              RadixIcons.crossCircled,
-                                              size: 24,
-                                              color:
-                                                  theme.colorScheme.destructive,
-                                            ),
-                                            const fw.SizedBox(width: 12),
-                                            Text('login_failed'.tr()),
-                                          ],
+                                        title: Text('error_2'.tr()),
+                                        content: Text(
+                                          'failed_to_load_user_data_please_try_ag'
+                                              .tr(),
                                         ),
-                                        content: Text('error'.tr(args: ['${error}'])),
                                         actions: [
                                           PrimaryButton(
                                             onPressed: () =>
@@ -476,114 +375,137 @@ class _LoginScreenShadcnState extends fw.State<LoginScreenShadcn> {
                                       ),
                                     );
                                   }
-                                },
-                                child: fw.Container(
-                                  decoration: fw.BoxDecoration(
-                                    borderRadius: fw.BorderRadius.circular(12),
-                                    boxShadow: [
-                                      fw.BoxShadow(
-                                        color: theme.colorScheme.primary
-                                            .withValues(alpha: 0.3),
-                                        blurRadius: 16,
-                                        offset: const fw.Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: PrimaryButton(
-                                    child: fw.Padding(
-                                      padding: const fw.EdgeInsets.symmetric(
-                                        vertical: 4,
-                                      ),
-                                      child: fw.Row(
-                                        mainAxisAlignment:
-                                            fw.MainAxisAlignment.center,
+                                }
+                              },
+                              onError: (error) {
+                                if (context.mounted) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: fw.Row(
                                         children: [
-                                          Text(
-                                            'sign_in'.tr(),
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: fw.FontWeight.w600,
-                                              letterSpacing: 0.5,
-                                            ),
-                                          ),
-                                          const fw.SizedBox(width: 8),
                                           Icon(
-                                            RadixIcons.arrowRight,
-                                            size: 18,
-                                            color: theme
-                                                .colorScheme.primaryForeground,
+                                            RadixIcons.crossCircled,
+                                            size: 24,
+                                            color:
+                                                theme.colorScheme.destructive,
                                           ),
+                                          const fw.SizedBox(width: 12),
+                                          Text('login_failed'.tr()),
                                         ],
                                       ),
+                                      content:
+                                          Text('error'.tr(args: ['$error'])),
+                                      actions: [
+                                        PrimaryButton(
+                                          onPressed: () =>
+                                              fw.Navigator.pop(ctx),
+                                          child: Text('ok'.tr()),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                              child: PrimaryButton(
+                                child: fw.Row(
+                                  mainAxisAlignment:
+                                      fw.MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'sign_in'.tr(),
+                                      style: const fw.TextStyle(
+                                        fontSize: AppDesignTokens.cardTitleFontSize,
+                                        fontWeight: AppDesignTokens.semiBold,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                    const fw.SizedBox(width: 8),
+                                    Icon(
+                                      RadixIcons.arrowRight,
+                                      size: 18,
+                                      color:
+                                          theme.colorScheme.primaryForeground,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const fw.SizedBox(
+                              height: AppDesignTokens.sectionGap + 4,
+                            ),
+
+                            // Register link
+                            fw.Row(
+                              mainAxisAlignment: fw.MainAxisAlignment.center,
+                              children: [
+                                fw.Text(
+                                  'don_t_have_an_account'.tr(),
+                                  style: fw.TextStyle(
+                                    fontSize: AppDesignTokens.bodyFontSize,
+                                    color: theme.colorScheme.mutedForeground,
+                                    fontWeight: AppDesignTokens.medium,
+                                  ),
+                                ),
+                                const fw.SizedBox(width: 6),
+                                fw.GestureDetector(
+                                  onTap: () {
+                                    fw.Navigator.push(
+                                      context,
+                                      fw.PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) =>
+                                            const RegisterScreenShadcn(),
+                                        transitionDuration: Duration.zero,
+                                        reverseTransitionDuration:
+                                            Duration.zero,
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'sign_up'.tr(),
+                                    style: fw.TextStyle(
+                                      fontSize: AppDesignTokens.bodyFontSize,
+                                      color: theme.colorScheme.primary,
+                                      fontWeight: AppDesignTokens.bold,
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const fw.SizedBox(height: 32),
-
-                    // Premium Register Link
-                    fw.Container(
-                      padding: const fw.EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
-                      decoration: fw.BoxDecoration(
-                        color: theme.colorScheme.muted.withValues(alpha: 0.3),
-                        borderRadius: fw.BorderRadius.circular(16),
-                        border: fw.Border.all(
-                          color: theme.colorScheme.border.withValues(
-                            alpha: 0.2,
-                          ),
-                        ),
-                      ),
-                      child: fw.Row(
-                        mainAxisAlignment: fw.MainAxisAlignment.center,
-                        mainAxisSize: fw.MainAxisSize.min,
-                        children: [
-                          fw.Text(
-                            'don_t_have_an_account'.tr(),
-                            style: fw.TextStyle(
-                              fontSize: 15,
-                              color: theme.colorScheme.mutedForeground,
-                              fontWeight: fw.FontWeight.w500,
-                            ),
-                          ),
-                          fw.GestureDetector(
-                            onTap: () {
-                              fw.Navigator.push(
-                                context,
-                                fw.PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) =>
-                                      const RegisterScreenShadcn(),
-                                  transitionDuration: Duration.zero,
-                                  reverseTransitionDuration: Duration.zero,
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'sign_up'.tr(),
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: theme.colorScheme.primary,
-                                fontWeight: fw.FontWeight.w700,
-                                letterSpacing: 0.3,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  fw.Widget _fieldError(ThemeData theme, String message) {
+    return fw.Padding(
+      padding: const fw.EdgeInsets.only(top: 8),
+      child: fw.Row(
+        children: [
+          Icon(
+            RadixIcons.crossCircled,
+            size: 14,
+            color: theme.colorScheme.destructive,
+          ),
+          const fw.SizedBox(width: 6),
+          Text(
+            message,
+            style: fw.TextStyle(
+              color: theme.colorScheme.destructive,
+              fontSize: AppDesignTokens.captionFontSize + 1,
+              fontWeight: AppDesignTokens.medium,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:store/core/classes/cashe_helper.dart';
 import 'package:store/features/auth/screen/auth_wrapper.dart';
 import 'package:store/features/inventory/cubit/inventory_cubit.dart';
 import 'package:store/features/order/cubit/order_cubit.dart';
+import 'package:store/features/reports/cubit/reports_cubit.dart';
 import 'package:store/features/product/cubit/product_cubit.dart';
 
 import 'core/classes/keys.dart';
@@ -102,6 +103,7 @@ class _MyAppState extends State<MyApp> with fw.WidgetsBindingObserver {
         ),
         BlocProvider<OrderCubit>(create: (context) => OrderCubit()),
         BlocProvider<InventoryCubit>(create: (context) => InventoryCubit()),
+        BlocProvider<ReportsCubit>(create: (context) => ReportsCubit()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,

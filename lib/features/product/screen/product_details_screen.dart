@@ -25,8 +25,6 @@ class ProductDetailsScreen extends fw.StatelessWidget {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    Theme.of(context);
-
     return BlocProvider(
       create: (context) => ProductCubit(),
       child: Scaffold(
@@ -222,21 +220,19 @@ class ProductDetailsScreen extends fw.StatelessWidget {
                           if (product.description != null &&
                               product.description!.isNotEmpty) ...[
                             AppSectionTitle('description'.tr()),
-                            const fw.SizedBox(height: 12),
-                            fw.Container(
-                              width: double.infinity,
-                              padding: const fw.EdgeInsets.all(16),
-                              decoration: AppDesignTokens.glassDecoration(),
+                            const fw.SizedBox(height: AppDesignTokens.itemGap),
+                            AppCard(
+                              elevated: true,
                               child: Text(
                                 product.description!,
                                 style: fw.TextStyle(
-                                  fontSize: 14.5,
+                                  fontSize: AppDesignTokens.bodyFontSize + 0.5,
                                   height: 1.65,
                                   color: AppDesignTokens.titleTextColor.withValues(alpha: 0.88),
                                 ),
                               ),
                             ),
-                            const fw.SizedBox(height: 24),
+                            const fw.SizedBox(height: AppDesignTokens.sectionGap),
                           ],
 
                           _StockBreakdown(productId: product.id ?? ''),
@@ -332,8 +328,6 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    final theme = Theme.of(context);
-
     fw.Widget title() => AppSectionTitle('stock_overview'.tr());
 
     if (_variants == null && !_failed) {
@@ -344,21 +338,36 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
           const fw.SizedBox(height: 12),
           fw.Row(
             children: const [
+              // Match AppStatTile radius (cardRadius - 4 = 12).
               fw.Expanded(
-                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 20),
+                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 12),
               ),
               fw.SizedBox(width: 10),
               fw.Expanded(
-                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 20),
+                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 12),
               ),
               fw.SizedBox(width: 10),
               fw.Expanded(
-                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 20),
+                child: AppSkeletonBox(width: double.infinity, height: 92, borderRadius: 12),
               ),
             ],
           ),
           const fw.SizedBox(height: 12),
-          const AppSkeletonBox(width: double.infinity, height: 96, borderRadius: 24),
+          // Calm silhouette of the elevated color-breakdown AppCard:
+          // its real shell + a heading line and two body lines.
+          AppCard(
+            elevated: true,
+            child: fw.Column(
+              crossAxisAlignment: fw.CrossAxisAlignment.start,
+              children: const [
+                AppSkeletonBox(width: 140, height: 14),
+                fw.SizedBox(height: 14),
+                AppSkeletonBox(width: double.infinity, height: 12),
+                fw.SizedBox(height: 8),
+                AppSkeletonBox(width: 180, height: 12),
+              ],
+            ),
+          ),
         ],
       );
     }
@@ -370,11 +379,9 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
           title(),
-          const fw.SizedBox(height: 12),
-          fw.Container(
-            width: double.infinity,
-            padding: const fw.EdgeInsets.all(16),
-            decoration: AppDesignTokens.glassDecoration(),
+          const fw.SizedBox(height: AppDesignTokens.itemGap),
+          AppCard(
+            elevated: true,
             child: Text(
               'no_variants_yet'.tr(),
               style: fw.TextStyle(color: AppDesignTokens.mutedTextColor),
@@ -421,12 +428,10 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
             ],
           ),
         ),
-        const fw.SizedBox(height: 12),
+        const fw.SizedBox(height: AppDesignTokens.itemGap),
         for (final entry in byColor.entries) ...[
-          fw.Container(
-            width: double.infinity,
-            padding: const fw.EdgeInsets.all(16),
-            decoration: AppDesignTokens.glassDecoration(),
+          AppCard(
+            elevated: true,
             child: fw.Column(
               crossAxisAlignment: fw.CrossAxisAlignment.start,
               children: [
@@ -523,7 +528,7 @@ class _StockBreakdownState extends fw.State<_StockBreakdown> {
               ],
             ),
           ),
-          const fw.SizedBox(height: 10),
+          const fw.SizedBox(height: AppDesignTokens.smallGap),
         ],
       ],
     );

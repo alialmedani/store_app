@@ -31,9 +31,14 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
                   ),
                   itemCount: 3,
                   itemBuilder: (context, i) => const fw.Padding(
-                    padding: fw.EdgeInsets.only(bottom: 16),
+                    padding: fw.EdgeInsets.only(bottom: AppDesignTokens.cardGap),
                     child: _StockSummarySkeleton(),
                   ),
+                ),
+                noDataWidget: EmptyState(
+                  icon: Icons.warehouse_outlined,
+                  title: 'category_stock_summary_empty_title'.tr(),
+                  subtitle: 'category_stock_summary_empty_subtitle'.tr(),
                 ),
                 repositoryCallBack: (data) {
                   return context
@@ -52,8 +57,13 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
                     itemBuilder: (context, index) {
                       final summary = list[index];
                       return fw.Padding(
-                        padding: const fw.EdgeInsets.only(bottom: 16),
-                        child: _StockSummaryCard(summary: summary),
+                        padding: const fw.EdgeInsets.only(
+                          bottom: AppDesignTokens.cardGap,
+                        ),
+                        child: _StockSummaryCard(
+                          summary: summary,
+                          animationIndex: index,
+                        ),
                       );
                     },
                   );
@@ -67,14 +77,18 @@ class CategoryStockSummaryScreen extends fw.StatelessWidget {
 /// Stock Summary Card Widget - Premium design
 class _StockSummaryCard extends fw.StatelessWidget {
   final CategoryStockSummaryModel summary;
+  final int animationIndex;
 
-  const _StockSummaryCard({required this.summary});
+  const _StockSummaryCard({required this.summary, this.animationIndex = 0});
 
   @override
   fw.Widget build(fw.BuildContext context) {
     final theme = Theme.of(context);
 
-    return AppCard(
+    return FadeSlideIn(
+      index: animationIndex,
+      child: AppCard(
+      elevated: true,
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
@@ -92,7 +106,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                   ),
                 ),
               ),
-              const fw.SizedBox(width: 12),
+              const fw.SizedBox(width: AppDesignTokens.itemGap),
               // Active Status Badge
               fw.Container(
                 padding: const fw.EdgeInsets.symmetric(
@@ -119,7 +133,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
             ],
           ),
 
-          const fw.SizedBox(height: 16),
+          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
           // Availability Status Badge (if available)
           if (summary.availabilityStatus?.name != null) ...[
@@ -156,12 +170,12 @@ class _StockSummaryCard extends fw.StatelessWidget {
                 ],
               ),
             ),
-            const fw.SizedBox(height: 16),
+            const fw.SizedBox(height: AppDesignTokens.cardGap),
           ],
 
           // Product & Variant Counts Section
           fw.Container(
-            padding: const fw.EdgeInsets.all(16),
+            padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
             decoration: fw.BoxDecoration(
               color: theme.colorScheme.muted.withValues(alpha: 0.2),
               borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
@@ -183,7 +197,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                         color: AppDesignTokens.successColor,
                       ),
                     ),
-                    const fw.SizedBox(width: 12),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.check_circle_rounded,
@@ -192,7 +206,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    const fw.SizedBox(width: 12),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.cancel_rounded,
@@ -203,7 +217,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     ),
                   ],
                 ),
-                const fw.SizedBox(height: 12),
+                const fw.SizedBox(height: AppDesignTokens.itemGap),
                 // Variants Row
                 fw.Row(
                   children: [
@@ -215,7 +229,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                         color: AppDesignTokens.infoColor,
                       ),
                     ),
-                    const fw.SizedBox(width: 12),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.check_circle_rounded,
@@ -224,7 +238,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    const fw.SizedBox(width: 12),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
                     fw.Expanded(
                       child: _StatItem(
                         icon: Icons.cancel_rounded,
@@ -239,11 +253,11 @@ class _StockSummaryCard extends fw.StatelessWidget {
             ),
           ),
 
-          const fw.SizedBox(height: 16),
+          const fw.SizedBox(height: AppDesignTokens.cardGap),
 
           // Stock Status Section
           fw.Container(
-            padding: const fw.EdgeInsets.all(16),
+            padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
             decoration: fw.BoxDecoration(
               gradient: fw.LinearGradient(
                 begin: fw.Alignment.topLeft,
@@ -281,7 +295,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                     ),
                   ],
                 ),
-                const fw.SizedBox(height: 12),
+                const fw.SizedBox(height: AppDesignTokens.itemGap),
                 // Product Stock Status
                 fw.Row(
                   children: [
@@ -294,7 +308,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                         icon: Icons.check_circle,
                       ),
                     ),
-                    const fw.SizedBox(width: 12),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
                     fw.Expanded(
                       child: _StockStatusItem(
                         label: 'low_stock'.tr(),
@@ -304,7 +318,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
                         icon: Icons.warning,
                       ),
                     ),
-                    const fw.SizedBox(width: 12),
+                    const fw.SizedBox(width: AppDesignTokens.itemGap),
                     fw.Expanded(
                       child: _StockStatusItem(
                         label: 'out_of_stock'.tr(),
@@ -323,13 +337,13 @@ class _StockSummaryCard extends fw.StatelessWidget {
           // Total Stock Quantity & Threshold
           if (summary.totalStockQuantity != null ||
               summary.lowStockThreshold != null) ...[
-            const fw.SizedBox(height: 16),
+            const fw.SizedBox(height: AppDesignTokens.cardGap),
             fw.Row(
               children: [
                 if (summary.totalStockQuantity != null)
                   fw.Expanded(
                     child: fw.Container(
-                      padding: const fw.EdgeInsets.all(12),
+                      padding: const fw.EdgeInsets.all(AppDesignTokens.itemGap),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.2),
                         borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
@@ -360,11 +374,11 @@ class _StockSummaryCard extends fw.StatelessWidget {
                   ),
                 if (summary.totalStockQuantity != null &&
                     summary.lowStockThreshold != null)
-                  const fw.SizedBox(width: 12),
+                  const fw.SizedBox(width: AppDesignTokens.itemGap),
                 if (summary.lowStockThreshold != null)
                   fw.Expanded(
                     child: fw.Container(
-                      padding: const fw.EdgeInsets.all(12),
+                      padding: const fw.EdgeInsets.all(AppDesignTokens.itemGap),
                       decoration: fw.BoxDecoration(
                         color: theme.colorScheme.muted.withValues(alpha: 0.2),
                         borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
@@ -397,6 +411,7 @@ class _StockSummaryCard extends fw.StatelessWidget {
             ),
           ],
         ],
+      ),
       ),
     );
   }
@@ -489,7 +504,7 @@ class _StockStatusItem extends fw.StatelessWidget {
           ),
           const fw.SizedBox(height: 4),
           Text(
-            'p'.tr(args: ['${products}']),
+            'p'.tr(args: ['$products']),
             style: fw.TextStyle(
               fontSize: 11,
               fontWeight: fw.FontWeight.w700,
@@ -497,7 +512,7 @@ class _StockStatusItem extends fw.StatelessWidget {
             ),
           ),
           Text(
-            'v'.tr(args: ['${variants}']),
+            'v'.tr(args: ['$variants']),
             style: fw.TextStyle(
               fontSize: 11,
               fontWeight: fw.FontWeight.w700,
@@ -526,6 +541,7 @@ class _StockSummarySkeleton extends fw.StatelessWidget {
       ],
     );
     return AppCard(
+      elevated: true,
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
         children: [
@@ -536,13 +552,13 @@ class _StockSummarySkeleton extends fw.StatelessWidget {
               AppSkeletonBox(width: 60, height: 24, borderRadius: 8),
             ],
           ),
-          const fw.SizedBox(height: 16),
+          const fw.SizedBox(height: AppDesignTokens.cardGap),
           const AppSkeletonBox(width: 110, height: 28, borderRadius: 10),
-          const fw.SizedBox(height: 16),
+          const fw.SizedBox(height: AppDesignTokens.cardGap),
           statRow(),
           const fw.SizedBox(height: 12),
           statRow(),
-          const fw.SizedBox(height: 16),
+          const fw.SizedBox(height: AppDesignTokens.cardGap),
           const AppSkeletonBox(width: double.infinity, height: 70, borderRadius: 12),
         ],
       ),

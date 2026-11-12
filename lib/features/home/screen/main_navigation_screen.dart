@@ -9,7 +9,8 @@ import 'profile_screen.dart';
 import 'explore_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-/// Main Navigation Screen with floating dark pill dock (Aurora)
+/// Main Navigation Screen with an ink pill bottom nav (Ink & Ember):
+/// outline icons, the active item sits inside a filled ember circle.
 class MainNavigationScreen extends fw.StatefulWidget {
   const MainNavigationScreen({super.key});
 
@@ -29,11 +30,11 @@ class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
   ];
 
   static List<_NavDef> get _items => [
-    _NavDef(Icons.home_rounded, 'home'.tr()),
-    _NavDef(Icons.explore_rounded, 'explore'.tr()),
-    _NavDef(Icons.dashboard_rounded, 'dashboard'.tr()),
-    _NavDef(Icons.shopping_cart_rounded, 'cart'.tr()),
-    _NavDef(Icons.person_rounded, 'profile'.tr()),
+    _NavDef(Icons.home_outlined, 'home'.tr()),
+    _NavDef(Icons.explore_outlined, 'explore'.tr()),
+    _NavDef(Icons.dashboard_outlined, 'dashboard'.tr()),
+    _NavDef(Icons.shopping_bag_outlined, 'cart'.tr()),
+    _NavDef(Icons.person_outline, 'profile'.tr()),
   ];
 
   @override
@@ -107,19 +108,18 @@ class _MainNavigationScreenState extends fw.State<MainNavigationScreen> {
       child: fw.AnimatedContainer(
         duration: AppDesignTokens.motionBase,
         curve: AppDesignTokens.easeOut,
-        width: 48,
-        height: 48,
-        transform: fw.Matrix4.translationValues(0, isSelected ? -2 : 0, 0),
+        width: 46,
+        height: 46,
         decoration: fw.BoxDecoration(
-          borderRadius: fw.BorderRadius.circular(AppDesignTokens.inputRadius),
-          gradient: isSelected ? AppDesignTokens.primaryGradient : null,
+          shape: fw.BoxShape.circle,
+          color: isSelected ? AppDesignTokens.primaryColor : null,
           boxShadow: isSelected ? AppDesignTokens.glowShadow : null,
         ),
         child: fw.Icon(
           def.icon,
           size: 22,
           color: isSelected
-              ? const fw.Color(0xFFFFFFFF)
+              ? AppDesignTokens.onAccentColor
               : AppDesignTokens.navMutedColor,
         ),
       ),

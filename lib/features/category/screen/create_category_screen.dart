@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/core/ui/kit/app_kit.dart';
+import 'package:flutter/widgets.dart' as fw;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -13,17 +14,16 @@ import 'package:easy_localization/easy_localization.dart';
 
 /// Create Category Screen - Form to create new category
 /// Uses CreateModel widget for state management
-/// Uses shadcn_flutter components
-class CreateCategoryScreen extends StatefulWidget {
+class CreateCategoryScreen extends fw.StatefulWidget {
   const CreateCategoryScreen({super.key});
 
   @override
-  State<CreateCategoryScreen> createState() => _CreateCategoryScreenState();
+  fw.State<CreateCategoryScreen> createState() => _CreateCategoryScreenState();
 }
 
-class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
+class _CreateCategoryScreenState extends fw.State<CreateCategoryScreen> {
+  final _nameController = fw.TextEditingController();
+  final _descriptionController = fw.TextEditingController();
   final _imagePicker = ImagePicker();
   CreateModelCubit? createModelCubit;
 
@@ -46,10 +46,10 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('error_2'.tr()),
-            content: Text('failed_to_select_image'.tr(args: ['${e}'])),
+            content: Text('failed_to_select_image'.tr(args: ['$e'])),
             actions: [
               PrimaryButton(
-                onPressed: () => Navigator.pop(ctx),
+                onPressed: () => fw.Navigator.pop(ctx),
                 child: Text('ok'.tr()),
               ),
             ],
@@ -81,347 +81,312 @@ class _CreateCategoryScreenState extends State<CreateCategoryScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  fw.Widget build(fw.BuildContext context) {
     final cubit = context.read<CategoryCubit>();
 
     return Scaffold(
       child: SafeArea(
-        child: ScrollAwayHeader(header: Column(children: [
-            // App Bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'create_category'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+        child: ScrollAwayHeader(
+          header: fw.Column(
+            children: [
+              AppHeader(
+                title: 'create_category'.tr(),
+                onBack: () => fw.Navigator.pop(context),
               ),
-            )]), body: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Name Field
-                        BlocBuilder<CategoryCubit, CategoryState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'category_name'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: _nameController,
-                                  placeholder: Text(
-                                    'enter_category_name'.tr(),
-                                  ),
-                                  onChanged: (value) {
-                                    cubit.createCategoryParams.name = value;
-                                    cubit.clearNameError();
-                                  },
-                                ),
-                                if (cubit.nameError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.nameError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Description Field
-                        Text(
-                          'description'.tr(),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: _descriptionController,
-                          placeholder: Text(
-                            'enter_description_optional'.tr(),
-                          ),
-                          maxLines: 3,
-                          onChanged: (value) {
-                            cubit.createCategoryParams.description = value;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Category Image Upload
-                        BlocBuilder<CategoryCubit, CategoryState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'category_image_optional'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                if (cubit.selectedImageFile != null)
-                                  Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(AppDesignTokens.badgeRadius),
-                                        child: Image.file(
-                                          cubit.selectedImageFile!,
-                                          height: 200,
-                                          width: double.infinity,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 8,
-                                        right: 8,
-                                        child: IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            cubit.clearImageFile();
-                                          },
-                                          variance: ButtonVariance.destructive,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                else
-                                  OutlineButton(
-                                    onPressed: cubit.isUploadingImage
-                                        ? null
-                                        : () => _pickImage(cubit),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.image,
-                                          size: 20,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text('select_image'.tr()),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Size Type Selection
-                        BlocBuilder<CategoryCubit, CategoryState>(
-                          builder: (context, state) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'size_type'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: [
-                                    _SizeTypeChip(
-                                      label: 'none'.tr(),
-                                      value: SizeType.none,
-                                      selectedValue: cubit.selectedSizeType,
-                                      onSelected: cubit.selectSizeType,
-                                    ),
-                                    _SizeTypeChip(
-                                      label: 'clothing'.tr(),
-                                      value: SizeType.clothing,
-                                      selectedValue: cubit.selectedSizeType,
-                                      onSelected: cubit.selectSizeType,
-                                    ),
-                                    _SizeTypeChip(
-                                      label: 'shoes'.tr(),
-                                      value: SizeType.shoes,
-                                      selectedValue: cubit.selectedSizeType,
-                                      onSelected: cubit.selectSizeType,
-                                    ),
-                                    _SizeTypeChip(
-                                      label: 'one_size'.tr(),
-                                      value: SizeType.oneSize,
-                                      selectedValue: cubit.selectedSizeType,
-                                      onSelected: cubit.selectSizeType,
-                                    ),
-                                    _SizeTypeChip(
-                                      label: 'kids_age'.tr(),
-                                      value: SizeType.kidsAge,
-                                      selectedValue: cubit.selectedSizeType,
-                                      onSelected: cubit.selectSizeType,
-                                    ),
-                                    _SizeTypeChip(
-                                      label: 'custom'.tr(),
-                                      value: SizeType.custom,
-                                      selectedValue: cubit.selectedSizeType,
-                                      onSelected: cubit.selectSizeType,
-                                    ),
-                                  ],
-                                ),
-                                if (cubit.sizeTypeError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      cubit.sizeTypeError!,
-                                      style: TextStyle(
-                                        color: AppDesignTokens.dangerColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Active Switch
-                        BlocBuilder<CategoryCubit, CategoryState>(
-                          builder: (context, state) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'active'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Switch(
-                                  value: cubit.createCategoryParams.isActive,
-                                  onChanged: (value) {
-                                    cubit.toggleIsActive(value);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 32),
-
-                        // Submit Button
-                        CreateModel<CategoryModel>(
-                          withValidation: true,
-                          onCubitCreated: (createCubit) {
-                            createModelCubit = createCubit;
-                          },
-                          onTap: () {
-                            return _validateFields(cubit);
-                          },
-                          useCaseCallBack: (data) {
-                            return cubit.createCategoryWithImage();
-                          },
-                          onSuccess: (categoryModel) {
-                            // Clear form
-                            cubit.createCategoryParams.name = '';
-                            cubit.createCategoryParams.description = '';
-                            cubit.createCategoryParams.sizeType = 0;
-                            cubit.createCategoryParams.isActive = true;
-                            cubit.selectedSizeType = SizeType.none;
-                            cubit.clearImageFile();
-                            cubit.clearAllErrors();
-
-                            // Show success dialog
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: Text('success'.tr()),
-                                content: Text(
-                                  'category_created_successfully'.tr(),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(ctx);
-                                      Navigator.pop(context); // Go back to list
-                                    },
-                                    child: Text('ok'.tr()),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          onError: (error) {
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: Text('error_2'.tr()),
-                                content: Text(
-                                  'failed_to_create_category'.tr(args: ['${error}']),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(ctx),
-                                    child: Text('ok'.tr()),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          child: PrimaryButton(
-                            child: Text('create_category'.tr()),
-                          ),
-                        ),
-                      ],
-                    ),
+            ],
+          ),
+          body: fw.SingleChildScrollView(
+            padding: const fw.EdgeInsets.fromLTRB(
+              AppDesignTokens.screenPaddingHorizontal,
+              0,
+              AppDesignTokens.screenPaddingHorizontal,
+              AppDesignTokens.listBottomPadding,
+            ),
+            child: fw.Column(
+              crossAxisAlignment: fw.CrossAxisAlignment.stretch,
+              children: [
+                // Basic info section
+                AppCard(
+                  elevated: true,
+                  child: fw.Column(
+                    crossAxisAlignment: fw.CrossAxisAlignment.start,
+                    children: [
+                      AppSectionTitle('basic_information'.tr()),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+                      BlocBuilder<CategoryCubit, CategoryState>(
+                        builder: (context, state) {
+                          return AppTextField(
+                            label: 'category_name'.tr(),
+                            controller: _nameController,
+                            placeholder: 'enter_category_name'.tr(),
+                            errorText: cubit.nameError,
+                            onChanged: (value) {
+                              cubit.createCategoryParams.name = value;
+                              cubit.clearNameError();
+                            },
+                          );
+                        },
+                      ),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+                      AppTextField(
+                        label: 'description'.tr(),
+                        controller: _descriptionController,
+                        placeholder: 'enter_description_optional'.tr(),
+                        maxLines: 3,
+                        onChanged: (value) {
+                          cubit.createCategoryParams.description = value;
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              )),
+                const fw.SizedBox(height: AppDesignTokens.cardGap),
+
+                // Image section
+                AppCard(
+                  elevated: true,
+                  child: fw.Column(
+                    crossAxisAlignment: fw.CrossAxisAlignment.start,
+                    children: [
+                      AppSectionTitle('category_image_optional'.tr()),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+                      BlocBuilder<CategoryCubit, CategoryState>(
+                        builder: (context, state) {
+                          if (cubit.selectedImageFile != null) {
+                            return fw.Stack(
+                              children: [
+                                fw.ClipRRect(
+                                  borderRadius: fw.BorderRadius.circular(
+                                    AppDesignTokens.inputRadius,
+                                  ),
+                                  child: fw.Image.file(
+                                    cubit.selectedImageFile!,
+                                    height: 200,
+                                    width: double.infinity,
+                                    fit: fw.BoxFit.cover,
+                                  ),
+                                ),
+                                fw.Positioned(
+                                  top: AppDesignTokens.smallGap,
+                                  right: AppDesignTokens.smallGap,
+                                  child: IconButton(
+                                    icon: const fw.Icon(Icons.close),
+                                    onPressed: () {
+                                      cubit.clearImageFile();
+                                    },
+                                    variance: ButtonVariance.destructive,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return OutlineButton(
+                            onPressed: cubit.isUploadingImage
+                                ? null
+                                : () => _pickImage(cubit),
+                            child: fw.Row(
+                              mainAxisAlignment: fw.MainAxisAlignment.center,
+                              children: [
+                                fw.Icon(
+                                  Icons.image_outlined,
+                                  size: 20,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                const fw.SizedBox(width: AppDesignTokens.smallGap),
+                                Text('select_image'.tr()),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const fw.SizedBox(height: AppDesignTokens.cardGap),
+
+                // Size type section
+                AppCard(
+                  elevated: true,
+                  child: fw.Column(
+                    crossAxisAlignment: fw.CrossAxisAlignment.start,
+                    children: [
+                      AppSectionTitle('size_type'.tr()),
+                      const fw.SizedBox(height: AppDesignTokens.itemGap),
+                      BlocBuilder<CategoryCubit, CategoryState>(
+                        builder: (context, state) {
+                          return fw.Column(
+                            crossAxisAlignment: fw.CrossAxisAlignment.start,
+                            children: [
+                              fw.Wrap(
+                                spacing: AppDesignTokens.smallGap,
+                                runSpacing: AppDesignTokens.smallGap,
+                                children: [
+                                  _SizeTypeChip(
+                                    label: 'none'.tr(),
+                                    value: SizeType.none,
+                                    selectedValue: cubit.selectedSizeType,
+                                    onSelected: cubit.selectSizeType,
+                                  ),
+                                  _SizeTypeChip(
+                                    label: 'clothing'.tr(),
+                                    value: SizeType.clothing,
+                                    selectedValue: cubit.selectedSizeType,
+                                    onSelected: cubit.selectSizeType,
+                                  ),
+                                  _SizeTypeChip(
+                                    label: 'shoes'.tr(),
+                                    value: SizeType.shoes,
+                                    selectedValue: cubit.selectedSizeType,
+                                    onSelected: cubit.selectSizeType,
+                                  ),
+                                  _SizeTypeChip(
+                                    label: 'one_size'.tr(),
+                                    value: SizeType.oneSize,
+                                    selectedValue: cubit.selectedSizeType,
+                                    onSelected: cubit.selectSizeType,
+                                  ),
+                                  _SizeTypeChip(
+                                    label: 'kids_age'.tr(),
+                                    value: SizeType.kidsAge,
+                                    selectedValue: cubit.selectedSizeType,
+                                    onSelected: cubit.selectSizeType,
+                                  ),
+                                  _SizeTypeChip(
+                                    label: 'custom'.tr(),
+                                    value: SizeType.custom,
+                                    selectedValue: cubit.selectedSizeType,
+                                    onSelected: cubit.selectSizeType,
+                                  ),
+                                ],
+                              ),
+                              if (cubit.sizeTypeError != null)
+                                fw.Padding(
+                                  padding: const fw.EdgeInsets.only(
+                                    top: AppDesignTokens.smallGap,
+                                  ),
+                                  child: Text(
+                                    cubit.sizeTypeError!,
+                                    style: fw.TextStyle(
+                                      color: AppDesignTokens.dangerColor,
+                                      fontSize: AppDesignTokens.captionFontSize,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const fw.SizedBox(height: AppDesignTokens.cardGap),
+
+                // Status section
+                AppCard(
+                  elevated: true,
+                  child: BlocBuilder<CategoryCubit, CategoryState>(
+                    builder: (context, state) {
+                      return fw.Row(
+                        mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'active'.tr(),
+                            style: const fw.TextStyle(
+                              fontSize: AppDesignTokens.bodyFontSize,
+                              fontWeight: AppDesignTokens.semiBold,
+                            ),
+                          ),
+                          Switch(
+                            value: cubit.createCategoryParams.isActive,
+                            onChanged: (value) {
+                              cubit.toggleIsActive(value);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                const fw.SizedBox(height: AppDesignTokens.sectionGap),
+
+                // Submit Button
+                CreateModel<CategoryModel>(
+                  withValidation: true,
+                  onCubitCreated: (createCubit) {
+                    createModelCubit = createCubit;
+                  },
+                  onTap: () {
+                    return _validateFields(cubit);
+                  },
+                  useCaseCallBack: (data) {
+                    return cubit.createCategoryWithImage();
+                  },
+                  onSuccess: (categoryModel) {
+                    // Clear form
+                    cubit.createCategoryParams.name = '';
+                    cubit.createCategoryParams.description = '';
+                    cubit.createCategoryParams.sizeType = 0;
+                    cubit.createCategoryParams.isActive = true;
+                    cubit.selectedSizeType = SizeType.none;
+                    cubit.clearImageFile();
+                    cubit.clearAllErrors();
+
+                    // Show success dialog
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text('success'.tr()),
+                        content: Text(
+                          'category_created_successfully'.tr(),
+                        ),
+                        actions: [
+                          PrimaryButton(
+                            onPressed: () {
+                              fw.Navigator.pop(ctx);
+                              fw.Navigator.pop(context); // Go back to list
+                            },
+                            child: Text('ok'.tr()),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  onError: (error) {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text('error_2'.tr()),
+                        content: Text(
+                          'failed_to_create_category'.tr(args: ['$error']),
+                        ),
+                        actions: [
+                          PrimaryButton(
+                            onPressed: () => fw.Navigator.pop(ctx),
+                            child: Text('ok'.tr()),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: PrimaryButton(
+                    child: Text('create_category'.tr()),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
 /// Size Type Chip Widget for selection
-class _SizeTypeChip extends StatelessWidget {
+class _SizeTypeChip extends fw.StatelessWidget {
   final String label;
   final SizeType value;
   final SizeType? selectedValue;
-  final Function(SizeType) onSelected;
+  final fw.ValueChanged<SizeType> onSelected;
 
   const _SizeTypeChip({
     required this.label,
@@ -431,35 +396,19 @@ class _SizeTypeChip extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  fw.Widget build(fw.BuildContext context) {
     final isSelected = value == selectedValue;
-    final theme = Theme.of(context);
 
-    return GestureDetector(
-      onTap: () => onSelected(value),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? theme.colorScheme.primary.withValues(alpha: 0.1)
-              : Colors.transparent,
-          border: Border.all(
-            color: isSelected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.border,
-            width: isSelected ? 2 : 1,
-          ),
-          borderRadius: BorderRadius.circular(AppDesignTokens.badgeRadius),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            color: isSelected ? theme.colorScheme.primary : null,
-          ),
-        ),
-      ),
+    if (isSelected) {
+      return PrimaryButton(
+        onPressed: () => onSelected(value),
+        child: Text(label),
+      );
+    }
+
+    return OutlineButton(
+      onPressed: () => onSelected(value),
+      child: Text(label),
     );
   }
 }

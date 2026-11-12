@@ -26,90 +26,70 @@ class VariantCreationOptionsScreen extends StatelessWidget {
         child: Column(
           children: [
             Expanded(child: ScrollAwayHeader(header: Column(children: [
-            // App Bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => fw.Navigator.of(context).pop(),
-                    variance: ButtonVariance.ghost,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'add_product_variants'.tr(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )]), body: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+            AppHeader(
+              title: 'add_product_variants'.tr(),
+              onBack: () => fw.Navigator.of(context).pop(),
+            ),
+            ]), body: SingleChildScrollView(
+                padding: const EdgeInsets.all(
+                  AppDesignTokens.screenPaddingHorizontal,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     if (initialProduct != null) ...[
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'step_2_of_2'.tr(),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'adding_variants_for'.tr(args: ['${initialProduct!.name ?? ''}']),
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                    // Header
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
+                      AppCard(
+                        elevated: true,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'choose_creation_method'.tr(),
+                              'step_2_of_2'.tr(),
                               style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
+                                fontSize: AppDesignTokens.captionFontSize,
+                                fontWeight: AppDesignTokens.bold,
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: AppDesignTokens.smallGap - 2),
                             Text(
-                              'select_the_most_suitable_method_for_ad'.tr(),
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: theme.colorScheme.mutedForeground,
+                              'adding_variants_for'.tr(args: [initialProduct!.name ?? '']),
+                              style: const TextStyle(
+                                fontSize: AppDesignTokens.bodyFontSize + 1,
+                                fontWeight: AppDesignTokens.bold,
                               ),
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(height: AppDesignTokens.itemGap),
+                    ],
+                    // Header
+                    AppCard(
+                      elevated: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'choose_creation_method'.tr(),
+                            style: TextStyle(
+                              fontSize: AppDesignTokens.sectionTitleFontSize,
+                              fontWeight: AppDesignTokens.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(height: AppDesignTokens.smallGap),
+                          Text(
+                            'select_the_most_suitable_method_for_ad'.tr(),
+                            style: TextStyle(
+                              fontSize: AppDesignTokens.bodyFontSize,
+                              color: theme.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppDesignTokens.sectionGap),
 
                     // Option 1: Create Single Variant
                     _OptionCard(
@@ -136,7 +116,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
 
                     // Option 2: Bulk Create Variants
                     _OptionCard(
@@ -163,7 +143,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDesignTokens.cardGap),
 
                     // Option 3: Generate Variants
                     _OptionCard(
@@ -190,7 +170,6 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                         );
                       },
                     ),
-                  
                   ],
                 ),
               ))),
@@ -204,7 +183,7 @@ class VariantCreationOptionsScreen extends StatelessWidget {
                         child: Text('skip_for_now'.tr()),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDesignTokens.itemGap),
                     Expanded(
                       child: PrimaryButton(
                         onPressed: () => fw.Navigator.of(context).pop(),
@@ -247,135 +226,124 @@ class _OptionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return fw.GestureDetector(
+    return AppCard(
+      elevated: true,
       onTap: onTap,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Icon & Title
+          Row(
             children: [
-              // Icon & Title
-              Row(
-                children: [
-                  fw.Container(
-                    padding: const fw.EdgeInsets.all(12),
-                    decoration: fw.BoxDecoration(
-                      color: buttonColor.withValues(alpha: 0.16),
-                      borderRadius: fw.BorderRadius.circular(AppDesignTokens.iconBoxRadius),
-                    ),
-                    child: Icon(icon, size: 28, color: buttonColor),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          description,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: theme.colorScheme.mutedForeground,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Divider
-              fw.Container(
-                height: 1,
-                color: theme.colorScheme.border.withValues(alpha: 0.3),
-              ),
-              const SizedBox(height: 16),
-
-              // Use Cases
-              Text(
-                useCaseTitle,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              ...useCases.map((useCase) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      fw.Container(
-                        margin: const fw.EdgeInsets.only(top: 6),
-                        width: 5,
-                        height: 5,
-                        decoration: fw.BoxDecoration(
-                          color: theme.colorScheme.mutedForeground,
-                          shape: fw.BoxShape.circle,
-                        ),
+              AppIconChip(icon: icon, color: buttonColor, size: 28),
+              const SizedBox(width: AppDesignTokens.cardGap),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: AppDesignTokens.cardTitleFontSize,
+                        fontWeight: AppDesignTokens.bold,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          useCase,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: theme.colorScheme.mutedForeground,
-                            height: 1.4,
-                          ),
-                        ),
+                    ),
+                    const SizedBox(height: AppDesignTokens.tinyGap),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: AppDesignTokens.bodyFontSize - 1,
+                        color: theme.colorScheme.mutedForeground,
                       ),
-                    ],
-                  ),
-                );
-              }),
-              const SizedBox(height: 16),
-
-              // Action Button
-              SizedBox(
-                width: double.infinity,
-                child: fw.GestureDetector(
-                  onTap: onTap,
-                  child: fw.Container(
-                    padding: const fw.EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
                     ),
-                    decoration: fw.BoxDecoration(
-                      color: buttonColor,
-                      borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(icon, size: 18, color: AppDesignTokens.onAccentColor),
-                        const SizedBox(width: 8),
-                        Text(
-                          buttonText,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: AppDesignTokens.onAccentColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: AppDesignTokens.cardGap),
+
+          // Divider
+          fw.Container(
+            height: 1,
+            color: theme.colorScheme.border.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: AppDesignTokens.cardGap),
+
+          // Use Cases
+          Text(
+            useCaseTitle,
+            style: const TextStyle(
+              fontSize: AppDesignTokens.bodyFontSize - 1,
+              fontWeight: AppDesignTokens.semiBold,
+            ),
+          ),
+          const SizedBox(height: AppDesignTokens.smallGap),
+          ...useCases.map((useCase) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: AppDesignTokens.smallGap - 2),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  fw.Container(
+                    margin: const fw.EdgeInsets.only(top: AppDesignTokens.smallGap - 2),
+                    width: 5,
+                    height: 5,
+                    decoration: fw.BoxDecoration(
+                      color: theme.colorScheme.mutedForeground,
+                      shape: fw.BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: AppDesignTokens.itemGap - 2),
+                  Expanded(
+                    child: Text(
+                      useCase,
+                      style: TextStyle(
+                        fontSize: AppDesignTokens.bodyFontSize - 1,
+                        color: theme.colorScheme.mutedForeground,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: AppDesignTokens.cardGap),
+
+          // Action Button
+          SizedBox(
+            width: double.infinity,
+            child: fw.GestureDetector(
+              onTap: onTap,
+              child: fw.Container(
+                padding: const fw.EdgeInsets.symmetric(
+                  horizontal: AppDesignTokens.cardGap,
+                  vertical: AppDesignTokens.itemGap,
+                ),
+                decoration: fw.BoxDecoration(
+                  color: buttonColor,
+                  borderRadius: fw.BorderRadius.circular(AppDesignTokens.badgeRadius),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(icon, size: 18, color: AppDesignTokens.onAccentColor),
+                    const SizedBox(width: AppDesignTokens.smallGap),
+                    Text(
+                      buttonText,
+                      style: TextStyle(
+                        fontSize: AppDesignTokens.bodyFontSize + 1,
+                        fontWeight: AppDesignTokens.semiBold,
+                        color: AppDesignTokens.onAccentColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

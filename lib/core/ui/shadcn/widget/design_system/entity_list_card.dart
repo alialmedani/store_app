@@ -21,6 +21,9 @@ class EntityListCard extends fw.StatelessWidget {
   /// Position in the list; drives the staggered entrance animation.
   final int animationIndex;
 
+  /// Lifted shadow so list rows float over the page (Ink & Ember elevation).
+  final bool elevated;
+
   const EntityListCard({
     super.key,
     required this.title,
@@ -33,6 +36,7 @@ class EntityListCard extends fw.StatelessWidget {
     this.onEdit,
     this.trailing,
     this.animationIndex = 0,
+    this.elevated = true,
   });
 
   @override
@@ -42,6 +46,7 @@ class EntityListCard extends fw.StatelessWidget {
     return FadeSlideIn(
       index: animationIndex,
       child: AppCard(
+      elevated: elevated,
       onTap: onTap,
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,

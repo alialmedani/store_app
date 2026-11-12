@@ -38,7 +38,90 @@ class AppSkeletonBox extends fw.StatelessWidget {
   }
 }
 
-/// Skeleton for Product/Category cards with images
+/// Flat card decoration shared by skeletons that preview a non-elevated
+/// surface (same as [AppDesignTokens.glassDecoration]).
+fw.BoxDecoration _flatCardDecoration({double? radius}) =>
+    AppDesignTokens.glassDecoration(radius: radius);
+
+/// Elevated card decoration shared by skeletons that stand in for real
+/// `AppCard(elevated: true)` surfaces (list rows via EntityListCard, dashboard
+/// KPI/menu rows, detail cards). Mirrors [AppCard] with `elevated: true`:
+/// flat paper/ink surface + Line hairline + the lifted [elevatedShadow].
+fw.BoxDecoration _elevatedCardDecoration({double? radius}) => fw.BoxDecoration(
+  color: AppDesignTokens.cardColor,
+  borderRadius: fw.BorderRadius.circular(radius ?? AppDesignTokens.cardRadius),
+  border: fw.Border.all(color: AppDesignTokens.glassBorder, width: 1),
+  boxShadow: AppDesignTokens.elevatedShadow(),
+);
+
+/// A single left-aligned shimmer line sized as a fraction of the available
+/// width. Used for the calm-silhouette "title"/"subtitle" lines so they never
+/// look like a reconstructed field.
+class _CalmLine extends fw.StatelessWidget {
+  final double widthFactor;
+  final double height;
+  const _CalmLine({required this.widthFactor, this.height = 13});
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return fw.FractionallySizedBox(
+      alignment: fw.AlignmentDirectional.centerStart,
+      widthFactor: widthFactor,
+      child: AppSkeletonBox(width: double.infinity, height: height),
+    );
+  }
+}
+
+/// Calm-silhouette card content (loading-state direction A):
+/// a leading icon/image box + a wider "title" line and a shorter "subtitle"
+/// line. NO faux chips, badges, metric tiles or nested boxes — the real card's
+/// shell (shadow/radius/hairline) carries the structure; the inside stays calm.
+/// Reused by every card/row skeleton so loading states read consistently.
+class _CalmCardContent extends fw.StatelessWidget {
+  final double leadingSize;
+  final double leadingRadius;
+  final double titleFactor;
+  final double subtitleFactor;
+
+  const _CalmCardContent({
+    this.leadingSize = 48,
+    this.leadingRadius = AppDesignTokens.iconBoxRadius,
+    this.titleFactor = 0.66,
+    this.subtitleFactor = 0.4,
+  });
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return fw.Row(
+      crossAxisAlignment: fw.CrossAxisAlignment.start,
+      children: [
+        AppSkeletonBox(
+          width: leadingSize,
+          height: leadingSize,
+          borderRadius: leadingRadius,
+        ),
+        const fw.SizedBox(width: AppDesignTokens.cardGap),
+        fw.Expanded(
+          child: fw.Padding(
+            // Nudge the two lines down so they sit centered against the box.
+            padding: const fw.EdgeInsets.only(top: 2),
+            child: fw.Column(
+              crossAxisAlignment: fw.CrossAxisAlignment.start,
+              children: [
+                _CalmLine(widthFactor: titleFactor, height: 15),
+                const fw.SizedBox(height: AppDesignTokens.smallGap + 2),
+                _CalmLine(widthFactor: subtitleFactor, height: 12),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Skeleton for Product/Category list rows (elevated [EntityListCard] with an
+/// 80x80 image). Calm silhouette: image box + title line + subtitle line.
 class ProductCardSkeleton extends fw.StatelessWidget {
   const ProductCardSkeleton({super.key});
 
@@ -46,47 +129,29 @@ class ProductCardSkeleton extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: AppDesignTokens.glassDecoration(),
-      child: fw.Row(
-        crossAxisAlignment: fw.CrossAxisAlignment.start,
-        children: [
-          const AppSkeletonBox(
-            width: 80,
-            height: 80,
-            borderRadius: AppDesignTokens.inputRadius,
-          ),
-          const fw.SizedBox(width: AppDesignTokens.itemGap),
-          fw.Expanded(
-            child: fw.Column(
-              crossAxisAlignment: fw.CrossAxisAlignment.start,
-              children: [
-                const AppSkeletonBox(width: double.infinity, height: 18),
-                const fw.SizedBox(height: AppDesignTokens.smallGap),
-                const AppSkeletonBox(width: 100, height: 14),
-                const fw.SizedBox(height: AppDesignTokens.smallGap),
-                const AppSkeletonBox(width: double.infinity, height: 12),
-                const fw.SizedBox(height: AppDesignTokens.tinyGap),
-                const AppSkeletonBox(width: 140, height: 12),
-              ],
-            ),
-          ),
-        ],
+      decoration: _elevatedCardDecoration(),
+      child: const _CalmCardContent(
+        leadingSize: 80,
+        leadingRadius: AppDesignTokens.inputRadius,
+        titleFactor: 0.72,
+        subtitleFactor: 0.45,
       ),
     );
   }
 }
 
-/// Skeleton for Category cards with images
+/// Skeleton for Category list rows (same shape as product rows).
 class CategoryCardSkeleton extends fw.StatelessWidget {
   const CategoryCardSkeleton({super.key});
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    return const ProductCardSkeleton(); // Same layout as product
+    return const ProductCardSkeleton();
   }
 }
 
-/// Skeleton for Product Variant cards without images
+/// Skeleton for Product Variant list rows (elevated [EntityListCard]).
+/// Calm silhouette: icon box + title line + subtitle line.
 class ProductVariantCardSkeleton extends fw.StatelessWidget {
   const ProductVariantCardSkeleton({super.key});
 
@@ -94,72 +159,13 @@ class ProductVariantCardSkeleton extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: AppDesignTokens.glassDecoration(),
-      child: fw.Column(
-        crossAxisAlignment: fw.CrossAxisAlignment.start,
-        children: [
-          // Top row: Title + Status Badge + Edit Button
-          fw.Row(
-            crossAxisAlignment: fw.CrossAxisAlignment.start,
-            children: [
-              // Title
-              const fw.Expanded(
-                child: AppSkeletonBox(
-                  width: double.infinity,
-                  height: 18,
-                  borderRadius: 6,
-                ),
-              ),
-              const fw.SizedBox(width: AppDesignTokens.smallGap),
-              // Status badge
-              const AppSkeletonBox(width: 60, height: 22, borderRadius: 8),
-              const fw.SizedBox(width: AppDesignTokens.smallGap),
-              // Edit button
-              const AppSkeletonBox(width: 34, height: 34, borderRadius: 8),
-            ],
-          ),
-          const fw.SizedBox(height: AppDesignTokens.itemGap),
-          // Meta items row (color, size, stock)
-          fw.Wrap(
-            spacing: AppDesignTokens.cardGap,
-            runSpacing: AppDesignTokens.smallGap,
-            children: [
-              // Meta item 1 (Color)
-              fw.Row(
-                mainAxisSize: fw.MainAxisSize.min,
-                children: [
-                  const AppSkeletonBox(width: 15, height: 15, borderRadius: 4),
-                  const fw.SizedBox(width: 6),
-                  const AppSkeletonBox(width: 50, height: 12, borderRadius: 4),
-                ],
-              ),
-              // Meta item 2 (Size)
-              fw.Row(
-                mainAxisSize: fw.MainAxisSize.min,
-                children: [
-                  const AppSkeletonBox(width: 15, height: 15, borderRadius: 4),
-                  const fw.SizedBox(width: 6),
-                  const AppSkeletonBox(width: 35, height: 12, borderRadius: 4),
-                ],
-              ),
-              // Meta item 3 (Stock)
-              fw.Row(
-                mainAxisSize: fw.MainAxisSize.min,
-                children: [
-                  const AppSkeletonBox(width: 15, height: 15, borderRadius: 4),
-                  const fw.SizedBox(width: 6),
-                  const AppSkeletonBox(width: 70, height: 12, borderRadius: 4),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+      decoration: _elevatedCardDecoration(),
+      child: const _CalmCardContent(),
     );
   }
 }
 
-/// Skeleton for Order cards
+/// Skeleton for Order list rows (elevated card). Calm silhouette.
 class OrderCardSkeleton extends fw.StatelessWidget {
   const OrderCardSkeleton({super.key});
 
@@ -167,210 +173,29 @@ class OrderCardSkeleton extends fw.StatelessWidget {
   fw.Widget build(fw.BuildContext context) {
     return fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: AppDesignTokens.glassDecoration(),
-      child: fw.Column(
-        crossAxisAlignment: fw.CrossAxisAlignment.start,
-        children: [
-          // Order Number, Date, and Edit Button
-          fw.Row(
-            mainAxisAlignment: fw.MainAxisAlignment.spaceBetween,
-            children: [
-              const fw.Expanded(child: AppSkeletonBox(width: 120, height: 18)),
-              const AppSkeletonBox(width: 70, height: 12),
-              const fw.SizedBox(width: 8),
-              const AppSkeletonBox(width: 32, height: 32, borderRadius: 8),
-            ],
-          ),
-          const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-          // Customer Name with icon
-          fw.Row(
-            children: [
-              const AppSkeletonBox(width: 16, height: 16, borderRadius: 4),
-              const fw.SizedBox(width: 8),
-              const fw.Expanded(child: AppSkeletonBox(width: 150, height: 14)),
-            ],
-          ),
-          const fw.SizedBox(height: 8),
-
-          // Phone with icon
-          fw.Row(
-            children: [
-              const AppSkeletonBox(width: 16, height: 16, borderRadius: 4),
-              const fw.SizedBox(width: 8),
-              const AppSkeletonBox(width: 120, height: 14),
-            ],
-          ),
-          const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-          // Status badges
-          fw.Row(
-            children: [
-              const AppSkeletonBox(
-                width: 70,
-                height: 22,
-                borderRadius: AppDesignTokens.badgeRadius,
-              ),
-              const fw.SizedBox(width: 8),
-              const AppSkeletonBox(
-                width: 60,
-                height: 22,
-                borderRadius: AppDesignTokens.badgeRadius,
-              ),
-            ],
-          ),
-          const fw.SizedBox(height: AppDesignTokens.itemGap),
-
-          // Total Amount container
-          const AppSkeletonBox(width: 120, height: 32, borderRadius: 8),
-        ],
-      ),
+      decoration: _elevatedCardDecoration(),
+      child: const _CalmCardContent(titleFactor: 0.5, subtitleFactor: 0.7),
     );
   }
 }
 
-/// Skeleton for Inventory Movement cards
-/// Neutral gray placeholders only - no colors, no labels, no fake data
+/// Skeleton for Inventory Movement rows (elevated `AppCard(elevated: true)` with
+/// `cardPaddingLarge`). Calm silhouette: icon box + title line + subtitle line.
 class InventoryMovementCardSkeleton extends fw.StatelessWidget {
   const InventoryMovementCardSkeleton({super.key});
 
   @override
   fw.Widget build(fw.BuildContext context) {
     return fw.Container(
-      padding: const fw.EdgeInsets.all(20),
-      decoration: fw.BoxDecoration(
-        color: AppDesignTokens.cardColor,
-        borderRadius: fw.BorderRadius.circular(12),
-        border: fw.Border.all(color: AppDesignTokens.borderColor, width: 1),
-      ),
-      child: fw.Column(
-        crossAxisAlignment: fw.CrossAxisAlignment.start,
-        children: [
-          // Header: Icon and Product Info
-          fw.Row(
-            crossAxisAlignment: fw.CrossAxisAlignment.start,
-            children: [
-              // Icon placeholder
-              const AppSkeletonBox(width: 48, height: 48, borderRadius: 12),
-              const fw.SizedBox(width: 14),
-              // Product Details
-              fw.Expanded(
-                child: fw.Column(
-                  crossAxisAlignment: fw.CrossAxisAlignment.start,
-                  children: [
-                    const AppSkeletonBox(width: double.infinity, height: 18),
-                    const fw.SizedBox(height: 8),
-                    // Chips row
-                    fw.Row(
-                      children: [
-                        const AppSkeletonBox(
-                          width: 60,
-                          height: 24,
-                          borderRadius: 6,
-                        ),
-                        const fw.SizedBox(width: 8),
-                        const AppSkeletonBox(
-                          width: 50,
-                          height: 24,
-                          borderRadius: 6,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const fw.SizedBox(height: 16),
-          // Metrics row (stock and change boxes)
-          fw.Row(
-            children: [
-              fw.Expanded(
-                child: fw.Container(
-                  padding: const fw.EdgeInsets.all(12),
-                  decoration: fw.BoxDecoration(
-                    color: AppDesignTokens.mutedSurfaceColor.withValues(
-                      alpha: 0.3,
-                    ),
-                    borderRadius: fw.BorderRadius.circular(10),
-                    border: fw.Border.all(
-                      color: AppDesignTokens.borderColor,
-                      width: 1,
-                    ),
-                  ),
-                  child: fw.Column(
-                    crossAxisAlignment: fw.CrossAxisAlignment.start,
-                    children: [
-                      const AppSkeletonBox(width: 60, height: 12),
-                      const fw.SizedBox(height: 6),
-                      const AppSkeletonBox(width: 40, height: 20),
-                    ],
-                  ),
-                ),
-              ),
-              const fw.SizedBox(width: 12),
-              fw.Expanded(
-                child: fw.Container(
-                  padding: const fw.EdgeInsets.all(12),
-                  decoration: fw.BoxDecoration(
-                    color: AppDesignTokens.mutedSurfaceColor.withValues(
-                      alpha: 0.3,
-                    ),
-                    borderRadius: fw.BorderRadius.circular(10),
-                    border: fw.Border.all(
-                      color: AppDesignTokens.borderColor,
-                      width: 1,
-                    ),
-                  ),
-                  child: fw.Column(
-                    crossAxisAlignment: fw.CrossAxisAlignment.start,
-                    children: [
-                      const AppSkeletonBox(width: 60, height: 12),
-                      const fw.SizedBox(height: 6),
-                      const AppSkeletonBox(width: 40, height: 20),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const fw.SizedBox(height: 16),
-          // Metadata row
-          fw.Row(
-            children: [
-              const AppSkeletonBox(width: 24, height: 14),
-              const fw.SizedBox(width: 8),
-              const AppSkeletonBox(width: 80, height: 14),
-              const fw.SizedBox(width: 16),
-              const AppSkeletonBox(width: 24, height: 14),
-              const fw.SizedBox(width: 8),
-              const AppSkeletonBox(width: 60, height: 14),
-            ],
-          ),
-          const fw.SizedBox(height: 12),
-          // Notes section placeholder
-          fw.Container(
-            padding: const fw.EdgeInsets.all(12),
-            decoration: fw.BoxDecoration(
-              color: AppDesignTokens.mutedSurfaceColor.withValues(alpha: 0.3),
-              borderRadius: fw.BorderRadius.circular(8),
-            ),
-            child: fw.Column(
-              crossAxisAlignment: fw.CrossAxisAlignment.start,
-              children: [
-                const AppSkeletonBox(width: double.infinity, height: 12),
-                const fw.SizedBox(height: 6),
-                const AppSkeletonBox(width: 180, height: 12),
-              ],
-            ),
-          ),
-        ],
-      ),
+      padding: const fw.EdgeInsets.all(AppDesignTokens.cardPaddingLarge),
+      decoration: _elevatedCardDecoration(),
+      child: const _CalmCardContent(titleFactor: 0.6, subtitleFactor: 0.38),
     );
   }
 }
 
-/// Skeleton for selector list items
+/// Skeleton for selector list items. Already a calm icon(optional) + title line
+/// (+ optional subtitle) shape, matching [SelectorTile].
 class SelectorItemSkeleton extends fw.StatelessWidget {
   final bool withLeading;
   final bool withSubtitle;
@@ -402,10 +227,10 @@ class SelectorItemSkeleton extends fw.StatelessWidget {
             child: fw.Column(
               crossAxisAlignment: fw.CrossAxisAlignment.start,
               children: [
-                const AppSkeletonBox(width: double.infinity, height: 16),
+                const _CalmLine(widthFactor: 0.7, height: 16),
                 if (withSubtitle) ...[
                   const fw.SizedBox(height: AppDesignTokens.smallGap),
-                  const AppSkeletonBox(width: 150, height: 12),
+                  const _CalmLine(widthFactor: 0.45, height: 12),
                 ],
               ],
             ),
@@ -416,7 +241,7 @@ class SelectorItemSkeleton extends fw.StatelessWidget {
   }
 }
 
-/// Default skeleton for any list that is loading (cards with image)
+/// Default skeleton for any list that is loading (elevated image rows).
 class ListSkeleton extends fw.StatelessWidget {
   final int count;
   const ListSkeleton({super.key, this.count = 6});
@@ -435,23 +260,101 @@ class ListSkeleton extends fw.StatelessWidget {
   }
 }
 
-/// Default skeleton for a details / edit page that is loading
+/// Skeleton for report screens. Reports lead with a row of flat [StatCard]s then
+/// flat [AppCard] sections, so this previews that shape with the calm-silhouette
+/// language: KPI cards = icon box + two lines; sections = a block / plain lines.
+class ReportSkeleton extends fw.StatelessWidget {
+  const ReportSkeleton({super.key});
+
+  // Flat KPI stat-card silhouette: icon box + a value line + a label line.
+  fw.Widget _statCard() => fw.Container(
+    padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
+    decoration: _flatCardDecoration(),
+    child: fw.Column(
+      crossAxisAlignment: fw.CrossAxisAlignment.start,
+      children: const [
+        AppSkeletonBox(
+          width: 44,
+          height: 44,
+          borderRadius: AppDesignTokens.iconBoxRadius,
+        ),
+        fw.SizedBox(height: AppDesignTokens.itemGap),
+        _CalmLine(widthFactor: 0.75, height: 22),
+        fw.SizedBox(height: AppDesignTokens.smallGap),
+        _CalmLine(widthFactor: 0.5, height: 12),
+      ],
+    ),
+  );
+
+  // Flat section card: either one big block (chart) or a few calm lines.
+  fw.Widget _sectionCard({double chartHeight = 0, int lines = 0}) =>
+      fw.Container(
+        padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
+        decoration: _flatCardDecoration(),
+        child: fw.Column(
+          crossAxisAlignment: fw.CrossAxisAlignment.start,
+          children: [
+            if (chartHeight > 0)
+              AppSkeletonBox(width: double.infinity, height: chartHeight),
+            for (var i = 0; i < lines; i++) ...[
+              if (i > 0) const fw.SizedBox(height: AppDesignTokens.cardGap),
+              _CalmLine(widthFactor: i.isEven ? 0.8 : 0.6, height: 13),
+            ],
+          ],
+        ),
+      );
+
+  @override
+  fw.Widget build(fw.BuildContext context) {
+    return fw.ListView(
+      physics: const fw.NeverScrollableScrollPhysics(),
+      padding: const fw.EdgeInsets.fromLTRB(
+        AppDesignTokens.screenPaddingHorizontal,
+        0,
+        AppDesignTokens.screenPaddingHorizontal,
+        AppDesignTokens.sectionGap,
+      ),
+      children: [
+        fw.Row(
+          children: [
+            fw.Expanded(child: _statCard()),
+            const fw.SizedBox(width: AppDesignTokens.cardGap),
+            fw.Expanded(child: _statCard()),
+          ],
+        ),
+        const fw.SizedBox(height: AppDesignTokens.sectionGap),
+        const _CalmLine(widthFactor: 0.45, height: 15),
+        const fw.SizedBox(height: AppDesignTokens.itemGap),
+        _sectionCard(chartHeight: 150),
+        const fw.SizedBox(height: AppDesignTokens.sectionGap),
+        const _CalmLine(widthFactor: 0.35, height: 15),
+        const fw.SizedBox(height: AppDesignTokens.itemGap),
+        _sectionCard(lines: 4),
+      ],
+    );
+  }
+}
+
+/// Default skeleton for a details / edit page that is loading.
+/// Calm silhouette: a hero row (avatar + title line) + elevated section cards,
+/// each a short heading line + two body lines.
 class DetailSkeleton extends fw.StatelessWidget {
   const DetailSkeleton({super.key});
 
   @override
   fw.Widget build(fw.BuildContext context) {
-    fw.Widget card(double h) => fw.Container(
+    // Detail screens render elevated AppCard(elevated: true) sections.
+    fw.Widget card() => fw.Container(
       padding: const fw.EdgeInsets.all(AppDesignTokens.cardPadding),
-      decoration: AppDesignTokens.glassDecoration(),
+      decoration: _elevatedCardDecoration(),
       child: fw.Column(
         crossAxisAlignment: fw.CrossAxisAlignment.start,
-        children: [
-          const AppSkeletonBox(width: 120, height: 16),
-          const fw.SizedBox(height: AppDesignTokens.itemGap),
-          AppSkeletonBox(width: double.infinity, height: h),
-          const fw.SizedBox(height: AppDesignTokens.smallGap),
-          const AppSkeletonBox(width: 200, height: 14),
+        children: const [
+          _CalmLine(widthFactor: 0.35, height: 14),
+          fw.SizedBox(height: AppDesignTokens.itemGap),
+          _CalmLine(widthFactor: 0.9, height: 12),
+          fw.SizedBox(height: AppDesignTokens.smallGap),
+          _CalmLine(widthFactor: 0.6, height: 12),
         ],
       ),
     );
@@ -465,24 +368,22 @@ class DetailSkeleton extends fw.StatelessWidget {
             children: const [
               AppSkeletonBox(width: 46, height: 46, borderRadius: 99),
               fw.SizedBox(width: AppDesignTokens.itemGap),
-              fw.Expanded(
-                child: AppSkeletonBox(width: double.infinity, height: 24),
-              ),
+              fw.Expanded(child: _CalmLine(widthFactor: 0.6, height: 22)),
             ],
           ),
           const fw.SizedBox(height: AppDesignTokens.sectionGap),
-          card(160),
+          card(),
           const fw.SizedBox(height: AppDesignTokens.cardGap),
-          card(60),
+          card(),
           const fw.SizedBox(height: AppDesignTokens.cardGap),
-          card(60),
+          card(),
         ],
       ),
     );
   }
 }
 
-/// Skeleton for a horizontal strip of selectable chips/cards
+/// Skeleton for a horizontal strip of selectable chips/cards.
 class ChipsRowSkeleton extends fw.StatelessWidget {
   final double width;
   final int count;
